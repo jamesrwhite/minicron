@@ -4,54 +4,76 @@ require 'rubygems'
 require 'bundler/setup'
 require 'pty'
 require 'colored'
+require 'commander/import'
 
-# Were we passed a command to run?, TODO: migrate to using a solid cli gem
-if ARGV.first
-  # Record the start time of the command
-  start = Time.now.to_f
+# Header and license info
+puts '         _      _                 '
+puts '  __ _  (_)__  (_)__________  ___ '
+puts ' /  \' \/ / _ \/ / __/ __/ _ \/ _ \\'
+puts '/_/_/_/_/_//_/_/\__/_/  \___/_//_/'
+puts
 
-  # Output some debug info, TODO: hide this behind a -v option
-  print 'started running '.blue
-  print "`#{ARGV.first}`".yellow
-  puts " at #{start}".blue
-  print "`#{ARGV.first}`".yellow
-  puts ' output..'.blue
-  puts
+# cli basic info
+program :name, 'minicron'
+program :help, 'Author', 'James White <dev.jameswhite@gmail.com>'
+program :help, 'License', 'GPL v3'
+program :version, '0.1.0'
+program :description, 'cli for minicron; a system a to manage and monitor cron jobs'
 
-  # Spawn a process to run the command
-  PTY.spawn(ARGV.first) do |stdout, stdin, pid|
-    # Loop until data is no longer being sent to stdout
-    while !stdout.eof?
-      # TODO: allow switching between read modes
-      data = stdout.read(1) # One character at a time
-      # data = stdout.readline() # One line at a time
+# Set the default command to run
+default_command :help
 
-      # Print it back out, TODO: hide this behind a -v option
-      print data
-      STDOUT.flush
-    end
+# Hide --trace and -t from the help menu
+Commander::Runner.instance.disable_tracing
 
-    # Force waiting for the process to finish
-    Process.wait(pid)
+# The important part, actually running the command
+command :run do |c|
+  c.syntax = "minicron run 'command -option value'"
+  c.description = 'Run the given command, see `minicron help run` for more info.'
 
-    # Record the time the command finished
-    finish = Time.now.to_f
+  c.action do |args, options|
+    # Do some validation on the arguments
+    raise ArgumentError.new('A command to run is required! See `minicron help run`') unless args.length === 1
+
+    # Record the start time of the command
+    start = Time.now.to_f
 
     # Output some debug info, TODO: hide this behind a -v option
+    print 'started running '.blue
+    print "`#{args.first}`".yellow
+    puts " at #{start}".blue
+    print "`#{args.first}`".yellow
+    puts ' output..'.blue
     puts
-    print 'finished running '.green
-    print "`#{ARGV.first}`".yellow
-    puts " at #{start}".green
-    print 'running '.green
-    print "`#{ARGV.first}`".yellow
-    puts " took #{finish - start}s".green
-    puts "and finished with an exit status code of #{$?.exitstatus}".green
+
+    # Spawn a process to run the command
+    PTY.spawn(args.first) do |stdout, stdin, pid|
+      # Loop until data is no longer being sent to stdout
+      while !stdout.eof?
+        # TODO: allow switching between read modes
+        data = stdout.read(1) # One character at a time
+        # data = stdout.readline() # One line at a time
+
+        # Print it back out, TODO: hide this behind a -v option
+        print data
+        STDOUT.flush
+      end
+
+      # Force waiting for the process to finish
+      Process.wait(pid)
+
+      # Record the time the command finished
+      finish = Time.now.to_f
+
+      # Output some debug info, TODO: hide this behind a -v option
+      puts
+      print 'finished running '.green
+      print "`#{args.first}`".yellow
+      puts " at #{start}".green
+      print 'running '.green
+      print "`#{args.first}`".yellow
+      puts " took #{finish - start}s".green
+      puts "and finished with an exit status code of #{$?.exitstatus}".green
+    end
   end
-else
-  # TODO: Add version number and license info
-  puts '         _      _                 '
-  puts '  __ _  (_)__  (_)__________  ___ '
-  puts ' /  \' \/ / _ \/ / __/ __/ _ \/ _ \\'
-  puts '/_/_/_/_/_//_/_/\__/_/  \___/_//_/'
-  puts '                                  '
 end

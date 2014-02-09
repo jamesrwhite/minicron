@@ -1,9 +1,19 @@
+GIT
+  remote: git://github.com/jamesrwhite/commander.git
+  revision: 2c4cef007c1de2f4d9991530f6f792520508f230
+  specs:
+    commander (4.1.5)
+      highline (~> 1.6.11)
+
 GEM
+  remote: https://rubygems.org/
   specs:
     colored (1.2)
+    highline (1.6.20)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   colored (~> 1.2)
+  commander!
