@@ -6,18 +6,13 @@ require 'pty'
 require 'colored'
 require 'commander/import'
 
-# Header and license info
-puts '         _      _                 '
-puts '  __ _  (_)__  (_)__________  ___ '
-puts ' /  \' \/ / _ \/ / __/ __/ _ \/ _ \\'
-puts '/_/_/_/_/_//_/_/\__/_/  \___/_//_/'
-puts
+VERSION = '0.1.0'
 
-# cli basic info
+# basic information for the help menu
 program :name, 'minicron'
 program :help, 'Author', 'James White <dev.jameswhite@gmail.com>'
 program :help, 'License', 'GPL v3'
-program :version, '0.1.0'
+program :version, VERSION
 program :description, 'cli for minicron; a system a to manage and monitor cron jobs'
 
 # Set the default command to run
@@ -29,7 +24,7 @@ Commander::Runner.instance.disable_tracing
 # The important part, actually running the command
 command :run do |c|
   c.syntax = "minicron run 'command -option value'"
-  c.description = 'Run the given command, see `minicron help run` for more info.'
+  c.description = 'Runs the command passed as an argument.'
 
   c.action do |args, options|
     # Do some validation on the arguments
