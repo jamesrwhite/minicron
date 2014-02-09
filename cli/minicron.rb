@@ -21,6 +21,9 @@ default_command :help
 # Hide --trace and -t from the help menu
 Commander::Runner.instance.disable_tracing
 
+# Add a global option for verbose mode
+global_option '--verbose', 'Turn on verbose mode'
+
 # The important part, actually running the command
 command :run do |c|
   c.syntax = "minicron run 'command -option value'"
@@ -33,13 +36,15 @@ command :run do |c|
     # Record the start time of the command
     start = Time.now.to_f
 
-    # Output some debug info, TODO: hide this behind a -v option
-    print 'started running '.blue
-    print "`#{args.first}`".yellow
-    puts " at #{start}".blue
-    print "`#{args.first}`".yellow
-    puts ' output..'.blue
-    puts
+    # Output some debug info
+    if options.verbose
+      print 'started running '.blue
+      print "`#{args.first}`".yellow
+      puts " at #{start}".blue
+      print "`#{args.first}`".yellow
+      puts ' output..'.blue
+      puts
+    end
 
     # Spawn a process to run the command
     PTY.spawn(args.first) do |stdout, stdin, pid|
@@ -49,7 +54,7 @@ command :run do |c|
         data = stdout.read(1) # One character at a time
         # data = stdout.readline() # One line at a time
 
-        # Print it back out, TODO: hide this behind a -v option
+        # Print it back out
         print data
         STDOUT.flush
       end
@@ -60,15 +65,17 @@ command :run do |c|
       # Record the time the command finished
       finish = Time.now.to_f
 
-      # Output some debug info, TODO: hide this behind a -v option
-      puts
-      print 'finished running '.green
-      print "`#{args.first}`".yellow
-      puts " at #{start}".green
-      print 'running '.green
-      print "`#{args.first}`".yellow
-      puts " took #{finish - start}s".green
-      puts "and finished with an exit status code of #{$?.exitstatus}".green
+      # Output some debug info
+      if options.verbose
+        puts
+        print 'finished running '.green
+        print "`#{args.first}`".yellow
+        puts " at #{start}".green
+        print 'running '.green
+        print "`#{args.first}`".yellow
+        puts " took #{finish - start}s".green
+        puts "and finished with an exit status code of #{$?.exitstatus}".green
+      end
     end
   end
 end
