@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'GPL-3.0'
   spec.executables  << 'minicron'
 
-  spec.files         = ['lib/minicron.rb', 'lib/minicron/version.rb']
+  spec.files         = ['lib/minicron.rb', 'lib/minicron/cli.rb', 'lib/minicron/version.rb']
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
