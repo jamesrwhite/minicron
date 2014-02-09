@@ -1,19 +1,23 @@
-GIT
-  remote: git://github.com/jamesrwhite/commander.git
-  revision: 2c4cef007c1de2f4d9991530f6f792520508f230
+PATH
+  remote: .
   specs:
-    commander (4.1.5)
-      highline (~> 1.6.11)
+    minicron (0.1.0)
+      colored (~> 1.2)
+      commander (~> 4.1.5)
 
 GEM
   remote: https://rubygems.org/
   specs:
     colored (1.2)
+    commander (4.1.5)
+      highline (~> 1.6.11)
     highline (1.6.20)
+    rake (10.1.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  colored (~> 1.2)
-  commander!
+  bundler (~> 1.5)
+  minicron!
+  rake
