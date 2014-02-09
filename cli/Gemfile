@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'colored', '~> 1.2'
-gem 'commander', :git => 'git://github.com/jamesrwhite/commander.git'
+# Specify your gem's dependencies in minicron.gemspec
+gemspec
