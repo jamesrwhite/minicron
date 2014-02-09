@@ -28,10 +28,16 @@ global_option '--verbose', 'Turn on verbose mode'
 command :run do |c|
   c.syntax = "minicron run 'command -option value'"
   c.description = 'Runs the command passed as an argument.'
+  c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: line"
 
   c.action do |args, options|
     # Do some validation on the arguments
-    raise ArgumentError.new('A command to run is required! See `minicron help run`') unless args.length === 1
+    if args.length != 1
+      raise ArgumentError.new('A command to run is required! See `minicron help run`')
+    end
+
+    # Default the mode to char
+    options.default :prefix => 'line'
 
     # Record the start time of the command
     start = Time.now.to_f
@@ -50,9 +56,8 @@ command :run do |c|
     PTY.spawn(args.first) do |stdout, stdin, pid|
       # Loop until data is no longer being sent to stdout
       while !stdout.eof?
-        # TODO: allow switching between read modes
-        data = stdout.read(1) # One character at a time
-        # data = stdout.readline() # One line at a time
+        # One character at a time or one line at a time?
+        data = options.mode === 'char' ? stdout.read(1) : stdout.readline()
 
         # Print it back out
         print data
