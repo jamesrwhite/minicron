@@ -1,5 +1,5 @@
-require 'coveralls'
-Coveralls.wear!
+# require 'coveralls'
+# Coveralls.wear!
 
 require 'rspec'
 require 'minicron/cli'
