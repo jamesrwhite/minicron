@@ -61,18 +61,23 @@ module Minicron
 
           # Spawn a process to run the command
           PTY.spawn(args.first) do |stdout, stdin, pid|
-            # Loop until data is no longer being sent to stdout
-            while !stdout.eof?
-              # One character at a time or one line at a time?
-              data = options.mode === 'char' ? stdout.read(1) : stdout.readline()
+            begin
+              # Loop until data is no longer being sent to stdout
+              while !stdout.eof?
+                # One character at a time or one line at a time?
+                data = options.mode === 'char' ? stdout.read(1) : stdout.readline()
 
-              # Print it back out
-              print data
-              STDOUT.flush
+                # Print it back out
+                print data
+                STDOUT.flush
+              end
+            # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
+            rescue Errno::EIO
+            ensure
+              # Force waiting for the process to finish so we can get the exit status
+              Process.wait pid
+              exit_status = $?.exitstatus
             end
-
-            # Force waiting for the process to finish
-            Process.wait(pid)
 
             # Record the time the command finished
             finish = Time.now.to_f
@@ -86,7 +91,7 @@ module Minicron
               print 'running '.green
               print "`#{args.first}`".yellow
               puts " took #{finish - start}s".green
-              puts "and finished with an exit status code of #{$?.exitstatus}".green
+              puts "and finished with an exit status code of #{exit_status}".green
             end
           end
         end
