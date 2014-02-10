@@ -26,7 +26,7 @@ module Minicron
       @commander.default_command :help
 
       # Hide --trace and -t from the help menu, waiting on commander pull request
-      # Commander::Runner.instance.disable_tracing
+      # @commander.disable_tracing
 
       # Add a global option for verbose mode
       @commander.global_option '--verbose', 'Turn on verbose mode'
