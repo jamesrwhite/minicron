@@ -1,3 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'minicron'
+
+Minicron::CLI.new(ARGV).run do |output|
+  print output
+  STDOUT.flush
+end
+

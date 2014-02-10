@@ -51,12 +51,11 @@ module Minicron
 
           # Output some debug info
           if options.verbose
-            print 'started running '.blue
-            print "`#{args.first}`".yellow
-            puts " at #{start}".blue
-            print "`#{args.first}`".yellow
-            puts ' output..'.blue
-            puts
+            yield 'started running '.blue
+            yield "`#{args.first}`".yellow
+            yield " at #{start}".blue
+            yield "`#{args.first}`".yellow
+            yield " output..\n\n".blue
           end
 
           # Spawn a process to run the command
@@ -68,8 +67,7 @@ module Minicron
                 data = options.mode === 'char' ? stdout.read(1) : stdout.readline()
 
                 # Print it back out
-                print data
-                STDOUT.flush
+                yield data
               end
             # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
             rescue Errno::EIO
@@ -84,14 +82,13 @@ module Minicron
 
             # Output some debug info
             if options.verbose
-              puts
-              print 'finished running '.green
-              print "`#{args.first}`".yellow
-              puts " at #{start}".green
-              print 'running '.green
-              print "`#{args.first}`".yellow
-              puts " took #{finish - start}s".green
-              puts "and finished with an exit status code of #{exit_status}".green
+              yield "\nfinished running ".green
+              yield "`#{args.first}`".yellow
+              yield " at #{start}\n".green
+              yield 'running '.green
+              yield "`#{args.first}`".yellow
+              yield " took #{finish - start}s\n".green
+              yield "and finished with an exit status code of #{exit_status}\n".green
             end
           end
         end
