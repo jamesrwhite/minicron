@@ -1,9 +1,9 @@
+require 'coveralls'
+Coveralls.wear!
+
 require 'rspec'
 require 'minicron/cli'
 require 'stringio'
-require 'coveralls'
-
-Coveralls.wear!
 
 RSpec.configure do |config|
   config.color_enabled = true
