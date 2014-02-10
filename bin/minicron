@@ -2,8 +2,13 @@
 
 require 'minicron'
 
-Minicron::CLI.new(ARGV).run do |output|
-  print output
-  STDOUT.flush
+begin
+  Minicron::CLI.new(ARGV).run do |output|
+    print output
+    STDOUT.flush
+  end
+rescue Interrupt
+  puts "\nExiting.."
+rescue Exception => e
+  puts e
 end
-
