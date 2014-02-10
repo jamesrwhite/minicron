@@ -10,6 +10,15 @@ Code Style
 
 Where possible I'm trying to follow [GitHub's Ruby Styleguide](https://github.com/styleguide/ruby "GitHub's Ruby Styleguide")
 
+Requirements
+-------------
+
+- Ruby
+  - 1.9.2 and above (tested on 1.9.2, 1.9.3, 2.0.0, 2.1.0 and HEAD)
+  - I haven't tested jruby or other ruby implementations *yet*
+- OS
+  - *Should* run on any linux/bsd based OS that the above ruby versions run on. No windows support.
+
 Contributing
 ------------
 
