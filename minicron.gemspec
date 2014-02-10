@@ -9,6 +9,12 @@ Gem::Specification.new do |spec|
   spec.authors               = ['James White']
   spec.email                 = ['dev.jameswhite@gmail.com']
   spec.summary               = 'cli for minicron; a system a to manage and monitor cron jobs'
+  spec.description           = %{
+    The minicron cli is part of the minicron system that aims to make it easier
+    to manage and monitor cron jobs.
+
+    For more info see the project README on GitHub.
+  }
   spec.homepage              = 'https://github.com/jamesrwhite/minicron/tree/master/cli'
   spec.license               = 'GPL-3.0'
   spec.required_ruby_version = '>= 1.9.2'
