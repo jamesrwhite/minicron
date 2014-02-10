@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Minicron::CLI do
   it 'should run a simple command and print the output to stdout' do
     output = capture_stdout do
-      Minicron::CLI.new(['run', 'echo hello']).run
+      Minicron::CLI.new(['run', 'echo hello', '--trace']).run
     end
 
     output.clean == 'hello'
@@ -11,7 +11,7 @@ describe Minicron::CLI do
 
   it 'should run a simple multi-line command and print the output to stdout' do
     output = capture_stdout do
-      Minicron::CLI.new(['run', 'ls -l']).run
+      Minicron::CLI.new(['run', 'ls -l', '--trace']).run
     end
 
     output.clean == `ls -l`.clean
