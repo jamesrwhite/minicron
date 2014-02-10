@@ -2,28 +2,16 @@ require 'minicron/version'
 require 'pty'
 require 'colored'
 require 'commander'
-require 'commander/delegates'
 
 include Commander::UI
-include Commander::UI::AskForClass
-include Commander::Delegates
 
 module Minicron
   class CLI
     def initialize args
-      if args != ARGV
-        # empty ARGV
-        while ARGV.length > 0
-          ARGV.shift
-        end
+      # replace ARGV with the contents of args to aid testability
+      ARGV.replace args
 
-        # then replace it with the contents of args to aid testability
-        args.each do |arg|
-          ARGV.push(arg)
-        end
-      end
-
-      @commander = Commander::Runner.instance
+      @commander = Commander::Runner.new
     end
 
     def run
