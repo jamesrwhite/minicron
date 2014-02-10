@@ -1,5 +1,5 @@
 minicron [![Build Status](https://secure.travis-ci.org/jamesrwhite/minicron.png)](http://travis-ci.org/jamesrwhite/minicron) [![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.png)](https://coveralls.io/r/jamesrwhite/minicron) [![Dependency Status](https://gemnasium.com/jamesrwhite/minicron.png)](https://gemnasium.com/jamesrwhite/minicron)
----------
+=======
 
 A system to manage and monitor cron jobs.
 
