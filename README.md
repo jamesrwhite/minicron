@@ -1,4 +1,4 @@
-minicron
+minicron [![Build Status](https://secure.travis-ci.org/jamesrwhite/minicron.png)](http://travis-ci.org/jamesrwhite/minicron)
 ---------
 
 A system to manage and monitor cron jobs.
