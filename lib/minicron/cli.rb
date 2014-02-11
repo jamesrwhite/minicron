@@ -7,50 +7,57 @@ include Commander::UI
 
 module Minicron
   class CLI
-    def initialize args
-      # replace ARGV with the contents of args to aid testability
-      ARGV.replace args
+    def run options = {}
+      # Default the options
+      options[:argv] |= []
+      options[:trace] |= false
 
-      @commander = Commander::Runner.new
-    end
+      # replace ARGV with the contents of arv to aid testability
+      ARGV.replace options[:argv]
 
-    def run
+      # Get an instance of commander
+      cli = Commander::Runner.new
+
       # basic information for the help menu
-      @commander.program :name, 'minicron'
-      @commander.program :help, 'Author', 'James White <dev.jameswhite@gmail.com>'
-      @commander.program :help, 'License', 'GPL v3'
-      @commander.program :version, Minicron::VERSION
-      @commander.program :description, 'cli for minicron; a system a to manage and monitor cron jobs'
+      cli.program :name, 'minicron'
+      cli.program :help, 'Author', 'James White <dev.jameswhite@gmail.com>'
+      cli.program :help, 'License', 'GPL v3'
+      cli.program :version, Minicron::VERSION
+      cli.program :description, 'cli for minicron; a system a to manage and monitor cron jobs'
 
       # Set the default command to run
-      @commander.default_command :help
+      cli.default_command :help
 
-      # Hide --trace and -t from the help menu, waiting on commander pull request
-      # @commander.disable_tracing
+      # Hide --trace and -t from the help menu unless we are told not to
+      if options[:trace]
+        cli.always_trace!
+      else
+        cli.never_trace!
+      end
 
       # Add a global option for verbose mode
-      @commander.global_option '--verbose', 'Turn on verbose mode'
+      cli.global_option '--verbose', 'Turn on verbose mode'
 
       # The important part, actually running the command
-      @commander.command :run do |c|
+      cli.command :run do |c|
         c.syntax = "minicron run 'command -option value'"
         c.description = 'Runs the command passed as an argument.'
         c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: line"
 
-        c.action do |args, options|
+        c.action do |args, opts|
           # Do some validation on the arguments
           if args.length != 1
             raise ArgumentError.new('A command to run is required! See `minicron help run`')
           end
 
           # Default the mode to char
-          options.default :mode => 'line'
+          opts.default :mode => 'line'
 
           # Record the start time of the command
           start = Time.now.to_f
 
           # Output some debug info
-          if options.verbose
+          if opts.verbose
             yield 'started running '.blue
             yield "`#{args.first}`".yellow
             yield " at #{start}".blue
@@ -64,7 +71,7 @@ module Minicron
               # Loop until data is no longer being sent to stdout
               while !stdout.eof?
                 # One character at a time or one line at a time?
-                data = options.mode === 'char' ? stdout.read(1) : stdout.readline()
+                data = opts.mode === 'char' ? stdout.read(1) : stdout.readline()
 
                 # Print it back out
                 yield data
@@ -81,7 +88,7 @@ module Minicron
             finish = Time.now.to_f
 
             # Output some debug info
-            if options.verbose
+            if opts.verbose
               yield "\nfinished running ".green
               yield "`#{args.first}`".yellow
               yield " at #{start}\n".green
@@ -95,7 +102,7 @@ module Minicron
       end
 
       # And off we go!
-      @commander.run!
+      cli.run!
     end
   end
 end

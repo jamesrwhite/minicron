@@ -3,7 +3,7 @@
 require 'minicron'
 
 begin
-  Minicron::CLI.new(ARGV).run do |output|
+  Minicron::CLI.new.run argv: ARGV do |output|
     print output
     STDOUT.flush
   end
