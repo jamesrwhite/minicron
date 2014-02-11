@@ -7,13 +7,12 @@ include Commander::UI
 
 module Minicron
   class CLI
-    def run options = {}
+    def run argv, options = {}
       # Default the options
-      options[:argv] |= []
-      options[:trace] |= false
+      options[:trace] ||= false
 
       # replace ARGV with the contents of arv to aid testability
-      ARGV.replace options[:argv]
+      ARGV.replace argv
 
       # Get an instance of commander
       cli = Commander::Runner.new
@@ -29,11 +28,7 @@ module Minicron
       cli.default_command :help
 
       # Hide --trace and -t from the help menu unless we are told not to
-      if options[:trace]
-        cli.always_trace!
-      else
-        cli.never_trace!
-      end
+      if options[:trace] then cli.always_trace! else cli.never_trace! end
 
       # Add a global option for verbose mode
       cli.global_option '--verbose', 'Turn on verbose mode'
@@ -51,58 +46,69 @@ module Minicron
           end
 
           # Default the mode to char
-          opts.default :mode => 'line'
+          opts.default mode: 'line'
 
-          # Record the start time of the command
-          start = Time.now.to_f
-
-          # Output some debug info
-          if opts.verbose
-            yield 'started running '.blue
-            yield "`#{args.first}`".yellow
-            yield " at #{start}".blue
-            yield "`#{args.first}`".yellow
-            yield " output..\n\n".blue
-          end
-
-          # Spawn a process to run the command
-          PTY.spawn(args.first) do |stdout, stdin, pid|
-            begin
-              # Loop until data is no longer being sent to stdout
-              while !stdout.eof?
-                # One character at a time or one line at a time?
-                data = opts.mode === 'char' ? stdout.read(1) : stdout.readline()
-
-                # Print it back out
-                yield data
-              end
-            # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
-            rescue Errno::EIO
-            ensure
-              # Force waiting for the process to finish so we can get the exit status
-              Process.wait pid
-              exit_status = $?.exitstatus
-            end
-
-            # Record the time the command finished
-            finish = Time.now.to_f
-
-            # Output some debug info
-            if opts.verbose
-              yield "\nfinished running ".green
-              yield "`#{args.first}`".yellow
-              yield " at #{start}\n".green
-              yield 'running '.green
-              yield "`#{args.first}`".yellow
-              yield " took #{finish - start}s\n".green
-              yield "and finished with an exit status code of #{exit_status}\n".green
-            end
+          # Execute the command and yield the output
+          run_command args.first, mode: opts.mode, verbose: opts.verbose do |output|
+            yield output
           end
         end
       end
 
       # And off we go!
       cli.run!
+    end
+
+    def run_command command, options = {}
+      # Default the options
+      options[:mode] ||= 'line'
+      options[:verbose] ||= false
+
+      # Record the start time of the command
+      start = Time.now.to_f
+
+      # Output some debug info
+      if options[:verbose]
+        yield 'started running '.blue
+        yield "`#{options[:command]}`".yellow
+        yield " at #{start}".blue
+        yield "`#{options[:command]}`".yellow
+        yield " output..\n\n".blue
+      end
+
+      # Spawn a process to run the command
+      PTY.spawn(command) do |stdout, stdin, pid|
+        begin
+          # Loop until data is no longer being sent to stdout
+          while !stdout.eof?
+            # One character at a time or one line at a time?
+            data = options[:mode] === 'char' ? stdout.read(1) : stdout.readline()
+
+            # Print it back out
+            yield data
+          end
+        # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
+        rescue Errno::EIO
+        ensure
+          # Force waiting for the process to finish so we can get the exit status
+          Process.wait pid
+          exit_status = $?.exitstatus
+        end
+
+        # Record the time the command finished
+        finish = Time.now.to_f
+
+        # Output some debug info
+        if options[:verbose]
+          yield "\nfinished running ".green
+          yield "`#{command}`".yellow
+          yield " at #{start}\n".green
+          yield 'running '.green
+          yield "`#{command}`".yellow
+          yield " took #{finish - start}s\n".green
+          yield "and finished with an exit status code of #{exit_status}\n".green
+        end
+      end
     end
   end
 end
