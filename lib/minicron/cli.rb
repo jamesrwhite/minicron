@@ -136,7 +136,7 @@ module Minicron
     # by default
     #
     # @return [Boolean] whether rainbow is enabled or not
-    def enable_coloured_output
+    def enable_coloured_output!
       Rainbow.enabled = true
     end
 
@@ -144,7 +144,7 @@ module Minicron
     # by default
     #
     # @return [Boolean] whether rainbow is enabled or not
-    def disable_coloured_output
+    def disable_coloured_output!
       Rainbow.enabled = false
     end
   end
