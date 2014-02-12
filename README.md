@@ -8,6 +8,33 @@ Installation
 
 minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo and ````rake install````.
 
+Usage
+-----
+
+minicron is packaged as a gem and can be interacted with from the command line once you have installed it. The current commands are as follows:
+
+#### Run a command
+
+````
+minicron run 'command --options'
+````
+
+You can alter the way in which the command alters it's output by passing the --mode option to the run argument with the value of either 'line' or 'char'. Most of the time you'll want to use the default value of line but for some commands e.g a script that outputs a progress bar minicron printing the output each character at a time can be useful.
+
+````
+minicron run --mode char 'python progress_bar.py'
+````
+
+The global ````--verbose```` option can also be passed to the ````run```` argument like so ````minicron run --verbose ls````, for further information see ````minicron help run````.
+
+#### Get help
+
+Running ````minicron```` with no arguments is an alias to running ````minicron help````, ````minicron -h```` or ````minicron --help````. You can also use the help argument to get information on any command as shown above in the run a command section or alternatively you can pass the ````-h```` or ````--help```` options like so ````minicron run -h````.
+
+#### Version
+
+Like many command line programs minicron will show it's version number when the global options ````-v```` or ````--version```` are passed.
+
 Documentation
 -------------
 
