@@ -3,12 +3,14 @@
 require 'minicron'
 
 begin
-  Minicron::CLI.new.run ARGV do |output|
-    print output
-    STDOUT.flush
+  Minicron.capture_output :type => :stderr do |stderr|
+    Minicron::CLI.new.run ARGV do |output|
+      print  output
+      STDOUT.flush
+    end
   end
 rescue Interrupt
   puts "\nExiting.."
 rescue Exception => e
-  puts e
+  p e
 end
