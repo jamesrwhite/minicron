@@ -124,5 +124,29 @@ module Minicron
         end
       end
     end
+
+    # Whether or not coloured output of the rainbox gem is enabled, this is
+    # enabled by default
+    #
+    # @return [Boolean] whether rainbow is enabled or not
+    def coloured_output?
+      Rainbow.enabled
+    end
+
+    # Enable coloured terminal output from the rainbow gem, this is enabled
+    # by default
+    #
+    # @return [Boolean] whether rainbow is enabled or not
+    def enable_coloured_output
+      Rainbow.enabled = true
+    end
+
+    # Disable coloured terminal output from the rainbow gem, this is enabled
+    # by default
+    #
+    # @return [Boolean] whether rainbow is enabled or not
+    def disable_coloured_output
+      Rainbow.enabled = false
+    end
   end
 end
