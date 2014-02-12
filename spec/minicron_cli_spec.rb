@@ -53,20 +53,20 @@ describe Minicron::CLI do
     end
   end
 
-  describe '#enable_coloured_output' do
+  describe '#enable_coloured_output!' do
     it 'should set Rainbow.enabled to true' do
       minicron = Minicron::CLI.new
-      minicron.enable_coloured_output
+      minicron.enable_coloured_output!
 
       Rainbow.enabled.should eq true
       minicron.coloured_output?.should eq true
     end
   end
 
-  describe '#disable_coloured_output' do
+  describe '#disable_coloured_output!' do
     it 'should set Rainbow.enabled to false' do
       minicron = Minicron::CLI.new
-      minicron.disable_coloured_output
+      minicron.disable_coloured_output!
 
       Rainbow.enabled.should eq false
       minicron.coloured_output?.should eq false
