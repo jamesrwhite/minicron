@@ -15,3 +15,13 @@ class String
     self.strip.encode(self.encoding, :universal_newline => true)
   end
 end
+
+# Taken from commander gem
+# prevent paging from actually occurring in test environment
+module Commander
+  module UI
+    def enable_paging
+      return
+    end
+  end
+end
