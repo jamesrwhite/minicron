@@ -5,4 +5,5 @@ rvm:
   - 2.0.0
   - 2.1.0
   - ruby-head
+  - rbx
 script: bundle exec rspec spec
