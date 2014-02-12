@@ -58,7 +58,7 @@ module Minicron
           opts.default mode: 'line'
 
           # Execute the command and yield the output
-          run_command args.first, mode: opts.mode, verbose: opts.verbose do |output|
+          run_command args.first, :mode => opts.mode, :verbose => opts.verbose do |output|
             yield output
           end
         end
