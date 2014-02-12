@@ -5,6 +5,18 @@ A system to manage and monitor cron jobs.
 
 *work in progress*
 
+Documentation
+-------------
+
+minicron uses [Yard](http://yardoc.org/ "Yard") for it's documentation, you can either generate it and view it locally using the following commands:
+
+````
+yard doc
+yard server
+````
+
+or view the most up to date version online at [RubyDoc.info](http://rdoc.info/github/jamesrwhite/minicron/master/frames "RubyDoc.info").
+
 Requirements
 -------------
 
