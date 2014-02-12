@@ -5,7 +5,7 @@ require 'minicron'
 begin
   Minicron.capture_output :type => :stderr do |stderr|
     Minicron::CLI.new.run ARGV do |output|
-      print  output
+      print output
       STDOUT.flush
     end
   end
