@@ -1,7 +1,8 @@
-require 'minicron/version'
 require 'pty'
+require 'English'
 require 'rainbow/ext/string'
 require 'commander'
+require 'minicron/version'
 
 include Commander::UI
 
@@ -16,7 +17,7 @@ module Minicron
     # @raise [ArgumentError] if no arguments are passed to the run cli command
     # i.e when the argv param is ['run']. A second option (the command to execute)
     # should be present in the array
-    def run argv, options = {}
+    def run(argv, options = {})
       # Default the options
       options[:trace] ||= false
 
@@ -37,7 +38,7 @@ module Minicron
       cli.default_command :help
 
       # Hide --trace and -t from the help menu unless we are told not to
-      if options[:trace] then cli.always_trace! else cli.never_trace! end
+      options[:trace] ? cli.always_trace! : cli.never_trace!
 
       # Add a global option for verbose mode
       cli.global_option '--verbose', 'Turn on verbose mode'
@@ -50,9 +51,7 @@ module Minicron
 
         c.action do |args, opts|
           # Check that exactly one argument has been passed
-          if args.length != 1
-            raise ArgumentError.new('A valid command to run is required! See `minicron help run`')
-          end
+          fail ArgumentError, 'A valid command to run is required! See `minicron help run`' if args.length != 1
 
           # Default the mode to char
           opts.default mode: 'line'
@@ -76,7 +75,7 @@ module Minicron
     # @option options [Boolean] verbose whether or not to output extra
     # information for debugging purposes.
     # @yieldparam output [String] output from the command execution
-    def run_command command, options = {}
+    def run_command(command, options = {})
       # Default the options
       options[:mode] ||= 'line'
       options[:verbose] ||= false
@@ -94,9 +93,9 @@ module Minicron
       PTY.spawn(command) do |stdout, stdin, pid|
         begin
           # Loop until data is no longer being sent to stdout
-          while !stdout.eof?
+          until stdout.eof?
             # One character at a time or one line at a time?
-            data = options[:mode] === 'char' ? stdout.read(1) : stdout.readline()
+            data = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
 
             # Print it back out
             yield data
@@ -106,7 +105,7 @@ module Minicron
         ensure
           # Force waiting for the process to finish so we can get the exit status
           Process.wait pid
-          exit_status = $?.exitstatus
+          exit_status = $CHILD_STATUS.exitstatus
         end
 
         # Record the time the command finished
@@ -115,11 +114,11 @@ module Minicron
         # Output some debug info
         if options[:verbose]
           yield "\n[minicron]".colour(:magenta)
-          yield " finished running ".colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
+          yield ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
           yield '[minicron]'.colour(:magenta)
           yield ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
           yield '[minicron]'.colour(:magenta)
-          yield " `#{command}`".colour(:yellow) + " finished with an exit status of ".colour(:blue)
+          yield " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
           yield exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
         end
       end
