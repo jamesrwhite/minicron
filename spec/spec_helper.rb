@@ -20,7 +20,7 @@ end
 # Normalise varied new line usage
 class String
   def clean
-    self.strip.encode(self.encoding, :universal_newline => true)
+    strip.encode(encoding, :universal_newline => true)
   end
 end
 
@@ -29,7 +29,6 @@ end
 module Commander
   module UI
     def enable_paging
-      return
     end
   end
 end
