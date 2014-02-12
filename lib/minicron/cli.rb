@@ -1,6 +1,6 @@
 require 'minicron/version'
 require 'pty'
-require 'colored'
+require 'rainbow/ext/string'
 require 'commander'
 
 include Commander::UI
@@ -86,8 +86,8 @@ module Minicron
 
       # Output some debug info
       if options[:verbose]
-        yield '[minicron]'.magenta
-        yield ' started running '.blue + "`#{command}`".yellow + " at #{start}\n\n".blue
+        yield '[minicron]'.colour(:magenta)
+        yield ' started running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n\n".colour(:blue)
       end
 
       # Spawn a process to run the command
@@ -114,13 +114,13 @@ module Minicron
 
         # Output some debug info
         if options[:verbose]
-          yield "\n[minicron]".magenta
-          yield " finished running ".blue + "`#{command}`".yellow + " at #{start}\n".blue
-          yield '[minicron]'.magenta
-          yield ' running '.blue + "`#{command}`".yellow + " took #{finish - start}s\n".blue
-          yield '[minicron]'.magenta
-          yield " `#{command}`".yellow + " finished with an exit status of ".blue
-          yield exit_status == 0 ? "#{exit_status}\n".green : "#{exit_status}\n".red
+          yield "\n[minicron]".colour(:magenta)
+          yield " finished running ".colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
+          yield '[minicron]'.colour(:magenta)
+          yield ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
+          yield '[minicron]'.colour(:magenta)
+          yield " `#{command}`".colour(:yellow) + " finished with an exit status of ".colour(:blue)
+          yield exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
         end
       end
     end
