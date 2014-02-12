@@ -14,15 +14,20 @@ Requirements
 -------------
 
 - Ruby
-  - 1.9.2 and above (tested on 1.9.2, 1.9.3, 2.0.0, 2.1.0 and HEAD)
-  - I haven't tested jruby or other ruby implementations *yet*
+  - MRI
+    - 1.9.2 and above (tested on 1.9.2, 1.9.3, 2.0.0, 2.1.0 and HEAD)
+  - Rubinius
+    - Travis builds are run on the latest release
+  - JRuby
+    - As yet untested
 - OS
-  - *Should* run on any linux/bsd based OS that the above ruby versions run on. No windows support.
+  - Should run on any linux/bsd based OS that the above ruby versions run on.
+  - No windows support due to the lack of pseudo terminal support.
 
 Contributing
 ------------
 
-I'm building minicron as a part of my final year project at University and as such cannot currently accept pull requests. Once the project is finished however (June 2014) this will most likely change.
+I'm building minicron as a part of my final year project at University and as such cannot currently accept pull requests. Once the project is finished however (June 2014) this will most likely change. Feel free to submit feature requests via issues though.
 
 License
 --------
