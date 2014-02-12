@@ -18,15 +18,23 @@ describe Minicron::CLI do
       Minicron.capture_output :type => :stderr do
         expect {
           Minicron::CLI.new.run ['lol'], :trace => true
-        }.to raise_error(SystemExit)
+        }.to raise_error SystemExit
       end
     end
 
-    it 'should return an error when tracing is disabled but passed as an option' do
+    it 'should raise SystemExit when tracing is disabled but passed as an option' do
       Minicron.capture_output :type => :stderr do
         expect {
           Minicron::CLI.new.run ['run', 'echo 1', '--trace']
-        }.to raise_error(SystemExit)
+        }.to raise_error SystemExit
+      end
+    end
+
+    it 'should raise ArgumentError when no argument is passed to the run action' do
+      Minicron.capture_output :type => :stderr do
+        expect {
+          Minicron::CLI.new.run ['run', '--trace'], :trace => true
+        }.to raise_error ArgumentError
       end
     end
   end

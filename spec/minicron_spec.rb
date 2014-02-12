@@ -38,5 +38,14 @@ describe Minicron do
       output[:stdout].should be_an_instance_of StringIO
       output[:stderr].should be_an_instance_of StringIO
     end
+
+    it 'should raise an ArgumentError when an invalid :type is used' do
+      expect {
+        Minicron.capture_output :type => :lol do
+          $stdout.write 'I like turtles!'
+          $stderr.write 'Quit yo jibber jabber, fool!'
+        end
+      }.to raise_error ArgumentError
+    end
   end
 end
