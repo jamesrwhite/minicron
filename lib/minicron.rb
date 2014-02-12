@@ -25,7 +25,7 @@ module Minicron
     when :both
       $stderr = $stdout = stdout = stderr = StringIO.new
     else
-      raise ArgumentError 'The type must be one of [stdout, stderr, both]'
+      raise ArgumentError, 'The type must be one of [stdout, stderr, both]'
     end
 
     # Yield to the code block
