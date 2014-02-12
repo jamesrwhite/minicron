@@ -82,15 +82,12 @@ module Minicron
       options[:verbose] ||= false
 
       # Record the start time of the command
-      start = Time.now.to_f
+      start = Time.now
 
       # Output some debug info
       if options[:verbose]
-        yield 'started running '.blue
-        yield "`#{command}`".yellow
-        yield " at #{start}".blue
-        yield "`#{command}`".yellow
-        yield " output..\n\n".blue
+        yield '[minicron]'.magenta
+        yield ' started running '.blue + "`#{command}`".yellow + " at #{start}\n\n".blue
       end
 
       # Spawn a process to run the command
@@ -113,17 +110,17 @@ module Minicron
         end
 
         # Record the time the command finished
-        finish = Time.now.to_f
+        finish = Time.now
 
         # Output some debug info
         if options[:verbose]
-          yield "\nfinished running ".green
-          yield "`#{command}`".yellow
-          yield " at #{start}\n".green
-          yield 'running '.green
-          yield "`#{command}`".yellow
-          yield " took #{finish - start}s\n".green
-          yield "and finished with an exit status code of #{exit_status}\n".green
+          yield "\n[minicron]".magenta
+          yield " finished running ".blue + "`#{command}`".yellow + " at #{start}\n".blue
+          yield '[minicron]'.magenta
+          yield ' running '.blue + "`#{command}`".yellow + " took #{finish - start}s\n".blue
+          yield '[minicron]'.magenta
+          yield " `#{command}`".yellow + " finished with an exit status of ".blue
+          yield exit_status == 0 ? "#{exit_status}\n".green : "#{exit_status}\n".red
         end
       end
     end
