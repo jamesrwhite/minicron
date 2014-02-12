@@ -6,7 +6,16 @@ require 'commander'
 include Commander::UI
 
 module Minicron
+  # @author James White <dev.jameswhite+minicron@gmail.com>
   class CLI
+    # Sets up an instance of commander and runs it based on the argv param
+    #
+    # @param argv [Array] an array of arguments passed to the cli
+    # @option options [Boolean] trace (false) whether or not to enable tracing
+    # @yieldparam output [String] output from the cli
+    # @raise [ArgumentError] if no arguments are passed to the run cli command
+    # i.e when the argv param is ['run']. A second option (the command to execute)
+    # should be present in the array
     def run argv, options = {}
       # Default the options
       options[:trace] ||= false
@@ -40,9 +49,9 @@ module Minicron
         c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: line"
 
         c.action do |args, opts|
-          # Do some validation on the arguments
+          # Check that exactly one argument has been passed
           if args.length != 1
-            raise ArgumentError.new('A command to run is required! See `minicron help run`')
+            raise ArgumentError.new('A valid command to run is required! See `minicron help run`')
           end
 
           # Default the mode to char
@@ -59,6 +68,14 @@ module Minicron
       cli.run!
     end
 
+    # Executes a command in a pseudo terminal and yields the output
+    #
+    # @param command [String] the command to execute e.g 'ls'
+    # @option options [String] mode ('line') the method to yield the
+    # command output. Either 'line' by line or 'char' by char.
+    # @option options [Boolean] verbose whether or not to output extra
+    # information for debugging purposes.
+    # @yieldparam output [String] output from the command execution
     def run_command command, options = {}
       # Default the options
       options[:mode] ||= 'line'
@@ -70,9 +87,9 @@ module Minicron
       # Output some debug info
       if options[:verbose]
         yield 'started running '.blue
-	yield "`#{command}`".yellow
+        yield "`#{command}`".yellow
         yield " at #{start}".blue
-	yield "`#{command}`".yellow
+        yield "`#{command}`".yellow
         yield " output..\n\n".blue
       end
 
