@@ -3,6 +3,18 @@ minicron [![Build Status](https://secure.travis-ci.org/jamesrwhite/minicron.png)
 
 minicron is a work in progress system to make it easier to more effectively manage and monitor cron jobs.
 
+Todo
+------
+
+- CLI
+  - Send data from CLI that runs commands to the 'hub'
+  - This will be via either WebSockets, a Message Queue or HTTP(s) - *yet to decided*
+  - Added configuration file/options to CLI, file most likely using [toml](https://github.com/jamesmoss/toml "toml")
+  - Further testing
+
+- Hub
+  - TODO - *todoception*
+
 Installation
 -------------
 
