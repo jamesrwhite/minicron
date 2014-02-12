@@ -1,4 +1,4 @@
-minicron [![Build Status](https://secure.travis-ci.org/jamesrwhite/minicron.png)](http://travis-ci.org/jamesrwhite/minicron) [![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.png?branch=master)](https://coveralls.io/r/jamesrwhite/minicron?branch=master) [![Dependency Status](https://gemnasium.com/jamesrwhite/minicron.png)](https://gemnasium.com/jamesrwhite/minicron)
+minicron [![Build Status](https://secure.travis-ci.org/jamesrwhite/minicron.png)](http://travis-ci.org/jamesrwhite/minicron) [![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.png)](https://coveralls.io/r/jamesrwhite/minicron?branch=master) [![Dependency Status](https://gemnasium.com/jamesrwhite/minicron.png)](https://gemnasium.com/jamesrwhite/minicron)
 =======
 
 minicron is a work in progress system to make it easier to more effectively manage and monitor cron jobs.
