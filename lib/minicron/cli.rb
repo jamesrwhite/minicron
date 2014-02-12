@@ -70,9 +70,9 @@ module Minicron
       # Output some debug info
       if options[:verbose]
         yield 'started running '.blue
-        yield "`#{options[:command]}`".yellow
+	yield "`#{command}`".yellow
         yield " at #{start}".blue
-        yield "`#{options[:command]}`".yellow
+	yield "`#{command}`".yellow
         yield " output..\n\n".blue
       end
 
