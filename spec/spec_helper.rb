@@ -1,12 +1,11 @@
 if ENV['CI'] && (!defined?(RUBY_ENGINE) || RUBY_ENGINE == 'ruby')
   require 'coveralls'
   Coveralls.wear!
-end
-
-require 'simplecov'
-
-SimpleCov.start do
-  add_filter '/spec/'
+else
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/spec/'
+  end
 end
 
 require 'rspec'
