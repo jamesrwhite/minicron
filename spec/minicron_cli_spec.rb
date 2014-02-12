@@ -39,6 +39,20 @@ describe Minicron::CLI do
     end
   end
 
+  describe '#run_command' do
+    it 'a one line command should result in 7 total line when in verbose mode' do
+      minicron = Minicron::CLI.new
+      minicron.disable_coloured_output!
+      output = ''
+
+      minicron.run_command 'echo 1', :verbose => true do |line|
+        output += line
+      end
+
+      output.split("\n").length.should eq 7
+    end
+  end
+
   describe '#coloured_output?' do
     it 'should return true when rainbow is enabled' do
       Rainbow.enabled = true
