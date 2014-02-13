@@ -10,10 +10,15 @@ Todo
   - Send data from CLI that runs commands to the 'hub'
   - This will be via either WebSockets, a Message Queue or HTTP(s) - *yet to decided*
   - Added configuration file/options to CLI, file most likely using [toml](https://github.com/jamesmoss/toml "toml")
-  - Further testing
+  - Config to allow where job output is to be read from, currently assumed to be STDOUT/STDERR (could be log files)?
 
 - Hub
-  - TODO - *todoception*
+  - The 'Hub' is a web interface to the minicron system and the central point where data is collected
+  - Collect data sent via CLI and store it in a db
+  - Display both realtime and historic data
+  - CRUD functionality for cron jobs via SSH
+  - Permissions support
+  - Alerting (email, sms and push notifications support)
 
 Installation
 -------------
