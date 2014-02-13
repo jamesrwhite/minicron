@@ -31,11 +31,39 @@
         <h1>
 <a name="minicron" class="anchor" href="#minicron"><span class="octicon octicon-link"></span></a>minicron</h1>
 
-<p><a href="http://travis-ci.org/jamesrwhite/minicron"><img src="https://secure.travis-ci.org/jamesrwhite/minicron.png" alt="Build Status"></a> <a href="https://gemnasium.com/jamesrwhite/minicron"><img src="https://gemnasium.com/jamesrwhite/minicron.png" alt="Dependency Status"></a></p>
+<p><a href="http://travis-ci.org/jamesrwhite/minicron"><img src="https://secure.travis-ci.org/jamesrwhite/minicron.png" alt="Build Status"></a> <a href="https://coveralls.io/r/jamesrwhite/minicron?branch=master"><img src="https://coveralls.io/repos/jamesrwhite/minicron/badge.png?derp" alt="Coverage Status"></a> <a href="https://gemnasium.com/jamesrwhite/minicron"><img src="https://gemnasium.com/jamesrwhite/minicron.png" alt="Dependency Status"></a></p>
 
 <p>minicron is a work in progress system to make it easier to more effectively manage and monitor cron jobs.</p>
 
 <h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>Todo</h2>
+
+<ul>
+<li>
+<p>CLI</p>
+
+<ul>
+<li>Send data from CLI that runs commands to the 'hub'</li>
+<li>This will be via either WebSockets, a Message Queue or HTTP(s) - <em>yet to decided</em>
+</li>
+<li>Added configuration file/options to CLI, file most likely using <a href="https://github.com/jamesmoss/toml" title="toml">toml</a>
+</li>
+<li>Config to allow where job output is to be read from, currently assumed to be STDOUT/STDERR (could be log files)?</li>
+</ul>
+</li>
+<li>
+<p>Hub</p>
+
+<ul>
+<li>The 'Hub' is a web interface to the minicron system and the central point where data is collected</li>
+<li>Collect data sent via CLI and store it in a db</li>
+<li>Display both realtime and historic data</li>
+<li>CRUD functionality for cron jobs via SSH</li>
+<li>Permissions support</li>
+<li>Alerting (email, sms and push notifications support)</li>
+</ul>
+</li>
+</ul><h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo and <code>rake install</code>.</p>
