@@ -7,7 +7,6 @@ require 'minicron/version'
 include Commander::UI
 
 module Minicron
-  # @author James White <dev.jameswhite+minicron@gmail.com>
   class CLI
     # Sets up an instance of commander and runs it based on the argv param
     #
@@ -57,7 +56,7 @@ module Minicron
           opts.default mode: 'line'
 
           # Execute the command and yield the output
-          run_command args.first, :mode => opts.mode, :verbose => opts.verbose do |output|
+          run_command(args.first, :mode => opts.mode, :verbose => opts.verbose) do |output|
             yield output
           end
         end
@@ -95,10 +94,7 @@ module Minicron
           # Loop until data is no longer being sent to stdout
           until stdout.eof?
             # One character at a time or one line at a time?
-            data = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
-
-            # Print it back out
-            yield data
+            yield options[:mode] == 'char' ? stdout.read(1) : stdout.readline
           end
         # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
         rescue Errno::EIO
