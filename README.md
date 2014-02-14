@@ -89,7 +89,7 @@ Contributing
 Code Style
 ----------
 
-Where possible I'm trying to follow [GitHub's Ruby Styleguide](https://github.com/styleguide/ruby "GitHub's Ruby Styleguide")
+Where possible I'm trying to follow [Ruby Community Styleguide](https://github.com/bbatsov/ruby-style-guide "Ruby Community Styleguide")
 
 License
 --------
