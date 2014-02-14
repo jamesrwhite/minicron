@@ -10,10 +10,15 @@ Todo
   - Send data from CLI that runs commands to the 'hub'
   - This will be via either WebSockets, a Message Queue or HTTP(s) - *yet to decided*
   - Added configuration file/options to CLI, file most likely using [toml](https://github.com/jamesmoss/toml "toml")
-  - Further testing
+  - Config to allow where job output is to be read from, currently assumed to be STDOUT/STDERR (could be log files)?
 
 - Hub
-  - TODO - *todoception*
+  - The 'Hub' is a web interface to the minicron system and the central point where data is collected
+  - Collect data sent via CLI and store it in a db
+  - Display both realtime and historic data
+  - CRUD functionality for cron jobs via SSH
+  - Permissions support
+  - Alerting (email, sms and push notifications support)
 
 Installation
 -------------
@@ -77,12 +82,14 @@ Requirements
 Contributing
 ------------
 
-I'm building minicron as a part of my final year project at University and as such cannot currently accept pull requests. Once the project is finished however (June 2014) this will most likely change. Feel free to submit feature requests via issues though.
+<del>I'm building minicron as a part of my final year project at University and as such cannot currently accept pull requests. Once the project is finished however (June 2014) this will most likely change. Feel free to submit feature requests via issues though.</del>
+
+*This might not be the case actually, will update when I know for sure.*
 
 Code Style
 ----------
 
-Where possible I'm trying to follow [GitHub's Ruby Styleguide](https://github.com/styleguide/ruby "GitHub's Ruby Styleguide")
+Where possible I'm trying to follow [Ruby Community Styleguide](https://github.com/bbatsov/ruby-style-guide "Ruby Community Styleguide")
 
 License
 --------
