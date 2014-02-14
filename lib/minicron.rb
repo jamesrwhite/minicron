@@ -1,6 +1,7 @@
 require 'stringio'
 require 'minicron/cli'
 
+# @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
   # Helper function to capture STDOUT and/or STDERR
   # adapted from http://stackoverflow.com/a/11349621/483271
@@ -28,7 +29,7 @@ module Minicron
       fail ArgumentError, 'The type must be one of [stdout, stderr, both]'
     end
 
-    # Yield to the code block
+    # Yield to the code block to do whatever it has to do
     begin
       yield
     # Whatever happens make sure we reset STDOUT/STDERR

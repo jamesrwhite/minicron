@@ -3,14 +3,18 @@
 require 'minicron'
 
 begin
-  Minicron.capture_output :type => :stderr do |stderr|
-    Minicron::CLI.new.run ARGV do |output|
+  # Capture any output from STDERR so we can handle it how we want to
+  Minicron.capture_output(:type => :stderr) do
+    # Run the CLI and pass it all arguments passed to us
+    Minicron::CLI.new.run(ARGV) do |output|
       print output
       STDOUT.flush
     end
   end
+# Handle ctrl-c any other nasty interruptions
 rescue Interrupt
   puts "\nExiting.."
+# Accept failure
 rescue Exception => e
-  p e
+  fail e
 end

@@ -3,13 +3,13 @@ require 'spec_helper'
 describe Minicron::CLI do
   describe '#run' do
     it 'should run a simple command and print the output to stdout' do
-      Minicron::CLI.new.run ['run', 'echo hello', '--trace'], :trace => true do |output|
+      Minicron::CLI.new.run(['run', 'echo hello', '--trace'], :trace => true) do |output|
         output.clean == 'hello'
       end
     end
 
     it 'should run a simple multi-line command and print the output to stdout' do
-      Minicron::CLI.new.run ['run', 'ls -l', '--trace'], :trace => true do |output|
+      Minicron::CLI.new.run(['run', 'ls -l', '--trace'], :trace => true) do |output|
         output.clean == `ls -l`.clean
       end
     end
@@ -17,7 +17,7 @@ describe Minicron::CLI do
     it 'should return an error when a non-existent command is run' do
       Minicron.capture_output :type => :stderr do
         expect do
-          Minicron::CLI.new.run ['lol'], :trace => true
+          Minicron::CLI.new.run(['lol'], :trace => true)
         end.to raise_error SystemExit
       end
     end
@@ -25,7 +25,7 @@ describe Minicron::CLI do
     it 'should raise SystemExit when tracing is disabled but passed as an option' do
       Minicron.capture_output :type => :stderr do
         expect do
-          Minicron::CLI.new.run ['run', 'echo 1', '--trace']
+          Minicron::CLI.new.run(['run', 'echo 1', '--trace'])
         end.to raise_error SystemExit
       end
     end
@@ -33,7 +33,7 @@ describe Minicron::CLI do
     it 'should raise ArgumentError when no argument is passed to the run action' do
       Minicron.capture_output :type => :stderr do
         expect do
-          Minicron::CLI.new.run ['run', '--trace'], :trace => true
+          Minicron::CLI.new.run(['run', '--trace'], :trace => true)
         end.to raise_error ArgumentError
       end
     end
@@ -45,7 +45,7 @@ describe Minicron::CLI do
       minicron.disable_coloured_output!
       output = ''
 
-      minicron.run_command 'echo 1', :verbose => true do |line|
+      minicron.run_command('echo 1', :verbose => true) do |line|
         output += line
       end
 
