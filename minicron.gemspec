@@ -21,8 +21,8 @@ Gem::Specification.new do |spec|
   spec.post_install_message  = 'Thanks for installing minicron!'
 
   spec.require_paths = ['lib']
-  spec.files         = ['lib/minicron.rb', 'lib/minicron/cli.rb', 'lib/minicron/version.rb']
-  spec.test_files    = spec.files.grep(%r{^(spec)/})
+  spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,spec}/**/*']
+  spec.test_files    = Dir['{spec}/**/*']
   spec.executables  << 'minicron'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
@@ -32,6 +32,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.1'
   spec.add_development_dependency 'rspec', '~> 2'
   spec.add_development_dependency 'simplecov', '~> 0.8'
-  spec.add_development_dependency 'yard', '~> 0.8'
-  spec.add_development_dependency 'rubocop', '~> 0.18'
 end

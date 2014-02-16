@@ -19,3 +19,6 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+
+# My random testing scripts
+testing
