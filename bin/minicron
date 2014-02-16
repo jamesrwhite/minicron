@@ -12,9 +12,10 @@ begin
     end
   end
 # Handle ctrl-c any other nasty interruptions
-rescue Interrupt
+rescue Interrupt, SignalException
   puts "\nExiting.."
 # Accept failure
 rescue Exception => e
-  fail e
+  $stderr.write("#{e}\n")
+  fail
 end
