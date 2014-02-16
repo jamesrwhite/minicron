@@ -162,9 +162,6 @@ module Minicron
           yield exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
         end
       end
-
-      # Ensure all messages are delivered
-      transport.ensure_delivery
     end
 
     # Whether or not coloured output of the rainbox gem is enabled, this is
