@@ -18,4 +18,6 @@ rescue Interrupt, SignalException
 rescue Exception => e
   $stderr.write("#{e}\n")
   fail
+ensure
+  Minicron::Transport::Server.stop!
 end
