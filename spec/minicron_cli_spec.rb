@@ -14,56 +14,68 @@ describe Minicron::CLI do
       end
     end
 
-    it 'should return an error when a non-existent command is run' do
-      Minicron.capture_output :type => :stderr do
-        expect do
-          Minicron::CLI.new.run(['lol'], :trace => true)
-        end.to raise_error SystemExit
+    context 'when a non-existent command is run' do
+      it 'should return an error' do
+        Minicron.capture_output :type => :stderr do
+          expect do
+            Minicron::CLI.new.run(['lol'], :trace => true)
+          end.to raise_error SystemExit
+        end
       end
     end
 
-    it 'should raise SystemExit when tracing is disabled but passed as an option' do
-      Minicron.capture_output :type => :stderr do
-        expect do
-          Minicron::CLI.new.run(['run', 'echo 1', '--trace'])
-        end.to raise_error SystemExit
+    context 'when tracing is disabled but passed as an option' do
+      it 'should raise SystemExit' do
+        Minicron.capture_output :type => :stderr do
+          expect do
+            Minicron::CLI.new.run(['run', 'echo 1', '--trace'])
+          end.to raise_error SystemExit
+        end
       end
     end
 
-    it 'should raise ArgumentError when no argument is passed to the run action' do
-      Minicron.capture_output :type => :stderr do
-        expect do
-          Minicron::CLI.new.run(['run', '--trace'], :trace => true)
-        end.to raise_error ArgumentError
+    context 'when no argument is passed to the run action' do
+      it 'should raise ArgumentError' do
+        Minicron.capture_output :type => :stderr do
+          expect do
+            Minicron::CLI.new.run(['run', '--trace'], :trace => true)
+          end.to raise_error ArgumentError
+        end
       end
     end
   end
 
   describe '#run_command' do
-    it 'a one line command should result in 7 total line when in verbose mode' do
-      minicron = Minicron::CLI.new
-      minicron.disable_coloured_output!
-      output = ''
+    context 'when in verbose mode' do
+      it 'a one line command should result in 7 total line' do
+        minicron = Minicron::CLI.new
+        minicron.disable_coloured_output!
+        output = ''
 
-      minicron.run_command('echo 1', :verbose => true) do |line|
-        output += line
+        minicron.run_command('echo 1', :verbose => true) do |line|
+          output += line[:output]
+        end
+
+        expect(output.split("\n").length).to eq 7
       end
-
-      output.split("\n").length.should eq 7
     end
   end
 
   describe '#coloured_output?' do
-    it 'should return true when rainbow is enabled' do
-      Rainbow.enabled = true
+    context 'when Rainbow is enabled' do
+      it 'should return true' do
+        Rainbow.enabled = true
 
-      Minicron::CLI.new.coloured_output?.should eq true
+        expect(Minicron::CLI.new.coloured_output?).to eq true
+      end
     end
 
-    it 'should return false when rainbow is disabled' do
-      Rainbow.enabled = false
+    context 'when Rainbow is disabled' do
+      it 'should return false' do
+        Rainbow.enabled = false
 
-      Minicron::CLI.new.coloured_output?.should eq false
+        expect(Minicron::CLI.new.coloured_output?).to eq false
+      end
     end
   end
 
@@ -72,8 +84,8 @@ describe Minicron::CLI do
       minicron = Minicron::CLI.new
       minicron.enable_coloured_output!
 
-      Rainbow.enabled.should eq true
-      minicron.coloured_output?.should eq true
+      expect(Rainbow.enabled).to eq true
+      expect(minicron.coloured_output?).to eq true
     end
   end
 
@@ -82,8 +94,8 @@ describe Minicron::CLI do
       minicron = Minicron::CLI.new
       minicron.disable_coloured_output!
 
-      Rainbow.enabled.should eq false
-      minicron.coloured_output?.should eq false
+      expect(Rainbow.enabled).to eq false
+      expect(minicron.coloured_output?).to eq false
     end
   end
 end
