@@ -5,18 +5,9 @@ Pull requests of all sizes are very much appreciated, below is a quick guide on 
 
 1. Fork the master branch of this repository
 
-2. Install a local copy of minicron like so:
+2. Install a local copy of minicron like so: ````bundle```` & ````rake install````
 
-````
-bundle
-rake install
-````
-
-3. Run the tests to be sure everything is working before you begin
-
-````
-rake spec
-````
+3. Run the tests to be sure everything is working before you begin like so: ````rake spec````
 
 4. Make your changes.
 
