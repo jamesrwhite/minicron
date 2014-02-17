@@ -37,7 +37,7 @@ module Minicron
     end
 
     def structured(type, output)
-      { :type => type, :data => output }
+      { :type => type, :output => output }
     end
 
     # Sets up an instance of commander and runs it based on the argv param
@@ -87,12 +87,12 @@ module Minicron
             # We need to handle the yielded output differently based on it's type
             case output[:type]
             when :status
-              transport.publish("job/#{job_id}/status", output[:data])
+              transport.publish("job/#{job_id}/status", output[:output])
             when :command
-              transport.publish("job/#{job_id}/output", output[:data])
+              transport.publish("job/#{job_id}/output", output[:output])
             end
 
-            yield output[:data] unless output[:type] == :status
+            yield output[:output] unless output[:type] == :status
           end
 
           # Block until all the messages have been sent
