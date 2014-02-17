@@ -36,6 +36,10 @@ module Minicron
       cli
     end
 
+    def structured(type, output)
+      { :type => type, :data => output }
+    end
+
     # Sets up an instance of commander and runs it based on the argv param
     #
     # @param argv [Array] an array of arguments passed to the cli
@@ -72,10 +76,27 @@ module Minicron
           # Default the mode to char
           opts.default mode: 'line'
 
+          # Get the Job ID
+          job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
+
+          # Get a transport instance so we can send data about the job
+          transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
+
           # Execute the command and yield the output
           run_command(args.first, :mode => opts.mode, :verbose => opts.verbose) do |output|
-            yield output
+            # We need to handle the yielded output differently based on it's type
+            case output[:type]
+            when :status
+              transport.publish("job/#{job_id}/status", output[:data])
+            when :command
+              transport.publish("job/#{job_id}/output", output[:data])
+            end
+
+            yield output[:data] unless output[:type] == :status
           end
+
+          # Block until all the messages have been sent
+          transport.ensure_delivery
         end
       end
 
@@ -106,25 +127,24 @@ module Minicron
       options[:mode] ||= 'line'
       options[:verbose] ||= false
 
-      # Get the Job ID
-      job_id = Minicron::Transport.get_job_id(command, `hostname -s`.strip)
-
-      # Get a transport instance so we can send data about the job
-      transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
-
       # Spawn a process to run the command
       PTY.spawn(command) do |stdout, stdin, pid|
         # Record the start time of the command
         start = Time.now
+        subtract_total = 0
+
+        # yield the start time
+        subtract = Time.now
+        yield structured :status, "START #{start}"
+        subtract_total += Time.now - subtract
 
         # Output some debug info
         if options[:verbose]
-          yield '[minicron]'.colour(:magenta)
-          yield ' started running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n\n".colour(:blue)
+          subtract = Time.now
+          yield structured :verbose, '[minicron]'.colour(:magenta)
+          yield structured :verbose, ' started running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n\n".colour(:blue)
+          subtract_total += Time.now - subtract
         end
-
-        # Transmit the job start time
-        transport.publish("job/#{job_id}/status", 'START')
 
         begin
           # Loop until data is no longer being sent to stdout
@@ -132,10 +152,9 @@ module Minicron
             # One character at a time or one line at a time?
             output = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
 
-            # Transmit the job output
-            transport.publish("job/#{job_id}/output", output)
-
-            yield output
+            subtract = Time.now
+            yield structured :command, output
+            subtract_total += Time.now - subtract
           end
         # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
         rescue Errno::EIO
@@ -146,20 +165,21 @@ module Minicron
         end
 
         # Record the time the command finished
-        finish = Time.now
+        finish = Time.now - subtract_total
 
-        # Transmit the job end time and exit status
-        transport.publish("job/#{job_id}/status", "FINISH #{exit_status}")
+        # yield the finish time and exit status
+        yield structured :status, "FINISH #{finish}"
+        yield structured :status, "EXIT #{exit_status}"
 
         # Output some debug info
         if options[:verbose]
-          yield "\n[minicron]".colour(:magenta)
-          yield ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
-          yield '[minicron]'.colour(:magenta)
-          yield ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
-          yield '[minicron]'.colour(:magenta)
-          yield " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
-          yield exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
+          yield structured :verbose, "\n[minicron]".colour(:magenta)
+          yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
+          yield structured :verbose, '[minicron]'.colour(:magenta)
+          yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
+          yield structured :verbose, '[minicron]'.colour(:magenta)
+          yield structured :verbose, " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
+          yield structured :verbose, exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
         end
       end
     end
