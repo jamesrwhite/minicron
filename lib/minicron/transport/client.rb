@@ -23,7 +23,7 @@ module Minicron
         # Set up the data to send to faye
         data = {:channel => "/#{channel}", :data => {
           :ts => Time.now.to_f,
-          :data => message
+          :output => message
         }}
 
         # Make sure eventmachine is running
