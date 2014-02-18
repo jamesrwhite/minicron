@@ -74,7 +74,7 @@ module Minicron
           end
 
           # Default the mode to char
-          opts.default mode: 'line'
+          opts.default :mode => 'line'
 
           # Get the Job ID
           job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
@@ -103,10 +103,19 @@ module Minicron
       cli.command :server do |c|
         c.syntax = 'minicron server start'
         c.description = 'Starts the minicron server.'
+        c.option '--host STRING', String, "The host for the server to listen on. Default: 127.0.0.1"
+        c.option '--port STRING', Integer, "How port for the server to listed on. Default: 9292"
+        c.option '--path STRING', String, "The path on the host. Default: /faye"
 
         c.action do |args, opts|
+          # Set the option defaults
+          opts.default :host => '127.0.0.1'
+          opts.default :port => 9292
+          opts.default :path => '/faye'
+
           # Start the server!
-          Minicron::Transport::Server.start!('127.0.0.1', 9292, '/faye')
+          server = Minicron::Transport::Server.new
+          server.start!(opts.host, opts.port, opts.path)
         end
       end
 
