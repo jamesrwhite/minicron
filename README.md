@@ -82,9 +82,7 @@ Requirements
 Contributing
 ------------
 
-<del>I'm building minicron as a part of my final year project at University and as such cannot currently accept pull requests. Once the project is finished however (June 2014) this will most likely change. Feel free to submit feature requests via issues though.</del>
-
-*This might not be the case actually, will update when I know for sure.*
+Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md "CONTRIBUTING.md") for more info.
 
 Code Style
 ----------
