@@ -81,6 +81,7 @@ module Minicron
 
           # Get a transport instance so we can send data about the job
           transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
+          transport.ensure_em_running
 
           # Execute the command and yield the output
           run_command(args.first, :mode => opts.mode, :verbose => opts.verbose) do |output|
