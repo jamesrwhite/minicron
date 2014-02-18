@@ -15,10 +15,22 @@ describe Minicron::Transport::Client do
 
   describe '#ensure_em_running' do
     context 'when eventmachine is not running' do
-      it 'should start eventmachine'
+      it 'should start eventmachine' do
+        EM.stub(:reactor_running?).and_return(false, true)
+        EM.stub(:run)
+        EM.should_receive(:reactor_running?).twice
+        EM.should_receive(:run).once
+
+        client.new('http://127.0.0.1/test').ensure_em_running
+      end
     end
     context 'when eventmachine is running' do
-      it 'should not start eventmachine'
+      it 'should not start eventmachine' do
+        EM.stub(:reactor_running?).and_return true
+        EM.should_receive(:reactor_running?).twice
+
+        client.new('http://127.0.0.1/test').ensure_em_running
+      end
     end
   end
 
@@ -47,28 +59,18 @@ describe Minicron::Transport::Client do
   end
 
   describe '#ensure_delivery' do
-    before :each do
-      eventmachine.stub(:run)
-      eventmachine.stub(:stop)
-      eventmachine.stub(:reactor_running?).and_return true
+    before(:each) { EM.stub(:stop) }
+    it 'should block until the queue hash is empty and return nil' do
+      client_instance = client.new('http://127.0.0.1/test')
+      client_instance.stub(:queue).and_return({ :a => 1, :b => 2 }, { :b => 2 }, {})
+
+      client_instance.ensure_delivery
+      expect(client_instance.queue.length).to eq 0
     end
 
-    # TODO: Not convinced this test works correctly but it's almost
-    # not worth testing any way as it's such a simple method
-    it 'should block until the queue hash is empty and return nil' #do
-    #   client_instance = client.new('http://127.0.0.1/test')
-    #   client_instance.queue = { :test => 1, :hello => 'world' }
-
-    #   Thread.new { expect(client_instance.ensure_delivery).to eq true }
-
-    #   client_instance.queue.delete(:test)
-    #   sleep(0.05)
-    #   client_instance.queue.delete(:hello)
-    # end
-
-    it 'should stop eventmachine' #do
-    #   eventmachine.should_receive(:stop)
-    #   client.new('http://127.0.0.1/test').ensure_delivery
-    # end
+    it 'should stop eventmachine' do
+      EM.should_receive(:stop)
+      client.new('http://127.0.0.1/test').ensure_delivery
+    end
   end
 end

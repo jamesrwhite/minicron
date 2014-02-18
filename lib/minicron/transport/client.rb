@@ -38,7 +38,7 @@ module Minicron
         time = Time.now.to_f
 
         # Put the request in the queue
-        @queue["#{req.to_s}@#{time}"] = req
+        queue["#{req.to_s}@#{time}"] = req
 
         # Did the request succeed? If so remove it from the queue
         req.callback do
@@ -48,7 +48,7 @@ module Minicron
             :body => req.response
           }
 
-          @queue.delete("#{req.to_s}@#{time}")
+          queue.delete("#{req.to_s}@#{time}")
         end
 
         # If not  output the error message
@@ -60,7 +60,7 @@ module Minicron
 
       def ensure_delivery
         # Keep waiting until the queue is empty but only if we need to
-        sleep 0.05 until @queue.length == 0 if @queue.length > 0
+        sleep 0.05 until queue.length == 0 if queue.length > 0
 
         # Stop eventmachine now we're done
         EM.stop
