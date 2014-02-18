@@ -4,9 +4,14 @@ require 'em-http-request'
 module Minicron
   module Transport
     class Client
+      attr_accessor :host
+      attr_accessor :queue
+      attr_accessor :responses
+
       def initialize(host)
         @host = URI.parse(host)
         @queue = {}
+        @responses = {}
 
         # Start EM early to avoid skewing the command timings
         ensure_em_running
@@ -40,6 +45,12 @@ module Minicron
 
         # Did the request succeed? If so remove it from the queue
         req.callback do
+          @responses = {
+            :status => req.response_header.status,
+            :header => req.response_header,
+            :body => req.response
+          }
+
           @queue.delete("#{req.to_s}@#{time}")
         end
 
@@ -51,9 +62,13 @@ module Minicron
       end
 
       def ensure_delivery
-        until @queue.length == 0
-          sleep 0.05
-        end
+        # Keep waiting until the queue is empty but only if we need to
+        sleep 0.05 until @queue.length == 0 if @queue.length > 0
+
+        # Stop eventmachine now we're done
+        EM.stop
+
+        true
       end
     end
   end
