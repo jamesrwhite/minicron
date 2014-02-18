@@ -3,23 +3,22 @@ require 'webmock/rspec'
 
 describe Minicron::Transport::Client do
   let(:client) { Minicron::Transport::Client }
-  let(:eventmachine) { EM }
+  let(:eventmachine) { double('EM') }
 
   describe '#initialize' do
-    before :each do
-      eventmachine.stub(:run)
-      eventmachine.stub(:stop)
-      eventmachine.stub(:reactor_running?)
-    end
-
     it 'should set the host and queue instance variable' do
-      eventmachine.should_receive(:reactor_running?).and_return false
-      eventmachine.should_receive(:run)
-      eventmachine.should_receive(:reactor_running?).and_return true
-
       client_instance = client.new('http://127.0.0.1/test')
       expect(client_instance.host).to eq URI.parse('http://127.0.0.1/test')
       expect(client_instance.queue).to eq({})
+    end
+  end
+
+  describe '#ensure_em_running' do
+    context 'when eventmachine is not running' do
+      it 'should start eventmachine'
+    end
+    context 'when eventmachine is running' do
+      it 'should not start eventmachine'
     end
   end
 

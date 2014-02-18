@@ -12,9 +12,6 @@ module Minicron
         @host = URI.parse(host)
         @queue = {}
         @responses = {}
-
-        # Start EM early to avoid skewing the command timings
-        ensure_em_running
       end
 
       def ensure_em_running
