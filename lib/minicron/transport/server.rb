@@ -5,15 +5,17 @@ require 'rack'
 module Minicron
   module Transport
     class Server
-      def self.start!(host, port, path)
-        return if running?
+      attr_accessor :server
+
+      def start!(host, port, path)
+        return false if running?
 
         # Load the Faye thin adapter, this needs to happen first
         Faye::WebSocket.load_adapter('thin')
 
         # Set up our Faye rack app
         faye = Faye::RackAdapter.new(
-          :mount => '', # This is mounted to /faye
+          :mount => '', # This is mounted to /#{path}
           :timeout => 25
         )
 
@@ -38,8 +40,7 @@ module Minicron
         end
 
         # Start the thin server
-        # TODO: make host, port and path configurable
-        @@server = Thin::Server.new(host, port) do
+        server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions
 
@@ -48,19 +49,21 @@ module Minicron
           end
         end
 
-        @@server.start
+        server.start
+        true
       end
 
-      def self.stop!
-        return unless running?
+      def stop!
+        return false unless running? && server != nil
 
-        @@server.stop
+        server.stop
+        true
       end
 
-      def self.running?
-        return false unless defined? @@server
+      def running?
+        return false unless server != nil
 
-        @@server.running?
+        server.running?
       end
     end
   end

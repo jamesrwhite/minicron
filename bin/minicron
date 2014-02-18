@@ -19,5 +19,6 @@ rescue Exception => e
   $stderr.write("#{e}\n")
   fail
 ensure
-  Minicron::Transport::Server.stop!
+  # TODO: figure out how to replace this now we need to an instance to call stop!
+  # Minicron::Transport::Server.stop!
 end
