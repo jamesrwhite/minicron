@@ -9,7 +9,7 @@ describe Minicron::Transport::Client do
     before :each do
       eventmachine.stub(:run)
       eventmachine.stub(:stop)
-      eventmachine.stub(:reactor_running?).and_return false
+      eventmachine.stub(:reactor_running?)
     end
 
     it 'should set the host and queue instance variable' do
@@ -56,20 +56,20 @@ describe Minicron::Transport::Client do
 
     # TODO: Not convinced this test works correctly but it's almost
     # not worth testing any way as it's such a simple method
-    it 'should block until the queue hash is empty and return nil' do
-      client_instance = client.new('http://127.0.0.1/test')
-      client_instance.queue = { :test => 1, :hello => 'world' }
+    it 'should block until the queue hash is empty and return nil' #do
+    #   client_instance = client.new('http://127.0.0.1/test')
+    #   client_instance.queue = { :test => 1, :hello => 'world' }
 
-      Thread.new { expect(client_instance.ensure_delivery).to eq true }
+    #   Thread.new { expect(client_instance.ensure_delivery).to eq true }
 
-      client_instance.queue.delete(:test)
-      sleep(0.05)
-      client_instance.queue.delete(:hello)
-    end
+    #   client_instance.queue.delete(:test)
+    #   sleep(0.05)
+    #   client_instance.queue.delete(:hello)
+    # end
 
-    it 'should stop eventmachine' do
-      eventmachine.should_receive(:stop)
-      client.new('http://127.0.0.1/test').ensure_delivery
-    end
+    it 'should stop eventmachine' #do
+    #   eventmachine.should_receive(:stop)
+    #   client.new('http://127.0.0.1/test').ensure_delivery
+    # end
   end
 end
