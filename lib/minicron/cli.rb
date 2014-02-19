@@ -66,6 +66,7 @@ module Minicron
         c.syntax = "minicron run 'command -option value'"
         c.description = 'Runs the command passed as an argument.'
         c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: line"
+        c.option '--dry-run', 'Run the command without sending the output to the server'
 
         c.action do |args, opts|
           # Check that exactly one argument has been passed
@@ -76,28 +77,30 @@ module Minicron
           # Default the mode to char
           opts.default :mode => 'line'
 
-          # Get the Job ID
-          job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
+          unless opts.dry_run
+            # Get the Job ID
+            job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
 
-          # Get a transport instance so we can send data about the job
-          transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
-          transport.ensure_em_running
+            # Get a transport instance so we can send data about the job
+            transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
+            transport.ensure_em_running
+          end
 
           # Execute the command and yield the output
           run_command(args.first, :mode => opts.mode, :verbose => opts.verbose) do |output|
             # We need to handle the yielded output differently based on it's type
             case output[:type]
             when :status
-              transport.publish("job/#{job_id}/status", output[:output])
+              transport.publish("job/#{job_id}/status", output[:output]) unless opts.dry_run
             when :command
-              transport.publish("job/#{job_id}/output", output[:output])
+              transport.publish("job/#{job_id}/output", output[:output]) unless opts.dry_run
             end
 
             yield output[:output] unless output[:type] == :status
           end
 
           # Block until all the messages have been sent
-          transport.ensure_delivery
+          transport.ensure_delivery unless opts.dry_run
         end
       end
 
