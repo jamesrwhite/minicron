@@ -31,7 +31,10 @@ module Minicron
       options[:trace] ? cli.always_trace! : cli.never_trace!
 
       # Add a global option for verbose mode
-      cli.global_option '--verbose', 'Turn on verbose mode'
+      cli.global_option '-V', '--verbose', "Turn on verbose mode. Default: #{Minicron.config[:cli][:verbose]}"
+
+      # Add a global option for passing the path to a config file
+      cli.global_option '-c', '--config FILE', 'Set the config file to use'
 
       cli
     end
@@ -52,7 +55,7 @@ module Minicron
       # Default the options
       options[:trace] ||= false
 
-      # replace ARGV with the contents of arv to aid testability
+      # replace ARGV with the contents of argv to aid testability
       ARGV.replace argv
 
       # Get an instance of commander
@@ -65,8 +68,8 @@ module Minicron
       cli.command :run do |c|
         c.syntax = "minicron run 'command -option value'"
         c.description = 'Runs the command passed as an argument.'
-        c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: line"
-        c.option '--dry-run', 'Run the command without sending the output to the server'
+        c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config[:cli][:mode]}"
+        c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config[:cli][:dry_run]}"
 
         c.action do |args, opts|
           # Check that exactly one argument has been passed
@@ -74,8 +77,16 @@ module Minicron
             fail ArgumentError, 'A valid command to run is required! See `minicron help run`'
           end
 
-          # Default the mode to char
-          opts.default :mode => 'line'
+          # Parse the cli options
+          Minicron.parse_cli_config(
+            :global => {
+              :verbose => opts.verbose
+            },
+            :cli => {
+              :mode => opts.mode,
+              :dry_run => opts.dry_run
+            }
+          )
 
           unless opts.dry_run
             # Get the Job ID
@@ -87,20 +98,20 @@ module Minicron
           end
 
           # Execute the command and yield the output
-          run_command(args.first, :mode => opts.mode, :verbose => opts.verbose) do |output|
+          run_command(args.first, :mode => Minicron.config[:cli][:mode], :verbose => Minicron.config[:global][:verbose]) do |output|
             # We need to handle the yielded output differently based on it's type
             case output[:type]
             when :status
-              transport.publish("job/#{job_id}/status", output[:output]) unless opts.dry_run
+              transport.publish("job/#{job_id}/status", output[:output]) unless Minicron.config[:cli][:dry_run]
             when :command
-              transport.publish("job/#{job_id}/output", output[:output]) unless opts.dry_run
+              transport.publish("job/#{job_id}/output", output[:output]) unless Minicron.config[:cli][:dry_run]
             end
 
             yield output[:output] unless output[:type] == :status
           end
 
           # Block until all the messages have been sent
-          transport.ensure_delivery unless opts.dry_run
+          transport.ensure_delivery unless Minicron.config[:cli][:dry_run]
         end
       end
 
@@ -112,14 +123,25 @@ module Minicron
         c.option '--path STRING', String, "The path on the host. Default: /faye"
 
         c.action do |args, opts|
-          # Set the option defaults
-          opts.default :host => '127.0.0.1'
-          opts.default :port => 9292
-          opts.default :path => '/faye'
+          # Parse the cli options
+          Minicron.parse_cli_config(
+            :global => {
+              :verbose => opts.verbose
+            },
+            :server => {
+              :host => opts.host,
+              :port => opts.port,
+              :path => opts.path
+            }
+          )
 
           # Start the server!
           server = Minicron::Transport::Server.new
-          server.start!(opts.host, opts.port, opts.path)
+          server.start!(
+            Minicron.config[:server][:host],
+            Minicron.config[:server][:port],
+            Minicron.config[:server][:path]
+          )
         end
       end
 

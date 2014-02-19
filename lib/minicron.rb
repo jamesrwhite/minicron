@@ -3,6 +3,36 @@ require 'minicron/cli'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
+  # Default configuration, this can be overriden
+  @config = {
+    :global => {
+      :verbose => false
+    },
+    :server => {
+      :host => '127.0.0.1',
+      :port => 9292,
+      :path => '/faye'
+    },
+    :cli => {
+      :mode => :line,
+      :dry_run => false
+    }
+  }
+
+  class << self
+    attr_accessor :config
+  end
+
+  def self.parse_cli_config(options = {})
+    options.each do |type, _|
+      options[type].each do |key, value|
+        if value
+          @config[type][key] = value
+        end
+      end
+    end
+  end
+
   # Helper function to capture STDOUT and/or STDERR
   # adapted from http://stackoverflow.com/a/11349621/483271
   #
