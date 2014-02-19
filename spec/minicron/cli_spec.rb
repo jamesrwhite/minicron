@@ -17,62 +17,68 @@ describe Minicron::CLI do
   end
 
   describe '#run' do
-    it 'should run a simple command and print the output to stdout' #do
-    #   Minicron::CLI.new.run(['run', 'echo hello', '--trace'], :trace => true) do |output|
-    #     expect(output.clean).to eq 'hello'
-    #   end
-    # end
+    context 'when in --dry-run mode' do
+      it 'should run a simple command and print the output to stdout' do
+        Minicron::CLI.new.run(['run', 'echo hello', '--trace', '--dry-run'], :trace => true) do |output|
+          expect(output.clean).to eq 'hello'
+        end
+      end
 
-    it 'should run a simple multi-line command and print the output to stdout' #do
-    #   Minicron::CLI.new.run(['run', 'ls -l', '--trace'], :trace => true) do |output|
-    #     expect(output.clean).to eq `ls -l`.clean
-    #   end
-    # end
+      it 'should run a simple multi-line command and print the output to stdout' do
+        command_output = ''
 
-    context 'when a non-existent command is run' do
-      it 'should return an error' #do
-    #     Minicron.capture_output :type => :stderr do
-    #       expect do
-    #         Minicron::CLI.new.run(['lol'], :trace => true)
-    #       end.to raise_error SystemExit
-    #     end
-    #   end
-    end
+        Minicron::CLI.new.run(['run', 'echo "hello\nworld"', '--trace', '--dry-run'], :trace => true) do |output|
+          command_output += output
+        end
 
-    context 'when tracing is disabled but passed as an option' do
-      it 'should raise SystemExit' #do
-    #     Minicron.capture_output :type => :stderr do
-    #       expect do
-    #         Minicron::CLI.new.run(['run', 'echo 1', '--trace'])
-    #       end.to raise_error SystemExit
-    #     end
-    #   end
-    end
+        expect(command_output.clean).to eq `echo "hello\nworld"`.clean
+      end
 
-    context 'when no argument is passed to the run action' do
-      it 'should raise ArgumentError' #do
-    #     Minicron.capture_output :type => :stderr do
-    #       expect do
-    #         Minicron::CLI.new.run(['run', '--trace'], :trace => true)
-    #       end.to raise_error ArgumentError
-    #     end
-    #   end
+      context 'when a non-existent command is run' do
+        it 'should return an error' do
+          Minicron.capture_output :type => :stderr do
+            expect do
+              Minicron::CLI.new.run(['lol'], :trace => true)
+            end.to raise_error SystemExit
+          end
+        end
+      end
+
+      context 'when tracing is disabled but passed as an option' do
+        it 'should raise SystemExit' do
+          Minicron.capture_output :type => :stderr do
+            expect do
+              Minicron::CLI.new.run(['run', 'echo 1', '--trace', '--dry-run'])
+            end.to raise_error SystemExit
+          end
+        end
+      end
+
+      context 'when no argument is passed to the run action' do
+        it 'should raise ArgumentError' do
+          Minicron.capture_output :type => :stderr do
+            expect do
+              Minicron::CLI.new.run(['run', '--trace', '--dry-run'], :trace => true)
+            end.to raise_error ArgumentError
+          end
+        end
+      end
     end
   end
 
   describe '#run_command' do
     context 'when in verbose mode' do
-      it 'a one line command should result in 7 total line' #do
-    #     minicron = Minicron::CLI.new
-    #     minicron.disable_coloured_output!
-    #     output = ''
+      it 'a one line command should result in 7 total line' do
+        minicron = Minicron::CLI.new
+        minicron.disable_coloured_output!
+        output = ''
 
-    #     minicron.run_command('echo 1', :verbose => true) do |line|
-    #       output += line[:output]
-    #     end
+        minicron.run_command('echo 1', :verbose => true) do |line|
+          output += line[:output]
+        end
 
-    #     expect(output.split("\n").length).to eq 7
-    #   end
+        expect(output.split("\n").length).to eq 7
+      end
     end
   end
 
