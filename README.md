@@ -69,7 +69,7 @@ Requirements
 
 #### Ruby
 - MRI
-  - 1.9.2 and above (tested on 1.9.2, 1.9.3, 2.0.0, 2.1.0 and HEAD)
+  - 1.9.2 and above (tested on 1.9.2, 1.9.3, 2.0.0, 2.1.0)
 - <del>Rubinius</del>
   - <del>Travis builds are run on the latest release</del> *awaiting bug fix*
 - JRuby
