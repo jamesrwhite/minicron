@@ -53,6 +53,10 @@ Running ````minicron```` with no arguments is an alias to running ````minicron h
 
 Like many command line programs minicron will show it's version number when the global options ````-v```` or ````--version```` are passed.
 
+#### Configuration
+
+Many configuration options can be passed in manually but you can also pass a file path to the ````--config```` global option. The file is expected to be in the [toml](https://github.com/mojombo/toml "toml") format. The default options are specified in the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml "default.config.toml") file. Options specified via the command line will take precedence over those taken from a config file.
+
 Documentation
 -------------
 
