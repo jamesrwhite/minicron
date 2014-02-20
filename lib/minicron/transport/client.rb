@@ -36,8 +36,8 @@ module Minicron
         # Make the request
         req = EventMachine::HttpRequest.new(
           @host,
-          Minicron.config['server']['connect_timeout'],
-          Minicron.config['server']['inactivity_timeout']
+          :connect_timeout => Minicron.config['server']['connect_timeout'],
+          :inactivity_timeout => Minicron.config['server']['inactivity_timeout']
         ).post(:body => body)
 
         # Generate an id for the request
