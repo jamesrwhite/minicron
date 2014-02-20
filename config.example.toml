@@ -1,0 +1,16 @@
+# Example config file
+
+# Global options
+[global]
+verbose = false
+
+# Server options
+[server]
+host = "127.0.0.1"
+port = 9292
+path = "/faye"
+
+# CLI options
+[cli]
+mode = "line"
+dry_run = false

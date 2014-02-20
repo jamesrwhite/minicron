@@ -1,3 +1,4 @@
+require 'toml'
 require 'stringio'
 require 'minicron/cli'
 
@@ -5,17 +6,17 @@ require 'minicron/cli'
 module Minicron
   # Default configuration, this can be overriden
   @config = {
-    :global => {
-      :verbose => false
+    'global' => {
+      'verbose' => false
     },
-    :server => {
-      :host => '127.0.0.1',
-      :port => 9292,
-      :path => '/faye'
+    'server' => {
+      'host' => '127.0.0.1',
+      'port' => 9292,
+      'path' => '/faye'
     },
-    :cli => {
-      :mode => :line,
-      :dry_run => false
+    'cli' => {
+      'mode' => 'line',
+      'dry_run' => false
     }
   }
 
@@ -23,6 +24,21 @@ module Minicron
     attr_accessor :config
   end
 
+  # Parse the given config file and update the config hash
+  #
+  # @param file_path [String]
+  def self.parse_file_config(file_path)
+    begin
+      @config = TOML.load_file(file_path)
+    rescue TOML::ParseError
+      raise Exception.new("An error occured parsing the config file '#{file_path}', please check it exists and uses valid TOML syntax.")
+    end
+  end
+
+  # Parses the config options from the cli
+  # @option options [Hash] global global options
+  # @option options [Hash] server server options
+  # @option options [Hash] cli cli options
   def self.parse_cli_config(options = {})
     options.each do |type, _|
       options[type].each do |key, value|

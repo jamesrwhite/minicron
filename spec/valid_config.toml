@@ -1,0 +1,16 @@
+# Test valid config file
+
+# Global options
+[global]
+verbose = true
+
+# Server options
+[server]
+host = "127.0.0.1"
+port = 9292
+path = "/faye"
+
+# CLI options
+[cli]
+mode = "line"
+dry_run = false
