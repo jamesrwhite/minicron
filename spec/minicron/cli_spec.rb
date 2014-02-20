@@ -68,6 +68,54 @@ describe Minicron::CLI do
         end
       end
     end
+
+    context 'when in --dry-run mode with a valid --config file passed' do
+      it 'should run a simple command and print the output to stdout' do
+        Minicron::CLI.new.run(['run', 'echo hello', '--trace', '--dry-run', '--config', './default.config.toml'], :trace => true) do |output|
+          expect(output.clean).to eq 'hello'
+        end
+      end
+
+      it 'should run a simple multi-line command and print the output to stdout' do
+        command_output = ''
+
+        Minicron::CLI.new.run(['run', 'echo "hello\nworld"', '--trace', '--dry-run', '--config', './default.config.toml'], :trace => true) do |output|
+          command_output += output
+        end
+
+        expect(command_output.clean).to eq `echo "hello\nworld"`.clean
+      end
+
+      context 'when a non-existent command is run' do
+        it 'should return an error' do
+          Minicron.capture_output :type => :stderr do
+            expect do
+              Minicron::CLI.new.run(['lol'], :trace => true)
+            end.to raise_error SystemExit
+          end
+        end
+      end
+
+      context 'when tracing is disabled but passed as an option' do
+        it 'should raise SystemExit' do
+          Minicron.capture_output :type => :stderr do
+            expect do
+              Minicron::CLI.new.run(['run', 'echo 1', '--trace', '--dry-run', '--config', './default.config.toml'])
+            end.to raise_error SystemExit
+          end
+        end
+      end
+
+      context 'when no argument is passed to the run action' do
+        it 'should raise ArgumentError' do
+          Minicron.capture_output :type => :stderr do
+            expect do
+              Minicron::CLI.new.run(['run', '--trace', '--dry-run', '--config', './default.config.toml'], :trace => true)
+            end.to raise_error ArgumentError
+          end
+        end
+      end
+    end
   end
 
   describe '#run_command' do
