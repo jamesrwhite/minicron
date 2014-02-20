@@ -12,7 +12,9 @@ module Minicron
     'server' => {
       'host' => '127.0.0.1',
       'port' => 9292,
-      'path' => '/faye'
+      'path' => '/faye',
+      'connect_timeout' => 5,
+      'inactivity_timeout' => 5
     },
     'cli' => {
       'mode' => 'line',

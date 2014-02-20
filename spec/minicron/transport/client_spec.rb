@@ -8,7 +8,7 @@ describe Minicron::Transport::Client do
   describe '#initialize' do
     it 'should set the host and queue instance variable' do
       client_instance = client.new('http://127.0.0.1/test')
-      expect(client_instance.host).to eq URI.parse('http://127.0.0.1/test')
+      expect(client_instance.host).to eq 'http://127.0.0.1/test'
       expect(client_instance.queue).to eq({})
     end
   end
