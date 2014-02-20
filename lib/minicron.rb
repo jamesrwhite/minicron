@@ -4,6 +4,8 @@ require 'minicron/cli'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
+  DEFAULT_CONFIG_FILE = '/etc/minicron.toml'
+
   # Default configuration, this can be overriden
   @config = {
     'global' => {
@@ -30,10 +32,19 @@ module Minicron
   #
   # @param file_path [String]
   def self.parse_file_config(file_path)
+    file_path ||= DEFAULT_CONFIG_FILE
+
     begin
       @config = TOML.load_file(file_path)
+    rescue Errno::ENOENT
+      # Fail if the file doesn't exist unless it's the default config file
+      if file_path != DEFAULT_CONFIG_FILE
+        raise Exception.new("Unable to the load the file '#{file_path}', are you sure it exists?")
+      end
+    rescue Errno::EACCES
+      raise Exception.new("Unable to the readthe file '#{file_path}', check it has the right permissions.")
     rescue TOML::ParseError
-      raise Exception.new("An error occured parsing the config file '#{file_path}', please check it exists and uses valid TOML syntax.")
+      raise Exception.new("An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax.")
     end
   end
 
