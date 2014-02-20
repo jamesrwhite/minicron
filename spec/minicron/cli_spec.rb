@@ -17,6 +17,10 @@ describe Minicron::CLI do
   end
 
   describe '#run' do
+    before :each do
+      Minicron.parse_file_config('./default.config.toml')
+    end
+
     context 'when in --dry-run mode' do
       it 'should run a simple command and print the output to stdout' do
         Minicron::CLI.new.run(['run', 'echo hello', '--trace', '--dry-run'], :trace => true) do |output|
