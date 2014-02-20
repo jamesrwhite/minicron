@@ -92,5 +92,13 @@ describe Minicron do
         end.to raise_error Exception
       end
     end
+
+    context 'when a non existent toml file is passed' do
+      it 'should update the config class variable with the toml file config' do
+        expect do
+          Minicron.parse_file_config('./nowhere/minicron.toml')
+        end.to raise_error Exception
+      end
+    end
   end
 end
