@@ -8,17 +8,25 @@ module Minicron
       attr_accessor :queue
       attr_accessor :responses
 
+      # Instantiate a new instance of the client
+      #
+      # @param host [String] The host to be communicated with
       def initialize(host)
         @host = URI.parse(host)
         @queue = {}
         @responses = {}
       end
 
+      # Starts EventMachine in a new thread if it isn't already running
       def ensure_em_running
         Thread.new { EM.run } unless EM.reactor_running?
         sleep 0.1 until EM.reactor_running?
       end
 
+      # Publishes a message on the given channel to the server
+      #
+      # @param channel [String]
+      # @param message [String]
       def publish(channel, message)
         # Set up the data to send to faye
         data = {:channel => "/#{channel}", :data => {
@@ -58,6 +66,7 @@ module Minicron
         end
       end
 
+      # Blocks until all messages in the sending queue have completed
       def ensure_delivery
         # Keep waiting until the queue is empty but only if we need to
         sleep 0.05 until queue.length == 0 if queue.length > 0
