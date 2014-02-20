@@ -31,14 +31,45 @@ module Minicron
       options[:trace] ? cli.always_trace! : cli.never_trace!
 
       # Add a global option for verbose mode
-      cli.global_option '-V', '--verbose', "Turn on verbose mode. Default: #{Minicron.config[:cli][:verbose]}"
+      cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['cli']['verbose']}"
 
       # Add a global option for passing the path to a config file
-      cli.global_option '-c', '--config FILE', 'Set the config file to use'
+      cli.global_option '--config FILE', 'Set the config file to use'
 
       cli
     end
 
+    # Function to the parse the config of the options passed to commands
+    #
+    # @param opts [Hash] The Commander provided options hash
+    def parse_config(opts)
+      # Parse the --config file options if it was passed
+      if opts.config
+        Minicron.parse_file_config(opts.config)
+      end
+
+      # Parse the cli options
+      Minicron.parse_cli_config(
+        'global' => {
+          'verbose' => opts.verbose
+        },
+        'cli' => {
+          'mode' => opts.mode,
+          'dry_run' => opts.dry_run
+        },
+        'server' => {
+          'host' => opts.host,
+          'port' => opts.port,
+          'path' => opts.path
+        }
+      )
+    end
+
+    # Used as a helper for yielding command output, returns it in a structured hash
+    #
+    # @param type [Symbol] The type of command output, currently one of :status, :command and :verbose
+    # @param output [String]
+    # @return [Hash]
     def structured(type, output)
       { :type => type, :output => output }
     end
@@ -56,7 +87,7 @@ module Minicron
       options[:trace] ||= false
 
       # replace ARGV with the contents of argv to aid testability
-      ARGV.replace argv
+      ARGV.replace(argv)
 
       # Get an instance of commander
       cli = Commander::Runner.new
@@ -64,12 +95,12 @@ module Minicron
       # Set some default otions on it
       cli = setup_cli(cli, options)
 
-      # The important part, actually running the command
+      # Add the run command to the cli
       cli.command :run do |c|
         c.syntax = "minicron run 'command -option value'"
         c.description = 'Runs the command passed as an argument.'
-        c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config[:cli][:mode]}"
-        c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config[:cli][:dry_run]}"
+        c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['cli']['mode']}"
+        c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['cli']['dry_run']}"
 
         c.action do |args, opts|
           # Check that exactly one argument has been passed
@@ -77,18 +108,10 @@ module Minicron
             fail ArgumentError, 'A valid command to run is required! See `minicron help run`'
           end
 
-          # Parse the cli options
-          Minicron.parse_cli_config(
-            :global => {
-              :verbose => opts.verbose
-            },
-            :cli => {
-              :mode => opts.mode,
-              :dry_run => opts.dry_run
-            }
-          )
+          # Parse the file and cli config options
+          parse_config(opts)
 
-          unless opts.dry_run
+          unless Minicron.config['cli']['dry_run']
             # Get the Job ID
             job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
 
@@ -98,23 +121,24 @@ module Minicron
           end
 
           # Execute the command and yield the output
-          run_command(args.first, :mode => Minicron.config[:cli][:mode], :verbose => Minicron.config[:global][:verbose]) do |output|
+          run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['global']['verbose']) do |output|
             # We need to handle the yielded output differently based on it's type
             case output[:type]
             when :status
-              transport.publish("job/#{job_id}/status", output[:output]) unless Minicron.config[:cli][:dry_run]
+              transport.publish("job/#{job_id}/status", output[:output]) unless Minicron.config['cli']['dry_run']
             when :command
-              transport.publish("job/#{job_id}/output", output[:output]) unless Minicron.config[:cli][:dry_run]
+              transport.publish("job/#{job_id}/output", output[:output]) unless Minicron.config['cli']['dry_run']
             end
 
             yield output[:output] unless output[:type] == :status
           end
 
           # Block until all the messages have been sent
-          transport.ensure_delivery unless Minicron.config[:cli][:dry_run]
+          transport.ensure_delivery unless Minicron.config['cli']['dry_run']
         end
       end
 
+      # Add the server command to the cli
       cli.command :server do |c|
         c.syntax = 'minicron server start'
         c.description = 'Starts the minicron server.'
@@ -123,24 +147,15 @@ module Minicron
         c.option '--path STRING', String, "The path on the host. Default: /faye"
 
         c.action do |args, opts|
-          # Parse the cli options
-          Minicron.parse_cli_config(
-            :global => {
-              :verbose => opts.verbose
-            },
-            :server => {
-              :host => opts.host,
-              :port => opts.port,
-              :path => opts.path
-            }
-          )
+          # Parse the file and cli config options
+          parse_config(opts)
 
           # Start the server!
           server = Minicron::Transport::Server.new
           server.start!(
-            Minicron.config[:server][:host],
-            Minicron.config[:server][:port],
-            Minicron.config[:server][:path]
+            Minicron.config['server']['host'],
+            Minicron.config['server']['port'],
+            Minicron.config['server']['path']
           )
         end
       end

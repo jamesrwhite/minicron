@@ -58,4 +58,37 @@ describe Minicron do
       end
     end
   end
+
+  describe '.parse_file_config' do
+    context 'when a valid toml file is passed' do
+      it 'should update the config class variable with the toml file config' do
+        expected_valid_config = {
+          'global' => {
+            'verbose' => true
+          },
+          'server' => {
+            'host' => '127.0.0.1',
+            'port' => 9292,
+            'path' => '/faye'
+          },
+          'cli' => {
+            'mode' => 'line',
+            'dry_run' => false
+          }
+        }
+
+        parse_file_config = Minicron.parse_file_config('./spec/valid_config.toml')
+        expect(parse_file_config).to eq expected_valid_config
+        expect(Minicron.config).to eq expected_valid_config
+      end
+    end
+
+    context 'when an invalid toml file is passed' do
+      it 'should update the config class variable with the toml file config' do
+        expect do
+          Minicron.parse_file_config('./spec/invalid_config.toml')
+        end.to raise_error Exception
+      end
+    end
+  end
 end
