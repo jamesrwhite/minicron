@@ -15,7 +15,7 @@ module Minicron
     #
     # @param cli [Commander::Runner] a instance of commander runner
     # @option options [Boolean] trace (false) whether or not to enable tracing
-    # @return cli [Commander::Runner] a configured instance of commander runner
+    # @return [Commander::Runner] a configured instance of commander runner
     def setup_cli(cli, options)
       # basic information for the help menu
       cli.program :name, 'minicron'
