@@ -7,10 +7,11 @@ Todo
 ------
 
 - CLI
-  - Send data from CLI that runs commands to the 'hub'
-  - This will be via either WebSockets, a Message Queue or HTTP(s) - *yet to decided*
-  - Added configuration file/options to CLI, file most likely using [toml](https://github.com/jamesmoss/toml "toml")
+  - <del>Send data from CLI that runs commands to the 'hub'</del> &#10003;
+  - <del>This will be via either WebSockets, a Message Queue or HTTP(s)</del> &#10003;
+  - <del>Added configuration file/options to CLI, file most likely using [toml](https://github.com/mojombo/toml "toml")</del> &#10003;
   - Config to allow where job output is to be read from, currently assumed to be STDOUT/STDERR (could be log files)?
+  - Resillience to server connection issues, the job should always run regardless. Store output for later transmission
 
 - Hub
   - The 'Hub' is a web interface to the minicron system and the central point where data is collected
