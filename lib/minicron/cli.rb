@@ -140,11 +140,13 @@ module Minicron
 
       # Add the server command to the cli
       cli.command :server do |c|
-        c.syntax = 'minicron server start'
+        c.syntax = 'minicron server'
         c.description = 'Starts the minicron server.'
-        c.option '--host STRING', String, "The host for the server to listen on. Default: 127.0.0.1"
-        c.option '--port STRING', Integer, "How port for the server to listed on. Default: 9292"
-        c.option '--path STRING', String, "The path on the host. Default: /faye"
+        c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
+        c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
+        c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
+        c.option '--connect_timeout INTEGER', Integer, "Default: #{Minicron.config['server']['connect_timeout']}"
+        c.option '--inactivity_timeout INTEGER', Integer, "Default: #{Minicron.config['server']['inactivity_timeout']}"
 
         c.action do |args, opts|
           # Parse the file and cli config options
