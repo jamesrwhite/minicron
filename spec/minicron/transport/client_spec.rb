@@ -7,8 +7,8 @@ describe Minicron::Transport::Client do
 
   describe '#initialize' do
     it 'should set the host and queue instance variable' do
-      client_instance = client.new('http://127.0.0.1/test')
-      expect(client_instance.host).to eq 'http://127.0.0.1/test'
+      client_instance = client.new('127.0.0.1', '80', '/test')
+      expect(client_instance.url).to eq '127.0.0.1:80/test/faye'
       expect(client_instance.queue).to eq({})
     end
   end
@@ -62,7 +62,7 @@ describe Minicron::Transport::Client do
   describe '#ensure_delivery' do
     before(:each) { eventmachine.stub(:stop) }
     it 'should block until the queue hash is empty and return nil' do
-      client_instance = client.new('http://127.0.0.1/test')
+      client_instance = client.new('127.0.0.1', '80', '/test')
       client_instance.stub(:queue).and_return({ :a => 1, :b => 2 }, { :b => 2 }, {})
 
       client_instance.ensure_delivery
@@ -71,7 +71,7 @@ describe Minicron::Transport::Client do
 
     it 'should stop eventmachine' do
       eventmachine.should_receive(:stop)
-      client.new('http://127.0.0.1/test').ensure_delivery
+      client.new('127.0.0.1', '80', '/test').ensure_delivery
     end
   end
 end

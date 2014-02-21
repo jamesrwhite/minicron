@@ -246,7 +246,11 @@ module Minicron
             job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
 
             # Get a transport instance so we can send data about the job
-            transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
+            transport = Minicron::Transport::Client.new(
+              Minicron.config['server']['host'],
+              Minicron.config['server']['port'],
+              Minicron.config['server']['path']
+            )
             transport.ensure_em_running
           end
 
