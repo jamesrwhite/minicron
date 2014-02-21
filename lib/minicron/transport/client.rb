@@ -5,15 +5,18 @@ require 'digest/sha1'
 module Minicron
   module Transport
     class Client
-      attr_accessor :host
+      attr_accessor :url
       attr_accessor :queue
       attr_accessor :responses
 
       # Instantiate a new instance of the client
       #
       # @param host [String] The host to be communicated with
-      def initialize(host)
+      def initialize(host, port, path)
         @host = host
+        @path = host
+        @port = host
+        @url = "#{host}:#{port}#{path}/faye"
         @queue = {}
         @responses = []
         @retries = 3
@@ -26,7 +29,7 @@ module Minicron
         sleep 0.1 until EM.reactor_running?
       end
 
-      # Sends a request to the @host and adds it to the request queue
+      # Sends a request to the @url and adds it to the request queue
       #
       # @param body [String]
       def request(body)
@@ -35,7 +38,7 @@ module Minicron
 
         # Make the request
         req = EventMachine::HttpRequest.new(
-          @host,
+          @url,
           :connect_timeout => Minicron.config['server']['connect_timeout'],
           :inactivity_timeout => Minicron.config['server']['inactivity_timeout']
         ).post(:body => body)
