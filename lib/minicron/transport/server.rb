@@ -49,13 +49,20 @@ module Minicron
           p [:disconnect, client_id]
         end
 
-        # Start the thin server
+        # Start the faye or rails apps depending on the path
         server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions
 
           map path do
-            run faye
+            map '/faye' do
+              run faye
+            end
+
+            map '/' do
+              require ::File.expand_path('../../hub/config/environment',  __FILE__)
+              run Rails.application
+            end
           end
         end
 
