@@ -11,34 +11,6 @@ include Commander::UI
 
 module Minicron
   class CLI
-    # Sets the basic options for a commander cli instance
-    #
-    # @param cli [Commander::Runner] a instance of commander runner
-    # @option options [Boolean] trace (false) whether or not to enable tracing
-    # @return [Commander::Runner] a configured instance of commander runner
-    def setup_cli(cli, options)
-      # basic information for the help menu
-      cli.program :name, 'minicron'
-      cli.program :help, 'Author', 'James White <dev.jameswhite+minicron@gmail.com>'
-      cli.program :help, 'License', 'GPL v3'
-      cli.program :version, Minicron::VERSION
-      cli.program :description, 'cli for minicron; a system a to manage and monitor cron jobs'
-
-      # Set the default command to run
-      cli.default_command :help
-
-      # Hide --trace and -t from the help menu unless we are told not to
-      options[:trace] ? cli.always_trace! : cli.never_trace!
-
-      # Add a global option for verbose mode
-      cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['cli']['verbose']}"
-
-      # Add a global option for passing the path to a config file
-      cli.global_option '--config FILE', 'Set the config file to use'
-
-      cli
-    end
-
     # Function to the parse the config of the options passed to commands
     #
     # @param opts [Hash] The Commander provided options hash
@@ -88,80 +60,19 @@ module Minicron
       ARGV.replace(argv)
 
       # Get an instance of commander
-      cli = Commander::Runner.new
+      @cli = Commander::Runner.new
 
       # Set some default otions on it
-      cli = setup_cli(cli, options)
+      setup_cli(options)
 
       # Add the run command to the cli
-      cli.command :run do |c|
-        c.syntax = "minicron run 'command -option value'"
-        c.description = 'Runs the command passed as an argument.'
-        c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['cli']['mode']}"
-        c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['cli']['dry_run']}"
-
-        c.action do |args, opts|
-          # Check that exactly one argument has been passed
-          if args.length != 1
-            fail ArgumentError, 'A valid command to run is required! See `minicron help run`'
-          end
-
-          # Parse the file and cli config options
-          parse_config(opts)
-
-          unless Minicron.config['cli']['dry_run']
-            # Get the Job ID
-            job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
-
-            # Get a transport instance so we can send data about the job
-            transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
-            transport.ensure_em_running
-          end
-
-          # Execute the command and yield the output
-          run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['global']['verbose']) do |output|
-            # We need to handle the yielded output differently based on it's type
-            case output[:type]
-            when :status
-              transport.publish("job/#{job_id}/status", output[:output]) unless Minicron.config['cli']['dry_run']
-            when :command
-              transport.publish("job/#{job_id}/output", output[:output]) unless Minicron.config['cli']['dry_run']
-            end
-
-            yield output[:output] unless output[:type] == :status
-          end
-
-          # Block until all the messages have been sent
-          transport.ensure_delivery unless Minicron.config['cli']['dry_run']
-        end
-      end
+      add_run_cli_command { |output| yield output }
 
       # Add the server command to the cli
-      cli.command :server do |c|
-        c.syntax = 'minicron server'
-        c.description = 'Starts the minicron server.'
-        c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
-        c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
-        c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
-        c.option '--connect_timeout INTEGER', Integer, "Default: #{Minicron.config['server']['connect_timeout']}"
-        c.option '--inactivity_timeout INTEGER', Integer, "Default: #{Minicron.config['server']['inactivity_timeout']}"
-
-        c.action do |args, opts|
-          # Parse the file and cli config options
-          parse_config(opts)
-
-          # Start the server!
-          server = Minicron::Transport::Server.new
-          server.start!(
-            Minicron.config['server']['host'],
-            Minicron.config['server']['port'],
-            Minicron.config['server']['path']
-          )
-        end
-      end
+      add_server_cli_command
 
       # And off we go!
-      cli.run!
+      @cli.run!
     end
 
     # Executes a command in a pseudo terminal and yields the output
@@ -256,6 +167,106 @@ module Minicron
     # @return [Boolean] whether rainbow is enabled or not
     def disable_coloured_output!
       Rainbow.enabled = false
+    end
+
+    # Sets the basic options for a commander cli instance
+    #
+    # @option options [Boolean] trace (false) whether or not to enable tracing
+    private
+    def setup_cli(options)
+      # basic information for the help menu
+      @cli.program :name, 'minicron'
+      @cli.program :help, 'Author', 'James White <dev.jameswhite+minicron@gmail.com>'
+      @cli.program :help, 'License', 'GPL v3'
+      @cli.program :version, Minicron::VERSION
+      @cli.program :description, 'cli for minicron; a system a to manage and monitor cron jobs'
+
+      # Set the default command to run
+      @cli.default_command :help
+
+      # Hide --trace and -t from the help menu unless we are told not to
+      options[:trace] ? @cli.always_trace! : @cli.never_trace!
+
+      # Add a global option for verbose mode
+      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['cli']['verbose']}"
+
+      # Add a global option for passing the path to a config file
+      @cli.global_option '--config FILE', 'Set the config file to use'
+    end
+
+    # Add the `minicron server` command
+    private
+    def add_server_cli_command
+      @cli.command :server do |c|
+        c.syntax = 'minicron server'
+        c.description = 'Starts the minicron server.'
+        c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
+        c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
+        c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
+        c.option '--connect_timeout INTEGER', Integer, "Default: #{Minicron.config['server']['connect_timeout']}"
+        c.option '--inactivity_timeout INTEGER', Integer, "Default: #{Minicron.config['server']['inactivity_timeout']}"
+
+        c.action do |args, opts|
+          # Parse the file and @cli config options
+          parse_config(opts)
+
+          # Start the server!
+          server = Minicron::Transport::Server.new
+          server.start!(
+            Minicron.config['server']['host'],
+            Minicron.config['server']['port'],
+            Minicron.config['server']['path']
+          )
+        end
+      end
+    end
+
+    # Add the `minicron run [command]` command
+    # @yieldparam output [String] output from the cli
+    private
+    def add_run_cli_command
+      # Add the run command to the cli
+      @cli.command :run do |c|
+        c.syntax = "minicron run 'command -option value'"
+        c.description = 'Runs the command passed as an argument.'
+        c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['cli']['mode']}"
+        c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['cli']['dry_run']}"
+
+        c.action do |args, opts|
+          # Check that exactly one argument has been passed
+          if args.length != 1
+            fail ArgumentError, 'A valid command to run is required! See `minicron help run`'
+          end
+
+          # Parse the file and cli config options
+          parse_config(opts)
+
+          unless Minicron.config['cli']['dry_run']
+            # Get the Job ID
+            job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
+
+            # Get a transport instance so we can send data about the job
+            transport = Minicron::Transport::Client.new('http://127.0.0.1:9292/faye')
+            transport.ensure_em_running
+          end
+
+          # Execute the command and yield the output
+          run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['global']['verbose']) do |output|
+            # We need to handle the yielded output differently based on it's type
+            case output[:type]
+            when :status
+              transport.publish("job/#{job_id}/status", output[:output]) unless Minicron.config['cli']['dry_run']
+            when :command
+              transport.publish("job/#{job_id}/output", output[:output]) unless Minicron.config['cli']['dry_run']
+            end
+
+            yield output[:output] unless output[:type] == :status
+          end
+
+          # Block until all the messages have been sent
+          transport.ensure_delivery unless Minicron.config['cli']['dry_run']
+        end
+      end
     end
   end
 end
