@@ -25,7 +25,8 @@ module Minicron
         },
         'cli' => {
           'mode' => opts.mode,
-          'dry_run' => opts.dry_run
+          'dry_run' => opts.dry_run,
+          'trace' => opts.trace
         },
         'server' => {
           'scheme' => opts.scheme,
@@ -48,15 +49,11 @@ module Minicron
     # Sets up an instance of commander and runs it based on the argv param
     #
     # @param argv [Array] an array of arguments passed to the cli
-    # @option options [Boolean] trace (false) whether or not to enable tracing
     # @yieldparam output [String] output from the cli
     # @raise [ArgumentError] if no arguments are passed to the run cli command
     # i.e when the argv param is ['run']. A second option (the command to execute)
     # should be present in the array
-    def run(argv, options = {})
-      # Default the options
-      options[:trace] ||= false
-
+    def run(argv)
       # replace ARGV with the contents of argv to aid testability
       ARGV.replace(argv)
 
@@ -64,7 +61,7 @@ module Minicron
       @cli = Commander::Runner.new
 
       # Set some default otions on it
-      setup_cli(options)
+      setup_cli
 
       # Add the run command to the cli
       add_run_cli_command { |output| yield output }
@@ -91,62 +88,62 @@ module Minicron
 
       # Spawn a process to run the command
       begin
-      PTY.spawn(command) do |stdout, stdin, pid|
-        # Record the start time of the command
-        start = Time.now
-        subtract_total = 0
+        PTY.spawn(command) do |stdout, stdin, pid|
+          # Record the start time of the command
+          start = Time.now
+          subtract_total = 0
 
-        # yield the start time
-        subtract = Time.now
-        yield structured :status, "START #{start}"
-        subtract_total += Time.now - subtract
-
-        # Output some debug info
-        if options[:verbose]
+          # yield the start time
           subtract = Time.now
-          yield structured :verbose, '[minicron]'.colour(:magenta)
-          yield structured :verbose, ' started running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n\n".colour(:blue)
+          yield structured :status, "START #{start}"
           subtract_total += Time.now - subtract
-        end
 
-        begin
-          # Loop until data is no longer being sent to stdout
-          until stdout.eof?
-            # One character at a time or one line at a time?
-            output = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
-
+          # Output some debug info
+          if options[:verbose]
             subtract = Time.now
-            yield structured :command, output
+            yield structured :verbose, '[minicron]'.colour(:magenta)
+            yield structured :verbose, ' started running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n\n".colour(:blue)
             subtract_total += Time.now - subtract
           end
-        # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
-        rescue Errno::EIO
-        ensure
-          # Force waiting for the process to finish so we can get the exit status
-          Process.wait pid
-          exit_status = $CHILD_STATUS.exitstatus
+
+          begin
+            # Loop until data is no longer being sent to stdout
+            until stdout.eof?
+              # One character at a time or one line at a time?
+              output = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
+
+              subtract = Time.now
+              yield structured :command, output
+              subtract_total += Time.now - subtract
+            end
+          # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
+          rescue Errno::EIO
+          ensure
+            # Force waiting for the process to finish so we can get the exit status
+            Process.wait pid
+            exit_status = $CHILD_STATUS.exitstatus
+          end
+
+          # Record the time the command finished
+          finish = Time.now - subtract_total
+
+          # yield the finish time and exit status
+          yield structured :status, "FINISH #{finish}"
+          yield structured :status, "EXIT #{exit_status}"
+
+          # Output some debug info
+          if options[:verbose]
+            yield structured :verbose, "\n[minicron]".colour(:magenta)
+            yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
+            yield structured :verbose, '[minicron]'.colour(:magenta)
+            yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
+            yield structured :verbose, '[minicron]'.colour(:magenta)
+            yield structured :verbose, " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
+            yield structured :verbose, exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
+          end
         end
-
-        # Record the time the command finished
-        finish = Time.now - subtract_total
-
-        # yield the finish time and exit status
-        yield structured :status, "FINISH #{finish}"
-        yield structured :status, "EXIT #{exit_status}"
-
-        # Output some debug info
-        if options[:verbose]
-          yield structured :verbose, "\n[minicron]".colour(:magenta)
-          yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
-          yield structured :verbose, '[minicron]'.colour(:magenta)
-          yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
-          yield structured :verbose, '[minicron]'.colour(:magenta)
-          yield structured :verbose, " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
-          yield structured :verbose, exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
-        end
-      end
       rescue Errno::ENOENT
-	fail Exception, "Running the command `#{command}` failed, are you sure it exists?", caller
+        fail Exception, "Running the command `#{command}` failed, are you sure it exists?", caller
       end
     end
 
@@ -175,10 +172,8 @@ module Minicron
     end
 
     # Sets the basic options for a commander cli instance
-    #
-    # @option options [Boolean] trace (false) whether or not to enable tracing
     private
-    def setup_cli(options)
+    def setup_cli
       # basic information for the help menu
       @cli.program :name, 'minicron'
       @cli.program :help, 'Author', 'James White <dev.jameswhite+minicron@gmail.com>'
@@ -189,11 +184,15 @@ module Minicron
       # Set the default command to run
       @cli.default_command :help
 
-      # Hide --trace and -t from the help menu unless we are told not to
-      options[:trace] ? @cli.always_trace! : @cli.never_trace!
+      # Check if --trace was pased or not
+      if @cli.instance_variable_get(:@args).include? '--trace'
+        Minicron.config['cli']['trace'] = true
+      end
 
       # Add a global option for verbose mode
-      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['cli']['verbose']}"
+      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['cli']['verbose']}" do
+        Minicron.config['global']['verbose'] = true
+      end
 
       # Add a global option for passing the path to a config file
       @cli.global_option '--config FILE', 'Set the config file to use'
@@ -240,7 +239,7 @@ module Minicron
         c.action do |args, opts|
           # Check that exactly one argument has been passed
           if args.length != 1
-            fail ArgumentError, 'A valid command to run is required! See `minicron help run`'
+            fail ArgumentError, 'A valid command to run is required! See `minicron help run`', caller
           end
 
           # Parse the file and cli config options

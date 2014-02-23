@@ -76,7 +76,8 @@ describe Minicron do
           },
           'cli' => {
             'mode' => 'line',
-            'dry_run' => false
+            'dry_run' => false,
+            'trace' => false
           }
         }
 
