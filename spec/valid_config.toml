@@ -6,15 +6,24 @@ verbose = true
 
 # Server options
 [server]
-scheme = "http"
+scheme = "http" # [http, https]
 host = "127.0.0.1"
 port = 9292
 path = "/"
 connect_timeout = 5
 inactivity_timeout = 5
 
+# Database options
+[database]
+type = "mysql" # [mysql, sqlite]
+host = "127.0.0.1"
+database = "minicron"
+username = "minicron"
+password = "password"
+
 # CLI options
 [cli]
-mode = "line"
+mode = "line" # [line, char]
 dry_run = false
 trace = false
+

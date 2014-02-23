@@ -74,6 +74,13 @@ describe Minicron do
             'connect_timeout' => 5,
             'inactivity_timeout' => 5
           },
+          'database' => {
+            'type' => 'mysql',
+            'host' => '127.0.0.1',
+            'database' => 'minicron',
+            'username' => 'minicron',
+            'password' => 'password'
+          },
           'cli' => {
             'mode' => 'line',
             'dry_run' => false,
