@@ -32,24 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'eventmachine', '~> 1.0', '>= 1.0.3'
   spec.add_runtime_dependency 'toml-rb', '~> 0.1', '>= 0.1.4'
 
-  # Rails
-    spec.add_runtime_dependency 'rails', '~> 4.0', '>= 4.0.3'
-    # Use sqlite3 as the database for Active Record
-    spec.add_runtime_dependency 'sqlite3'
-    # Use SCSS for stylesheets
-    spec.add_runtime_dependency 'sass-rails', '~> 4.0.0'
-    # Use Uglifier as compressor for JavaScript assets
-    spec.add_runtime_dependency 'uglifier', '>= 1.3.0'
-    # Use jquery as the JavaScript library
-    spec.add_runtime_dependency 'jquery-rails'
-    # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-    spec.add_runtime_dependency 'turbolinks'
-    # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-    spec.add_runtime_dependency 'jbuilder', '~> 1.2'
-    # Use ActiveModel has_secure_password
-    spec.add_runtime_dependency 'bcrypt-ruby', '~> 3.1.2'
-  # End Rails
-
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.1'
   spec.add_development_dependency 'rspec', '~> 2'
