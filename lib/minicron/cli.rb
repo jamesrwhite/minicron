@@ -90,6 +90,7 @@ module Minicron
       options[:verbose] ||= false
 
       # Spawn a process to run the command
+      begin
       PTY.spawn(command) do |stdout, stdin, pid|
         # Record the start time of the command
         start = Time.now
@@ -143,6 +144,9 @@ module Minicron
           yield structured :verbose, " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
           yield structured :verbose, exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
         end
+      end
+      rescue Errno::ENOENT
+	fail Exception, "Running the command `#{command}` failed, are you sure it exists?", caller
       end
     end
 
