@@ -12,7 +12,7 @@ describe Minicron::CLI do
       # thin_server.should_receive(:new).and_return Thin::Server
       # Thin::Server.stub(:start)
 
-      # Minicron::CLI.new.run(['server', '--trace'], :trace => true)
+      # Minicron::CLI.new.run(['server'])
     # end
   end
 
@@ -23,7 +23,7 @@ describe Minicron::CLI do
 
     context 'when in --dry-run mode' do
       it 'should run a simple command and print the output to stdout' do
-        Minicron::CLI.new.run(['run', 'echo hello', '--trace', '--dry-run'], :trace => true) do |output|
+        Minicron::CLI.new.run(['run', 'echo hello', '--dry-run', '--trace']) do |output|
           expect(output.clean).to eq 'hello'
         end
       end
@@ -31,7 +31,7 @@ describe Minicron::CLI do
       it 'should run a simple multi-line command and print the output to stdout' do
         command_output = ''
 
-        Minicron::CLI.new.run(['run', 'echo "hello\nworld"', '--trace', '--dry-run'], :trace => true) do |output|
+        Minicron::CLI.new.run(['run', 'echo "hello\nworld"', '--dry-run', '--trace']) do |output|
           command_output += output
         end
 
@@ -42,17 +42,7 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.new.run(['lol'], :trace => true)
-            end.to raise_error SystemExit
-          end
-        end
-      end
-
-      context 'when tracing is disabled but passed as an option' do
-        it 'should raise SystemExit' do
-          Minicron.capture_output :type => :stderr do
-            expect do
-              Minicron::CLI.new.run(['run', 'echo 1', '--trace', '--dry-run'])
+              Minicron::CLI.new.run(['lol', '--trace'])
             end.to raise_error SystemExit
           end
         end
@@ -62,7 +52,7 @@ describe Minicron::CLI do
         it 'should raise ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.new.run(['run', '--trace', '--dry-run'], :trace => true)
+              Minicron::CLI.new.run(['run', '--dry-run', '--trace'])
             end.to raise_error ArgumentError
           end
         end
@@ -71,7 +61,7 @@ describe Minicron::CLI do
 
     context 'when in --dry-run mode with a valid --config file passed' do
       it 'should run a simple command and print the output to stdout' do
-        Minicron::CLI.new.run(['run', 'echo hello', '--trace', '--dry-run', '--config', './default.config.toml'], :trace => true) do |output|
+        Minicron::CLI.new.run(['run', 'echo hello', '--dry-run', '--trace', '--config', './default.config.toml']) do |output|
           expect(output.clean).to eq 'hello'
         end
       end
@@ -79,7 +69,7 @@ describe Minicron::CLI do
       it 'should run a simple multi-line command and print the output to stdout' do
         command_output = ''
 
-        Minicron::CLI.new.run(['run', 'echo "hello\nworld"', '--trace', '--dry-run', '--config', './default.config.toml'], :trace => true) do |output|
+        Minicron::CLI.new.run(['run', 'echo "hello\nworld"', '--dry-run', '--trace', '--config', './default.config.toml']) do |output|
           command_output += output
         end
 
@@ -90,17 +80,7 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.new.run(['lol'], :trace => true)
-            end.to raise_error SystemExit
-          end
-        end
-      end
-
-      context 'when tracing is disabled but passed as an option' do
-        it 'should raise SystemExit' do
-          Minicron.capture_output :type => :stderr do
-            expect do
-              Minicron::CLI.new.run(['run', 'echo 1', '--trace', '--dry-run', '--config', './default.config.toml'])
+              Minicron::CLI.new.run(['lol', '--trace'])
             end.to raise_error SystemExit
           end
         end
@@ -110,7 +90,7 @@ describe Minicron::CLI do
         it 'should raise ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.new.run(['run', '--trace', '--dry-run', '--config', './default.config.toml'], :trace => true)
+              Minicron::CLI.new.run(['run', '--dry-run', '--trace', '--config', './default.config.toml'])
             end.to raise_error ArgumentError
           end
         end

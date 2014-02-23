@@ -1,12 +1,11 @@
 #!/usr/bin/env ruby
-
 require 'minicron'
 
 begin
   # Capture any output from STDERR so we can handle it how we want to
   Minicron.capture_output(:type => :stderr) do
     # Run the CLI and pass it all arguments passed to us
-    Minicron::CLI.new.run(ARGV, :trace => true) do |output|
+    Minicron::CLI.new.run(ARGV) do |output|
       print output
       STDOUT.flush
     end
@@ -16,9 +15,10 @@ rescue Interrupt, SignalException
   puts "\nExiting.."
 # Accept failure
 rescue Exception => e
-  $stderr.write("#{e}\n")
-  fail
-ensure
-  # TODO: figure out how to replace this now we need to an instance to call stop!
-  # Minicron::Transport::Server.stop!
+  $stderr.write("#{e.message}\n")
+
+  if Minicron.config['cli']['trace']
+    puts
+    fail
+  end
 end
