@@ -12,6 +12,7 @@ module Minicron
       'verbose' => false
     },
     'server' => {
+      'scheme' => 'http',
       'host' => '127.0.0.1',
       'port' => 9292,
       'path' => '/',

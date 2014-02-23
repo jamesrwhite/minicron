@@ -12,11 +12,13 @@ module Minicron
       # Instantiate a new instance of the client
       #
       # @param host [String] The host to be communicated with
-      def initialize(host, port, path)
+      def initialize(scheme, host, port, path)
+	@scheme = scheme
         @host = host
-        @path = host
-        @port = host
-        @url = "#{host}:#{port}#{path}/faye"
+	@path = path
+	@port = port
+	url_path = path == '/' ? '' : path
+	@url = "#{scheme}://#{host}:#{port}#{url_path}/faye"
         @queue = {}
         @responses = []
         @retries = 3

@@ -10,7 +10,7 @@ describe Minicron::Transport::Server do
         server.stub(:server).and_return thin_server
         server.should_receive(:running?).and_return true
 
-        expect(server.start!('127.0.0.0.1', 1337, '/lol')).to eq false
+        expect(server.start!('127.0.0.1', 1337, '/lol')).to eq false
       end
     end
 
@@ -20,7 +20,7 @@ describe Minicron::Transport::Server do
         thin_server.should_receive(:new).and_return thin_server
         thin_server.stub(:start)
 
-        expect(server.start!('127.0.0.0.1', 1337, '/lol')).to eq true
+        expect(server.start!('127.0.0.1', 1337, '/lol')).to eq true
       end
     end
   end

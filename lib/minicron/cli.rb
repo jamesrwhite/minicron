@@ -28,6 +28,7 @@ module Minicron
           'dry_run' => opts.dry_run
         },
         'server' => {
+	  'scheme' => opts.scheme,
           'host' => opts.host,
           'port' => opts.port,
           'path' => opts.path
@@ -247,6 +248,7 @@ module Minicron
 
             # Get a transport instance so we can send data about the job
             transport = Minicron::Transport::Client.new(
+	      Minicron.config['server']['scheme'],
               Minicron.config['server']['host'],
               Minicron.config['server']['port'],
               Minicron.config['server']['path']
