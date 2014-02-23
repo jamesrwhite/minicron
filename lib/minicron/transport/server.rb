@@ -1,5 +1,6 @@
 require 'thin'
 require 'rack'
+require 'faye'
 
 module Minicron
   module Transport
@@ -19,16 +20,45 @@ module Minicron
           use Rack::CommonLogger
           use Rack::ShowExceptions
 
-          map path do
-            map '/faye' do
-              require './faye.rb'
-              run Minicron::Transport::Faye.new
+          # Set the path faye should start relative to
+          faye_path = path == '/' ? '/faye' : "#{path}/faye"
+
+          map faye_path do
+            # Load the Faye thin adapter, this needs to happen first
+            Faye::WebSocket.load_adapter('thin')
+
+            # Set up our Faye rack app
+            faye = Faye::RackAdapter.new(
+              :mount => '', # This is mounted to /#{path}
+              :timeout => 25
+            )
+
+            faye.on(:handshake) do |client_id|
+              # TODO: Respect the --verbose option here
+              p [:handshake, client_id]
             end
 
-            map '/' do
-              require ::File.expand_path('../../hub/config/environment',  __FILE__)
-              run Rails.application
+            faye.on(:subscribe) do |client_id, channel|
+              # TODO: Respect the --verbose option here
+              p [:subscribe, client_id, channel]
             end
+
+            faye.on(:unsubscribe) do |client_id, channel|
+              # TODO: Respect the --verbose option here
+              p [:unsubscribe, client_id, channel]
+            end
+
+            faye.on(:publish) do |client_id, channel, data|
+              # TODO: Respect the --verbose option here
+              p [:published, client_id, channel, data]
+            end
+
+            faye.on(:disconnect) do |client_id|
+              # TODO: Respect the --verbose option here
+              p [:disconnect, client_id]
+            end
+
+            run faye
           end
         end
 
