@@ -1,11 +1,10 @@
 require 'toml'
 require 'stringio'
 require 'minicron/cli'
+require 'minicron/constants'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
-  DEFAULT_CONFIG_FILE = '/etc/minicron.toml'
-
   # Default configuration, this can be overriden
   @config = {
     'global' => {
