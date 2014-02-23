@@ -20,9 +20,16 @@ module Minicron
           use Rack::CommonLogger
           use Rack::ShowExceptions
 
+          # The 'hub', aka our sinatra web interface
+          map '/' do
+            require Minicron::LIB_PATH + '/minicron/hub/app'
+            run Minicron::Hub::App.new
+          end
+
           # Set the path faye should start relative to
           faye_path = path == '/' ? '/faye' : "#{path}/faye"
 
+          # The faye server the server and browser clients talk to
           map faye_path do
             # Load the Faye thin adapter, this needs to happen first
             Faye::WebSocket.load_adapter('thin')
