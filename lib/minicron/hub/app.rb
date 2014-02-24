@@ -1,10 +1,37 @@
 require 'sinatra/base'
 require 'sinatra/activerecord'
+require 'sinatra/assetpack'
 require 'liquid'
 
 module Minicron::Hub
   class App < Sinatra::Base
     register Sinatra::ActiveRecordExtension
+    register Sinatra::AssetPack
+
+    # Set the application root
+    set :root, Minicron::HUB_PATH
+
+    # Configure how we server assets
+    assets do
+      serve '/css', :from => 'assets/css'
+      serve '/js', :from => 'assets/js'
+
+      # Set up the application css
+      css :app, '/css/all.css', [
+        '/css/bootstrap.css',
+        '/css/bootstrap-theme.css',
+        '/css/main.css'
+      ]
+
+      # Set up the application javascript
+      js :app, '/js/all.js', [
+        '/js/jquery-1.10.2.js',
+        '/js/handlebars-1.1.2.js',
+        '/js/ember-1.4.0.js',
+        '/js/faye-browser-1.0.1.js',
+        '/js/app.js'
+      ]
+    end
 
     configure :development do
       # Configure the database
