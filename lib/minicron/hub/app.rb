@@ -25,8 +25,8 @@ module Minicron::Hub
 
       # Set up the application javascript
       js :app, '/js/all.js', [
-        '/js/jquery-1.10.2.js',
-        '/js/handlebars-1.1.2.js',
+	'/js/jquery-2.0.3.js',
+	'/js/handlebars-1.3.0.js',
         '/js/ember-1.4.0.js',
         '/js/faye-browser-1.0.1.js',
         '/js/app.js'
