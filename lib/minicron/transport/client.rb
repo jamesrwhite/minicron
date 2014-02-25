@@ -12,13 +12,12 @@ module Minicron
       # Instantiate a new instance of the client
       #
       # @param host [String] The host to be communicated with
-      def initialize(scheme, host, port, path)
+      def initialize(scheme, host, port, path) # TODO: Add options hash for other options
         @scheme = scheme
         @host = host
         @path = path
         @port = port
-        url_path = path == '/' ? '' : path
-        @url = "#{scheme}://#{host}:#{port}#{url_path}/faye"
+        @url = "#{scheme}://#{host}:#{port}#{path}"
         @queue = {}
         @responses = []
         @retries = 3
@@ -81,21 +80,6 @@ module Minicron
         end
       end
 
-      # Publishes a message on the given channel to the server
-      #
-      # @param channel [String]
-      # @param message [String]
-      def publish(channel, message)
-        # Set up the data to send to faye
-        data = {:channel => "/#{channel}", :data => {
-          :ts => Time.now.to_f,
-          :output => message
-        }}
-
-        # Make the request
-        request({ :message => data.to_json })
-      end
-
       # Blocks until all messages in the sending queue have completed
       def ensure_delivery
         # Keep waiting until the queue is empty but only if we need to
@@ -105,10 +89,12 @@ module Minicron
           end
         end
 
-        # Stop eventmachine now we're done
-        EM.stop
-
         true
+      end
+
+      # Tidy up after we are done with the client
+      def tidy_up
+        EM.stop
       end
     end
   end
