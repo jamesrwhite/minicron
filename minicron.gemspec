@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra-activerecord', '~> 1.3'
   spec.add_runtime_dependency 'sinatra-assetpack', '~> 0.3', '>= 0.3.2'
   spec.add_runtime_dependency 'sass', '~> 3.2', '>= 3.2.14'
+  spec.add_runtime_dependency 'json', '~> 1.8', '>= 1.8.1'
 
   # Databases we want to support
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.8'

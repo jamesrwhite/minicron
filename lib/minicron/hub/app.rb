@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sinatra/assetpack'
 require 'erubis'
+require 'json'
 
 module Minicron::Hub
   class App < Sinatra::Base
