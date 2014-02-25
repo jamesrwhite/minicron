@@ -90,20 +90,20 @@ module Minicron
       begin
         PTY.spawn(command) do |stdout, stdin, pid|
           # Record the start time of the command
-          start = Time.now
+          start = Time.now.utc
           subtract_total = 0
 
           # yield the start time
-          subtract = Time.now
-          yield structured :status, "START #{start}"
-          subtract_total += Time.now - subtract
+          subtract = Time.now.utc
+          yield structured :status, "START #{start.strftime("%Y-%m-%d %H:%M:%S")}"
+          subtract_total += Time.now.utc - subtract
 
           # Output some debug info
           if options[:verbose]
-            subtract = Time.now
+            subtract = Time.now.utc
             yield structured :verbose, '[minicron]'.colour(:magenta)
             yield structured :verbose, ' started running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n\n".colour(:blue)
-            subtract_total += Time.now - subtract
+            subtract_total += Time.now.utc - subtract
           end
 
           begin
@@ -112,9 +112,9 @@ module Minicron
               # One character at a time or one line at a time?
               output = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
 
-              subtract = Time.now
+              subtract = Time.now.utc
               yield structured :command, output
-              subtract_total += Time.now - subtract
+              subtract_total += Time.now.utc - subtract
             end
           # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
           rescue Errno::EIO
@@ -125,11 +125,10 @@ module Minicron
           end
 
           # Record the time the command finished
-          finish = Time.now - subtract_total
+          finish = Time.now.utc - subtract_total
 
           # yield the finish time and exit status
-          yield structured :status, "FINISH #{finish}"
-          yield structured :status, "EXIT #{exit_status}"
+          yield structured :status, "FINISH #{exit_status} #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
 
           # Output some debug info
           if options[:verbose]
@@ -260,8 +259,8 @@ module Minicron
             # Fire up eventmachine
             faye.ensure_em_running
 
-            # Set up the job and get the job execution ID
-            job_execution_id = faye.setup(job_id)
+            # Set up the job and get the execution id
+            execution_id = faye.setup(job_id)
           end
 
           # Execute the command and yield the output
@@ -270,11 +269,11 @@ module Minicron
             case output[:type]
             when :status
               unless Minicron.config['cli']['dry_run']
-                faye.send(:job_id => job_id, :job_execution_id => job_execution_id, :type => :status, :message => output[:output])
+                faye.send(:job_id => job_id, :execution_id => execution_id, :type => :status, :message => output[:output])
               end
             when :command
               unless Minicron.config['cli']['dry_run']
-                faye.send(:job_id => job_id, :job_execution_id => job_execution_id, :type => :output, :message => output[:output])
+                faye.send(:job_id => job_id, :execution_id => execution_id, :type => :output, :message => output[:output])
               end
             end
 
