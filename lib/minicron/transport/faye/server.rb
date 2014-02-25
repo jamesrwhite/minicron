@@ -34,7 +34,7 @@ module Minicron
       private
       def add_faye_events
         @server.on(:handshake) do |client_id|
-          p [:handshake, client_id] #if Minicron.config['global']['verbose']
+          p [:handshake, client_id] if Minicron.config['global']['verbose']
         end
 
         @server.on(:subscribe) do |client_id, channel|
