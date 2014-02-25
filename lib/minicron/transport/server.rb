@@ -1,11 +1,10 @@
 require 'thin'
 require 'rack'
-require 'faye'
 
 module Minicron
   module Transport
     class Server
-      attr_accessor :server
+      attr_reader :server
 
       # Starts the thin server
       #
@@ -31,7 +30,7 @@ module Minicron
 
           # The faye server the server and browser clients talk to
           map faye_path do
-            require Minicron::LIB_PATH + '/minicron/transport/faye'
+            require Minicron::LIB_PATH + '/minicron/transport/faye/server'
             faye = Minicron::Transport::FayeServer.new
             run faye.server
           end
