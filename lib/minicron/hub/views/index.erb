@@ -13,23 +13,22 @@
 </script>
 
 <script type="text/x-handlebars" id="jobs">
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span3">
-        <table class='table'>
-          <thead>
-            <tr><th>Recent Posts</th></tr>
-          </thead>
-          {{#each model}}
-          <tr><td>
-              {{#link-to 'job' this}}{{title}} <small class='muted'>by {{author.name}}</small>{{/link-to}}
-          </td></tr>
-          {{/each}}
-        </table>
-      </div>
-      <div class="span9">
-        {{outlet}}
-      </div>
+  <div class="row">
+    <div class="col-md-3">
+      <table class='table'>
+        <thead>
+          <tr><th>Recent Jobs</th></tr>
+        </thead>
+        {{#each job in model}}
+        <tr><td>
+          {{#link-to 'job' job.job_id}}{{job.command}}{{/link-to}}
+        </td></tr>
+        {{/each}}
+      </table>
+    </div>
+
+    <div class="col-md-9">
+      {{outlet}}
     </div>
   </div>
 </script>
@@ -39,10 +38,10 @@
 </script>
 
 <script type="text/x-handlebars" id="job">
-  <h1>{{title}}</h1>
-  <h2>by {{author.name}} <small class='muted'>({{date}})</small></h2>
-
-  <div class='below-the-fold'>
-    {{body}}
-  </div>
+  <ul>
+    <li><b>ID:</b> {{job_id}}</li>
+    <li><b>Command:</b> {{command}}</b></li>
+    <li><b>Host:</b> {{host}}</b></li>
+    <li><b>Created At:</b> {{created_at}}</b></li>
+  </ul>
 </script>
