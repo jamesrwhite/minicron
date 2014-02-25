@@ -1,0 +1,48 @@
+<script type="text/x-handlebars">
+  <div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand">minicron</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {{outlet}}
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="jobs">
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span3">
+        <table class='table'>
+          <thead>
+            <tr><th>Recent Posts</th></tr>
+          </thead>
+          {{#each model}}
+          <tr><td>
+              {{#link-to 'job' this}}{{title}} <small class='muted'>by {{author.name}}</small>{{/link-to}}
+          </td></tr>
+          {{/each}}
+        </table>
+      </div>
+      <div class="span9">
+        {{outlet}}
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="jobs/index">
+  <p class="text-warning">Please select a job</p>
+</script>
+
+<script type="text/x-handlebars" id="job">
+  <h1>{{title}}</h1>
+  <h2>by {{author.name}} <small class='muted'>({{date}})</small></h2>
+
+  <div class='below-the-fold'>
+    {{body}}
+  </div>
+</script>
