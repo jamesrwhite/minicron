@@ -12,9 +12,12 @@ module Minicron
         # Load the Faye thin adapter, this needs to happen first
         Faye::WebSocket.load_adapter('thin')
 
-        # log = Logger.new(STDOUT)
-        # log.level = Logger::DEBUG
-        # Faye.logger = log
+        # Show debug verbose output if requested
+        if Minicron.config['global']['verbose']
+          log = Logger.new(STDOUT)
+          log.level = Logger::DEBUG
+          Faye.logger = log
+        end
 
         # Set up our Faye rack app
         @server = Faye::RackAdapter.new(
