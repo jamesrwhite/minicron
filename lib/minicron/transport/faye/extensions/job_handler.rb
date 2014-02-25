@@ -1,4 +1,5 @@
 require 'minicron/hub/models/execution'
+require 'minicron/hub/models/job_execution_output'
 
 module Minicron
   module Transport
@@ -14,6 +15,7 @@ module Minicron
           if segments[3] == 'status' && message['data']['message'] == 'SETUP'
             # Check that the job id is a valid length
             if segments[2].length == 40
+              # Create an execution for this job
               execution = Execution.create(
                 :job_id => segments[2],
               )
@@ -33,6 +35,16 @@ module Minicron
                 'started_at' => message['data']['message'][6..-1]
               )
             end
+          end
+
+          # Is it job output?
+          if segments[4] == 'output'
+            JobExecutionOutput.create(
+              :job_id => segments[2],
+              :execution_id => segments[3],
+              :output => message['data']['message'],
+              :timestamp => message['data']['ts']
+            )
           end
 
           # Is it a finish message?
