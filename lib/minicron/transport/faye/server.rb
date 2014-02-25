@@ -1,7 +1,7 @@
 require 'thin'
 require 'rack'
 require 'faye'
-require Minicron::HUB_PATH + '/models/execution'
+require 'minicron/transport/faye/extensions/job_handler'
 
 module Minicron
   module Transport
@@ -21,6 +21,8 @@ module Minicron
           :mount => '', # This is relative to the map faye_path set in server.rb
           :timeout => 25
         )
+
+        @server.add_extension(Minicron::Transport::FayeJobHandler.new)
 
         # Add all the events we want to listen out for
         add_faye_events
@@ -42,25 +44,6 @@ module Minicron
 
         @server.on(:publish) do |client_id, channel, data|
           p [:published, client_id, channel, data] if Minicron.config['global']['verbose']
-
-          # Split the channel into it's segments by /
-          segments = channel.split('/')
-
-          # Check if it's a 'job' message and a valid job_id is present
-          if segments[1] == 'job' && segments[2].length == 40
-            job_id = segments[2]
-
-            # Check if it's a status message
-            if segments[3] == 'status'
-              # How do we need to handle this?
-              if data['message'][0..4] == 'START'
-                Execution.create(
-                  :job_id => job_id,
-                  :start_time => Time.now # TODO: Use the time in the output instead
-                )
-              end
-            end
-          end
         end
 
         @server.on(:disconnect) do |client_id|

@@ -25,8 +25,8 @@ module Minicron
         # Wait for the response..
         ensure_delivery
 
-        # TODO: Return the correct value!
-        5
+        # TODO: Handle errors here!
+        JSON.parse(responses.first[:body]).first['channel'].split('/')[3]
       end
 
       # Helper that wraps the publish function making it quicker to use
@@ -34,10 +34,11 @@ module Minicron
       # TODO: Add otions hash doc
       def send(options = {})
         # Only send the job execution if we have it
-        job_execution_id = job_execution_id ? "/#{options[:job_execution_id]}" : ''
+        # TODO: Validate if we should have it or not
+        execution_id = options[:execution_id] ? "/#{options[:execution_id]}" : ''
 
         # Publish the message to the correct channel
-        publish("/job/#{options[:job_id]}#{options[:job_execution_id]}/#{options[:type]}", options[:message])
+        publish("/job/#{options[:job_id]}#{execution_id}/#{options[:type]}", options[:message])
       end
 
       # Publishes a message on the given channel to the server
@@ -47,7 +48,7 @@ module Minicron
       def publish(channel, message)
         # Set up the data to send to faye
         data = {:channel => channel, :data => {
-          :ts => Time.now.to_f,
+          :ts => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S"),
           :message => message
         }}
 
