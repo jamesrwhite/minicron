@@ -4,7 +4,7 @@ require 'rainbow/ext/string'
 require 'commander'
 require 'minicron/constants'
 require 'minicron/transport'
-require 'minicron/transport/client'
+require 'minicron/transport/faye/client'
 require 'minicron/transport/server'
 
 include Commander::UI
@@ -249,14 +249,19 @@ module Minicron
             # Get the Job ID
             job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
 
-            # Get a transport instance so we can send data about the job
-            transport = Minicron::Transport::Client.new(
+            # Get a faye instance so we can send data about the job
+            faye = Minicron::Transport::FayeClient.new(
               Minicron.config['server']['scheme'],
               Minicron.config['server']['host'],
               Minicron.config['server']['port'],
               Minicron.config['server']['path']
             )
-            transport.ensure_em_running
+
+            # Fire up eventmachine
+            faye.ensure_em_running
+
+            # Set up the job and get the job execution ID
+            job_execution_id = faye.setup(job_id)
           end
 
           # Execute the command and yield the output
@@ -264,16 +269,21 @@ module Minicron
             # We need to handle the yielded output differently based on it's type
             case output[:type]
             when :status
-              transport.publish("job/#{job_id}/status", output[:output]) unless Minicron.config['cli']['dry_run']
+              unless Minicron.config['cli']['dry_run']
+                faye.send(:job_id => job_id, :job_execution_id => job_execution_id, :type => :status, :message => output[:output])
+              end
             when :command
-              transport.publish("job/#{job_id}/output", output[:output]) unless Minicron.config['cli']['dry_run']
+              unless Minicron.config['cli']['dry_run']
+                faye.send(:job_id => job_id, :job_execution_id => job_execution_id, :type => :output, :message => output[:output])
+              end
             end
 
             yield output[:output] unless output[:type] == :status
           end
 
           # Block until all the messages have been sent
-          transport.ensure_delivery unless Minicron.config['cli']['dry_run']
+          faye.ensure_delivery unless Minicron.config['cli']['dry_run']
+          faye.tidy_up unless Minicron.config['cli']['dry_run']
         end
       end
     end
