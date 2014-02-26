@@ -4,6 +4,11 @@
       <div class="navbar-header">
         <a class="navbar-brand" href="/">minicron</a>
       </div>
+
+      <ul class="nav navbar-nav">
+        {{#link-to 'executions' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Executions</a>{{/link-to}}
+        {{#link-to 'jobs' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Jobs</a>{{/link-to}}
+      </ul>
     </div>
   </div>
 
@@ -34,7 +39,7 @@
 </script>
 
 <script type="text/x-handlebars" id="executions/index">
-  <p class="text-warning">Please select a job</p>
+  <p class="text-warning">Please select a job execution</p>
 </script>
 
 <script type="text/x-handlebars" id="execution">
@@ -59,5 +64,42 @@
     <li><h4>Output</h4></li>
     <div class="output tomorrow-night-eightes-ansi-theme">{{#each job_execution_output}}{{ansi_to_html output}}{{/each}}</div>
   </ul>
+</script>
 
+<script type="text/x-handlebars" id="jobs">
+  <div class="row">
+    <div class="col-md-3">
+      <table class='table'>
+        <thead>
+          <tr><th>Jobs</th></tr>
+        </thead>
+        {{#each model}}
+        <tr><td>
+          {{#link-to 'job' job_id}}{{name}}{{/link-to}}
+        </td></tr>
+        {{/each}}
+      </table>
+    </div>
+
+    <div class="col-md-9">
+      {{outlet}}
+    </div>
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="jobs/index">
+  <p class="text-warning">Please select a job</p>
+</script>
+
+<script type="text/x-handlebars" id="job">
+  <ul>
+    <li><h4>Job</h4></li>
+    <ul>
+      <li><b>Job ID:</b> {{job_id}}</li>
+      <li><b>Name:</b> {{name}}</li>
+      <li><b>Command:</b> {{command}}</b></li>
+      <li><b>Host:</b> {{host}}</b></li>
+      <li><b>Created At:</b> {{created_at}}</b></li>
+    </ul>
+  </ul>
 </script>

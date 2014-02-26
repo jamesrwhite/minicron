@@ -1,3 +1,9 @@
+// Making the navbar items look clickable
+.navbar .nav li:hover {
+  cursor: pointer;
+}
+
+// Job execution output
 .output {
   display: block;
   unicode-bidi: embed;
