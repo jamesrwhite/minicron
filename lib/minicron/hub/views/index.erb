@@ -12,16 +12,16 @@
   </div>
 </script>
 
-<script type="text/x-handlebars" id="jobs">
+<script type="text/x-handlebars" id="executions">
   <div class="row">
     <div class="col-md-3">
       <table class='table'>
         <thead>
-          <tr><th>Recent Jobs</th></tr>
+          <tr><th>Recent Job Executions</th></tr>
         </thead>
-        {{#each job in model}}
+        {{#each model}}
         <tr><td>
-          {{#link-to 'job' job.job_id}}{{job.command}}{{/link-to}}
+          {{#link-to 'execution' execution_id}}{{job.name}}{{/link-to}}
         </td></tr>
         {{/each}}
       </table>
@@ -33,15 +33,33 @@
   </div>
 </script>
 
-<script type="text/x-handlebars" id="jobs/index">
+<script type="text/x-handlebars" id="executions/index">
   <p class="text-warning">Please select a job</p>
 </script>
 
-<script type="text/x-handlebars" id="job">
+<script type="text/x-handlebars" id="execution">
   <ul>
-    <li><b>ID:</b> {{job_id}}</li>
-    <li><b>Command:</b> {{command}}</b></li>
-    <li><b>Host:</b> {{host}}</b></li>
-    <li><b>Created At:</b> {{created_at}}</b></li>
+    <li><h4>Job</h4></li>
+    <ul>
+      <li><b>Job ID:</b> {{job.job_id}}</li>
+      <li><b>Name:</b> {{job.name}}</li>
+      <li><b>Command:</b> {{job.command}}</b></li>
+      <li><b>Host:</b> {{job.host}}</b></li>
+      <li><b>Created At:</b> {{job.created_at}}</b></li>
+    </ul>
+
+    <li><h4>Execution</h4></li>
+    <ul>
+      <li><b>Execution ID:</b> {{execution_id}}</li>
+      <li><b>Started At:</b> {{started_at}}</li>
+      <li><b>Finished At:</b> {{finished_at}}</li>
+      <li><b>Exit Status:</b> {{exit_status}}</li>
+    </ul>
+
+    <li><h4>Output</h4></li>
+    <ul>
+      {{#each job_execution_output}}<li>{{output}}</li>{{/each}}
+    </ul>
   </ul>
+
 </script>
