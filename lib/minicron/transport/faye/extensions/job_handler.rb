@@ -10,11 +10,18 @@ module Minicron
         # Is it a job messages
         if segments[1] == 'job'
           # TODO: All of these need more validation checks and error handling
+          # currently it's just assumed the correct data is passed
 
           # Is it a setup message?
-          if segments[3] == 'status' && message['data']['message'] == 'SETUP'
+          if segments[3] == 'status' && message['data']['message']['action'] == 'SETUP'
             # Check that the job id is a valid length
             if segments[2].length == 40
+              # Validate or create the job
+              Job.where(:job_id => segments[2]).first_or_create do |job|
+                job.command = message['data']['message']['command']
+                job.host = message['data']['message']['host']
+              end
+
               # Create an execution for this job
               execution = Execution.create(
                 :job_id => segments[2],

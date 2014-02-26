@@ -245,9 +245,6 @@ module Minicron
           parse_config(opts)
 
           unless Minicron.config['cli']['dry_run']
-            # Get the Job ID
-            job_id = Minicron::Transport.get_job_id(args.first, `hostname -s`.strip)
-
             # Get a faye instance so we can send data about the job
             faye = Minicron::Transport::FayeClient.new(
               Minicron.config['server']['scheme'],
@@ -259,8 +256,12 @@ module Minicron
             # Fire up eventmachine
             faye.ensure_em_running
 
+	    # Get the Job ID
+	    host = `hostname -s`.strip
+	    job_id = Minicron::Transport.get_job_id(args.first, host)
+
             # Set up the job and get the execution id
-            execution_id = faye.setup(job_id)
+	    execution_id = faye.setup(job_id, args.first, host)
           end
 
           # Execute the command and yield the output
