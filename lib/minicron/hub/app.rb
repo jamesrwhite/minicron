@@ -19,7 +19,6 @@ module Minicron::Hub
 
       # Set up the application css
       css :app, '/css/all.css', [
-        '/css/bootstrap.css',
         '/css/bootstrap-theme.css',
         '/css/main.css'
       ]
