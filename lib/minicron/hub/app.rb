@@ -30,6 +30,7 @@ module Minicron::Hub
         '/js/handlebars-1.3.0.js',
         '/js/ember-1.4.0.js',
         '/js/faye-browser-1.0.1.js',
+        '/js/ansi_to_html.js',
         '/js/app.js'
       ]
     end
