@@ -17,10 +17,16 @@ module Minicron
       # Used to set up a job on the server
       #
       # @param job_id [Integer]
+      # @param command [Integer]
+      # @param host [Integer]
       # @return [Integer]
-      def setup(job_id)
+      def setup(job_id, command, host)
         # Send a request to set up the job
-        send(:job_id => job_id, :type => :status, :message => 'SETUP')
+        send(:job_id => job_id, :type => :status, :message => {
+          :action => 'SETUP',
+          :command => command,
+          :host => host
+        })
 
         # Wait for the response..
         ensure_delivery
