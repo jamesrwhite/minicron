@@ -132,7 +132,7 @@ module Minicron
 
           # Output some debug info
           if options[:verbose]
-            yield structured :verbose, "\n[minicron]".colour(:magenta)
+            yield structured :verbose, "\n" + "[minicron]".colour(:magenta)
             yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
             yield structured :verbose, '[minicron]'.colour(:magenta)
             yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
