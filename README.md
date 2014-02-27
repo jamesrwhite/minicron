@@ -15,8 +15,8 @@ Todo
 
 - Hub
   - The 'Hub' is a web interface to the minicron system and the central point where data is collected
-  - Collect data sent via CLI and store it in a db
-  - Display both realtime and historic data
+  - <del>Collect data sent via CLI and store it in a db</del> &#10003;
+  - Display both realtime <del>and historic data</del>
   - CRUD functionality for cron jobs via SSH
   - Permissions support
   - Alerting (email, sms and push notifications support)
@@ -55,7 +55,7 @@ Like many command line programs minicron will show it's version number when the 
 
 #### Configuration
 
-Many configuration options can be passed in manually but you can also pass a file path to the ````--config```` global option. The file is expected to be in the [toml](https://github.com/mojombo/toml "toml") format. The default options are specified in the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml "default.config.toml") file. Options specified via the command line will take precedence over those taken from a config file.
+Many configuration options can be passed in manually but you can also pass a file path to the ````--config```` global option. The file is expected to be in the [toml](https://github.com/mojombo/toml "toml") format. The default options are specified in the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml "default.config.toml") file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via the command line will take precedence over those taken from a config file.
 
 Documentation
 -------------
