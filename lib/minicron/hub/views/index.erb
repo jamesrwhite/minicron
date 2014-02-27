@@ -26,12 +26,18 @@
           {{#link-to 'execution' execution_id class="list-group-item clearfix"}}
             <span class="pull-left">{{job.name}}</span>
             {{#if exit_status}}
-              <span class="pull-right label label-danger"><span class="glyphicon glyphicon-remove"></span></span>
+              <span class="pull-right label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
+                <span class="glyphicon glyphicon-remove"></span>
+                </span>
             {{else}}
               {{#if finished_at}}
-                <span class="pull-right label label-success"><span class="glyphicon glyphicon-ok"></span></span>
+                <span class="pull-right label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
+                  <span class="glyphicon glyphicon-ok"></span>
+                </span>
               {{else}}
-                <span class="pull-right label label-warning"><span class="glyphicon glyphicon-flash"></span></span>
+                <span class="pull-right label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
+                  <span class="glyphicon glyphicon-flash"></span>
+                </span>
               {{/if}}
             {{/if}}
           {{/link-to}}
