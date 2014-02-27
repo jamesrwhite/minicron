@@ -19,17 +19,24 @@
 
 <script type="text/x-handlebars" id="executions">
   <div class="row">
-    <div class="col-md-3">
-      <table class='table'>
-        <thead>
-          <tr><th>Recent Job Executions</th></tr>
-        </thead>
+    <div class="sidebar well col-md-3">
+      <h5>Recent Job Executions</h5>
+      <div class="list-group">
         {{#each model}}
-        <tr><td>
-          {{#link-to 'execution' execution_id}}{{job.name}}{{/link-to}}
-        </td></tr>
+          {{#link-to 'execution' execution_id class="list-group-item clearfix"}}
+            <span class="pull-left">{{job.name}}</span>
+            {{#if exit_status}}
+              <span class="pull-right label label-danger"><span class="glyphicon glyphicon-remove"></span></span>
+            {{else}}
+              {{#if finished_at}}
+                <span class="pull-right label label-success"><span class="glyphicon glyphicon-ok"></span></span>
+              {{else}}
+                <span class="pull-right label label-warning"><span class="glyphicon glyphicon-flash"></span></span>
+              {{/if}}
+            {{/if}}
+          {{/link-to}}
         {{/each}}
-      </table>
+      </div>
     </div>
 
     <div class="col-md-9">
@@ -39,7 +46,7 @@
 </script>
 
 <script type="text/x-handlebars" id="executions/index">
-  <p class="text-warning">Please select a job execution</p>
+  <h3 class="text-warning">Please select a job execution</h3>
 </script>
 
 <script type="text/x-handlebars" id="execution">
@@ -68,17 +75,13 @@
 
 <script type="text/x-handlebars" id="jobs">
   <div class="row">
-    <div class="col-md-3">
-      <table class='table'>
-        <thead>
-          <tr><th>Jobs</th></tr>
-        </thead>
+    <div class="sidebar well col-md-3">
+      <h5>Jobs</h5>
+      <div class="list-group">
         {{#each model}}
-        <tr><td>
-          {{#link-to 'job' job_id}}{{name}}{{/link-to}}
-        </td></tr>
+          {{#link-to 'job' job_id class="list-group-item"}}{{name}}{{/link-to}}
         {{/each}}
-      </table>
+      </div>
     </div>
 
     <div class="col-md-9">
@@ -88,7 +91,7 @@
 </script>
 
 <script type="text/x-handlebars" id="jobs/index">
-  <p class="text-warning">Please select a job</p>
+  <h3 class="text-warning">Please select a job</h3>
 </script>
 
 <script type="text/x-handlebars" id="job">
