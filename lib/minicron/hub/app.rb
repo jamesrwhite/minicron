@@ -14,8 +14,9 @@ module Minicron::Hub
 
     # Configure how we server assets
     assets do
-      serve '/css', :from => 'assets/css'
-      serve '/js', :from => 'assets/js'
+      serve '/css',   :from => 'assets/css'
+      serve '/js',    :from => 'assets/js'
+      serve '/fonts', :from => 'assets/fonts'
 
       # Set up the application css
       css :app, '/css/all.css', [
