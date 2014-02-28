@@ -128,7 +128,8 @@ module Minicron
           finish = Time.now.utc - subtract_total
 
           # yield the finish time and exit status
-          yield structured :status, "FINISH #{exit_status} #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
+          yield structured :status, "FINISH #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
+          yield structured :status, "EXIT #{exit_status}"
 
           # Output some debug info
           if options[:verbose]

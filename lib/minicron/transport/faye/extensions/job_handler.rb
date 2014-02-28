@@ -12,36 +12,36 @@ module Minicron
           # TODO: All of these need more validation checks and error handling
           # currently it's just assumed the correct data is passed
 
+          # Check that the job id is a valid length
+          if segments[2].length != 40
+            # Do something clever here
+          end
+
           # Is it a setup message?
           if segments[3] == 'status' && message['data']['message']['action'] == 'SETUP'
-            # Check that the job id is a valid length
-            if segments[2].length == 40
-              # Validate or create the job
-              Job.where(:job_id => segments[2]).first_or_create do |job|
-                job.command = message['data']['message']['command']
-                job.host = message['data']['message']['host']
-              end
-
-              # Create an execution for this job
-              execution = Execution.create(
-                :job_id => segments[2],
-              )
-
-              # Alter the response channel to include the execution id for the
-              # client to use in later requests
-              segments[3] = "#{execution.execution_id}/status"
-              message['channel'] = segments.join('/')
+            # Validate or create the job
+            Job.where(:job_id => segments[2]).first_or_create do |job|
+              job.command = message['data']['message']['command']
+              job.host = message['data']['message']['host']
             end
+
+            # Create an execution for this job
+            execution = Execution.create(
+              :job_id => segments[2],
+              :created_at => message['data']['ts']
+            )
+
+            # Alter the response channel to include the execution id for the
+            # client to use in later requests
+            segments[3] = "#{execution.execution_id}/status"
+            message['channel'] = segments.join('/')
           end
 
           # Is it a start message?
           if segments[4] == 'status' && message['data']['message'][0..4] == 'START'
-            # Check that the job id is a valid length
-            if segments[2].length == 40
-              Execution.where(:execution_id => segments[3]).update_all(
-                'started_at' => message['data']['message'][6..-1]
-              )
-            end
+            Execution.where(:execution_id => segments[3]).update_all(
+              'started_at' => message['data']['message'][6..-1]
+            )
           end
 
           # Is it job output?
@@ -56,13 +56,16 @@ module Minicron
 
           # Is it a finish message?
           if segments[4] == 'status' && message['data']['message'][0..5] == 'FINISH'
-            # Check that the job id is a valid length
-            if segments[2].length == 40
-              Execution.where(:execution_id => segments[3]).update_all(
-                'finished_at' => message['data']['message'][9..-1],
-                'exit_status' => message['data']['message'][7..7]
-              )
-            end
+            Execution.where(:execution_id => segments[3]).update_all(
+              'finished_at' => message['data']['message'][7..-1]
+            )
+          end
+
+          # Is it an exit message?
+          if segments[4] == 'status' && message['data']['message'][0..3] == 'EXIT'
+            Execution.where(:execution_id => segments[3]).update_all(
+              'exit_status' => message['data']['message'][5..-1]
+            )
           end
         end
 
