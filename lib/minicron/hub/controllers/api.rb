@@ -4,7 +4,7 @@ require 'minicron/hub/models/execution'
 class Minicron::Hub::App
   get '/api/jobs.json' do
     content_type :json
-    Job.all.to_json
+    Job.all.order(:created_at => :desc).to_json
   end
 
   get '/api/jobs/:job_id.json' do
@@ -14,7 +14,7 @@ class Minicron::Hub::App
 
   get '/api/executions.json' do
     content_type :json
-    Execution.all.order(:started_at => :desc).includes(:job)
+    Execution.all.order(:created_at => :desc, :started_at => :desc).includes(:job)
              .to_json(:include => :job)
   end
 
