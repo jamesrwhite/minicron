@@ -11,7 +11,10 @@ module Minicron
 
       # Instantiate a new instance of the client
       #
+      # @param scheme [String] http or https
       # @param host [String] The host to be communicated with
+      # @param port [String] The port number the server runs on
+      # @param path [String] The path to the server, optional
       def initialize(scheme, host, port, path) # TODO: Add options hash for other options
         @scheme = scheme
         @host = host

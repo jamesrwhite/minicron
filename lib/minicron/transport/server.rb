@@ -3,6 +3,7 @@ require 'rack'
 
 module Minicron
   module Transport
+    # Used to mangage the web server minicron runs on
     class Server
       attr_reader :server
 
