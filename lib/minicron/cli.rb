@@ -86,17 +86,18 @@ module Minicron
       options[:mode] ||= 'line'
       options[:verbose] ||= false
 
+      # Record the start time of the command
+      start = Time.now.utc
+      subtract_total = 0
+
+      # yield the start time
+      subtract = Time.now.utc
+      yield structured :status, "START #{start.strftime("%Y-%m-%d %H:%M:%S")}"
+      subtract_total += Time.now.utc - subtract
+
       # Spawn a process to run the command
       begin
         PTY.spawn(command) do |stdout, stdin, pid|
-          # Record the start time of the command
-          start = Time.now.utc
-          subtract_total = 0
-
-          # yield the start time
-          subtract = Time.now.utc
-          yield structured :status, "START #{start.strftime("%Y-%m-%d %H:%M:%S")}"
-          subtract_total += Time.now.utc - subtract
 
           # Output some debug info
           if options[:verbose]
@@ -143,6 +144,10 @@ module Minicron
           end
         end
       rescue Errno::ENOENT
+        yield structured :status, "START #{start.strftime("%Y-%m-%d %H:%M:%S")}"
+        yield structured :status, "FINISH #{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")}"
+        yield structured :status, "EXIT 1"
+
         fail Exception, "Running the command `#{command}` failed, are you sure it exists?", caller
       end
     end
