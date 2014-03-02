@@ -1,11 +1,20 @@
+require 'minicron/hub/models/host'
+require 'minicron/hub/models/job'
 require 'minicron/hub/models/execution'
 require 'minicron/hub/models/job_execution_output'
 
 module Minicron
   module Transport
+    # An extension to the Faye server to store some of the data it receives
     class FayeJobHandler
+      # Called by Faye when a message is recieved
+      #
+      # @param message [Hash] The message data
+      # @param callback
       def incoming(message, callback)
         segments = message['channel'].split('/')
+        data = message['data']['message']
+        ts = message['data']['ts']
 
         # Is it a job messages
         if segments[1] == 'job'
@@ -18,17 +27,22 @@ module Minicron
           end
 
           # Is it a setup message?
-          if segments[3] == 'status' && message['data']['message']['action'] == 'SETUP'
+          if segments[3] == 'status' && data['action'] == 'SETUP'
+            # Validate or create the host
+            host = Minicron::Hub::Host.where(:hostname => data['host']).first_or_create do |h|
+              h.hostname = data['host']
+            end
+
             # Validate or create the job
-            Job.where(:job_id => segments[2]).first_or_create do |job|
-              job.command = message['data']['message']['command']
-              job.host = message['data']['message']['host']
+            Minicron::Hub::Job.where(:job_id => segments[2]).first_or_create do |job|
+              job.command = data['command']
+              job.host_id = host.host_id
             end
 
             # Create an execution for this job
-            execution = Execution.create(
+            execution = Minicron::Hub::Execution.create(
               :job_id => segments[2],
-              :created_at => message['data']['ts']
+              :created_at => ts
             )
 
             # Alter the response channel to include the execution id for the
@@ -38,33 +52,33 @@ module Minicron
           end
 
           # Is it a start message?
-          if segments[4] == 'status' && message['data']['message'][0..4] == 'START'
-            Execution.where(:execution_id => segments[3]).update_all(
-              'started_at' => message['data']['message'][6..-1]
+          if segments[4] == 'status' && data[0..4] == 'START'
+            Minicron::Hub::Execution.where(:execution_id => segments[3]).update_all(
+              'started_at' => data[6..-1]
             )
           end
 
           # Is it job output?
           if segments[4] == 'output'
-            JobExecutionOutput.create(
+            Minicron::Hub::JobExecutionOutput.create(
               :job_id => segments[2],
               :execution_id => segments[3],
-              :output => message['data']['message'],
-              :timestamp => message['data']['ts']
+              :output => data,
+              :timestamp => ts
             )
           end
 
           # Is it a finish message?
-          if segments[4] == 'status' && message['data']['message'][0..5] == 'FINISH'
-            Execution.where(:execution_id => segments[3]).update_all(
-              'finished_at' => message['data']['message'][7..-1]
+          if segments[4] == 'status' && data[0..5] == 'FINISH'
+            Minicron::Hub::Execution.where(:execution_id => segments[3]).update_all(
+              'finished_at' => data[7..-1]
             )
           end
 
           # Is it an exit message?
-          if segments[4] == 'status' && message['data']['message'][0..3] == 'EXIT'
-            Execution.where(:execution_id => segments[3]).update_all(
-              'exit_status' => message['data']['message'][5..-1]
+          if segments[4] == 'status' && data[0..3] == 'EXIT'
+            Minicron::Hub::Execution.where(:execution_id => segments[3]).update_all(
+              'exit_status' => data[5..-1]
             )
           end
         end
