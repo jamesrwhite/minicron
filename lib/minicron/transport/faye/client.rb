@@ -37,7 +37,9 @@ module Minicron
 
       # Helper that wraps the publish function making it quicker to use
       #
-      # TODO: Add otions hash doc
+      # @option options [String] job_id
+      # @option options [String, Symbol] type status or output
+      # @option options [Integer] execution_id
       def send(options = {})
         # Only send the job execution if we have it
         # TODO: Validate if we should have it or not
