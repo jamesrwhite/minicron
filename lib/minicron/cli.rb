@@ -131,7 +131,7 @@ module Minicron
       ensure
         # Record the time the command finished
         finish = Time.now.utc - subtract_total
-        exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : 0
+        exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
 
         # yield the finish time and exit status
         yield structured :status, "FINISH #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
