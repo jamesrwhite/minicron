@@ -29,6 +29,7 @@ module Minicron::Hub
         '/js/jquery-2.0.3.js',
         '/js/handlebars-1.3.0.js',
         '/js/ember-1.4.0.js',
+        '/js/ember-data-1.0.0-beta.7.f87cba88.js',
         '/js/faye-browser-1.0.1.js',
         '/js/ansi_up.js',
         '/js/bootstrap.js',
