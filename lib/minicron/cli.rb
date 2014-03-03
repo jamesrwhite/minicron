@@ -122,33 +122,31 @@ module Minicron
           ensure
             # Force waiting for the process to finish so we can get the exit status
             Process.wait pid
-            exit_status = $CHILD_STATUS.exitstatus
-          end
-
-          # Record the time the command finished
-          finish = Time.now.utc - subtract_total
-
-          # yield the finish time and exit status
-          yield structured :status, "FINISH #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
-          yield structured :status, "EXIT #{exit_status}"
-
-          # Output some debug info
-          if options[:verbose]
-            yield structured :verbose, "\n" + "[minicron]".colour(:magenta)
-            yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
-            yield structured :verbose, '[minicron]'.colour(:magenta)
-            yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
-            yield structured :verbose, '[minicron]'.colour(:magenta)
-            yield structured :verbose, " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
-            yield structured :verbose, exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
           end
         end
       rescue Errno::ENOENT
-        yield structured :status, "START #{start.strftime("%Y-%m-%d %H:%M:%S")}"
-        yield structured :status, "FINISH #{Time.now.utc.strftime("%Y-%m-%d %H:%M:%S")}"
-        yield structured :status, "EXIT 1"
+        exit_status = 1
 
-        fail Exception, "Running the command `#{command}` failed, are you sure it exists?", caller
+        fail Exception, "Running the command `#{command}` failed, are you sure it exists?"
+      ensure
+        # Record the time the command finished
+        finish = Time.now.utc - subtract_total
+        exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : 0
+
+        # yield the finish time and exit status
+        yield structured :status, "FINISH #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
+        yield structured :status, "EXIT #{exit_status}"
+
+        # Output some debug info
+        if options[:verbose]
+          yield structured :verbose, "\n" + "[minicron]".colour(:magenta)
+          yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
+          yield structured :verbose, '[minicron]'.colour(:magenta)
+          yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
+          yield structured :verbose, '[minicron]'.colour(:magenta)
+          yield structured :verbose, " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
+          yield structured :verbose, exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
+        end
       end
     end
 
@@ -244,52 +242,67 @@ module Minicron
         c.action do |args, opts|
           # Check that exactly one argument has been passed
           if args.length != 1
-            fail ArgumentError, 'A valid command to run is required! See `minicron help run`', caller
+            fail ArgumentError, 'A valid command to run is required! See `minicron help run`'
           end
 
           # Parse the file and cli config options
           parse_config(opts)
 
-          unless Minicron.config['cli']['dry_run']
-            # Get a faye instance so we can send data about the job
-            faye = Minicron::Transport::FayeClient.new(
-              Minicron.config['server']['scheme'],
-              Minicron.config['server']['host'],
-              Minicron.config['server']['port'],
-              Minicron.config['server']['path']
-            )
+          begin
+            # Set up the job and get the job and execution ids
+            unless Minicron.config['cli']['dry_run']
+              # Get a faye instance so we can send data about the job
+              faye = Minicron::Transport::FayeClient.new(
+                Minicron.config['server']['scheme'],
+                Minicron.config['server']['host'],
+                Minicron.config['server']['port'],
+                Minicron.config['server']['path']
+              )
 
-            # Fire up eventmachine
-            faye.ensure_em_running
+              # Get the Job ID
+              host = `hostname -s`.strip
+              job_id = Minicron::Transport.get_job_id(args.first, host)
 
-            # Get the Job ID
-            host = `hostname -s`.strip
-            job_id = Minicron::Transport.get_job_id(args.first, host)
+              # Fire up eventmachine
+              faye.ensure_em_running
 
-            # Set up the job and get the execution id
-            execution_id = faye.setup(job_id, args.first, host)
-          end
+              # Setup the job on the server
+              execution_id = faye.setup(job_id, args.first, host)
 
-          # Execute the command and yield the output
-          run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['global']['verbose']) do |output|
-            # We need to handle the yielded output differently based on it's type
-            case output[:type]
-            when :status
-              unless Minicron.config['cli']['dry_run']
-                faye.send(:job_id => job_id, :execution_id => execution_id, :type => :status, :message => output[:output])
-              end
-            when :command
-              unless Minicron.config['cli']['dry_run']
-                faye.send(:job_id => job_id, :execution_id => execution_id, :type => :output, :message => output[:output])
-              end
+              # Wait until we get the execution id
+              faye.ensure_delivery
             end
 
-            yield output[:output] unless output[:type] == :status
-          end
+            # Execute the command and yield the output
+            run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['global']['verbose']) do |output|
+              # We need to handle the yielded output differently based on it's type
+              case output[:type]
+              when :status
+                unless Minicron.config['cli']['dry_run']
+                  faye.send(:job_id => job_id, :execution_id => execution_id, :type => :status, :message => output[:output])
+                end
+              when :command
+                unless Minicron.config['cli']['dry_run']
+                  faye.send(:job_id => job_id, :execution_id => execution_id, :type => :output, :message => output[:output])
+                end
+              end
 
-          # Block until all the messages have been sent
-          faye.ensure_delivery unless Minicron.config['cli']['dry_run']
-          faye.tidy_up unless Minicron.config['cli']['dry_run']
+              yield output[:output] unless output[:type] == :status
+            end
+          rescue Exception => e
+            # Send the exception message to the server and yield it
+            unless Minicron.config['cli']['dry_run']
+              faye.send(:job_id => job_id, :execution_id => execution_id, :type => :output, :message => e.message)
+            end
+
+            fail e
+          ensure
+            # Ensure that all messages are delivered and that we
+            unless Minicron.config['cli']['dry_run']
+              faye.ensure_delivery
+              faye.tidy_up
+            end
+          end
         end
       end
     end

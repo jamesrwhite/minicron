@@ -47,12 +47,12 @@ module Minicron
     rescue Errno::ENOENT
       # Fail if the file doesn't exist unless it's the default config file
       if file_path != DEFAULT_CONFIG_FILE
-        fail Exception, "Unable to the load the file '#{file_path}', are you sure it exists?", caller
+        fail Exception, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
     rescue Errno::EACCES
-      fail Exception, "Unable to the readthe file '#{file_path}', check it has the right permissions.", caller
+      fail Exception, "Unable to the readthe file '#{file_path}', check it has the right permissions."
     rescue TOML::ParseError
-      fail Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax.", caller
+      fail Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
     end
   end
 
