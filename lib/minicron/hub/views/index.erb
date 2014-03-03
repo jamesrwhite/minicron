@@ -8,6 +8,7 @@
       <ul class="nav navbar-nav">
         {{#link-to 'executions' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Executions</a>{{/link-to}}
         {{#link-to 'jobs' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Jobs</a>{{/link-to}}
+        {{#link-to 'hosts' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Hosts</a>{{/link-to}}
       </ul>
     </div>
   </div>
@@ -45,7 +46,7 @@
       </div>
     </div>
 
-    <div class="col-md-9">
+    <div class="main-panel col-md-9">
       {{outlet}}
     </div>
   </div>
@@ -76,7 +77,7 @@
     </ul>
 
     <li><h4>Output</h4></li>
-    <div class="output tomorrow-night-eightes-ansi-theme">{{#each job_execution_output}}{{ansi_to_html output}}{{/each}}</div>
+    <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_output}}{{ansi_to_html output}}{{/each}}</div>
   </ul>
 </script>
 
@@ -91,7 +92,7 @@
       </div>
     </div>
 
-    <div class="col-md-9">
+    <div class="main-panel col-md-9">
       {{outlet}}
     </div>
   </div>
@@ -109,6 +110,39 @@
       <li><b>Name:</b> {{name}}</li>
       <li><b>Command:</b> {{command}}</b></li>
       <li><b>Host:</b> {{host.name}}</b></li>
+      <li><b>Created At:</b> {{created_at}}</b></li>
+    </ul>
+  </ul>
+</script>
+
+<script type="text/x-handlebars" id="hosts">
+  <div class="row">
+    <div class="sidebar well col-md-3">
+      <h5>Hosts</h5>
+      <div class="list-group">
+        {{#each model}}
+          {{#link-to 'host' host_id class="list-group-item"}}{{name}}{{/link-to}}
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="main-panel col-md-9">
+      {{outlet}}
+    </div>
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="hosts/index">
+  <h3 class="text-warning">Please select a host</h3>
+</script>
+
+<script type="text/x-handlebars" id="host">
+  <ul>
+    <li><h4>Host</h4></li>
+    <ul>
+      <li><b>Host ID:</b> {{host_id}}</li>
+      <li><b>Hostname:</b> {{hostname}}</li>
+      <li><b>Name</b> {{name}}</b></li>
       <li><b>Created At:</b> {{created_at}}</b></li>
     </ul>
   </ul>

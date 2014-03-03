@@ -36,6 +36,7 @@ class Minicron::Hub::App
   end
 
   # Get all hosts that a job
+  # TODO: Add offset/limit
   get '/api/hosts.json' do
     content_type :json
     Minicron::Hub::Host.all.includes(:jobs).order(:created_at => :desc)

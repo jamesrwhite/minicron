@@ -1,5 +1,11 @@
+html, body, .sidebar, .main-panel {
+  min-height: 100%;
+  height: 100%;
+}
+
 body {
   padding-top: 60px;
+  background-color: #2A2C2E;
 }
 
 // Making the navbar items look clickable
@@ -10,6 +16,11 @@ body {
 // Removing the bottom margin from the navbar
 .navbar {
   margin-bottom: 0;
+}
+
+// Main content panel
+.main-panel {
+  background-color: #FFF;
 }
 
 // Remove border-radius from wells
@@ -42,7 +53,7 @@ a.list-group-item.active, a.list-group-item.active:hover {
 }
 
 a.list-group-item:hover {
-  text-decoration: underline;
+  background-color: #DDE1E4;
 }
 
 // Job execution output
@@ -59,7 +70,7 @@ a.list-group-item:hover {
 }
 
 // Tomorrow Night Ansi Colour Scheme
-.tomorrow-night-eightes-ansi-theme {
+.tomorrow-night-eighties-ansi-theme {
   .ansi-black-fg {
     color: #3A3A3A;
   }
