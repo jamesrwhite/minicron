@@ -31,7 +31,7 @@
         <h1>
 <a name="minicron" class="anchor" href="#minicron"><span class="octicon octicon-link"></span></a>minicron</h1>
 
-<p><a href="http://travis-ci.org/jamesrwhite/minicron"><img src="https://secure.travis-ci.org/jamesrwhite/minicron.png" alt="Build Status"></a> <a href="https://gemnasium.com/jamesrwhite/minicron"><img src="https://gemnasium.com/jamesrwhite/minicron.png" alt="Dependency Status"></a></p>
+<p><a href="http://travis-ci.org/jamesrwhite/minicron"><img src="https://api.travis-ci.org/jamesrwhite/minicron.png" alt="Build Status"></a> <a href="https://coveralls.io/r/jamesrwhite/minicron?branch=master"><img src="https://coveralls.io/repos/jamesrwhite/minicron/badge.png?derp" alt="Coverage Status"></a> <a href="https://codeclimate.com/github/jamesrwhite/minicron"><img src="https://codeclimate.com/github/jamesrwhite/minicron.png" alt="Code Climate"></a> <a href="https://gemnasium.com/jamesrwhite/minicron"><img src="https://gemnasium.com/jamesrwhite/minicron.png" alt="Dependency Status"></a> <a href="http://inch-pages.github.io/github/jamesrwhite/minicron"><img src="http://inch-pages.github.io/github/jamesrwhite/minicron.png" alt="Inline docs"></a></p>
 
 <p>minicron is a work in progress system to make it easier to more effectively manage and monitor cron jobs.</p>
 
@@ -58,8 +58,10 @@
 
 <ul>
 <li>The 'Hub' is a web interface to the minicron system and the central point where data is collected</li>
-<li>Collect data sent via CLI and store it in a db</li>
-<li>Display both realtime and historic data</li>
+<li>
+<del>Collect data sent via CLI and store it in a db</del> ✓</li>
+<li>Display both realtime <del>and historic data</del>
+</li>
 <li>CRUD functionality for cron jobs via SSH</li>
 <li>Permissions support</li>
 <li>Alerting (email, sms and push notifications support)</li>
@@ -101,7 +103,7 @@
 <h4>
 <a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h4>
 
-<p>Many configuration options can be passed in manually but you can also pass a file path to the <code>--config</code> global option. The file is expected to be in the <a href="https://github.com/mojombo/toml" title="toml">toml</a> format. The default options are specified in the <a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml" title="default.config.toml">default.config.toml</a> file. Options specified via the command line will take precedence over those taken from a config file.</p>
+<p>Many configuration options can be passed in manually but you can also pass a file path to the <code>--config</code> global option. The file is expected to be in the <a href="https://github.com/mojombo/toml" title="toml">toml</a> format. The default options are specified in the <a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml" title="default.config.toml">default.config.toml</a> file and minicron will parse a config located in <code>/etc/minicron.toml</code> if it exists. Options specified via the command line will take precedence over those taken from a config file.</p>
 
 <h2>
 <a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
