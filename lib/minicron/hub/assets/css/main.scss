@@ -1,3 +1,7 @@
+html, body, .ember-view, .main-container {
+  height: 100%;
+}
+
 body {
   padding-top: 60px;
   background-color: #2A2C2E;
@@ -18,9 +22,10 @@ body {
   border-radius: 0;
 }
 
-.ember-view > .container > .row{
+.main-container {
   display: table;
-  width: 100%;
+  width: 1024px;
+  margin: auto;
 }
 
 // Main content panel
@@ -28,6 +33,10 @@ body {
   width: 75%;
   background-color: #FFF;
   display: table-cell;
+
+  .main-panel-inner {
+    padding: 24px
+  }
 }
 
 .sidebar {
@@ -36,9 +45,10 @@ body {
   border: 0;
   margin: 0;
   display: table-cell;
+  background-color: #ECF0F1;
 
   h5 {
-    padding: 24px 15px;
+    padding: 24px;
     font-weight: bold;
     margin: 0;
   }
@@ -71,6 +81,7 @@ a.list-group-item:hover {
   line-height: 1.5;
   padding: 15px;
   overflow: scroll;
+  width: 700px; // Find a better way to do this
 }
 
 // Tomorrow Night Ansi Colour Scheme

@@ -1,6 +1,6 @@
 <script type="text/x-handlebars">
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="main-container">
       <div class="navbar-header">
         {{#link-to 'index' class="navbar-brand"}}minicron{{/link-to}}
       </div>
@@ -13,40 +13,40 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="main-container">
     {{outlet}}
   </div>
 </script>
 
 <script type="text/x-handlebars" id="executions">
-  <div class="row">
-    <div class="sidebar well">
-      <h5>Recent Job Executions</h5>
-      <div class="list-group">
-        {{#each model}}
-          {{#link-to 'execution' id class="list-group-item clearfix"}}
-            <span class="pull-left">{{job.name}}</span>
-            {{#if exit_status}}
-              <span class="pull-right label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
-                <span class="glyphicon glyphicon-remove"></span>
-                </span>
+  <div class="sidebar">
+    <h5>Recent Job Executions</h5>
+    <div class="list-group">
+      {{#each model}}
+        {{#link-to 'execution' id class="list-group-item clearfix"}}
+          <span class="pull-left">{{job.name}}</span>
+          {{#if exit_status}}
+            <span class="pull-right label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
+              <span class="glyphicon glyphicon-remove"></span>
+              </span>
+          {{else}}
+            {{#if finished_at}}
+              <span class="pull-right label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
+                <span class="glyphicon glyphicon-ok"></span>
+              </span>
             {{else}}
-              {{#if finished_at}}
-                <span class="pull-right label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
-                  <span class="glyphicon glyphicon-ok"></span>
-                </span>
-              {{else}}
-                <span class="pull-right label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
-                  <span class="glyphicon glyphicon-flash"></span>
-                </span>
-              {{/if}}
+              <span class="pull-right label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
+                <span class="glyphicon glyphicon-flash"></span>
+              </span>
             {{/if}}
-          {{/link-to}}
-        {{/each}}
-      </div>
+          {{/if}}
+        {{/link-to}}
+      {{/each}}
     </div>
+  </div>
 
-    <div class="main-panel container">
+  <div class="main-panel">
+    <div class="main-panel-inner">
       {{outlet}}
     </div>
   </div>
@@ -57,42 +57,36 @@
 </script>
 
 <script type="text/x-handlebars" id="execution">
-  <ul>
-    <li><h4>Job</h4></li>
-    <ul>
-      <li><b>Job ID:</b> {{job.id}}</li>
-      <li><b>Name:</b> {{job.name}}</li>
-      <li><b>Command:</b> {{job.command}}</b></li>
-      <li><b>Host:</b> {{job.host.name}}</b></li>
-      <li><b>Created At:</b> {{job.created_at}}</b></li>
-    </ul>
+  <h4>Job</h4>
+  <li><b>Job ID:</b> {{job.id}}</li>
+  <li><b>Name:</b> {{job.name}}</li>
+  <li><b>Command:</b> {{job.command}}</b></li>
+  <li><b>Host:</b> {{job.host.name}}</b></li>
+  <li><b>Created At:</b> {{job.created_at}}</b></li>
 
-    <li><h4>Execution</h4></li>
-    <ul>
-      <li><b>Execution ID:</b> {{id}}</li>
-      <li><b>Created At:</b> {{created_at}}</li>
-      <li><b>Started At:</b> {{started_at}}</li>
-      <li><b>Finished At:</b> {{finished_at}}</li>
-      <li><b>Exit Status:</b> {{exit_status}}</li>
-    </ul>
+  <h4>Execution</h4>
+  <li><b>Execution ID:</b> {{id}}</li>
+  <li><b>Created At:</b> {{created_at}}</li>
+  <li><b>Started At:</b> {{started_at}}</li>
+  <li><b>Finished At:</b> {{finished_at}}</li>
+  <li><b>Exit Status:</b> {{exit_status}}</li>
 
-    <li><h4>Output</h4></li>
-    <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_outputs}}{{ansi_to_html output}}{{/each}}</div>
-  </ul>
+  <h4>Output</h4>
+  <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_outputs}}{{ansi_to_html output}}{{/each}}</div>
 </script>
 
 <script type="text/x-handlebars" id="jobs">
-  <div class="row">
-    <div class="sidebar well">
-      <h5>Jobs</h5>
-      <div class="list-group">
-        {{#each model}}
-          {{#link-to 'job' id class="list-group-item"}}{{name}}{{/link-to}}
-        {{/each}}
-      </div>
+  <div class="sidebar">
+    <h5>Jobs</h5>
+    <div class="list-group">
+      {{#each model}}
+        {{#link-to 'job' id class="list-group-item"}}{{name}}{{/link-to}}
+      {{/each}}
     </div>
+  </div>
 
-    <div class="main-panel container">
+  <div class="main-panel">
+    <div class="main-panel-inner">
       {{outlet}}
     </div>
   </div>
@@ -116,17 +110,17 @@
 </script>
 
 <script type="text/x-handlebars" id="hosts">
-  <div class="row">
-    <div class="sidebar well">
-      <h5>Hosts</h5>
-      <div class="list-group">
-        {{#each model}}
-          {{#link-to 'host' id class="list-group-item"}}{{name}}{{/link-to}}
-        {{/each}}
-      </div>
+  <div class="sidebar">
+    <h5>Hosts</h5>
+    <div class="list-group">
+      {{#each model}}
+        {{#link-to 'host' id class="list-group-item"}}{{name}}{{/link-to}}
+      {{/each}}
     </div>
+  </div>
 
-    <div class="main-panel container">
+  <div class="main-panel">
+    <div class="main-panel-inner">
       {{outlet}}
     </div>
   </div>
