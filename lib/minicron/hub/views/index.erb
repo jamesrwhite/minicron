@@ -149,7 +149,7 @@
     <li><h4>Jobs</h4></li>
     <ul>
     {{#each job in jobs}}
-      <li><{{#link-to 'job' job.id}}{{job.id}}{{/link-to}}</li>
+      <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>
     {{/each}}
     </ul>
   </ul>
