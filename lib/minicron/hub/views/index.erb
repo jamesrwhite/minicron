@@ -24,7 +24,7 @@
       <h5>Recent Job Executions</h5>
       <div class="list-group">
         {{#each model}}
-          {{#link-to 'execution' execution_id class="list-group-item clearfix"}}
+          {{#link-to 'execution' id class="list-group-item clearfix"}}
             <span class="pull-left">{{job.name}}</span>
             {{#if exit_status}}
               <span class="pull-right label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
@@ -60,7 +60,7 @@
   <ul>
     <li><h4>Job</h4></li>
     <ul>
-      <li><b>Job ID:</b> {{job.job_id}}</li>
+      <li><b>Job ID:</b> {{job.id}}</li>
       <li><b>Name:</b> {{job.name}}</li>
       <li><b>Command:</b> {{job.command}}</b></li>
       <li><b>Host:</b> {{job.host.name}}</b></li>
@@ -69,7 +69,7 @@
 
     <li><h4>Execution</h4></li>
     <ul>
-      <li><b>Execution ID:</b> {{execution_id}}</li>
+      <li><b>Execution ID:</b> {{id}}</li>
       <li><b>Created At:</b> {{created_at}}</li>
       <li><b>Started At:</b> {{started_at}}</li>
       <li><b>Finished At:</b> {{finished_at}}</li>
@@ -87,7 +87,7 @@
       <h5>Jobs</h5>
       <div class="list-group">
         {{#each model}}
-          {{#link-to 'job' job_id class="list-group-item"}}{{name}}{{/link-to}}
+          {{#link-to 'job' id class="list-group-item"}}{{name}}{{/link-to}}
         {{/each}}
       </div>
     </div>
@@ -106,7 +106,7 @@
   <ul>
     <li><h4>Job</h4></li>
     <ul>
-      <li><b>Job ID:</b> {{job_id}}</li>
+      <li><b>Job ID:</b> {{id}}</li>
       <li><b>Name:</b> {{name}}</li>
       <li><b>Command:</b> {{command}}</b></li>
       <li><b>Host:</b> {{host.name}}</b></li>
@@ -121,7 +121,7 @@
       <h5>Hosts</h5>
       <div class="list-group">
         {{#each model}}
-          {{#link-to 'host' host_id class="list-group-item"}}{{name}}{{/link-to}}
+          {{#link-to 'host' id class="list-group-item"}}{{name}}{{/link-to}}
         {{/each}}
       </div>
     </div>
@@ -140,7 +140,7 @@
   <ul>
     <li><h4>Host</h4></li>
     <ul>
-      <li><b>Host ID:</b> {{host_id}}</li>
+      <li><b>Host ID:</b> {{id}}</li>
       <li><b>Hostname:</b> {{hostname}}</li>
       <li><b>Name</b> {{name}}</b></li>
       <li><b>Created At:</b> {{created_at}}</b></li>

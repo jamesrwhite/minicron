@@ -1,52 +1,49 @@
-require 'minicron/hub/models/job'
-require 'minicron/hub/models/execution'
-
 class Minicron::Hub::App
   # Get all jobs
   # TODO: Add offset/limit
-  get '/api/jobs.json' do
+  get '/api/jobs' do
     content_type :json
-    Minicron::Hub::Job.all.order(:created_at => :desc)
-                      .includes(:host)
-                      .to_json(:include => :host)
+    jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host)
+    { :jobs => jobs.map { |e| JobSerializer.new(e, :root => false) } }.to_json
   end
 
   # Get a single job by it ID
-  get '/api/jobs/:job_id.json' do
+  get '/api/jobs/:id' do
     content_type :json
-    Minicron::Hub::Job.includes(:host).find(params[:job_id])
-                      .to_json(:include => :host)
+    job = Minicron::Hub::Job.includes(:host).find(params[:id])
+    JobSerializer.new(job).to_json
   end
 
   # Get all job executions
   # TODO: Add offset/limit
-  get '/api/executions.json' do
+  get '/api/executions' do
     content_type :json
-    Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)
-             .includes({:job => :host})
-             .to_json(:include => {:job => {:include => :host}})
+    executions = Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)
+                                         #.includes({:job => :host}, :job_execution_outputs)
+    { :executions => executions.map { |e| ExecutionSerializer.new(e, :root => false) } }.to_json
   end
 
   # Get a single job execution by its ID
-  get '/api/executions/:execution_id.json' do
+  get '/api/executions/:id' do
     content_type :json
-    Minicron::Hub::Execution.includes({:job => :host}, :job_execution_output)
-             .find(params[:execution_id])
-             .to_json(:include => [{:job => {:include => :host}}, :job_execution_output])
+    execution = Minicron::Hub::Execution.find(params[:id])
+                                        #.includes({:job => :host}, :job_execution_outputs)
+    ExecutionSerializer.new(execution).to_json
   end
 
   # Get all hosts that a job
   # TODO: Add offset/limit
-  get '/api/hosts.json' do
+  get '/api/hosts' do
     content_type :json
-    Minicron::Hub::Host.all.includes(:jobs).order(:created_at => :desc)
-                       .to_json(:include => :jobs)
+    hosts = Minicron::Hub::Host.all.includes(:jobs).order(:created_at => :desc)
+    { :hosts => hosts.map { |h| HostSerializer.new(h, :root => false) } }.to_json
   end
 
   # Get a single host by its ID
-  get '/api/hosts/:host_id.json' do
+  get '/api/hosts/:id' do
     content_type :json
-    Minicron::Hub::Host.includes(:jobs).order(:created_at => :desc)
-                       .find(params[:host_id]).to_json(:include => :jobs)
+    host = Minicron::Hub::Host.includes(:jobs).order(:created_at => :desc)
+                              .find(params[:id])
+    HostSerializer.new(host).to_json
   end
 end

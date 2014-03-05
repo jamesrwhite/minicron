@@ -3,6 +3,7 @@ require 'sinatra/activerecord'
 require 'sinatra/assetpack'
 require 'erubis'
 require 'json'
+require 'active_model_serializers'
 
 module Minicron::Hub
   class App < Sinatra::Base
@@ -35,7 +36,9 @@ module Minicron::Hub
         '/js/bootstrap.js',
         '/js/app/helpers.js',
         '/js/app/application.js',
-        'js/app/models/job.js',
+        '/js/app/models/job.js',
+        '/js/app/models/host.js',
+        '/js/app/models/execution.js',
         '/js/app/routes.js',
       ]
     end
@@ -61,6 +64,11 @@ module Minicron::Hub
       end
     end
   end
+end
+
+# Load all our model serializers
+Dir[File.dirname(__FILE__) + '/serializers/*.rb'].each do |serializer|
+  require serializer
 end
 
 # Load all our models

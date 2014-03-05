@@ -1,4 +1,7 @@
 class Minicron::Hub::Host < ActiveRecord::Base
+  include ActiveModel::Serialization
+  include ActiveModel::Serializers::JSON
+
   has_many :jobs
 
   # Default the name of the host to the hostname itself if no name is set

@@ -34,9 +34,9 @@ module Minicron
             end
 
             # Validate or create the job
-            Minicron::Hub::Job.where(:job_id => segments[2]).first_or_create do |job|
+            Minicron::Hub::Job.where(:id => segments[2]).first_or_create do |job|
               job.command = data['command']
-              job.host_id = host.host_id
+              job.host_id = host.id
             end
 
             # Create an execution for this job
@@ -47,13 +47,13 @@ module Minicron
 
             # Alter the response channel to include the execution id for the
             # client to use in later requests
-            segments[3] = "#{execution.execution_id}/status"
+            segments[3] = "#{execution.id}/status"
             message['channel'] = segments.join('/')
           end
 
           # Is it a start message?
           if segments[4] == 'status' && data[0..4] == 'START'
-            Minicron::Hub::Execution.where(:execution_id => segments[3]).update_all(
+            Minicron::Hub::Execution.where(:id => segments[3]).update_all(
               'started_at' => data[6..-1]
             )
           end
@@ -70,14 +70,14 @@ module Minicron
 
           # Is it a finish message?
           if segments[4] == 'status' && data[0..5] == 'FINISH'
-            Minicron::Hub::Execution.where(:execution_id => segments[3]).update_all(
+            Minicron::Hub::Execution.where(:id => segments[3]).update_all(
               'finished_at' => data[7..-1]
             )
           end
 
           # Is it an exit message?
           if segments[4] == 'status' && data[0..3] == 'EXIT'
-            Minicron::Hub::Execution.where(:execution_id => segments[3]).update_all(
+            Minicron::Hub::Execution.where(:id => segments[3]).update_all(
               'exit_status' => data[5..-1]
             )
           end
