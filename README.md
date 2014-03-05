@@ -24,7 +24,7 @@ Todo
 Installation
 -------------
 
-minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo and ````rake install````.
+minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo ````bundle```` and ````rake install````.
 
 Usage
 -----
