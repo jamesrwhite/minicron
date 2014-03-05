@@ -42,8 +42,8 @@ class Minicron::Hub::App
   # Get a single job execution by its ID
   get '/api/executions/:id' do
     content_type :json
-    execution = Minicron::Hub::Execution.find(params[:id])
-                                        .includes(:job, :job_execution_outputs)
+    execution = Minicron::Hub::Execution.includes(:job, :job_execution_outputs)
+                                        .find(params[:id])
     ExecutionSerializer.new(execution).to_json
   end
 
