@@ -39,6 +39,7 @@ module Minicron::Hub
         '/js/app/models/job.js',
         '/js/app/models/host.js',
         '/js/app/models/execution.js',
+        '/js/app/models/job_execution_output.js',
         '/js/app/routes.js',
       ]
     end
