@@ -20,7 +20,7 @@
 
 <script type="text/x-handlebars" id="executions">
   <div class="row">
-    <div class="sidebar well col-md-3">
+    <div class="sidebar well">
       <h5>Recent Job Executions</h5>
       <div class="list-group">
         {{#each model}}
@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <div class="main-panel col-md-9">
+    <div class="main-panel container">
       {{outlet}}
     </div>
   </div>
@@ -83,7 +83,7 @@
 
 <script type="text/x-handlebars" id="jobs">
   <div class="row">
-    <div class="sidebar well col-md-3">
+    <div class="sidebar well">
       <h5>Jobs</h5>
       <div class="list-group">
         {{#each model}}
@@ -92,7 +92,7 @@
       </div>
     </div>
 
-    <div class="main-panel col-md-9">
+    <div class="main-panel container">
       {{outlet}}
     </div>
   </div>
@@ -117,7 +117,7 @@
 
 <script type="text/x-handlebars" id="hosts">
   <div class="row">
-    <div class="sidebar well col-md-3">
+    <div class="sidebar well">
       <h5>Hosts</h5>
       <div class="list-group">
         {{#each model}}
@@ -126,7 +126,7 @@
       </div>
     </div>
 
-    <div class="main-panel col-md-9">
+    <div class="main-panel container">
       {{outlet}}
     </div>
   </div>

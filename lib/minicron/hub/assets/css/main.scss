@@ -1,8 +1,3 @@
-html, body, .sidebar, .main-panel {
-  min-height: 100%;
-  height: 100%;
-}
-
 body {
   padding-top: 60px;
   background-color: #2A2C2E;
@@ -18,20 +13,29 @@ body {
   margin-bottom: 0;
 }
 
-// Main content panel
-.main-panel {
-  background-color: #FFF;
-}
-
 // Remove border-radius from wells
 .well {
   border-radius: 0;
 }
 
+.ember-view > .container > .row{
+  display: table;
+  width: 100%;
+}
+
+// Main content panel
+.main-panel {
+  width: 75%;
+  background-color: #FFF;
+  display: table-cell;
+}
+
 .sidebar {
+  width: 25%;
   padding: 0;
   border: 0;
   margin: 0;
+  display: table-cell;
 
   h5 {
     padding: 24px 15px;
