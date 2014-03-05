@@ -66,13 +66,19 @@ describe Minicron do
           'global' => {
             'verbose' => true
           },
-          'server' => {
+          'client' => {
             'scheme' => 'http',
             'host' => '127.0.0.1',
             'port' => 9292,
             'path' => '/',
             'connect_timeout' => 5,
             'inactivity_timeout' => 5
+          },
+          'server' => {
+            'scheme' => 'http',
+            'host' => '127.0.0.1',
+            'port' => 9292,
+            'path' => '/'
           },
           'database' => {
             'type' => 'mysql',

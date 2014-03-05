@@ -253,10 +253,10 @@ module Minicron
             unless Minicron.config['cli']['dry_run']
               # Get a faye instance so we can send data about the job
               faye = Minicron::Transport::FayeClient.new(
-                Minicron.config['server']['scheme'],
-                Minicron.config['server']['host'],
-                Minicron.config['server']['port'],
-                Minicron.config['server']['path']
+                Minicron.config['client']['scheme'],
+                Minicron.config['client']['host'],
+                Minicron.config['client']['port'],
+                Minicron.config['client']['path']
               )
 
               # Get the Job ID

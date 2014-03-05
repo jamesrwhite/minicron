@@ -4,14 +4,21 @@
 [global]
 verbose = true
 
-# Server options
-[server]
+# Client options
+[client]
 scheme = "http" # [http, https]
 host = "127.0.0.1"
 port = 9292
 path = "/"
 connect_timeout = 5
 inactivity_timeout = 5
+
+# Server options
+[server]
+scheme = "http" # [http, https]
+host = "127.0.0.1"
+port = 9292
+path = "/"
 
 # Database options
 [database]
@@ -26,4 +33,3 @@ password = "password"
 mode = "line" # [line, char]
 dry_run = false
 trace = false
-
