@@ -12,14 +12,14 @@ body {
   cursor: pointer;
 }
 
+// Line up the navbar logo
+.navbar-brand {
+  padding-left: 15px;
+}
+
 // Removing the bottom margin from the navbar
 .navbar {
   margin-bottom: 0;
-}
-
-// Remove border-radius from wells
-.well {
-  border-radius: 0;
 }
 
 // Fix z-index issue bootstrap tooltips
