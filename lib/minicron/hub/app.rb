@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sinatra/assetpack'
 require 'erubis'
-require 'json'
+require 'yajl'
 require 'active_model_serializers'
 
 module Minicron::Hub
@@ -12,6 +12,9 @@ module Minicron::Hub
 
     # Set the application root
     set :root, Minicron::HUB_PATH
+
+    # Set the json encoder we use
+    set :json, Yajl::Encoder.new
 
     # Configure how we server assets
     assets do
