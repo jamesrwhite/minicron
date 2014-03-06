@@ -27,6 +27,10 @@
   </div>
 </script>
 
+<script type="text/x-handlebars" id="executions/index">
+  <h3>Please select a job execution</h3>
+</script>
+
 <script type="text/x-handlebars" id="executions">
   <div class="sidebar">
     <h2>Recent Job Executions</h2>
@@ -61,10 +65,6 @@
   </div>
 </script>
 
-<script type="text/x-handlebars" id="executions/index">
-  <p class="text-warning">Please select a job execution</p>
-</script>
-
 <script type="text/x-handlebars" id="execution">
   <h2>Job</h2>
   <p>
@@ -88,6 +88,10 @@
   <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_outputs}}{{ansi_to_html output}}{{/each}}</div>
 </script>
 
+<script type="text/x-handlebars" id="jobs/index">
+  <h3>Please select a job</h3>
+</script>
+
 <script type="text/x-handlebars" id="jobs">
   <div class="sidebar">
     <h2>Jobs</h2>
@@ -105,21 +109,20 @@
   </div>
 </script>
 
-<script type="text/x-handlebars" id="jobs/index">
-  <p class="text-warning">Please select a job</p>
-</script>
-
 <script type="text/x-handlebars" id="job">
-  <ul>
-    <li><h2>Job</h2></li>
+    <h2>Job</h2>
+    <li><b>Job ID:</b> {{id}}</li>
+    <li><b>Name:</b> {{name}}</li>
+    <li><b>Command:</b> {{command}}</b></li>
+    <li><b>Host:</b> {{host.name}}</b></li>
+    <li><b>Created At:</b> {{created_at}}</b></li>
+
+    <h2>Executions</h2>
     <ul>
-      <li><b>Job ID:</b> {{id}}</li>
-      <li><b>Name:</b> {{name}}</li>
-      <li><b>Command:</b> {{command}}</b></li>
-      <li><b>Host:</b> {{host.name}}</b></li>
-      <li><b>Created At:</b> {{created_at}}</b></li>
+    {{#each execution in executions}}
+      <li>{{#link-to 'execution' execution.id}}execution#{{execution.id}}{{/link-to}}</li>
+    {{/each}}
     </ul>
-  </ul>
 </script>
 
 <script type="text/x-handlebars" id="hosts">
@@ -140,24 +143,20 @@
 </script>
 
 <script type="text/x-handlebars" id="hosts/index">
-  <p class="text-warning">Please select a host</p>
+  <h3>Please select a host</h3>
 </script>
 
 <script type="text/x-handlebars" id="host">
-  <ul>
-    <li><h2>Host</h2></li>
-    <ul>
-      <li><b>Host ID:</b> {{id}}</li>
-      <li><b>Hostname:</b> {{hostname}}</li>
-      <li><b>Name</b> {{name}}</b></li>
-      <li><b>Created At:</b> {{created_at}}</b></li>
-    </ul>
+  <h2>Host</h2>
+  <li><b>Host ID:</b> {{id}}</li>
+  <li><b>Hostname:</b> {{hostname}}</li>
+  <li><b>Name</b> {{name}}</b></li>
+  <li><b>Created At:</b> {{created_at}}</b></li>
 
-    <li><h2>Jobs</h2></li>
-    <ul>
-    {{#each job in jobs}}
-      <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>
-    {{/each}}
-    </ul>
+  <h2>Jobs</h2>
+  <ul>
+  {{#each job in jobs}}
+    <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>
+  {{/each}}
   </ul>
 </script>
