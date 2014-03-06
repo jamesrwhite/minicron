@@ -13,14 +13,14 @@
     </div>
   </div>
 
-  <div class="main-container">
+  <div class="main-container clearfix">
     {{outlet}}
   </div>
 </script>
 
 <script type="text/x-handlebars" id="executions">
   <div class="sidebar">
-    <h5>Recent Job Executions</h5>
+    <h2>Recent Job Executions</h2>
     <div class="list-group">
       {{#each model}}
         {{#link-to 'execution' id class="list-group-item clearfix"}}
@@ -46,38 +46,42 @@
   </div>
 
   <div class="main-panel">
-    <div class="main-panel-inner">
+    <div class="inner">
       {{outlet}}
     </div>
   </div>
 </script>
 
 <script type="text/x-handlebars" id="executions/index">
-  <h3 class="text-warning">Please select a job execution</h3>
+  <p class="text-warning">Please select a job execution</p>
 </script>
 
 <script type="text/x-handlebars" id="execution">
-  <h4>Job</h4>
-  <li><b>Job ID:</b> {{job.id}}</li>
-  <li><b>Name:</b> {{job.name}}</li>
-  <li><b>Command:</b> {{job.command}}</b></li>
-  <li><b>Host:</b> {{job.host.name}}</b></li>
-  <li><b>Created At:</b> {{job.created_at}}</b></li>
+  <h2>Job</h2>
+  <p>
+    <li><b>Job ID:</b> {{job.id}}</li>
+    <li><b>Name:</b> {{job.name}}</li>
+    <li><b>Command:</b> {{job.command}}</b></li>
+    <li><b>Host:</b> {{job.host.name}}</b></li>
+    <li><b>Created At:</b> {{job.created_at}}</b></li>
+  </p>
 
-  <h4>Execution</h4>
-  <li><b>Execution ID:</b> {{id}}</li>
-  <li><b>Created At:</b> {{created_at}}</li>
-  <li><b>Started At:</b> {{started_at}}</li>
-  <li><b>Finished At:</b> {{finished_at}}</li>
-  <li><b>Exit Status:</b> {{exit_status}}</li>
+  <h2>Execution</h2>
+  <p>
+    <li><b>Execution ID:</b> {{id}}</li>
+    <li><b>Created At:</b> {{created_at}}</li>
+    <li><b>Started At:</b> {{started_at}}</li>
+    <li><b>Finished At:</b> {{finished_at}}</li>
+    <li><b>Exit Status:</b> {{exit_status}}</li>
+  </p>
 
-  <h4>Output</h4>
+  <h2>Output</h2>
   <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_outputs}}{{ansi_to_html output}}{{/each}}</div>
 </script>
 
 <script type="text/x-handlebars" id="jobs">
   <div class="sidebar">
-    <h5>Jobs</h5>
+    <h2>Jobs</h2>
     <div class="list-group">
       {{#each model}}
         {{#link-to 'job' id class="list-group-item"}}{{name}}{{/link-to}}
@@ -86,19 +90,19 @@
   </div>
 
   <div class="main-panel">
-    <div class="main-panel-inner">
+    <div class="inner">
       {{outlet}}
     </div>
   </div>
 </script>
 
 <script type="text/x-handlebars" id="jobs/index">
-  <h3 class="text-warning">Please select a job</h3>
+  <p class="text-warning">Please select a job</p>
 </script>
 
 <script type="text/x-handlebars" id="job">
   <ul>
-    <li><h4>Job</h4></li>
+    <li><h2>Job</h2></li>
     <ul>
       <li><b>Job ID:</b> {{id}}</li>
       <li><b>Name:</b> {{name}}</li>
@@ -111,7 +115,7 @@
 
 <script type="text/x-handlebars" id="hosts">
   <div class="sidebar">
-    <h5>Hosts</h5>
+    <h2>Hosts</h2>
     <div class="list-group">
       {{#each model}}
         {{#link-to 'host' id class="list-group-item"}}{{name}}{{/link-to}}
@@ -120,19 +124,19 @@
   </div>
 
   <div class="main-panel">
-    <div class="main-panel-inner">
+    <div class="inner">
       {{outlet}}
     </div>
   </div>
 </script>
 
 <script type="text/x-handlebars" id="hosts/index">
-  <h3 class="text-warning">Please select a host</h3>
+  <p class="text-warning">Please select a host</p>
 </script>
 
 <script type="text/x-handlebars" id="host">
   <ul>
-    <li><h4>Host</h4></li>
+    <li><h2>Host</h2></li>
     <ul>
       <li><b>Host ID:</b> {{id}}</li>
       <li><b>Hostname:</b> {{hostname}}</li>
@@ -140,7 +144,7 @@
       <li><b>Created At:</b> {{created_at}}</b></li>
     </ul>
 
-    <li><h4>Jobs</h4></li>
+    <li><h2>Jobs</h2></li>
     <ul>
     {{#each job in jobs}}
       <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>

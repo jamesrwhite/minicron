@@ -22,20 +22,31 @@ body {
   border-radius: 0;
 }
 
+// Fix z-index issue bootstrap tooltips
+.tooltip {
+  position: fixed;
+}
+
+// Used in the nav bar and page
 .main-container {
-  display: table;
   width: 1024px;
   margin: auto;
+}
+
+// So we can have two equal width scrollable columns
+.main-panel, .sidebar {
+  float: left;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 // Main content panel
 .main-panel {
   width: 75%;
   background-color: #FFF;
-  display: table-cell;
 
-  .main-panel-inner {
-    padding: 24px
+  .h2 {
+    margin-top: 0;
   }
 }
 
@@ -44,14 +55,18 @@ body {
   padding: 0;
   border: 0;
   margin: 0;
-  display: table-cell;
   background-color: #ECF0F1;
 
-  h5 {
-    padding: 24px;
+  h2 {
     font-weight: bold;
+    font-size: 15px;
     margin: 0;
+    padding: 25px 15px;
   }
+}
+
+.inner {
+  padding: 25px;
 }
 
 .list-group-item {
