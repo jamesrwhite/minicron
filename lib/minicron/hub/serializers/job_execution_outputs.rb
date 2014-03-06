@@ -1,5 +1,5 @@
 class Minicron::Hub::App::JobExecutionOutputSerializer < ActiveModel::Serializer
-  embed :ids, include => true
+  embed :objects, include => true
 
   attributes :id, :execution_id, :job_id, :output, :timestamp
 
