@@ -13,13 +13,13 @@ module Minicron
       # @param callback
       def incoming(message, callback)
         segments = message['channel'].split('/')
-        data = message['data']['message']
-        ts = message['data']['ts']
 
         # Is it a job messages
         if segments[1] == 'job'
           # TODO: All of these need more validation checks and error handling
           # currently it's just assumed the correct data is passed
+          data = message['data']['message']
+          ts = message['data']['ts']
 
           # Check that the job id is a valid length
           if segments[2].length != 40
