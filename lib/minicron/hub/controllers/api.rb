@@ -20,7 +20,7 @@ class Minicron::Hub::App
   get '/api/jobs' do
     content_type :json
     jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, :executions)
-    { :jobs => jobs.map { |e| JobSerializer.new(e, :root => false) } }.to_json
+    { :jobs => jobs.map { |j| JobSerializer.new(j, :root => false) } }.to_json
   end
 
   # Get a single job by it ID
