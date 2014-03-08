@@ -36,6 +36,7 @@ module Minicron::Hub
         '/js/faye-browser-1.0.1.js',
         '/js/ansi_up.js',
         '/js/bootstrap.js',
+        '/js/moment.min.js',
 
         # Ember application files
         '/js/app/**/*.js'

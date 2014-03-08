@@ -21,20 +21,22 @@
           {{#link-to 'execution' id class="list-group-item clearfix"}}
             <span class="pull-left">{{job.name}}</span>
             {{#if exit_status}}
-              <span class="pull-right label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
+              <span class="pull-right execution-status label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
                 <span class="glyphicon glyphicon-remove"></span>
                 </span>
             {{else}}
               {{#if finished_at}}
-                <span class="pull-right label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
+                <span class="pull-right execution-status label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
                   <span class="glyphicon glyphicon-ok"></span>
                 </span>
               {{else}}
-                <span class="pull-right label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
+                <span class="pull-right execution-status label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
                   <span class="glyphicon glyphicon-flash"></span>
                 </span>
               {{/if}}
             {{/if}}
+            <div style="clear: left;"></div>
+            <span class="execution-info">{{format_date job.created_at}} on {{host.name}}</span>
           {{/link-to}}
         {{/each}}
       </div>
@@ -80,7 +82,7 @@
 </script>
 
 <script type="text/x-handlebars" id="jobs/index">
-  <h3>Jobs</h3>
+  <h2>Jobs</h2>
 
   {{#each model}}
     <li>{{#link-to 'job' id}}{{name}}{{/link-to}}</li>
@@ -106,7 +108,7 @@
 </script>
 
 <script type="text/x-handlebars" id="hosts/index">
-  <h3>Hosts</h3>
+  <h2>Hosts</h2>
 
   {{#each model}}
     <li>{{#link-to 'host' id}}{{name}}{{/link-to}}</li>
@@ -115,6 +117,7 @@
 
 <script type="text/x-handlebars" id="host">
   <h2>Host</h2>
+
   <li><b>Host ID:</b> {{id}}</li>
   <li><b>Hostname:</b> {{hostname}}</li>
   <li><b>Name</b> {{name}}</b></li>
