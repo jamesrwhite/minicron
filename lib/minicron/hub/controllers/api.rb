@@ -4,7 +4,7 @@ class Minicron::Hub::App
   get '/api/hosts' do
     content_type :json
     hosts = Minicron::Hub::Host.all.includes(:jobs).order(:created_at => :desc)
-    settings.json.encode({ :hosts => hosts.map { |h| HostSerializer.new(h, :root => false) } })
+    { :hosts => hosts.map { |h| HostSerializer.new(h, :root => false) } }.to_json
   end
 
   # Get a single host by its ID
@@ -12,7 +12,7 @@ class Minicron::Hub::App
     content_type :json
     host = Minicron::Hub::Host.includes(:jobs).order(:created_at => :desc)
                               .find(params[:id])
-    settings.json.encode(HostSerializer.new(host))
+    HostSerializer.new(host).to_json
   end
 
   # Get all jobs
@@ -20,14 +20,14 @@ class Minicron::Hub::App
   get '/api/jobs' do
     content_type :json
     jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, :executions)
-    settings.json.encode({ :jobs => jobs.map { |e| JobSerializer.new(e, :root => false) } })
+    { :jobs => jobs.map { |e| JobSerializer.new(e, :root => false) } }.to_json
   end
 
   # Get a single job by it ID
   get '/api/jobs/:id' do
     content_type :json
     job = Minicron::Hub::Job.includes(:host, :executions).find(params[:id])
-    settings.json.encode(JobSerializer.new(job))
+    JobSerializer.new(job).to_json
   end
 
   # Get all job executions
@@ -36,7 +36,7 @@ class Minicron::Hub::App
     content_type :json
     executions = Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)
                                          .includes({:job => :host}, :job_execution_outputs)
-    settings.json.encode({ :executions => executions.map { |e| ExecutionSerializer.new(e, :root => false) } })
+    { :executions => executions.map { |e| ExecutionSerializer.new(e, :root => false) } }.to_json
   end
 
   # Get a single job execution by its ID
@@ -44,7 +44,7 @@ class Minicron::Hub::App
     content_type :json
     execution = Minicron::Hub::Execution.includes({:job => :host}, :job_execution_outputs)
                                         .find(params[:id])
-    settings.json.encode(ExecutionSerializer.new(execution))
+    ExecutionSerializer.new(execution).to_json
   end
 
   # Get all job executions
@@ -55,7 +55,7 @@ class Minicron::Hub::App
                                                       .includes(:execution)
     # If Ember sends an ids array then filter by that, if not get all
     job_executions = params[:ids] ? job_executions.find_all_by_id(params[:ids]) : job_executions.all
-    settings.json.encode({ :job_execution_outputs => job_executions.map { |e| JobExecutionOutputSerializer.new(e, :root => false) } })
+    { :job_execution_outputs => job_executions.map { |e| JobExecutionOutputSerializer.new(e, :root => false) } }.to_json
   end
 
   # Get a single job job_execution by its ID
@@ -63,6 +63,6 @@ class Minicron::Hub::App
     content_type :json
     job_execution = Minicron::Hub::JobExecutionOutput.includes(:execution)
                                                      .order(:id => :asc).find(params[:id])
-    settings.json.encode(JobExecutionOutputSerializer.new(job_execution))
+    JobExecutionOutputSerializer.new(job_execution).to_json
   end
 end
