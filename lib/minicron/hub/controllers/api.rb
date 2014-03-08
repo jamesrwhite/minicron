@@ -46,23 +46,4 @@ class Minicron::Hub::App
                                         .find(params[:id])
     ExecutionSerializer.new(execution).to_json
   end
-
-  # Get all job executions
-  # TODO: Add offset/limit
-  get '/api/job_execution_outputs' do
-    content_type :json
-    job_executions = Minicron::Hub::JobExecutionOutput.order(:execution_id => :desc, :id => :asc)
-                                                      .includes(:execution)
-    # If Ember sends an ids array then filter by that, if not get all
-    job_executions = params[:ids] ? job_executions.find_all_by_id(params[:ids]) : job_executions.all
-    { :job_execution_outputs => job_executions.map { |e| JobExecutionOutputSerializer.new(e, :root => false) } }.to_json
-  end
-
-  # Get a single job job_execution by its ID
-  get '/api/job_execution_outputs/:id' do
-    content_type :json
-    job_execution = Minicron::Hub::JobExecutionOutput.includes(:execution)
-                                                     .order(:id => :asc).find(params[:id])
-    JobExecutionOutputSerializer.new(job_execution).to_json
-  end
 end
