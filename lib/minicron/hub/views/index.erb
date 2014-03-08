@@ -35,7 +35,7 @@
   <div class="sidebar">
     <h2>Recent Job Executions</h2>
     <div class="list-group">
-      {{#each model}}
+      {{#each controller}}
         {{#link-to 'execution' id class="list-group-item clearfix"}}
           <span class="pull-left">{{job.name}}</span>
           {{#if exit_status}}
