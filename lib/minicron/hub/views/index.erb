@@ -92,17 +92,13 @@
 </script>
 
 <script type="text/x-handlebars" id="job">
-    <h2>Job</h2>
-    <li><b>Job ID:</b> {{id}}</li>
-    <li><b>Name:</b> {{name}}</li>
-    <li><b>Command:</b> {{command}}</b></li>
-    <li><b>Host:</b> {{host.name}}</b></li>
-    <li><b>Created At:</b> {{created_at}}</b></li>
+  <h2>Job</h2>
 
-    <h2>Executions</h2>
-    {{#each execution in executions}}
-      <li>{{#link-to 'execution' execution.id}}execution#{{execution.id}}{{/link-to}}</li>
-    {{/each}}
+  <li><b>Job ID:</b> {{id}}</li>
+  <li><b>Name:</b> {{name}}</li>
+  <li><b>Command:</b> {{command}}</b></li>
+  <li><b>Host:</b> {{host.name}}</b></li>
+  <li><b>Created At:</b> {{created_at}}</b></li>
 </script>
 
 <script type="text/x-handlebars" id="hosts">
