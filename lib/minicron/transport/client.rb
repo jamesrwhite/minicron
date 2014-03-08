@@ -1,6 +1,6 @@
 require 'eventmachine'
 require 'em-http-request'
-require 'digest/sha1'
+require 'digest/md5'
 
 module Minicron
   module Transport
@@ -53,7 +53,7 @@ module Minicron
         ).post(:body => body)
 
         # Generate an id for the request
-        req_id = Digest::SHA1.hexdigest(body.to_s)
+        req_id = Digest::MD5.hexdigest(body.to_s)
 
         # Put the request in the queue
         queue[req_id] = req

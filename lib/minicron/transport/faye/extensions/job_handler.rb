@@ -22,7 +22,7 @@ module Minicron
           ts = message['data']['ts']
 
           # Check that the job id is a valid length
-          if segments[2].length != 40
+          if segments[2].length != 32
             # Do something clever here
           end
 

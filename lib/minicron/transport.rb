@@ -1,4 +1,4 @@
-require 'digest/sha1'
+require 'digest/md5'
 require 'json'
 
 module Minicron
@@ -9,7 +9,7 @@ module Minicron
     # @param command [String] the job command e.g 'ls -la'
     # @param hostname [String] the hostname of the server running the job e.g `hostname`
     def self.get_job_id(command, hostname)
-      Digest::SHA1.hexdigest(command + hostname)
+      Digest::MD5.hexdigest(command + hostname)
     end
   end
 end
