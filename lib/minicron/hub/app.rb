@@ -28,6 +28,7 @@ module Minicron::Hub
 
       # Set up the application javascript
       js :app, '/js/all.js', [
+        # Dependencies, the order of these is important
         '/js/jquery-2.0.3.js',
         '/js/handlebars-1.3.0.js',
         '/js/ember-1.4.0.js',
@@ -35,13 +36,9 @@ module Minicron::Hub
         '/js/faye-browser-1.0.1.js',
         '/js/ansi_up.js',
         '/js/bootstrap.js',
-        '/js/app/helpers.js',
-        '/js/app/application.js',
-        '/js/app/models/job.js',
-        '/js/app/models/host.js',
-        '/js/app/models/execution.js',
-        '/js/app/models/job_execution_output.js',
-        '/js/app/routes.js',
+
+        # Ember application files
+        '/js/app/**/*.js'
       ]
     end
 
