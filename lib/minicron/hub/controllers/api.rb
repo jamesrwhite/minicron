@@ -35,7 +35,7 @@ class Minicron::Hub::App
   get '/api/executions' do
     content_type :json
     executions = Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)
-                                         .includes({:job => :host}, :job_execution_outputs)
+                                         .includes(:job, :host, :job_execution_outputs)
     { :executions => executions.map { |e| ExecutionSerializer.new(e, :root => false) } }.to_json
   end
 

@@ -42,7 +42,8 @@ module Minicron
             # Create an execution for this job
             execution = Minicron::Hub::Execution.create(
               :job_id => segments[2],
-              :created_at => ts
+              :created_at => ts,
+              :host_id => host.id
             )
 
             # Alter the response channel to include the execution id for the
@@ -54,14 +55,13 @@ module Minicron
           # Is it a start message?
           if segments[4] == 'status' && data[0..4] == 'START'
             Minicron::Hub::Execution.where(:id => segments[3]).update_all(
-              'started_at' => data[6..-1]
+              :started_at => data[6..-1]
             )
           end
 
           # Is it job output?
           if segments[4] == 'output'
             Minicron::Hub::JobExecutionOutput.create(
-              :job_id => segments[2],
               :execution_id => segments[3],
               :output => data,
               :timestamp => ts
@@ -71,14 +71,14 @@ module Minicron
           # Is it a finish message?
           if segments[4] == 'status' && data[0..5] == 'FINISH'
             Minicron::Hub::Execution.where(:id => segments[3]).update_all(
-              'finished_at' => data[7..-1]
+              :finished_at => data[7..-1]
             )
           end
 
           # Is it an exit message?
           if segments[4] == 'status' && data[0..3] == 'EXIT'
             Minicron::Hub::Execution.where(:id => segments[3]).update_all(
-              'exit_status' => data[5..-1]
+              :exit_status => data[5..-1]
             )
           end
         end
