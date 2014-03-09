@@ -4,6 +4,5 @@ class Minicron::Hub::App::ExecutionSerializer < ActiveModel::Serializer
   attributes :id, :created_at, :started_at, :finished_at, :exit_status
 
   has_one :job
-  has_one :host
   has_many :job_execution_outputs
 end
