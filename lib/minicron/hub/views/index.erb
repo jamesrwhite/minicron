@@ -36,7 +36,7 @@
               {{/if}}
             {{/if}}
             <div style="clear: left;"></div>
-            <span class="execution-info">{{format_date created_at}} on {{host.name}}</span>
+            <span class="execution-info">{{time_ago created_at}} on {{host.name}}</span>
           {{/link-to}}
         {{/each}}
       </div>
@@ -65,15 +65,15 @@
     <li><b>Name:</b> {{job.name}}</li>
     <li><b>Command:</b> {{job.command}}</b></li>
     <li><b>Host:</b> {{host.name}}</b></li>
-    <li><b>Created At:</b> {{job.created_at}}</b></li>
+    <li><b>Created At:</b> {{date job.created_at}}</b></li>
   </p>
 
   <h2>Execution</h2>
   <p>
     <li><b>Execution ID:</b> {{id}}</li>
-    <li><b>Created At:</b> {{created_at}}</li>
-    <li><b>Started At:</b> {{started_at}}</li>
-    <li><b>Finished At:</b> {{finished_at}}</li>
+    <li><b>Created At:</b> {{date created_at}}</li>
+    <li><b>Started At:</b> {{date started_at}}</li>
+    <li><b>Finished At:</b> {{date finished_at}}</li>
     <li><b>Exit Status:</b> {{exit_status}}</li>
   </p>
 
@@ -100,7 +100,7 @@
   <li><b>Name:</b> {{name}}</li>
   <li><b>Command:</b> {{command}}</b></li>
   <li><b>Host:</b> {{host.name}}</b></li>
-  <li><b>Created At:</b> {{created_at}}</b></li>
+  <li><b>Created At:</b> {{date created_at}}</b></li>
 </script>
 
 <script type="text/x-handlebars" id="hosts">
@@ -121,7 +121,7 @@
   <li><b>Host ID:</b> {{id}}</li>
   <li><b>Hostname:</b> {{hostname}}</li>
   <li><b>Name</b> {{name}}</b></li>
-  <li><b>Created At:</b> {{created_at}}</b></li>
+  <li><b>Created At:</b> {{date created_at}}</b></li>
 
   <h2>Jobs</h2>
   <ul>
