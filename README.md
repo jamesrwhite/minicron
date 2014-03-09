@@ -16,7 +16,7 @@ Todo
 - Hub
   - The 'Hub' is a web interface to the minicron system and the central point where data is collected
   - <del>Collect data sent via CLI and store it in a db</del> &#10003;
-  - Display both realtime <del>and historic data</del>
+  - <del>Display both realtime and historic data</del>
   - CRUD functionality for cron jobs via SSH
   - Permissions support
   - Alerting (email, sms and push notifications support)
