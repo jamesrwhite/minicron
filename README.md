@@ -1,7 +1,7 @@
 minicron [![Build Status](https://api.travis-ci.org/jamesrwhite/minicron.png)](http://travis-ci.org/jamesrwhite/minicron) [![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.png?derp)](https://coveralls.io/r/jamesrwhite/minicron?branch=master) [![Code Climate](https://codeclimate.com/github/jamesrwhite/minicron.png)](https://codeclimate.com/github/jamesrwhite/minicron) [![Dependency Status](https://gemnasium.com/jamesrwhite/minicron.png)](https://gemnasium.com/jamesrwhite/minicron) [![Inline docs](http://inch-pages.github.io/github/jamesrwhite/minicron.png)](http://inch-pages.github.io/github/jamesrwhite/minicron)
 =======
 
-minicron is a work in progress system to make it easier to more effectively manage and monitor cron jobs.
+minicron is a system I'm building as part of my university dissertation. It aims to complement ````cron```` by making it easier to manage and monitor cron jobs.
 
 Todo
 ------
@@ -13,8 +13,7 @@ Todo
   - Config to allow where job output is to be read from, currently assumed to be STDOUT/STDERR (could be log files)?
   - If connection retries fail give up and then persist the command output to disk for later resending
 
-- Hub
-  - The 'Hub' is a web interface to the minicron system and the central point where data is collected
+- Hub (Web UI / API)
   - <del>Collect data sent via CLI and store it in a db</del> &#10003;
   - <del>Display both realtime and historic data</del> &#10003;
   - CRUD functionality for cron jobs via SSH
@@ -76,7 +75,7 @@ Requirements
 - MRI
   - 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
 - <del>Rubinius</del>
-  - <del>Travis builds are run on the latest release</del> *awaiting bug fix*
+  - <del>Travis builds are run on the latest release</del> [*awaiting bug fix*](https://github.com/rubinius/rubinius/issues/2944)
 - JRuby
   - As yet untested
 
