@@ -34,9 +34,9 @@ module Minicron::Hub
         '/js/ember-1.4.0.js',
         '/js/ember-data-1.0.0-beta.7.f87cba88.js',
         '/js/faye-browser-1.0.1.js',
-        '/js/ansi_up.js',
-        '/js/bootstrap.js',
-        '/js/moment.min.js',
+        '/js/ansi_up-1.1.1.js',
+        '/js/bootstrap-3.1.1.js',
+        '/js/moment-2.5.1.min.js',
 
         # Ember application files
         '/js/app/**/*.js'
