@@ -1,7 +1,6 @@
+require 'minicron'
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
-require 'sinatra/activerecord/rake'
-require 'minicron/hub/app'
 
 desc 'Run specs'
 RSpec::Core::RakeTask.new do |t|
