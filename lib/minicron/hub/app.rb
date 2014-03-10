@@ -1,3 +1,4 @@
+require 'minicron'
 require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sinatra/assetpack'
@@ -12,7 +13,6 @@ module Minicron::Hub
 
     # Set the application root
     set :root, Minicron::HUB_PATH
-
 
     # Configure how we server assets
     assets do
