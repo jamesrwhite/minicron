@@ -1,8 +1,6 @@
 class Minicron::Hub::App::JobSerializer < ActiveModel::Serializer
-  embed :objects, include => true
-
   attributes :id, :name, :command, :created_at
 
-  has_one :host
-  has_many :executions
+  has_one :host, :embed => :objects, include => true
+  has_many :executions, :embed => :objects, include => true
 end
