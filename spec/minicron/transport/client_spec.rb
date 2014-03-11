@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'webmock/rspec'
 
 describe Minicron::Transport::Client do
   let(:client) { Minicron::Transport::Client }
