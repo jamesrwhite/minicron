@@ -261,13 +261,13 @@ module Minicron
 
               # Get the Job ID
               host = `hostname -s`.strip
-              job_id = Minicron::Transport.get_job_id(args.first, host)
+              job_hash = Minicron::Transport.get_job_hash(args.first, host)
 
               # Fire up eventmachine
               faye.ensure_em_running
 
               # Setup the job on the server
-              execution_id = faye.setup(job_id, args.first, host)
+              execution_id = faye.setup(job_hash, args.first, host)
 
               # Wait until we get the execution id
               faye.ensure_delivery
@@ -279,11 +279,11 @@ module Minicron
               case output[:type]
               when :status
                 unless Minicron.config['cli']['dry_run']
-                  faye.send(:job_id => job_id, :execution_id => execution_id, :type => :status, :message => output[:output])
+                  faye.send(:job_hash => job_hash, :execution_id => execution_id, :type => :status, :message => output[:output])
                 end
               when :command
                 unless Minicron.config['cli']['dry_run']
-                  faye.send(:job_id => job_id, :execution_id => execution_id, :type => :output, :message => output[:output])
+                  faye.send(:job_hash => job_hash, :execution_id => execution_id, :type => :output, :message => output[:output])
                 end
               end
 
@@ -292,7 +292,7 @@ module Minicron
           rescue Exception => e
             # Send the exception message to the server and yield it
             unless Minicron.config['cli']['dry_run']
-              faye.send(:job_id => job_id, :execution_id => execution_id, :type => :output, :message => e.message)
+              faye.send(:job_hash => job_hash, :execution_id => execution_id, :type => :output, :message => e.message)
             end
 
             fail e

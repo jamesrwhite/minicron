@@ -16,13 +16,13 @@ module Minicron
 
       # Used to set up a job on the server
       #
-      # @param job_id [Integer]
+      # @param job_hash [String]
       # @param command [Integer]
       # @param host [Integer]
       # @return [Integer]
-      def setup(job_id, command, host)
+      def setup(job_hash, command, host)
         # Send a request to set up the job
-        send(:job_id => job_id, :type => :status, :message => {
+        send(:job_hash => job_hash, :type => :status, :message => {
           :action => 'SETUP',
           :command => command,
           :host => host
@@ -37,7 +37,7 @@ module Minicron
 
       # Helper that wraps the publish function making it quicker to use
       #
-      # @option options [String] job_id
+      # @option options [String] job_hash
       # @option options [String, Symbol] type status or output
       # @option options [Integer] execution_id
       def send(options = {})
@@ -46,7 +46,7 @@ module Minicron
         execution_id = options[:execution_id] ? "/#{options[:execution_id]}" : ''
 
         # Publish the message to the correct channel
-        publish("/job/#{options[:job_id]}#{execution_id}/#{options[:type]}", options[:message])
+        publish("/job/#{options[:job_hash]}#{execution_id}/#{options[:type]}", options[:message])
       end
 
       # Publishes a message on the given channel to the server

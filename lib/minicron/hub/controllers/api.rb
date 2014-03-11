@@ -19,7 +19,13 @@ class Minicron::Hub::App
   # TODO: Add offset/limit
   get '/api/jobs' do
     content_type :json
-    jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, :executions)
+
+    if params[:job_hash]
+      jobs = Minicron::Hub::Job.includes(:host, :executions).where(:job_hash => params[:job_hash])
+    else
+      jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, :executions)
+    end
+
     { :jobs => jobs.map { |j| JobSerializer.new(j, :root => false) } }.to_json
   end
 

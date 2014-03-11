@@ -34,15 +34,15 @@ module Minicron
             end
 
             # Validate or create the job
-            Minicron::Hub::Job.where(:id => segments[2]).first_or_create do |job|
-              job.command = data['command']
-              job.host_id = host.id
+            job = Minicron::Hub::Job.where(:job_hash => segments[2]).first_or_create do |j|
+              j.job_hash = segments[2]
+              j.command = data['command']
+              j.host_id = host.id
             end
 
             # Create an execution for this job
             execution = Minicron::Hub::Execution.create(
-              :job_id => segments[2],
-              :created_at => ts,
+              :job_id => job.id,
               :host_id => host.id
             )
 

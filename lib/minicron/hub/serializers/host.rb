@@ -1,5 +1,5 @@
 class Minicron::Hub::App::HostSerializer < ActiveModel::Serializer
-  attributes :id, :hostname, :name, :created_at
+  attributes :id, :hostname, :name, :created_at, :updated_at
 
   has_many :jobs, :embed => :objects, include => true
 end
