@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sass', '~> 3.2', '>= 3.2.14'
   spec.add_runtime_dependency 'oj', '~> 2.5.5'
   spec.add_runtime_dependency 'active_model_serializers', '~> 0.9.0.alpha1'
+  spec.add_runtime_dependency 'schema_plus', '~> 1.4', '>= 1.4.1'
 
   # Databases we want to support
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.8'
