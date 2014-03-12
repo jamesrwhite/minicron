@@ -71,7 +71,7 @@
 
   <h2>Execution</h2>
   <p>
-    <li><b>ID:</b> {{id}}</li>
+    <li><b>ID:</b> {{#link-to 'execution' id}}{{id}}{{/link-to}}</li>
     <li><b>Created At:</b> {{date created_at}}</li>
     <li><b>Started At:</b> {{date started_at}}</li>
     <li><b>Finished At:</b> {{date finished_at}}</li>
@@ -79,7 +79,7 @@
   </p>
 
   <h2>Output</h2>
-  <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_outputs}}{{ansi_to_html output}}{{/each}}</div>
+  <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_output in job_execution_outputs}}{{ansi_to_html job_execution_output.output}}{{/each}}</div>
 </script>
 
 <script type="text/x-handlebars" id="jobs/index">
