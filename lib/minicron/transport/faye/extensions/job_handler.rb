@@ -42,8 +42,7 @@ module Minicron
 
             # Create an execution for this job
             execution = Minicron::Hub::Execution.create(
-              :job_id => job.id,
-              :host_id => host.id
+              :job_id => job.id
             )
 
             # Alter the response channel to include the execution id for the
