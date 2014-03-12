@@ -45,8 +45,22 @@ body {
   width: 75%;
   background-color: #FFF;
 
-  .h2 {
-    margin-top: 0;
+  header {
+    h2, a {
+      margin: 10px 0;
+    }
+
+    a {
+      margin-top: 10px;
+    }
+  }
+
+  table {
+    a {
+      text-decoration: none;
+      margin-right: 5px;
+      height: auto;
+    }
   }
 }
 
