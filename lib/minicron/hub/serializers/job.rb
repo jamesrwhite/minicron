@@ -65,6 +65,12 @@ class Minicron::Hub::App::JobSerializer
         new_execution[key] = value
       end
 
+      # Also we need to add the job execution output ids
+      new_execution[:job_execution_outputs] = []
+      execution.job_execution_outputs.each do |job_execution_output|
+        new_execution[:job_execution_outputs].push(job_execution_output.id)
+      end
+
       @response[:executions].push(new_execution)
       new_job[:executions].push(execution.id)
     end
