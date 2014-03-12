@@ -1,7 +1,4 @@
 class Minicron::Hub::Job < ActiveRecord::Base
-  include ActiveModel::Serialization
-  include ActiveModel::Serializers::JSON
-
   has_many :executions
   has_many :job_execution_outputs
   belongs_to :host

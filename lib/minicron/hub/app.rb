@@ -4,7 +4,6 @@ require 'sinatra/activerecord'
 require 'sinatra/assetpack'
 require 'erubis'
 require 'oj'
-require 'active_model_serializers'
 
 module Minicron::Hub
   class App < Sinatra::Base

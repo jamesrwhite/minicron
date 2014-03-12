@@ -4,7 +4,7 @@ class Minicron::Hub::App
   get '/api/hosts' do
     content_type :json
     hosts = Minicron::Hub::Host.all.includes(:jobs).order(:created_at => :desc)
-    { :hosts => hosts.map { |h| HostSerializer.new(h, :root => false) } }.to_json
+    HostSerializer.new(hosts).serialize.to_json
   end
 
   # Get a single host by its ID
@@ -12,7 +12,7 @@ class Minicron::Hub::App
     content_type :json
     host = Minicron::Hub::Host.includes(:jobs).order(:created_at => :desc)
                               .find(params[:id])
-    HostSerializer.new(host).to_json
+    HostSerializer.new(host).serialize.to_json
   end
 
   # Get all jobs
@@ -26,14 +26,14 @@ class Minicron::Hub::App
       jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, :executions)
     end
 
-    { :jobs => jobs.map { |j| JobSerializer.new(j, :root => false) } }.to_json
+    JobSerializer.new(jobs).serialize.to_json
   end
 
   # Get a single job by it ID
   get '/api/jobs/:id' do
     content_type :json
     job = Minicron::Hub::Job.includes(:host, :executions).find(params[:id])
-    JobSerializer.new(job).to_json
+    JobSerializer.new(job).serialize.to_json
   end
 
   # Get all job executions
@@ -42,7 +42,7 @@ class Minicron::Hub::App
     content_type :json
     executions = Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)
                                          .includes(:job, :job_execution_outputs)
-    { :executions => executions.map { |e| ExecutionSerializer.new(e, :root => false) } }.to_json
+    ExecutionSerializer.new(executions).serialize.to_json
   end
 
   # Get a single job execution by its ID
@@ -50,6 +50,6 @@ class Minicron::Hub::App
     content_type :json
     execution = Minicron::Hub::Execution.includes(:job, :job_execution_outputs)
                                         .find(params[:id])
-    ExecutionSerializer.new(execution).to_json
+    ExecutionSerializer.new(execution).serialize.to_json
   end
 end
