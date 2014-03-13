@@ -1,0 +1,23 @@
+<script type="text/x-handlebars" id="execution">
+  <h2>Job</h2>
+  <p>
+    <li><b>ID:</b> {{#link-to 'job' job.id}}{{job.id}}{{/link-to}}</li>
+    <li><b>Hash:</b> {{job.job_hash}}</li>
+    <li><b>Name:</b> {{job.name}}</li>
+    <li><b>Command:</b> {{job.command}}</b></li>
+    <li><b>Host:</b> {{job.host.name}}</b></li>
+    <li><b>Created At:</b> {{date job.created_at}}</b></li>
+  </p>
+
+  <h2>Execution</h2>
+  <p>
+    <li><b>ID:</b> {{#link-to 'execution' id}}{{id}}{{/link-to}}</li>
+    <li><b>Created At:</b> {{date created_at}}</li>
+    <li><b>Started At:</b> {{date started_at}}</li>
+    <li><b>Finished At:</b> {{date finished_at}}</li>
+    <li><b>Exit Status:</b> {{exit_status}}</li>
+  </p>
+
+  <h2>Output</h2>
+  <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_output in job_execution_outputs}}{{ansi_to_html job_execution_output.output}}{{/each}}</div>
+</script>

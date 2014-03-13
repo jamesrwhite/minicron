@@ -14,6 +14,7 @@ class Minicron::Hub::App
     HostSerializer.new(host).serialize.to_json
   end
 
+  # Create a new host
   post '/api/hosts' do
     begin
       # Load the JSON body
@@ -24,6 +25,26 @@ class Minicron::Hub::App
         :name => request_body['host']['name'],
         :hostname => request_body['host']['hostname']
       )
+
+      # Return the new host
+      HostSerializer.new(host).serialize.to_json
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      { :error => e.message }.to_json
+    end
+  end
+
+  # Update an existing host
+  put '/api/hosts/:id' do
+    begin
+      # Load the JSON body
+      request_body = Oj.load(request.body)
+
+      # Try and save the new host
+      host = Minicron::Hub::Host.find(params[:id])
+      host.name = request_body['host']['name']
+      host.hostname = request_body['host']['hostname']
+      host.save!
 
       # Return the new host
       HostSerializer.new(host).serialize.to_json

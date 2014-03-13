@@ -1,0 +1,104 @@
+<script type="text/x-handlebars" id="hosts/index">
+  <header class="clearfix">
+    <h2 class="pull-left">Hosts</h2>
+    {{#link-to 'hosts.new' class="pull-right btn btn-success btn-sm"}}Add New Host{{/link-to}}
+  </header>
+  <hr/>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Hostname</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {{#each model}}
+      <tr>
+        <td>{{id}}</td>
+        <td>{{name}}</td>
+        <td>{{hostname}}</td>
+        <td>
+          {{#link-to 'host' id class="btn btn-info btn-xs"}}View{{/link-to}}
+          {{#link-to 'host.edit' id class="btn btn-warning btn-xs"}}Edit{{/link-to}}
+          <a href="#" class="btn btn-danger btn-xs">Delete</a>
+        </th>
+      </tr>
+    {{/each}}
+    </body>
+  </table>
+</script>
+
+<script type="text/x-handlebars" id="host/index">
+  <h2>Host</h2>
+
+  <li><b>ID:</b> {{id}}</li>
+  <li><b>Hostname:</b> {{hostname}}</li>
+  <li><b>Name</b> {{name}}</b></li>
+  <li><b>Created At:</b> {{date created_at}}</b></li>
+  <li><b>Updated At:</b> {{date updated_at}}</b></li>
+
+  <h2>Jobs</h2>
+  <ul>
+  {{#each job in jobs}}
+    <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>
+  {{/each}}
+  </ul>
+</script>
+
+<script type="text/x-handlebars" id="hosts/new">
+  <header>
+    <h2>Add New Host</h2>
+  </header>
+  <hr/>
+
+  <form class="form-horizontal" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Hostname</label>
+      <div class="col-sm-10">
+        {{input value=hostname type="text" class="form-control" placeholder="The machine hostname e.g 'server1'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        {{input value=name type="text" class="form-control" placeholder="A nickname for the host e.g 'fred'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-success">Save</button>
+      </div>
+    </div>
+  </form>
+</script>
+
+<script type="text/x-handlebars" id="host/edit">
+  <header>
+    <h2>Edit Host #{{id}}</h2>
+  </header>
+  <hr/>
+
+  <form class="form-horizontal" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Hostname</label>
+      <div class="col-sm-10">
+        {{input value=hostname type="text" class="form-control" placeholder="The machine hostname e.g 'server1'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        {{input value=name type="text" class="form-control" placeholder="A nickname for the host e.g 'fred'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-success">Save</button>
+      </div>
+    </div>
+  </form>
+</script>
