@@ -147,7 +147,7 @@
 <script type="text/x-handlebars" id="hosts/index">
   <header class="clearfix">
     <h2 class="pull-left">Hosts</h2>
-    <a href="#" class="pull-right btn btn-success btn-sm">Add New Host</a>
+    {{#link-to 'hosts.create' class="pull-right btn btn-success btn-sm"}}Add New Host{{/link-to}}
   </header>
   <hr/>
 
@@ -193,4 +193,31 @@
     <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>
   {{/each}}
   </ul>
+</script>
+
+<script type="text/x-handlebars" id="hosts/create">
+  <header>
+    <h2>Add New Host</h2>
+  </header>
+  <hr/>
+
+  <form class="form-horizontal" role="form" {{action 'create' on='submit'}}>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Hostname</label>
+      <div class="col-sm-10">
+        {{input value=hostname type="text" class="form-control" placeholder="The machine hostname e.g 'server1'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        {{input value=name type="text" class="form-control" placeholder="A nickname for the host e.g 'fred'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-success">Save</button>
+      </div>
+    </div>
+  </form>
 </script>
