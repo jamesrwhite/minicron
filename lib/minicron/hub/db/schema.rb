@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "name"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.text     "public_key"
     t.index ["hostname"], :name => "hostname"
   end
 
