@@ -16,6 +16,7 @@ class Minicron::Hub::App
 
   # Create a new host
   post '/api/hosts' do
+    content_type :json
     begin
       # Load the JSON body
       request_body = Oj.load(request.body)
@@ -36,11 +37,12 @@ class Minicron::Hub::App
 
   # Update an existing host
   put '/api/hosts/:id' do
+    content_type :json
     begin
       # Load the JSON body
       request_body = Oj.load(request.body)
 
-      # Try and save the new host
+      # Try and save the updated host
       host = Minicron::Hub::Host.find(params[:id])
       host.name = request_body['host']['name']
       host.hostname = request_body['host']['hostname']
@@ -48,6 +50,21 @@ class Minicron::Hub::App
 
       # Return the new host
       HostSerializer.new(host).serialize.to_json
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      { :error => e.message }.to_json
+    end
+  end
+
+  # Delete an existing host
+  delete '/api/hosts/:id' do
+    content_type :json
+    begin
+      # Try and delete the host
+      Minicron::Hub::Host.destroy(params[:id])
+
+      # This is what ember expects as the response
+      status 204
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       { :error => e.message }.to_json

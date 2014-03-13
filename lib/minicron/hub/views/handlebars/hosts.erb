@@ -24,7 +24,7 @@
         <td>
           {{#link-to 'host' id class="btn btn-info btn-xs"}}View{{/link-to}}
           {{#link-to 'host.edit' id class="btn btn-warning btn-xs"}}Edit{{/link-to}}
-          <a href="#" class="btn btn-danger btn-xs">Delete</a>
+          <a {{action 'delete' this}} class="btn btn-danger btn-xs">Delete</a>
         </th>
       </tr>
     {{/each}}
@@ -33,7 +33,12 @@
 </script>
 
 <script type="text/x-handlebars" id="host/index">
-  <h2>Host</h2>
+  <header class="clearfix">
+    <h2 class="pull-left">Host '{{name}}'</h2>
+    <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
+    {{#link-to 'host.edit' id class="pull-right btn btn-warning btn-sm"}}Edit{{/link-to}}
+  </header>
+  <hr/>
 
   <li><b>ID:</b> {{id}}</li>
   <li><b>Hostname:</b> {{hostname}}</li>
@@ -42,11 +47,9 @@
   <li><b>Updated At:</b> {{date updated_at}}</b></li>
 
   <h2>Jobs</h2>
-  <ul>
   {{#each job in jobs}}
     <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>
   {{/each}}
-  </ul>
 </script>
 
 <script type="text/x-handlebars" id="hosts/new">
@@ -77,8 +80,9 @@
 </script>
 
 <script type="text/x-handlebars" id="host/edit">
-  <header>
-    <h2>Edit Host #{{id}}</h2>
+  <header class="clearfix">
+    <h2 class="pull-left">Edit Host '{{name}}'</h2>
+    <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
   </header>
   <hr/>
 
