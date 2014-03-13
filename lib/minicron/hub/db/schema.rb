@@ -35,14 +35,11 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table "executions", force: true do |t|
     t.integer  "job_id",      null: false
-    t.integer  "host_id",     null: false
     t.datetime "created_at",  null: false
     t.datetime "started_at"
     t.datetime "finished_at"
     t.integer  "exit_status"
-    t.index ["host_id"], :name => "host_id"
     t.index ["job_id"], :name => "job_id"
-    t.foreign_key ["host_id"], "hosts", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "executions_ibfk_1"
     t.foreign_key ["job_id"], "jobs", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "executions_ibfk_2"
   end
 
