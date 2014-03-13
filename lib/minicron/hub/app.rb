@@ -76,6 +76,6 @@ Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
 end
 
 # Load all our controllers
-Dir[File.dirname(__FILE__) + '/controllers/*.rb'].each do |controller|
+Dir[File.dirname(__FILE__) + '/controllers/**/*.rb'].each do |controller|
   require controller
 end
