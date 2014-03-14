@@ -58,7 +58,7 @@ module Minicron
             # Do we need to update the ip address?
             if host.ip != request.ip
               Minicron::Hub::Host.where(:id => host.id).update_all(
-                h.ip = request.ip
+                :ip => request.ip
               )
             end
 
