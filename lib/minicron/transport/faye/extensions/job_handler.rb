@@ -11,7 +11,7 @@ module Minicron
       #
       # @param message [Hash] The message data
       # @param callback
-      def incoming(message, callback)
+      def incoming(message, request, callback)
         segments = message['channel'].split('/')
 
         # Is it a job messages
@@ -32,6 +32,14 @@ module Minicron
             host = Minicron::Hub::Host.where(:fqdn => data['fqdn']).first_or_create do |h|
               h.name = data['hostname']
               h.fqdn = data['fqdn']
+              h.ip = request.ip
+            end
+
+            # Do we need to update the ip address?
+            if host.ip != request.ip
+              Minicron::Hub::Host.where(:id => host.id).update_all(
+                h.ip = request.ip
+              )
             end
 
             # Validate or create the job

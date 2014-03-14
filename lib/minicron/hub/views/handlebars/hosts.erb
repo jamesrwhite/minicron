@@ -11,6 +11,7 @@
         <th>ID</th>
         <th>Name</th>
         <th>FQDN</th>
+        <th>IP</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -21,6 +22,7 @@
         <td>{{id}}</td>
         <td>{{name}}</td>
         <td>{{fqdn}}</td>
+        <td>{{ip}}</td>
         <td>
           {{#link-to 'host' id class="btn btn-info btn-xs"}}View{{/link-to}}
           {{#link-to 'host.edit' id class="btn btn-warning btn-xs"}}Edit{{/link-to}}
@@ -43,6 +45,7 @@
   <li><b>ID:</b> {{id}}</li>
   <li><b>Name</b> {{name}}</b></li>
   <li><b>FQDN:</b> {{fqdn}}</li>
+  <li><b>IP:</b> {{ip}}</li>
   <li><b>Created At:</b> {{date created_at}}</b></li>
   <li><b>Updated At:</b> {{date updated_at}}</b></li>
 
@@ -69,6 +72,12 @@
       <label class="col-sm-2 control-label">FQDN</label>
       <div class="col-sm-10">
         {{input value=fqdn type="text" class="form-control" placeholder="The machine fully qualified domain name e.g 'server1.host.com'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">IP</label>
+      <div class="col-sm-10">
+        {{input value=ip type="text" class="form-control" placeholder="The machine ip address e.g 127.0.0.1"}}
       </div>
     </div>
     <div class="form-group">
@@ -103,6 +112,12 @@
       <label class="col-sm-2 control-label">FQDN</label>
       <div class="col-sm-10">
         {{input value=fqdn type="text" class="form-control" placeholder="The machine fully qualified domain name e.g 'server1.host.com'"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">IP</label>
+      <div class="col-sm-10">
+        {{input value=ip type="text" class="form-control" placeholder="The machine ip address e.g 127.0.0.1"}}
       </div>
     </div>
     <div class="form-group">
