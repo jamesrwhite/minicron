@@ -7,9 +7,9 @@ module Minicron
     # Calculate the job hash based on the command and host
     #
     # @param command [String] the job command e.g 'ls -la'
-    # @param hostname [String] the hostname of the server running the job e.g `hostname`
-    def self.get_job_hash(command, hostname)
-      Digest::MD5.hexdigest(command + hostname)
+    # @param fqdn [String] the fqdn of the server running the job e.g `db1.example.com`
+    def self.get_job_hash(command, fqdn)
+      Digest::MD5.hexdigest(command + fqdn)
     end
   end
 end

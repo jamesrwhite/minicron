@@ -18,14 +18,16 @@ module Minicron
       #
       # @param job_hash [String]
       # @param command [Integer]
-      # @param host [Integer]
+      # @param fqdn [String]
+      # @param hostname [String]
       # @return [Integer]
-      def setup(job_hash, command, host)
+      def setup(job_hash, command, fqdn, hostname)
         # Send a request to set up the job
         send(:job_hash => job_hash, :type => :status, :message => {
           :action => 'SETUP',
           :command => command,
-          :host => host
+          :fqdn => fqdn,
+          :hostname => hostname
         })
 
         # Wait for the response..

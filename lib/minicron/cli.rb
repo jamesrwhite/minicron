@@ -259,15 +259,20 @@ module Minicron
                 Minicron.config['client']['path']
               )
 
-              # Get the Job ID
-              host = `hostname -f`.strip
-              job_hash = Minicron::Transport.get_job_hash(args.first, host)
+              # Get the fully qualified domain name of the currnet host
+              fqdn = `hostname -f`.strip
+
+              # Get the short hostname of the current host
+              hostname = `hostname -s`.strip
+
+              # Get the md5 hash for the job
+              job_hash = Minicron::Transport.get_job_hash(args.first, fqdn)
 
               # Fire up eventmachine
               faye.ensure_em_running
 
               # Setup the job on the server
-              execution_id = faye.setup(job_hash, args.first, host)
+              execution_id = faye.setup(job_hash, args.first, fqdn, hostname)
 
               # Wait until we get the execution id
               faye.ensure_delivery

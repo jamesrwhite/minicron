@@ -29,8 +29,9 @@ module Minicron
           # Is it a setup message?
           if segments[3] == 'status' && data['action'] == 'SETUP'
             # Validate or create the host
-            host = Minicron::Hub::Host.where(:hostname => data['host']).first_or_create do |h|
-              h.hostname = data['host']
+            host = Minicron::Hub::Host.where(:fqdn => data['fqdn']).first_or_create do |h|
+              h.name = data['hostname']
+              h.fqdn = data['fqdn']
             end
 
             # Validate or create the job
