@@ -40,6 +40,7 @@
       <h2 class="pull-left">Host '{{name}}'</h2>
       <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
       {{#link-to 'host.edit' id class="pull-right btn btn-warning btn-sm"}}Edit{{/link-to}}
+      <a {{action 'test' this}} class="pull-right btn btn-info btn-sm">{{test_connection}}</a>
     </header>
     <hr/>
 
@@ -168,6 +169,7 @@
   <header class="clearfix">
     <h2 class="pull-left">Edit Host '{{name}}'</h2>
     <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
+    <a {{action 'test' this}} class="pull-right btn btn-info btn-sm">{{test_connection}}</a>
   </header>
   <hr/>
 

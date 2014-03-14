@@ -1,3 +1,6 @@
+require 'net/ssh'
+require 'etc'
+
 class Minicron::Hub::App
   # Get all hosts that a job
   # TODO: Add offset/limit
@@ -70,6 +73,33 @@ class Minicron::Hub::App
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       { :error => e.message }.to_json
+    end
+  end
+
+  # Used to test an SSH connection for a host
+  get '/api/hosts/:id/test_ssh' do
+    begin
+      # Get the host
+      host = Minicron::Hub::Host.find(params[:id])
+
+      # Set the location of the private key we are going to use
+      safe_fqdn = Minicron.sanitize_filename(host.fqdn)
+      public_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa")
+
+      # Connect to the host
+      ssh = Net::SSH.start(host.ip, Etc.getlogin, :host_key => 'ssh-rsa', :keys => [public_key_path])
+
+      # Try and run a command
+      test = ssh.exec!('echo 1').strip
+
+      # Did we get back what we expect?
+      if test == '1'
+        { :success => true }.to_json
+      else
+        fail Exception, "Test command failed. '1' expected, recieved: #{test}"
+      end
+    rescue Exception => e
+      { :success => false, :error => e.message }.to_json
     end
   end
 end
