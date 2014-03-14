@@ -69,6 +69,9 @@ module Minicron
       # Add the server command to the cli
       add_server_cli_command
 
+      # Add the db command to the cli
+      add_db_cli_command
+
       # And off we go!
       @cli.run!
     end
@@ -199,6 +202,37 @@ module Minicron
 
       # Add a global option for passing the path to a config file
       @cli.global_option '--config FILE', 'Set the config file to use'
+    end
+
+    # Add the `minicron db` command
+    private
+    def add_db_cli_command
+      @cli.command :db do |c|
+        c.syntax = 'minicron db [load|dump]'
+        c.description = 'Loads or dumps the minicron database schema.'
+
+        c.action do |args, opts|
+          # Check that exactly one argument has been passed
+          if args.length != 1
+            fail ArgumentError, 'A valid command to run is required! See `minicron help db`'
+          end
+
+          # Parse the file and cli config options
+          parse_config(opts)
+
+          # These are inlined here because scheme_plus loads the whole of rails -.-
+          require 'rake'
+          require 'minicron/hub/app'
+          require 'sinatra/activerecord/rake'
+          require 'schema_plus'
+
+          # Setup the db
+          Minicron::Hub::App.setup_db
+
+          # Run the task
+          Rake.application['db:schema:' + args.first].invoke
+        end
+      end
     end
 
     # Add the `minicron server` command

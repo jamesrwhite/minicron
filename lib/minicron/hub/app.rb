@@ -43,7 +43,29 @@ module Minicron::Hub
       ]
     end
 
-    configure :development do
+    def initialize
+      super
+
+      # Initialize the db
+      Minicron::Hub::App.setup_db
+
+      # Load all our model serializers
+      Dir[File.dirname(__FILE__) + '/serializers/*.rb'].each do |serializer|
+        require serializer
+      end
+
+      # Load all our models
+      Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
+        require model
+      end
+
+      # Load all our controllers
+      Dir[File.dirname(__FILE__) + '/controllers/**/*.rb'].each do |controller|
+        require controller
+      end
+    end
+
+    def self.setup_db
       # For debug, TODO: remove this
       puts "Using #{Minicron.config['database']['type']}"
 
@@ -67,19 +89,4 @@ module Minicron::Hub
       end
     end
   end
-end
-
-# Load all our model serializers
-Dir[File.dirname(__FILE__) + '/serializers/*.rb'].each do |serializer|
-  require serializer
-end
-
-# Load all our models
-Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
-  require model
-end
-
-# Load all our controllers
-Dir[File.dirname(__FILE__) + '/controllers/**/*.rb'].each do |controller|
-  require controller
 end

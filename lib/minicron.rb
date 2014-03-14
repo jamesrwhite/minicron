@@ -42,7 +42,7 @@ module Minicron
   #
   # @param file_path [String]
   def self.parse_file_config(file_path)
-    file_path ||= DEFAULT_CONFIG_FILE
+    file_path ||= Minicron::DEFAULT_CONFIG_FILE
 
     begin
       @config = TOML.load_file(file_path)
