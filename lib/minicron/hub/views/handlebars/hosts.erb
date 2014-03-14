@@ -35,28 +35,94 @@
 </script>
 
 <script type="text/x-handlebars" id="host/index">
-  <header class="clearfix">
-    <h2 class="pull-left">Host '{{name}}'</h2>
-    <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
-    {{#link-to 'host.edit' id class="pull-right btn btn-warning btn-sm"}}Edit{{/link-to}}
-  </header>
-  <hr/>
+  <section>
+    <header class="clearfix">
+      <h2 class="pull-left">Host '{{name}}'</h2>
+      <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
+      {{#link-to 'host.edit' id class="pull-right btn btn-warning btn-sm"}}Edit{{/link-to}}
+    </header>
+    <hr/>
 
-  <li><b>ID:</b> {{id}}</li>
-  <li><b>Name</b> {{name}}</b></li>
-  <li><b>FQDN:</b> {{fqdn}}</li>
-  <li><b>IP:</b> {{ip}}</li>
-  <li>
-    <b>Public Key:</b>
-    <div class="output tomorrow-night-eighties-ansi-theme">{{public_key}}</div>
-  </li>
-  <li><b>Created At:</b> {{date created_at}}</b></li>
-  <li><b>Updated At:</b> {{date updated_at}}</b></li>
+    <form class="form-horizontal" role="form" {{action 'save' on='submit'}}>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">ID</label>
+        <div class="col-sm-10">
+          {{input value=id disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          {{input value=name disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">FQDN</label>
+        <div class="col-sm-10">
+          {{input value=fqdn disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">IP</label>
+        <div class="col-sm-10">
+          {{input value=ip disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Public Key</label>
+        <div class="col-sm-10">
+          {{textarea value=public_key disabled="disabled" class="form-control" rows="9"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Created At</label>
+        <div class="col-sm-10">
+          {{input value=created_at disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Updated At</label>
+        <div class="col-sm-10">
+          {{input value=updated_at disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+    </form>
+  </section>
 
-  <h2>Jobs</h2>
-  {{#each job in jobs}}
-    <li>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</li>
-  {{/each}}
+  <section>
+    <header class="clearfix">
+      <h2>Jobs</h2>
+    </header>
+    <hr/>
+
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Command</th>
+          <th>Host</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      {{#each job in jobs}}
+        <tr>
+          <td>{{job.id}}</td>
+          <td>{{job.name}}</td>
+          <td>{{job.command}}</td>
+          <td>{{#link-to 'host' job.host.id}}{{job.host.name}}{{/link-to}}</td>
+          <td>
+            {{#link-to 'job' job.id class="btn btn-info btn-xs"}}View{{/link-to}}
+            <a href="#" class="btn btn-warning btn-xs">Edit</a>
+            <a href="#" class="btn btn-danger btn-xs">Delete</a>
+          </th>
+        </tr>
+      {{/each}}
+      </body>
+    </table>
+  </section>
 </script>
 
 <script type="text/x-handlebars" id="hosts/new">
