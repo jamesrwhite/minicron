@@ -23,7 +23,28 @@ Todo
 Installation
 -------------
 
-minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo ````bundle```` and ````rake install````.
+minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo ````bundle```` and ````rake install````. Set your database configuration options and you can then ````rake db:schema:load```` to setup the db structure.
+
+Requirements
+-------------
+
+#### Ruby
+- MRI
+  - 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
+- <del>Rubinius</del>
+  - <del>Travis builds are run on the latest release</del> [*awaiting bug fix*](https://github.com/rubinius/rubinius/issues/2944)
+- JRuby
+  - As yet untested
+
+
+#### Database
+- MySQL
+- SQLite >= 3.6.16
+- PostgreSQL - As yet untested
+
+#### OS
+- Should run on any linux/bsd based OS that the above ruby versions run on.
+- No windows support due to the lack of pseudo terminal support.
 
 Usage
 -----
@@ -67,21 +88,6 @@ yard server
 ````
 
 or view the most up to date version online at [RubyDoc.info](http://rdoc.info/github/jamesrwhite/minicron/master/frames "RubyDoc.info").
-
-Requirements
--------------
-
-#### Ruby
-- MRI
-  - 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
-- <del>Rubinius</del>
-  - <del>Travis builds are run on the latest release</del> [*awaiting bug fix*](https://github.com/rubinius/rubinius/issues/2944)
-- JRuby
-  - As yet untested
-
-#### OS
-- Should run on any linux/bsd based OS that the above ruby versions run on.
-- No windows support due to the lack of pseudo terminal support.
 
 Contributing
 ------------
