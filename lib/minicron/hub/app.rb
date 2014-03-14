@@ -38,11 +38,14 @@ module Minicron::Hub
         '/js/moment-2.5.1.min.js',
 
         # Ember application files
-        '/js/app/**/*.js'
+        '/app/**/*.js'
       ]
     end
 
     configure :development do
+      # For debug, TODO: remove this
+      puts "Using #{Minicron.config['database']['type']}"
+
       # Configure the database
       case Minicron.config['database']['type']
       when 'mysql'
