@@ -7,7 +7,8 @@ class Minicron::Hub::App::ExecutionSerializer
     @response = {
       :executions => [],
       :jobs => [],
-      :job_execution_outputs => []
+      :job_execution_outputs => [],
+      :hosts => []
     }
 
     if @executions.respond_to? :each
@@ -48,6 +49,9 @@ class Minicron::Hub::App::ExecutionSerializer
 
     # Append the new job to the @response
     @response[:jobs].push(new_job)
+
+    # Append the job host to the @response
+    @response[:hosts].push(execution.job.host)
 
     # Add the job execution outputs to the sideloaded data and the ids to
     # the execution
