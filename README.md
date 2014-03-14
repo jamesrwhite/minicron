@@ -16,7 +16,7 @@ Todo
 - Hub (Web UI / API)
   - <del>Collect data sent via CLI and store it in a db</del> &#10003;
   - <del>Display both realtime and historic data</del> &#10003;
-  - CRUD functionality for cron jobs via SSH
+  - CRUD functionality for cron jobs via SSH - in progress
   - Permissions support
   - Alerting (email, sms and push notifications support)
 
