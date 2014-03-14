@@ -13,12 +13,13 @@
 ActiveRecord::Schema.define(version: 0) do
 
   create_table "hosts", force: true do |t|
-    t.string   "hostname",   default: "", null: false
     t.string   "name"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.string   "fqdn",                  default: "", null: false
+    t.string   "ip",         limit: 39, default: "", null: false
     t.text     "public_key"
-    t.index ["hostname"], :name => "hostname"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.index ["fqdn"], :name => "hostname"
   end
 
   create_table "jobs", force: true do |t|
