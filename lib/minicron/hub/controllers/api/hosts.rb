@@ -45,7 +45,9 @@ class Minicron::Hub::App
       # Try and save the updated host
       host = Minicron::Hub::Host.find(params[:id])
       host.name = request_body['host']['name']
-      host.hostname = request_body['host']['hostname']
+      host.fqdn = request_body['host']['fqdn']
+      host.ip = request_body['host']['ip']
+      host.public_key = request_body['host']['public_key']
       host.save!
 
       # Return the new host
