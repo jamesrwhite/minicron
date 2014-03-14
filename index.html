@@ -31,9 +31,9 @@
         <h1>
 <a name="minicron" class="anchor" href="#minicron"><span class="octicon octicon-link"></span></a>minicron</h1>
 
-<p><a href="http://travis-ci.org/jamesrwhite/minicron"><img src="https://api.travis-ci.org/jamesrwhite/minicron.png" alt="Build Status"></a> <a href="https://coveralls.io/r/jamesrwhite/minicron?branch=master"><img src="https://coveralls.io/repos/jamesrwhite/minicron/badge.png?derp" alt="Coverage Status"></a> <a href="https://codeclimate.com/github/jamesrwhite/minicron"><img src="https://codeclimate.com/github/jamesrwhite/minicron.png" alt="Code Climate"></a> <a href="https://gemnasium.com/jamesrwhite/minicron"><img src="https://gemnasium.com/jamesrwhite/minicron.png" alt="Dependency Status"></a> <a href="http://inch-pages.github.io/github/jamesrwhite/minicron"><img src="http://inch-pages.github.io/github/jamesrwhite/minicron.png" alt="Inline docs"></a></p>
+<p><a href="http://travis-ci.org/jamesrwhite/minicron"><img src="https://api.travis-ci.org/jamesrwhite/minicron.png" alt="Build Status"></a> <a href="https://codeclimate.com/github/jamesrwhite/minicron"><img src="https://codeclimate.com/github/jamesrwhite/minicron.png" alt="Code Climate"></a> <a href="https://gemnasium.com/jamesrwhite/minicron"><img src="https://gemnasium.com/jamesrwhite/minicron.png" alt="Dependency Status"></a> <a href="http://inch-pages.github.io/github/jamesrwhite/minicron"><img src="http://inch-pages.github.io/github/jamesrwhite/minicron.png" alt="Inline docs"></a></p>
 
-<p>minicron is a work in progress system to make it easier to more effectively manage and monitor cron jobs.</p>
+<p>minicron is a system I'm building as part of my university dissertation. It aims to complement <code>cron</code> by making it easier to manage and monitor cron jobs. minicron can largely be thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also providers a web interface to the data and makes it easy to manage your cron jobs.</p>
 
 <h2>
 <a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>Todo</h2>
@@ -54,14 +54,13 @@
 </ul>
 </li>
 <li>
-<p>Hub</p>
+<p>Hub (Web UI / API)</p>
 
 <ul>
-<li>The 'Hub' is a web interface to the minicron system and the central point where data is collected</li>
 <li>
 <del>Collect data sent via CLI and store it in a db</del> ✓</li>
-<li>Display both realtime <del>and historic data</del>
-</li>
+<li>
+<del>Display both realtime and historic data</del> ✓</li>
 <li>CRUD functionality for cron jobs via SSH</li>
 <li>Permissions support</li>
 <li>Alerting (email, sms and push notifications support)</li>
@@ -70,7 +69,7 @@
 </ul><h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo and <code>rake install</code>.</p>
+<p>minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo <code>bundle</code> and <code>rake install</code>.</p>
 
 <h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
@@ -134,7 +133,7 @@ yard server
 
 <ul>
 <li>
-<del>Travis builds are run on the latest release</del> <em>awaiting bug fix</em>
+<del>Travis builds are run on the latest release</del> <a href="https://github.com/rubinius/rubinius/issues/2944"><em>awaiting bug fix</em></a>
 </li>
 </ul>
 </li>
