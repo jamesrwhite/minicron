@@ -1,3 +1,4 @@
+require 'sshkey'
 require 'minicron/hub/models/host'
 require 'minicron/hub/models/job'
 require 'minicron/hub/models/execution'
@@ -17,22 +18,41 @@ module Minicron
         # Is it a job messages
         if segments[1] == 'job'
           # TODO: All of these need more validation checks and error handling
-          # currently it's just assumed the correct data is passed
+          # currently it's just assumed the correct data is passed and the server
+          # crashes if it isn't!
           data = message['data']['message']
           ts = message['data']['ts']
 
           # Check that the job id is a valid length
           if segments[2].length != 32
-            # Do something clever here
+            # TODO: Do something clever here
           end
 
           # Is it a setup message?
           if segments[3] == 'status' && data['action'] == 'SETUP'
             # Validate or create the host
             host = Minicron::Hub::Host.where(:fqdn => data['fqdn']).first_or_create do |h|
+              # Generate a new SSH key
+              key = SSHKey.generate(:comment => "minicron public key for #{data['fqdn']}")
+
+              # Set the locations to save the public key private key pair
+              safe_fqdn = sanitize_filename(data['fqdn'])
+              private_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa")
+              public_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa.pub")
+
+              # Save the public key private key pair
+              File.write(private_key_path, key.private_key)
+              File.write(public_key_path, key.ssh_public_key)
+
+              # Set the correct permissions on the files
+              File.chmod(0600, private_key_path)
+              File.chmod(0644, public_key_path)
+
+              # Set the attributes on the host
               h.name = data['hostname']
               h.fqdn = data['fqdn']
               h.ip = request.ip
+              h.public_key = key.ssh_public_key
             end
 
             # Do we need to update the ip address?
@@ -92,6 +112,21 @@ module Minicron
         end
 
         callback.call(message)
+      end
+
+      # Sanitize a filename - taken from http://guides.rubyonrails.org/security.html
+      #
+      # @param filename [String]
+      # @return [String]
+      def sanitize_filename(filename)
+        filename.strip.tap do |name|
+          name.sub!(/\A.*(\\|\/)/, '')
+          # Finally, replace all non alphanumeric, underscore
+          # or periods with underscore
+          name.gsub!(/[^\w\.\-]/, '_')
+        end
+
+        filename
       end
     end
   end
