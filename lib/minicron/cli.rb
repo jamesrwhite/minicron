@@ -260,7 +260,7 @@ module Minicron
               )
 
               # Get the Job ID
-              host = `hostname -s`.strip
+              host = `hostname -f`.strip
               job_hash = Minicron::Transport.get_job_hash(args.first, host)
 
               # Fire up eventmachine
