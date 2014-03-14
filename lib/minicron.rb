@@ -117,4 +117,19 @@ module Minicron
       { :stdout => stdout, :stderr => stderr }
     end
   end
+
+  # Sanitize a filename - taken from http://guides.rubyonrails.org/security.html
+  #
+  # @param filename [String]
+  # @return [String]
+  def self.sanitize_filename(filename)
+    filename.strip.tap do |name|
+      name.sub!(/\A.*(\\|\/)/, '')
+      # Finally, replace all non alphanumeric, underscore
+      # or periods with underscore
+      name.gsub!(/[^\w\.\-]/, '_')
+    end
+
+    filename
+  end
 end

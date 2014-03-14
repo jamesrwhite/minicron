@@ -32,11 +32,11 @@ module Minicron
           if segments[3] == 'status' && data['action'] == 'SETUP'
             # Validate or create the host
             host = Minicron::Hub::Host.where(:fqdn => data['fqdn']).first_or_create do |h|
-              # Generate a new SSH key
+              # Generate a new SSH key - TODO: add passphrase
               key = SSHKey.generate(:comment => "minicron public key for #{data['fqdn']}")
 
               # Set the locations to save the public key private key pair
-              safe_fqdn = sanitize_filename(data['fqdn'])
+              safe_fqdn = Minicron.sanitize_filename(data['fqdn'])
               private_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa")
               public_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa.pub")
 
@@ -112,21 +112,6 @@ module Minicron
         end
 
         callback.call(message)
-      end
-
-      # Sanitize a filename - taken from http://guides.rubyonrails.org/security.html
-      #
-      # @param filename [String]
-      # @return [String]
-      def sanitize_filename(filename)
-        filename.strip.tap do |name|
-          name.sub!(/\A.*(\\|\/)/, '')
-          # Finally, replace all non alphanumeric, underscore
-          # or periods with underscore
-          name.gsub!(/[^\w\.\-]/, '_')
-        end
-
-        filename
       end
     end
   end
