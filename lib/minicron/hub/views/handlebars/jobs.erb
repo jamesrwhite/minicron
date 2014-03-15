@@ -1,7 +1,6 @@
 <script type="text/x-handlebars" id="jobs/index">
-  <header class="clearfix">
-    <h2 class="pull-left">Jobs</h2>
-    <a href="#" class="pull-right btn btn-success btn-sm">Add New Job</a>
+  <header>
+    <h2>Jobs</h2>
   </header>
   <hr/>
 
@@ -25,8 +24,8 @@
         <td>{{#link-to 'host' host.id}}{{host.name}}{{/link-to}}</td>
         <td>
           {{#link-to 'job' id class="btn btn-info btn-xs"}}View{{/link-to}}
-          <a href="#" class="btn btn-warning btn-xs">Edit</a>
-          <a href="#" class="btn btn-danger btn-xs">Delete</a>
+          {{#link-to 'job.edit' id class="btn btn-warning btn-xs"}}Edit{{/link-to}}
+          <a {{action 'delete' this}} class="btn btn-danger btn-xs">Delete</a>
         </th>
       </tr>
     {{/each}}
@@ -34,20 +33,113 @@
   </table>
 </script>
 
-<script type="text/x-handlebars" id="job">
-  <h2>Job</h2>
+<script type="text/x-handlebars" id="job/index">
+  <section>
+    <header class="clearfix">
+      <h2 class="pull-left">Job '{{name}}'</h2>
+      <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
+      {{#link-to 'job.edit' id class="pull-right btn btn-warning btn-sm"}}Edit{{/link-to}}
+    </header>
+    <hr/>
 
-  <li><b>ID:</b> {{id}}</li>
-  <li><b>Hash:</b> {{job.job_hash}}</li>
-  <li><b>Name:</b> {{name}}</li>
-  <li><b>Command:</b> {{command}}</b></li>
-  <li><b>Host:</b> {{job.host.name}}</b></li>
-  <li><b>Created At:</b> {{date created_at}}</b></li>
-  <li><b>Updated At:</b> {{date updated_at}}</b></li>
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">ID</label>
+        <div class="col-sm-10">
+          {{input value=id disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Hash</label>
+        <div class="col-sm-10">
+          {{input value=job_hash disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          {{input value=name disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Command</label>
+        <div class="col-sm-10">
+          {{input value=command disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Host</label>
+        <div class="col-sm-10">
+          {{input value=host.name disabled="disabled" class="form-control" rows="9"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Created At</label>
+        <div class="col-sm-10">
+          {{input value=created_at disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Updated At</label>
+        <div class="col-sm-10">
+          {{input value=updated_at disabled="disabled" type="text" class="form-control"}}
+        </div>
+      </div>
+    </form>
+  </section>
 
-  <h2>Executions</h2>
+  <section>
+    <header class="clearfix">
+      <h2>Executions</h2>
+    </header>
+    <hr/>
 
-  {{#each execution in executions}}
-    <li>{{#link-to 'execution' execution.id}}{{execution.id}}{{/link-to}}
-  {{/each}}
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Started At</th>
+          <th>Finished At</th>
+          <th>Exit Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+      {{#each execution in executions}}
+        {{! TODO: contextual classes here for execution status }}
+        <tr>
+          <td>{{#link-to 'execution' execution.id}}{{id}}{{/link-to}}</td>
+          <td>{{date execution/started_at}}</td>
+          <td>{{date execution.finished_at}}</td>
+          <td>{{execution.exit_status}}</td>
+          <td>{{#link-to 'execution' execution.id class="btn btn-info btn-xs"}}View{{/link-to}}</td>
+        </tr>
+      {{/each}}
+      </body>
+    </table>
+  </section>
+</script>
+
+<script type="text/x-handlebars" id="job/edit">
+  <header class="clearfix">
+    <h2 class="pull-left">Edit Job '{{name}}'</h2>
+    <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
+  </header>
+  <hr/>
+
+  <form class="form-horizontal" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        {{input value=name type="text" class="form-control" placeholder="A nickname for the job"}}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-success">Save</button>
+        <button {{action 'cancel' this}} class="btn btn-danger">Cancel</button>
+      </div>
+    </div>
+  </form>
 </script>

@@ -116,8 +116,7 @@
           <td>{{#link-to 'host' job.host.id}}{{job.host.name}}{{/link-to}}</td>
           <td>
             {{#link-to 'job' job.id class="btn btn-info btn-xs"}}View{{/link-to}}
-            <a href="#" class="btn btn-warning btn-xs">Edit</a>
-            <a href="#" class="btn btn-danger btn-xs">Delete</a>
+            {{#link-to 'job.edit' job.id class="btn btn-warning btn-xs"}}Edit{{/link-to}}
           </th>
         </tr>
       {{/each}}
