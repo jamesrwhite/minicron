@@ -1,4 +1,3 @@
-require 'sshkey'
 require 'minicron/hub/models/host'
 require 'minicron/hub/models/job'
 require 'minicron/hub/models/execution'
@@ -30,32 +29,27 @@ module Minicron
 
           # Is it a setup message?
           if segments[3] == 'status' && data['action'] == 'SETUP'
-            # Validate or create the host
-            host = Minicron::Hub::Host.where(:fqdn => data['fqdn']).first_or_create do |h|
+            # Try and find the host
+            host = Minicron::Hub::Host.where(:fqdn => data['fqdn']).first
+
+            # Create it if it didn't exist!
+            if not host
+              host = Minicron::Hub::Host.create(
+                :name => data['hostname'],
+                :fqdn => data['fqdn'],
+                :ip => request.ip
+              )
+
               # Generate a new SSH key - TODO: add passphrase
-              key = SSHKey.generate(:comment => "minicron public key for #{data['fqdn']}")
+              key = Minicron.generate_ssh_key('host', host.id, host.fqdn)
 
-              # Set the locations to save the public key private key pair
-              safe_fqdn = Minicron.sanitize_filename(data['fqdn'])
-              private_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa")
-              public_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa.pub")
-
-              # Save the public key private key pair
-              File.write(private_key_path, key.private_key)
-              File.write(public_key_path, key.ssh_public_key)
-
-              # Set the correct permissions on the files
-              File.chmod(0600, private_key_path)
-              File.chmod(0644, public_key_path)
-
-              # Set the attributes on the host
-              h.name = data['hostname']
-              h.fqdn = data['fqdn']
-              h.ip = request.ip
-              h.public_key = key.ssh_public_key
+              # And finally we store the public key in te db with the host for convenience
+              Minicron::Hub::Host.where(:id => host.id).update_all(
+                :public_key => key.ssh_public_key
+              )
             end
 
-            # Do we need to update the ip address?
+            # Update the IP if we need to
             if host.ip != request.ip
               Minicron::Hub::Host.where(:id => host.id).update_all(
                 :ip => request.ip

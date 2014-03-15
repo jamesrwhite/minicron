@@ -83,11 +83,10 @@ class Minicron::Hub::App
       host = Minicron::Hub::Host.find(params[:id])
 
       # Set the location of the private key we are going to use
-      safe_fqdn = Minicron.sanitize_filename(host.fqdn)
-      public_key_path = File.expand_path("~/.ssh/minicron_#{safe_fqdn}_rsa")
+      private_key_path = File.expand_path("~/.ssh/minicron_host_#{host.id}_rsa")
 
       # Connect to the host
-      ssh = Net::SSH.start(host.ip, Etc.getlogin, :host_key => 'ssh-rsa', :keys => [public_key_path])
+      ssh = Net::SSH.start(host.ip, Etc.getlogin, :host_key => 'ssh-rsa', :keys => [private_key_path])
 
       # Try and run a command
       test = ssh.exec!('echo 1').strip

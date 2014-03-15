@@ -1,5 +1,6 @@
-require 'toml'
 require 'stringio'
+require 'toml'
+require 'sshkey'
 require 'minicron/cli'
 require 'minicron/constants'
 
@@ -131,5 +132,30 @@ module Minicron
     end
 
     filename
+  end
+
+
+  # Used to generate SSH keys for hosts but is completely generic
+  #
+  # @param type [String] the thing that is using the key, this is just here
+  # so this could be used for something other than hosts if needed
+  # @param id [Integer]
+  # @param name [String]
+  def self.generate_ssh_key(type, id, name)
+    key = SSHKey.generate(:comment => "minicron public key for #{name}")
+
+    # Set the locations to save the public key private key pair
+    private_key_path = sanitize_filename(File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa"))
+    public_key_path = sanitize_filename(File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa.pub"))
+
+    # Save the public key private key pair
+    File.write(private_key_path, key.private_key)
+    File.write(public_key_path, key.ssh_public_key)
+
+    # Set the correct permissions on the files
+    File.chmod(0600, private_key_path)
+    File.chmod(0644, public_key_path)
+
+    key
   end
 end
