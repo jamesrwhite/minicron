@@ -22,12 +22,12 @@ path = "/"
 
 # Database options
 [database]
-type = "sqlite" # [mysql, sqlite]
+type = "mysql" # [mysql, sqlite]
 # The options below are for mysql only
-# host = "127.0.0.1"
-# database = "minicron"
-# username = "minicron"
-# password = "password"
+host = "127.0.0.1"
+database = "minicron"
+username = "minicron"
+password = "password"
 
 # CLI options
 [cli]
