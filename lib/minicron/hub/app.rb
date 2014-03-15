@@ -22,7 +22,7 @@ module Minicron::Hub
 
       # Set up the application css
       css :app, '/css/all.css', [
-        '/css/bootstrap-theme.css',
+        '/css/bootswatch.css',
         '/css/main.css'
       ]
 
