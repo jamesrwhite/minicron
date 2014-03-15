@@ -4,7 +4,7 @@ require 'rainbow/ext/string'
 require 'commander'
 require 'minicron/constants'
 require 'minicron/transport'
-require 'minicron/transport/faye/client'
+require 'minicron/transport/client'
 require 'minicron/transport/server'
 
 include Commander::UI
@@ -286,7 +286,7 @@ module Minicron
             # Set up the job and get the job and execution ids
             unless Minicron.config['cli']['dry_run']
               # Get a faye instance so we can send data about the job
-              faye = Minicron::Transport::FayeClient.new(
+              faye = Minicron::Transport::Client.new(
                 Minicron.config['client']['scheme'],
                 Minicron.config['client']['host'],
                 Minicron.config['client']['port'],

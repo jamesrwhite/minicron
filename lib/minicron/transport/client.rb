@@ -1,116 +1,68 @@
-require 'eventmachine'
-require 'em-http-request'
-require 'digest/md5'
+require 'minicron/transport/faye/client'
 
 module Minicron
   module Transport
-    class Client
-      attr_accessor :url
-      attr_accessor :queue
-      attr_accessor :responses
-
+    class Client < Minicron::Transport::FayeClient
       # Instantiate a new instance of the client
       #
-      # @param scheme [String] http or https
       # @param host [String] The host to be communicated with
-      # @param port [String] The port number the server runs on
-      # @param path [String] The path to the server, optional
-      def initialize(scheme, host, port, path) # TODO: Add options hash for other options
+      def initialize(scheme, host, port, path)
         @scheme = scheme
         @host = host
-        @path = path
+        @path = path == '/' ? '/faye' : "#{path}/faye"
         @port = port
-        @url = "#{scheme}://#{host}:#{port}#{path}"
-        @queue = {}
-        @responses = []
-        @retries = 3
-        @retry_counts = {}
+        super(@scheme, @host, @port, @path)
       end
 
-      # Starts EventMachine in a new thread if it isn't already running
-      def ensure_em_running
-        Thread.new { EM.run } unless EM.reactor_running?
-        sleep 0.1 until EM.reactor_running?
-      end
-
-      # Sends a request to the @url and adds it to the request queue
+      # Used to set up a job on the server
       #
-      # @param body [String]
-      def request(body)
-        # Make sure eventmachine is running
-        ensure_em_running
+      # @param job_hash [String]
+      # @param command [Integer]
+      # @param fqdn [String]
+      # @param hostname [String]
+      # @return [Integer]
+      def setup(job_hash, command, fqdn, hostname)
+        # Send a request to set up the job
+        send(:job_hash => job_hash, :type => :status, :message => {
+          :action => 'SETUP',
+          :command => command,
+          :fqdn => fqdn,
+          :hostname => hostname
+        })
 
-        # Wait until there is some space in the queue so we don't overwhelm the server
-        # until queue.length <= 10
-        #   sleep 1
-        # end
+        # Wait for the response..
+        ensure_delivery
 
-        # Make the request
-        req = EventMachine::HttpRequest.new(
-          @url,
-          :connect_timeout => Minicron.config['client']['connect_timeout'],
-          :inactivity_timeout => Minicron.config['client']['inactivity_timeout']
-        ).post(:body => body)
-
-        # Generate an id for the request
-        req_id = Digest::MD5.hexdigest(body.to_s)
-
-        # Put the request in the queue
-        queue[req_id] = req
-
-        # Set up the retry count for this request if it didn't already exist
-        @retry_counts[req_id] ||= 0
-
-        # p "[minicron] Sending #{req_id}"
-
-        # Did the request succeed? If so remove it from the queue
-        req.callback do
-          @responses.push({
-            :status => req.response_header.status,
-            :header => req.response_header,
-            :body => req.response
-          })
-
-          # p "[minicron] ACK #{req_id}"
-
-          queue.delete(req_id)
-        end
-
-        # If not retry the request up to @retries times
-        req.errback do |error|
-          @responses.push({
-            :status => req.response_header.status,
-            :header => req.response_header,
-            :body => req.response
-          })
-
-          # p "[minicron] #{req.response}"
-
-          if @retry_counts[req_id] < @retries
-            # puts "[minicron] Retrying #{req_id} x#{@retry_counts[req_id]}"
-            @retry_counts[req_id] += 1
-            request(body)
-          end
-        end
+        # TODO: Handle errors here!
+        JSON.parse(responses.first[:body]).first['channel'].split('/')[3]
       end
 
-      # Blocks until all messages in the sending queue have completed
-      def ensure_delivery
-        # Keep waiting until the queue is empty but only if we need to
-        # p "[minicron] init queue length is #{queue.length}"
-        if queue.length > 0
-          until queue.length == 0
-            sleep 0.05
-            # p "[minicron] queue length is #{queue.length}"
-          end
-        end
+      # Helper that wraps the publish function making it quicker to use
+      #
+      # @option options [String] job_hash
+      # @option options [String, Symbol] type status or output
+      # @option options [Integer] execution_id
+      def send(options = {})
+        # Only send the job execution if we have it
+        # TODO: Validate if we should have it or not
+        execution_id = options[:execution_id] ? "/#{options[:execution_id]}" : ''
 
-        true
+        # Publish the message to the correct channel
+        publish("/job/#{options[:job_hash]}#{execution_id}/#{options[:type]}", options[:message])
       end
 
-      # Tidy up after we are done with the client
-      def tidy_up
-        EM.stop
+      # Publishes a message on the given channel to the server
+      #
+      # @param channel [String]
+      # @param message [String]
+      def publish(channel, message)
+        # Set up the data to send to faye
+        data = {:channel => channel, :data => {
+          :ts => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S"),
+          :message => message
+        }}
+
+        request({ :message => data.to_json })
       end
     end
   end
