@@ -18,7 +18,7 @@
     <tbody>
     {{#each model}}
       <tr>
-        <td>{{id}}</td>
+        <td>{{#link-to 'job' id}}{{id}}{{/link-to}}</td>
         <td>{{name}}</td>
         <td>{{command}}</td>
         <td>{{#link-to 'host' host.id}}{{host.name}}{{/link-to}}</td>

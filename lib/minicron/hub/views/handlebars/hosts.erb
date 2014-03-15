@@ -19,7 +19,7 @@
     <tbody>
     {{#each model}}
       <tr>
-        <td>{{id}}</td>
+        <td>{{#link-to 'host' id}}{{id}}{{/link-to}}</td>
         <td>{{name}}</td>
         <td>{{fqdn}}</td>
         <td>{{ip}}</td>
@@ -110,7 +110,7 @@
       <tbody>
       {{#each job in jobs}}
         <tr>
-          <td>{{job.id}}</td>
+          <td>{{#link-to 'job' job.id}}{{job.id}}{{/link-to}}</td>
           <td>{{job.name}}</td>
           <td>{{job.command}}</td>
           <td>{{#link-to 'host' job.host.id}}{{job.host.name}}{{/link-to}}</td>
