@@ -15,4 +15,19 @@ class Minicron::Hub::App
                                         .find(params[:id])
     ExecutionSerializer.new(execution).serialize.to_json
   end
+
+  # Delete an existing execution
+  delete '/api/executions/:id' do
+    content_type :json
+    begin
+      # Try and delete the execution
+      Minicron::Hub::Execution.destroy(params[:id])
+
+      # This is what ember expects as the response
+      status 204
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      { :error => e.message }.to_json
+    end
+  end
 end
