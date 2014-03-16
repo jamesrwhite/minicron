@@ -7,7 +7,7 @@ class Minicron::Hub::App
     if params[:job_hash]
       jobs = Minicron::Hub::Job.includes(:host, { :executions => :job_execution_outputs }).where(:job_hash => params[:job_hash])
     else
-      jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, :executions)
+      jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, { :executions => :job_execution_outputs })
     end
 
     JobSerializer.new(jobs).serialize.to_json
