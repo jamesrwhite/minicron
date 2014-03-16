@@ -96,17 +96,20 @@ class Minicron::Hub::App
       # Connect to the host
       ssh = Net::SSH.start(host.ip, Etc.getlogin, options)
 
-      # Try and run a command
-      test = ssh.exec!('echo 1').strip
+      # Check if the crontab is readable
+      read = ssh.exec!('test -r /etc/crontab && echo "y" || echo "n"').strip
 
-      # Did we get back what we expect?
-      if test == '1'
-        { :success => true }.to_json
-      else
-        fail Exception, "Test command failed. '1' expected, recieved: #{test}"
-      end
+      # Check if the crontab is writeable
+      write = ssh.exec!('test -w /etc/crontab && echo "y" || echo "n"').strip
+
+      # Return the test results as JSON
+      {
+        :connect => true,
+        :read => read == 'y',
+        :write => write == 'y'
+      }.to_json
     rescue Exception => e
-      { :success => false, :error => e.message }.to_json
+      { :connect => false, :error => e.message }.to_json
     end
   end
 end
