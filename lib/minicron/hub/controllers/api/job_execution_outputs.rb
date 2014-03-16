@@ -8,6 +8,10 @@ class Minicron::Hub::App
       output = Minicron::Hub::JobExecutionOutput.includes(:execution)
                                                 .where(:id => params[:ids])
                                                 .order(:id => :asc)
+    elsif params[:execution_id]
+      output = Minicron::Hub::JobExecutionOutput.includes(:execution)
+                                                .where(:execution_id => params[:execution_id])
+                                                .order(:id => :asc)
     else
       output = Minicron::Hub::JobExecutionOutput.all.order(:id => :asc)
     end
