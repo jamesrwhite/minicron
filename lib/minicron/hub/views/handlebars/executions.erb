@@ -70,6 +70,6 @@
     </header>
     <hr/>
 
-    <div class="output tomorrow-night-eighties-ansi-theme">{{#each job_execution_output in job_execution_outputs}}{{ansi_to_html job_execution_output.output}}{{/each}}</div>
+    <div class="output tomorrow-night-eighties-ansi-theme">{{#each controller.sortedOutput}}{{ansi_to_html output}}{{/each}}</div>
   </section>
 </script>
