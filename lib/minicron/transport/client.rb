@@ -11,6 +11,7 @@ module Minicron
         @host = host
         @path = path == '/' ? '/faye' : "#{path}/faye"
         @port = port
+        @seq = 1
         super(@scheme, @host, @port, @path)
       end
 
@@ -59,8 +60,12 @@ module Minicron
         # Set up the data to send to faye
         data = {:channel => channel, :data => {
           :ts => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S"),
-          :message => message
+          :message => message,
+          :seq => @seq
         }}
+
+        # Increment the sequence id
+        @seq += 1
 
         request({ :message => data.to_json })
       end

@@ -21,6 +21,7 @@ module Minicron
           # crashes if it isn't!
           data = message['data']['message']
           ts = message['data']['ts']
+          seq = message['data']['seq']
 
           # Check that the job id is a valid length
           if segments[2].length != 32
@@ -86,7 +87,8 @@ module Minicron
             Minicron::Hub::JobExecutionOutput.create(
               :execution_id => segments[3],
               :output => data,
-              :timestamp => ts
+              :timestamp => ts,
+              :seq => seq
             )
           end
 
