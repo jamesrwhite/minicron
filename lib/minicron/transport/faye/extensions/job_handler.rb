@@ -84,12 +84,15 @@ module Minicron
 
           # Is it job output?
           if segments[4] == 'output'
-            Minicron::Hub::JobExecutionOutput.create(
+            output = Minicron::Hub::JobExecutionOutput.create(
               :execution_id => segments[3],
               :output => data,
               :timestamp => ts,
               :seq => seq
             )
+
+            # Append the id to the message so we can use it on the frontend
+            message['data']['job_execution_output_id'] = output.id
           end
 
           # Is it a finish message?
