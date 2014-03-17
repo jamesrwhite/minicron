@@ -27,7 +27,8 @@ class Minicron::Hub::App
       host = Minicron::Hub::Host.create(
         :name => request_body['host']['name'],
         :fqdn => request_body['host']['fqdn'],
-        :host => request_body['host']['host']
+        :host => request_body['host']['host'],
+        :port => request_body['host']['port']
       )
 
       # Generate a new SSH key - TODO: add passphrase
@@ -57,6 +58,7 @@ class Minicron::Hub::App
       host.name = request_body['host']['name']
       host.fqdn = request_body['host']['fqdn']
       host.host = request_body['host']['host']
+      host.port = request_body['host']['port']
       host.save!
 
       # Return the new host
@@ -96,7 +98,8 @@ class Minicron::Hub::App
         :auth_methods => ['publickey'],
         :host_key => 'ssh-rsa',
         :keys => [private_key_path],
-        :timeout => 10
+        :timeout => 10,
+        :port => host.port
       }
 
       # Connect to the host
