@@ -93,7 +93,7 @@ class Minicron::Hub::App
       }
 
       # Connect to the host
-      ssh = Net::SSH.start(host.ip, `whoami`, options)
+      ssh = Net::SSH.start(host.ip, `whoami`.strip, options)
 
       # Check if the crontab is readable
       read = ssh.exec!('test -r /etc/crontab && echo "y" || echo "n"').strip
