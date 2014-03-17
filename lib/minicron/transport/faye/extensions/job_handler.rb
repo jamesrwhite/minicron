@@ -69,12 +69,9 @@ module Minicron
               :job_id => job.id
             )
 
-            # Append the job id to the messgae to make it easier for the client
-            message['data']['job_id'] = job.id
-
             # Alter the response channel to include the execution id for the
             # client to use in later requests
-            segments[3] = "#{execution.id}/status"
+            segments[3] = "#{job.id}-#{execution.id}/status"
             message['channel'] = segments.join('/')
           end
 

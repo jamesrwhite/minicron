@@ -21,10 +21,10 @@ module Minicron
       # @param command [Integer]
       # @param fqdn [String]
       # @param hostname [String]
-      # @return [Integer]
+      # @return [Hash]
       def setup(job_hash, command, fqdn, hostname)
         # Send a request to set up the job
-        send(:job_hash => job_hash, :type => :status, :message => {
+        publish("/job/#{job_hash}/status", {
           :action => 'SETUP',
           :command => command,
           :fqdn => fqdn,
@@ -35,21 +35,27 @@ module Minicron
         ensure_delivery
 
         # TODO: Handle errors here!
-        JSON.parse(responses.first[:body]).first['channel'].split('/')[3]
+        # Get the job and execution id from the response
+        ids = JSON.parse(responses.first[:body]).first['channel'].split('/')[3]
+
+        # Split them up
+        ids = ids.split('-')
+
+        # Return them as a hash
+        {
+          :job_id => ids[0],
+          :execution_id => ids[1]
+        }
       end
 
       # Helper that wraps the publish function making it quicker to use
       #
-      # @option options [String] job_hash
+      # @option options [String] job_id
       # @option options [String, Symbol] type status or output
       # @option options [Integer] execution_id
       def send(options = {})
-        # Only send the job execution if we have it
-        # TODO: Validate if we should have it or not
-        execution_id = options[:execution_id] ? "/#{options[:execution_id]}" : ''
-
         # Publish the message to the correct channel
-        publish("/job/#{options[:job_hash]}#{execution_id}/#{options[:type]}", options[:message])
+        publish("/job/#{options[:job_id]}/#{options[:execution_id]}/#{options[:type]}", options[:message])
       end
 
       # Publishes a message on the given channel to the server
