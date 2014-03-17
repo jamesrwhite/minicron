@@ -1,5 +1,4 @@
 require 'net/ssh'
-require 'etc'
 
 class Minicron::Hub::App
   # Get all hosts that a job
@@ -94,7 +93,7 @@ class Minicron::Hub::App
       }
 
       # Connect to the host
-      ssh = Net::SSH.start(host.ip, Etc.getlogin, options)
+      ssh = Net::SSH.start(host.ip, `whoami`, options)
 
       # Check if the crontab is readable
       read = ssh.exec!('test -r /etc/crontab && echo "y" || echo "n"').strip
