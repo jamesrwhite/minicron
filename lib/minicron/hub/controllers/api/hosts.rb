@@ -26,8 +26,16 @@ class Minicron::Hub::App
       # Try and save the new host
       host = Minicron::Hub::Host.create(
         :name => request_body['host']['name'],
-        :hostname => request_body['host']['hostname']
+        :fqdn => request_body['host']['fqdn'],
+        :host => request_body['host']['host']
       )
+
+      # Generate a new SSH key - TODO: add passphrase
+      key = Minicron.generate_ssh_key('host', host.id, host.fqdn)
+
+      # And finally we store the public key in te db with the host for convenience
+      host.public_key = key.ssh_public_key
+      host.save!
 
       # Return the new host
       HostSerializer.new(host).serialize.to_json
@@ -49,7 +57,6 @@ class Minicron::Hub::App
       host.name = request_body['host']['name']
       host.fqdn = request_body['host']['fqdn']
       host.host = request_body['host']['host']
-      host.public_key = request_body['host']['public_key']
       host.save!
 
       # Return the new host
