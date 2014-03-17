@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table "job_execution_outputs", force: true do |t|
     t.integer  "execution_id", null: false
+    t.integer  "seq",          null: false
     t.text     "output",       null: false
     t.datetime "timestamp",    null: false
     t.index ["execution_id"], :name => "execution_id"
