@@ -11,7 +11,7 @@
         <th>ID</th>
         <th>Name</th>
         <th>FQDN</th>
-        <th>IP</th>
+        <th>Host</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -22,7 +22,7 @@
         <td>{{#link-to 'host' id}}{{id}}{{/link-to}}</td>
         <td>{{name}}</td>
         <td>{{fqdn}}</td>
-        <td>{{ip}}</td>
+        <td>{{host}}</td>
         <td>
           {{#link-to 'host' id class="btn btn-info btn-xs"}}View{{/link-to}}
           {{#link-to 'host.edit' id class="btn btn-warning btn-xs"}}Edit{{/link-to}}
@@ -64,9 +64,9 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-2 control-label">IP</label>
+        <label class="col-sm-2 control-label">Host</label>
         <div class="col-sm-10">
-          {{input value=ip disabled="disabled" type="text" class="form-control"}}
+          {{input value=host disabled="disabled" type="text" class="form-control"}}
         </div>
       </div>
       <div class="form-group">
@@ -145,15 +145,9 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">IP</label>
+      <label class="col-sm-2 control-label">Host</label>
       <div class="col-sm-10">
-        {{input value=ip type="text" class="form-control" placeholder="The machine ip address e.g 127.0.0.1"}}
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Public Key</label>
-      <div class="col-sm-10">
-        {{textarea value=public_key class="form-control" rows="10" placeholder="The SSH public key that will be used to connect to the host - OPTIONAL"}}
+        {{input value=host type="text" class="form-control" placeholder="The machine host, this could be an IP address or FQDN"}}
       </div>
     </div>
     <div class="form-group">
@@ -187,9 +181,9 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">IP</label>
+      <label class="col-sm-2 control-label">Host</label>
       <div class="col-sm-10">
-        {{input value=ip type="text" class="form-control" placeholder="The machine ip address e.g 127.0.0.1"}}
+        {{input value=host type="text" class="form-control" placeholder="The machine host, this could be an IP address or FQDN"}}
       </div>
     </div>
     <div class="form-group">

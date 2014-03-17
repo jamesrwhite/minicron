@@ -38,7 +38,7 @@ module Minicron
               host = Minicron::Hub::Host.create(
                 :name => data['hostname'],
                 :fqdn => data['fqdn'],
-                :ip => request.ip
+                :host => request.ip
               )
 
               # Generate a new SSH key - TODO: add passphrase
@@ -47,13 +47,6 @@ module Minicron
               # And finally we store the public key in te db with the host for convenience
               Minicron::Hub::Host.where(:id => host.id).update_all(
                 :public_key => key.ssh_public_key
-              )
-            end
-
-            # Update the IP if we need to
-            if host.ip != request.ip
-              Minicron::Hub::Host.where(:id => host.id).update_all(
-                :ip => request.ip
               )
             end
 
