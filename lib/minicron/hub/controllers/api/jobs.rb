@@ -1,3 +1,5 @@
+require 'minicron/transport'
+
 class Minicron::Hub::App
   # Get all jobs
   # TODO: Add offset/limit
@@ -27,9 +29,16 @@ class Minicron::Hub::App
       # Load the JSON body
       request_body = Oj.load(request.body)
 
-      # Try and save the updated job
-      job = Minicron::Hub::Job.find(params[:id])
+      # Find the job
+      job = Minicron::Hub::Job.includes(:host).find(params[:id])
+
+      # Update the name and command
       job.name = request_body['job']['name']
+      job.command = request_body['job']['command']
+
+      # If the command was changed we'll need to recalculate the job hash
+      job.job_hash = Minicron::Transport.get_job_hash(job.command, job.host.fqdn)
+
       job.save!
 
       # Return the new job
