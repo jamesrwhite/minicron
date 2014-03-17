@@ -7,7 +7,8 @@ class Minicron::Hub::App::JobSerializer
     @response = {
       :jobs => [],
       :hosts => [],
-      :executions => []
+      :executions => [],
+      :job_schedules => []
     }
 
     if @jobs.respond_to? :each
@@ -38,6 +39,9 @@ class Minicron::Hub::App::JobSerializer
     # Set up the execution ids array
     new_job[:executions] = []
 
+    # Set up the job_schedules ids array
+    new_job[:job_schedules] = []
+
     # Add the host to the sideloaded data
     new_host = {}
     job.host.attributes.each do |key, value|
@@ -52,6 +56,22 @@ class Minicron::Hub::App::JobSerializer
 
     # Append the new host to the @response
     @response[:hosts].push(new_host)
+
+    # Add the job_schedules to the sideloaded data and the ids to
+    # the job
+    job.job_schedules.each do |job_schedule|
+      new_job_schedule = {}
+
+      job_schedule.attributes.each do |key, value|
+        # Remove _id from keys
+        key = key[-3, 3] == '_id' ? key[0..-4] : key
+
+        new_job_schedule[key] = value
+      end
+
+      @response[:job_schedules].push(new_job_schedule)
+      new_job[:job_schedules].push(job_schedule.id)
+    end
 
     # Add the executions to the sideloaded data and the ids to
     # the job
