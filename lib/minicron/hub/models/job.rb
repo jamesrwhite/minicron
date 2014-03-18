@@ -1,7 +1,7 @@
 class Minicron::Hub::Job < ActiveRecord::Base
   belongs_to :host
   has_many :executions
-  has_many :job_schedules
+  has_many :schedules
 
   # Default the name of the command to the command itself if no name is set
   def name

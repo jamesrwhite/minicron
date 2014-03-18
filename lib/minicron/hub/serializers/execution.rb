@@ -29,6 +29,7 @@ class Minicron::Hub::App::ExecutionSerializer
     execution.attributes.each do |key, value|
       # Remove _id from keys
       key = key[-3, 3] == '_id' ? key[0..-4] : key
+
       new_execution[key] = value
     end
 
