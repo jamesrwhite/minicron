@@ -11,8 +11,6 @@
         <th>ID</th>
         <th>Name</th>
         <th>FQDN</th>
-        <th>Host</th>
-        <th>Port</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -23,8 +21,6 @@
         <td>{{#link-to 'host' id}}{{id}}{{/link-to}}</td>
         <td>{{name}}</td>
         <td>{{fqdn}}</td>
-        <td>{{host}}</td>
-        <td>{{port}}</td>
         <td>
           {{#link-to 'host' id class="btn btn-info btn-xs"}}View{{/link-to}}
           {{#link-to 'host.edit' id class="btn btn-warning btn-xs"}}Edit{{/link-to}}
@@ -47,12 +43,6 @@
     <hr/>
 
     <form class="form-horizontal" role="form">
-      <div class="form-group">
-        <label class="col-sm-2 control-label">ID</label>
-        <div class="col-sm-10">
-          {{input value=id disabled="disabled" type="text" class="form-control"}}
-        </div>
-      </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-10">
@@ -109,7 +99,6 @@
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Command</th>
           <th>Host</th>
           <th>Actions</th>
         </tr>
@@ -120,7 +109,6 @@
         <tr>
           <td>{{#link-to 'job' job.id}}{{job.id}}{{/link-to}}</td>
           <td>{{job.name}}</td>
-          <td>{{job.command}}</td>
           <td>{{#link-to 'host' job.host.id}}{{job.host.name}}{{/link-to}}</td>
           <td>
             {{#link-to 'job' job.id class="btn btn-info btn-xs"}}View{{/link-to}}
