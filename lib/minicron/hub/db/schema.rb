@@ -54,9 +54,13 @@ ActiveRecord::Schema.define(version: 0) do
     t.foreign_key ["execution_id"], "executions", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "job_execution_outputs_ibfk_1"
   end
 
-  create_table "job_schedules", force: true do |t|
-    t.integer "job_id",   null: false
-    t.text    "schedule", null: false
+  create_table "schedules", force: true do |t|
+    t.integer  "job_id",     null: false
+    t.text     "schedule",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], :name => "job_id"
+    t.foreign_key ["job_id"], "jobs", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "schedules_ibfk_1"
   end
 
 end
