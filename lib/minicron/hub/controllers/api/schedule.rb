@@ -1,3 +1,5 @@
+require 'minicron/transport/ssh'
+
 class Minicron::Hub::App
   # Get all schedules
   # TODO: Add offset/limit
@@ -23,13 +25,48 @@ class Minicron::Hub::App
       # Load the JSON body
       request_body = Oj.load(request.body)
 
-      # Try and save the new schedule
+      # Create the new schedule
       schedule = Minicron::Hub::Schedule.create(
         :schedule => request_body['schedule']['schedule'],
         :job_id => request_body['schedule']['job']
       )
 
-      schedule.save!
+      Minicron::Hub::Schedule.transaction do
+        # Get the job and host for the schedule
+        job = Minicron::Hub::Job.includes(:host).find(schedule.job_id)
+
+        # Get an ssh instance and open a connection
+        ssh = Minicron::Transport::SSH.new(
+          :host => job.host.host,
+          :port => job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+        )
+        conn = ssh.open
+
+        # Prepare the line we are going to write to the crontab
+        command = "'" + job.command.gsub(/\\|'/) { |c| "\\#{c}" } + "'"
+        line = "#{schedule.schedule} root minicron run #{command}"
+        echo_line = "echo \"#{line}\" >> /etc/crontab && echo 'y' || echo 'n'"
+
+        # Append it to the end of the crontab
+        write = conn.exec!(echo_line).strip
+
+        # Throw an exception if it failed
+        if write != 'y'
+          raise Exception, "Unable to write #{line} to the crontab"
+        end
+
+        # Check the line is there
+        tail = conn.exec!('tail -n 1 /etc/crontab').strip
+
+        # Throw an exception if we can't see our new line at the end of the file
+        if tail != line
+          raise Exception, "Expected to find #{line} at eof but found #{tail}"
+        end
+
+        # And finally save it
+        schedule.save!
+      end
 
       # Return the new schedule
       ScheduleSerializer.new(schedule).serialize.to_json
