@@ -1,4 +1,4 @@
-require 'net/ssh'
+require 'minicron/transport/ssh'
 
 class Minicron::Hub::App
   # Get all hosts that a job
@@ -90,26 +90,25 @@ class Minicron::Hub::App
       # Get the host
       host = Minicron::Hub::Host.find(params[:id])
 
-      # Set the location of the private key we are going to use
-      private_key_path = File.expand_path("~/.ssh/minicron_host_#{host.id}_rsa")
+      # Set up the ssh instance
+      ssh = Minicron::Transport::SSH.new(
+        :user => `whoami`.strip,
+        :host => host.host,
+        :port => host.port,
+        :private_key => "~/.ssh/minicron_host_#{host.id}_rsa"
+      )
 
-      # Set up the ssh connection options
-      options = {
-        :auth_methods => ['publickey'],
-        :host_key => 'ssh-rsa',
-        :keys => [private_key_path],
-        :timeout => 10,
-        :port => host.port
-      }
-
-      # Connect to the host
-      ssh = Net::SSH.start(host.host, `whoami`.strip, options)
+      # Open the connection
+      conn = ssh.open
 
       # Check if the crontab is readable
-      read = ssh.exec!('test -r /etc/crontab && echo "y" || echo "n"').strip
+      read = conn.exec!('test -r /etc/crontab && echo "y" || echo "n"').strip
 
       # Check if the crontab is writeable
-      write = ssh.exec!('test -w /etc/crontab && echo "y" || echo "n"').strip
+      write = conn.exec!('test -w /etc/crontab && echo "y" || echo "n"').strip
+
+      # Tidy up
+      ssh.close
 
       # Return the test results as JSON
       {
