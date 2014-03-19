@@ -23,7 +23,7 @@ Todo
 Installation
 -------------
 
-minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo ````bundle```` and ````rake install````. Set your database configuration options and you can then ````rake db:schema:load```` to setup the db structure.
+minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo ````bundle```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db load```` to setup the db structure.
 
 Requirements
 -------------
