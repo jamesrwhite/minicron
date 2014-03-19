@@ -44,7 +44,7 @@ Requirements
 
 #### OS
 - Should run on any linux/bsd based OS that the above ruby versions run on.
-- No windows support due to the lack of pseudo terminal support.
+- No windows support.
 
 Usage
 -----
