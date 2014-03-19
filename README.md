@@ -94,6 +94,16 @@ Contributing
 
 Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md "CONTRIBUTING.md") for more info.
 
+Areas that I would love some help with:
+
+- Validation and error handling improvements
+- UI improvements
+- Documentation improvements
+- General testing, create issues for any bugs you find
+- Look for ````TODO:```` notices littered around the code
+- Code refactoring
+- Tests!!
+
 Code Style
 ----------
 
