@@ -25,6 +25,34 @@ class Minicron::Hub::App
     JobSerializer.new(job).serialize.to_json
   end
 
+  # Create a new job
+  post '/api/jobs' do
+    content_type :json
+    begin
+      # Load the JSON body
+      request_body = Oj.load(request.body)
+
+      # First we need to look up the host
+      host = Minicron::Hub::Host.find(request_body['job']['host'])
+
+      # Try and save the new job
+      job = Minicron::Hub::Job.create(
+        :job_hash => Minicron::Transport.get_job_hash(request_body['job']['command'], host.fqdn),
+        :name => request_body['job']['name'],
+        :command => request_body['job']['command'],
+        :host_id => host.id
+      )
+
+      job.save!
+
+      # Return the new job
+      JobSerializer.new(job).serialize.to_json
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      { :error => e.message }.to_json
+    end
+  end
+
   # Update an existing job
   put '/api/jobs/:id' do
     content_type :json
