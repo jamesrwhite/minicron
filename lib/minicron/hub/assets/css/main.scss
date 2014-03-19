@@ -1,4 +1,4 @@
-html, body, .ember-view, .main-container {
+html, body, body > .ember-view, .main-container {
   height: 100%;
 }
 
