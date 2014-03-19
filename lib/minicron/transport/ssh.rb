@@ -5,17 +5,16 @@ module Minicron
     class SSH
       # Set all the options for the ssh instance
       #
-      # @option options [String] the user
       # @option options [String] the host to connect to
       # @option options [Integer] the port number
       # @option options [String] the path to the private key
       def initialize(options = {})
-        @user = options[:user]
         @host = options[:host]
         @port = options[:port]
         @private_key = File.expand_path(options[:private_key])
 
         # TODO: Make these configurable?
+        @user = `whoami`.strip
         @auth_methods = ['publickey']
         @host_key = 'ssh-rsa'
         @timeout = 10

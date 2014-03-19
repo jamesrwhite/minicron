@@ -92,7 +92,6 @@ class Minicron::Hub::App
 
       # Set up the ssh instance
       ssh = Minicron::Transport::SSH.new(
-        :user => `whoami`.strip,
         :host => host.host,
         :port => host.port,
         :private_key => "~/.ssh/minicron_host_#{host.id}_rsa"
