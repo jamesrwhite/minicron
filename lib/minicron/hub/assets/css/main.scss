@@ -4,7 +4,7 @@ html, body, body > .ember-view, .main-container {
 
 body {
   padding-top: 60px;
-  background-color: #242321;
+  background-color: #242325;
 }
 
 // Making the navbar items look clickable
@@ -78,7 +78,7 @@ body {
   padding: 0;
   border: 0;
   margin: 0;
-  background-color: #F1EFEC;
+  background-color: #EEECF1;
 
   h2 {
     font-weight: bold;
@@ -105,8 +105,8 @@ body {
 }
 
 .list-group-item {
-  background-color: #F1EFEC;
-  border: 1px solid #D3CEC0;
+  background-color: #EEECF1;
+  border: 1px solid #C7C0D3;
   border-left: 0;
   border-right: 0;
   padding: 10px 13px;
@@ -115,12 +115,12 @@ body {
 a.list-group-item.active, a.list-group-item.active:hover {
   background-color: #FFF;
   color: #555;
-  border-color: #D2D6DF;
+  border-color: #C7C0D3;
   border-right-color: #FFF;
 }
 
 a.list-group-item:hover {
-  background-color: #DFDCD6;
+  background-color: #D6D3DD;
 }
 
 // Job execution output
