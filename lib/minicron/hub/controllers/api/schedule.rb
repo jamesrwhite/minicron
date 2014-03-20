@@ -25,6 +25,16 @@ class Minicron::Hub::App
       # Load the JSON body
       request_body = Oj.load(request.body)
 
+      # First we need to check a schedule like this doesn't already exist
+      exists = Minicron::Hub::Schedule.exists?(
+        :schedule => request_body['schedule']['schedule'],
+        :job_id => request_body['schedule']['job']
+      )
+
+      if exists
+        raise Exception, "The schedule #{request_body['schedule']['schedule']} already exists for this job"
+      end
+
       Minicron::Hub::Schedule.transaction do
         # Create the new schedule
         schedule = Minicron::Hub::Schedule.create(
