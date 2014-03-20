@@ -36,6 +36,8 @@ module Minicron
       end
 
       # Execute a command on the host and block until output is returned
+      #
+      # @param command [String]
       def exec!(command)
         @ssh.exec!(command)
       end
