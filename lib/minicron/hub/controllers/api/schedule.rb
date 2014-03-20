@@ -1,4 +1,5 @@
 require 'minicron/transport/ssh'
+require 'minicron/cron'
 
 class Minicron::Hub::App
   # Get all schedules
@@ -51,30 +52,12 @@ class Minicron::Hub::App
           :port => job.host.port,
           :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
         )
-        conn = ssh.open
 
-        # Prepare the line we are going to write to the crontab
-        command = "'" + job.command.gsub(/\\|'/) { |c| "\\#{c}" } + "'"
-        line = "#{schedule.schedule} root minicron run #{command}"
-        echo_line = "echo \"#{line}\" >> /etc/crontab && echo 'y' || echo 'n'"
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
 
-        # Append it to the end of the crontab
-        write = conn.exec!(echo_line).strip
-
-        # Throw an exception if it failed
-        if write != 'y'
-          raise Exception, "Unable to write #{line} to the crontab"
-        end
-
-        # Check the line is there
-        tail = conn.exec!('tail -n 1 /etc/crontab').strip
-
-        # Throw an exception if we can't see our new line at the end of the file
-        if tail != line
-          raise Exception, "Expected to find #{line} at eof but found #{tail}"
-        end
-
-        ssh.close
+        # Add the schedule to the crontab
+        cron.add_schedule(job, schedule.schedule)
 
         # And finally save it
         schedule.save!
@@ -105,50 +88,19 @@ class Minicron::Hub::App
           :port => schedule.job.host.port,
           :private_key => "~/.ssh/minicron_host_#{schedule.job.host.id}_rsa"
         )
-        conn = ssh.open
 
-        # Escape the command
-        command = "'" + schedule.job.command.gsub(/\\|'/) { |c| "\\#{c}" } + "'"
-
-        # We are looking for the current value of the schedule
-        find = "#{schedule.schedule} root minicron run #{command}"
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
 
         # Update the schedule
-        schedule.schedule = request_body['schedule']['schedule']
-
-        # And replacing it with the updated value
-        replace = "#{schedule.schedule} root minicron run #{command}"
-
-        # Build the parts of the sed command we are going to run
-        sed = "sed -e \"s/#{Regexp.escape(find)}/#{Regexp.escape(replace)}/g\""
-        sed_redirect = '/etc/crontab > /etc/crontab.tmp'
-        test = "&& echo 'y' || echo 'n'"
-
-        # Build the full command
-        sed_command = "#{sed} #{sed_redirect} #{test}"
-
-        # Append it to the end of the crontab
-        update = conn.exec!(sed_command).strip
-
-        # Throw an exception if it failed
-        if update != 'y'
-          raise Exception, "Unable to replace #{find} with #{replace} in the crontab"
-        end
-
-        # Check the line is there
-        tail = conn.exec!('tail -n 1 /etc/crontab.tmp').strip
-
-        # Throw an exception if we can't see our new line at the end of the file
-        if tail != replace
-          raise Exception, "Expected to find #{replace} at eof but found #{tail}"
-        end
-
-        # And finally replace the crontab with the new one now we now the change worked
-        conn.exec!('mv /etc/crontab.tmp /etc/crontab')
-
-        ssh.close
+        cron.update_schedule(
+          schedule.job,
+          schedule.schedule,
+          request_body['schedule']['schedule']
+        )
 
         # And finally save it
+        schedule.schedule = request_body['schedule']['schedule']
         schedule.save!
 
         # Return the new schedule
@@ -177,45 +129,12 @@ class Minicron::Hub::App
           :port => schedule.job.host.port,
           :private_key => "~/.ssh/minicron_host_#{schedule.job.host.id}_rsa"
         )
-        conn = ssh.open
 
-        # Escape the command
-        command = "'" + schedule.job.command.gsub(/\\|'/) { |c| "\\#{c}" } + "'"
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
 
-        # We are looking for the current value of the schedule
-        find = "#{schedule.schedule} root minicron run #{command}"
-
-        # Build the parts of the sed command we are going to run
-        sed = "sed -e \"s/#{Regexp.escape(find)}//g\""
-        sed_redirect = '/etc/crontab > /etc/crontab.tmp'
-        test = "&& echo 'y' || echo 'n'"
-
-        # Build the full command
-        sed_command = "#{sed} #{sed_redirect} #{test}"
-
-        # Append it to the end of the crontab
-        update = conn.exec!(sed_command).strip
-
-        # Throw an exception if it failed
-        if update != 'y'
-          raise Exception, "Unable to remove #{find} from the crontab"
-        end
-
-        # Check the line is there
-        grep = conn.exec!("grep \"#{find}\" /etc/crontab.tmp")
-
-        # Throw an exception if we can't see our new line at the end of the file
-        if grep
-          raise Exception, "Expected to find nothing when grepping for '#{find}' but found #{grep}"
-        end
-
-        # And finally replace the crontab with the new one now we now the change worked
-        conn.exec!('mv /etc/crontab.tmp /etc/crontab')
-
-        ssh.close
-
-        # And finally save it
-        schedule.save!
+        # Delete the schedule from the crontab
+        cron.delete_schedule(schedule.job, schedule.schedule)
 
         # This is what ember expects as the response
         status 204
