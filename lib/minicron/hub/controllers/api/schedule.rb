@@ -97,21 +97,18 @@ class Minicron::Hub::App
 
       Minicron::Hub::Schedule.transaction do
         # Find the schedule
-        schedule = Minicron::Hub::Schedule.includes(:job).find(params[:id])
-
-        # Get the job and host for the schedule
-        job = Minicron::Hub::Job.includes(:host).find(schedule.job_id)
+        schedule = Minicron::Hub::Schedule.includes({ :job => :host }).find(params[:id])
 
         # Get an ssh instance and open a connection
         ssh = Minicron::Transport::SSH.new(
-          :host => job.host.host,
-          :port => job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+          :host => schedule.job.host.host,
+          :port => schedule.job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{schedule.job.host.id}_rsa"
         )
         conn = ssh.open
 
         # Escape the command
-        command = "'" + job.command.gsub(/\\|'/) { |c| "\\#{c}" } + "'"
+        command = "'" + schedule.job.command.gsub(/\\|'/) { |c| "\\#{c}" } + "'"
 
         # We are looking for the current value of the schedule
         find = "#{schedule.schedule} root minicron run #{command}"
@@ -167,11 +164,62 @@ class Minicron::Hub::App
   delete '/api/schedules/:id' do
     content_type :json
     begin
-      # Try and delete the schedule
-      Minicron::Hub::Schedule.destroy(params[:id])
+      Minicron::Hub::Schedule.transaction do
+        # Find the schedule
+        schedule = Minicron::Hub::Schedule.includes({ :job => :host }).find(params[:id])
 
-      # This is what ember expects as the response
-      status 204
+        # Try and delete the schedule
+        Minicron::Hub::Schedule.destroy(params[:id])
+
+        # Get an ssh instance and open a connection
+        ssh = Minicron::Transport::SSH.new(
+          :host => schedule.job.host.host,
+          :port => schedule.job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{schedule.job.host.id}_rsa"
+        )
+        conn = ssh.open
+
+        # Escape the command
+        command = "'" + schedule.job.command.gsub(/\\|'/) { |c| "\\#{c}" } + "'"
+
+        # We are looking for the current value of the schedule
+        find = "#{schedule.schedule} root minicron run #{command}"
+
+        # Build the parts of the sed command we are going to run
+        sed = "sed -e \"s/#{Regexp.escape(find)}//g\""
+        sed_redirect = '/etc/crontab > /etc/crontab.tmp'
+        test = "&& echo 'y' || echo 'n'"
+
+        # Build the full command
+        sed_command = "#{sed} #{sed_redirect} #{test}"
+
+        # Append it to the end of the crontab
+        update = conn.exec!(sed_command).strip
+
+        # Throw an exception if it failed
+        if update != 'y'
+          raise Exception, "Unable to remove #{find} from the crontab"
+        end
+
+        # Check the line is there
+        grep = conn.exec!("grep \"#{find}\" /etc/crontab.tmp")
+
+        # Throw an exception if we can't see our new line at the end of the file
+        if grep
+          raise Exception, "Expected to find nothing when grepping for '#{find}' but found #{grep}"
+        end
+
+        # And finally replace the crontab with the new one now we now the change worked
+        conn.exec!('mv /etc/crontab.tmp /etc/crontab')
+
+        ssh.close
+
+        # And finally save it
+        schedule.save!
+
+        # This is what ember expects as the response
+        status 204
+      end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       { :error => e.message }.to_json
