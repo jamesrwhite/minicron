@@ -34,7 +34,7 @@ module Minicron::Hub
         '/js/ember-1.4.1.min.js',
         '/js/ember-data-1.0.0-beta.7.f87cba88.min.js',
         '/js/faye-browser-1.0.1.min.js',
-        '/js/ansi_up-1.1.1.js',
+        '/js/ansi_up-1.1.1.min.js',
         '/js/bootstrap-3.1.1.min.js',
         '/js/moment-2.5.1.min.js',
 
