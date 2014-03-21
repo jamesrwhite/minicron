@@ -55,11 +55,12 @@ ActiveRecord::Schema.define(version: 0) do
   end
 
   create_table "schedules", force: true do |t|
-    t.integer  "job_id",     null: false
-    t.text     "schedule",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "job_id",                              null: false
+    t.string   "schedule",   limit: 128, default: "", null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.index ["job_id"], :name => "job_id"
+    t.index ["schedule"], :name => "schedule"
     t.foreign_key ["job_id"], "jobs", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "schedules_ibfk_1"
   end
 
