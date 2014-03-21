@@ -71,8 +71,22 @@ body {
   form button {
     margin-right: 15px;
   }
+
+  .form-control-view {
+    background-color: #EEECF1;
+  }
+
+  pre.form-control-view {
+    height: auto;
+  }
 }
 
+.inner {
+  padding: 25px;
+}
+// End Main content panel
+
+// Sidebar
 .sidebar {
   width: 25%;
   padding: 0;
@@ -94,10 +108,6 @@ body {
   .execution-info {
     font-size: 12px;
   }
-}
-
-.inner {
-  padding: 25px;
 }
 
 .list-group {
@@ -122,6 +132,7 @@ a.list-group-item.active, a.list-group-item.active:hover {
 a.list-group-item:hover {
   background-color: #D6D3DD;
 }
+// End Sidebar
 
 // Job execution output
 .output {

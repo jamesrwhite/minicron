@@ -10,25 +10,25 @@
       <div class="form-group">
         <label class="col-sm-2 control-label">Created At</label>
         <div class="col-sm-10">
-          {{input value=created_at disabled="disabled" type="text" class="form-control"}}
+          <div class="form-control form-control-view">{{created_at}}</div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Started At</label>
         <div class="col-sm-10">
-          {{input value=started_at disabled="disabled" type="text" class="form-control"}}
+          <div class="form-control form-control-view">{{started_at}}</div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Finished At</label>
         <div class="col-sm-10">
-          {{input value=finished_at disabled="disabled" type="text" class="form-control"}}
+          <div class="form-control form-control-view">{{finished_at}}</div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Exit Status</label>
         <div class="col-sm-10">
-          {{input value=exit_status disabled="disabled" type="text" class="form-control"}}
+          <div class="form-control form-control-view">{{exit_status}}</div>
         </div>
       </div>
     </form>
@@ -46,19 +46,19 @@
       <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-10">
-          {{input value=job.name disabled="disabled" type="text" class="form-control"}}
+          <div class="form-control form-control-view">{{job.name}}</div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Command</label>
         <div class="col-sm-10">
-          {{input value=job.command disabled="disabled" type="text" class="form-control"}}
+          <div class="form-control form-control-view">{{job.command}}</div>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Host</label>
         <div class="col-sm-10">
-          {{input value=job.host.name disabled="disabled" class="form-control"}}
+          <div class="form-control form-control-view">{{job.host.name}}</div>
         </div>
       </div>
     </form>
