@@ -45,7 +45,7 @@ module Minicron
 
       # Throw an exception if it failed
       if write != 'y'
-        raise Exception, "Unable to write #{line} to the crontab"
+        raise Exception, "Unable to write '#{line}' to the crontab"
       end
 
       # Check the line is there
@@ -53,7 +53,7 @@ module Minicron
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
-        raise Exception, "Expected to find #{line} at eof but found #{tail}"
+        raise Exception, "Expected to find '#{line}' at eof but found '#{tail}'"
       end
 
       @ssh.close
@@ -90,12 +90,12 @@ module Minicron
         raise Exception, "Unable to replace #{find} with #{replace} in the crontab"
       end
 
-      # Check the line is there
-      tail = conn.exec!('tail -n 1 /etc/crontab.tmp').strip
+      # Check the updated line is there
+      grep = conn.exec!("grep \"#{replace}\" /etc/crontab.tmp").to_s.strip
 
       # Throw an exception if we can't see our new line at the end of the file
-      if tail != replace
-        raise Exception, "Expected to find #{replace} at eof but found #{tail}"
+      if grep != replace
+        raise Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
       end
 
       # And finally replace the crontab with the new one now we now the change worked
@@ -132,10 +132,10 @@ module Minicron
       end
 
       # Check the line is there
-      grep = conn.exec!("grep \"#{find}\" /etc/crontab.tmp")
+      grep = conn.exec!("grep \"#{find}\" /etc/crontab.tmp").to_s.strip
 
       # Throw an exception if we can't see our new line at the end of the file
-      if grep
+      if grep.length > 0
         raise Exception, "Expected to find nothing when grepping for '#{find}' but found #{grep}"
       end
 
