@@ -46,7 +46,7 @@ class Minicron::Hub::App
         # Get the job and host for the schedule
         job = Minicron::Hub::Job.includes(:host).find(schedule.job_id)
 
-        # Get an ssh instance and open a connection
+        # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
           :host => job.host.host,
           :port => job.host.port,
@@ -82,7 +82,7 @@ class Minicron::Hub::App
         # Find the schedule
         schedule = Minicron::Hub::Schedule.includes({ :job => :host }).find(params[:id])
 
-        # Get an ssh instance and open a connection
+        # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
           :host => schedule.job.host.host,
           :port => schedule.job.host.port,
@@ -123,7 +123,7 @@ class Minicron::Hub::App
         # Try and delete the schedule
         Minicron::Hub::Schedule.destroy(params[:id])
 
-        # Get an ssh instance and open a connection
+        # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
           :host => schedule.job.host.host,
           :port => schedule.job.host.port,
