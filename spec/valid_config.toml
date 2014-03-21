@@ -22,7 +22,7 @@ path = "/"
 
 # Database options
 [database]
-type = "mysql" # [mysql, sqlite]
+type = "mysql" # [mysql]
 host = "127.0.0.1"
 database = "minicron"
 username = "minicron"

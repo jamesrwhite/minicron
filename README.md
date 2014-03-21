@@ -39,8 +39,7 @@ Requirements
 
 #### Database
 - MySQL
-- SQLite >= 3.6.16
-- PostgreSQL - As yet untested
+- Support for PostgreSQL and SQlite is planned in the future
 
 #### OS
 - Should run on any linux/bsd based OS that the above ruby versions run on.

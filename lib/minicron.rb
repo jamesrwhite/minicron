@@ -26,7 +26,11 @@ module Minicron
       'path' => '/'
     },
     'database' => {
-      'type' => 'sqlite'
+      'type' => 'mysql',
+      'host' => '127.0.0.1',
+      'database' => 'minicron',
+      'username' => 'minicron',
+      'password' => 'password'
     },
     'cli' => {
       'mode' => 'line',

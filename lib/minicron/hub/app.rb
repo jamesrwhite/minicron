@@ -79,11 +79,6 @@ module Minicron::Hub
           :username => Minicron.config['database']['username'],
           :password => Minicron.config['database']['password']
         }
-      when 'sqlite'
-        set :database, {
-          :adapter => 'sqlite3',
-          :database => 'db/minicron.sqlite3', # TODO: Allow configuring this but default to this value
-        }
       else
         raise Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
