@@ -144,5 +144,20 @@ module Minicron
 
       @ssh.close
     end
+
+    # Delete a job and all it's schedules from the crontab
+    #
+    # @param job [Minicron::Hub::Job] a job instance with it's schedules
+    def delete_job(job)
+      # Loop through each schedule and delete them one by one
+      # TODO: share the ssh connection for this so it's faster when
+      # many schedules exist
+      # TODO: what if one schedule removal fails but others don't? Should
+      # we try and rollback somehow or just return the job with half its
+      # schedules deleted?
+      job.schedules.each do |schedule|
+        delete_schedule(job, schedule.schedule)
+      end
+    end
   end
 end
