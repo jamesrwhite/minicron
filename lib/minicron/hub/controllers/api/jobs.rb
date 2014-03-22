@@ -101,7 +101,7 @@ class Minicron::Hub::App
         # Get an instance of the cron class
         cron = Minicron::Cron.new(ssh)
 
-        # Delete the schedule from the crontab
+        # Delete the job from the crontab
         cron.delete_job(job)
 
         # This is what ember expects as the response
