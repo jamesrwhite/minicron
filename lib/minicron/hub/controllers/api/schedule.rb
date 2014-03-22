@@ -67,6 +67,7 @@ class Minicron::Hub::App
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
+      status 422
       { :error => e.message }.to_json
     end
   end
@@ -108,6 +109,7 @@ class Minicron::Hub::App
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
+      status 422
       { :error => e.message }.to_json
     end
   end
@@ -141,6 +143,7 @@ class Minicron::Hub::App
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
+      status 422
       { :error => e.message }.to_json
     end
   end
