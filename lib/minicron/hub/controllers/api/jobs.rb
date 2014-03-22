@@ -62,14 +62,11 @@ class Minicron::Hub::App
       request_body = Oj.load(request.body)
 
       # Find the job
-      job = Minicron::Hub::Job.includes(:host).find(params[:id])
+      job = Minicron::Hub::Job.includes(:host, :schedules, { :executions => :job_execution_outputs })
+                              .find(params[:id])
 
-      # Update the name and command
+      # Update the name
       job.name = request_body['job']['name']
-      job.command = request_body['job']['command']
-
-      # If the command was changed we'll need to recalculate the job hash
-      job.job_hash = Minicron::Transport.get_job_hash(job.command, job.host.fqdn)
 
       job.save!
 
