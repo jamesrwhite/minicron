@@ -81,7 +81,7 @@ class Minicron::Hub::App
 
       Minicron::Hub::Schedule.transaction do
         # Find the schedule
-        schedule = Minicron::Hub::Schedule.includes({ :job => :host }).find(params[:id])
+        schedule = Minicron::Hub::Schedule.includes({ :job => [:executions, :schedules] }).find(params[:id])
 
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(

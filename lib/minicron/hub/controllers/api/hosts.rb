@@ -54,12 +54,15 @@ class Minicron::Hub::App
       # Load the JSON body
       request_body = Oj.load(request.body)
 
-      # Try and save the updated host
-      host = Minicron::Hub::Host.find(params[:id])
+      # Find the host
+      host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
+
+      # Update its data
       host.name = request_body['host']['name']
       host.fqdn = request_body['host']['fqdn']
       host.host = request_body['host']['host']
       host.port = request_body['host']['port']
+
       host.save!
 
       # Return the new host
