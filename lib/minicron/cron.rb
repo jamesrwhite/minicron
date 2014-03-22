@@ -159,5 +159,20 @@ module Minicron
         delete_schedule(job, schedule.schedule)
       end
     end
+
+    # Delete a host and all it's jobs from the crontab
+    #
+    # @param job [Minicron::Hub::Job] a job instance with it's schedules
+    def delete_host(host)
+      # Loop through each job and delete them one by one
+      # TODO: share the ssh connection for this so it's faster when
+      # many schedules exist
+      # TODO: what if one schedule removal fails but others don't? Should
+      # we try and rollback somehow or just return the job with half its
+      # schedules deleted?
+      host.jobs.each do |job|
+        delete_job(job)
+      end
+    end
   end
 end

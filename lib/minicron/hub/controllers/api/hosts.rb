@@ -73,11 +73,29 @@ class Minicron::Hub::App
   delete '/api/hosts/:id' do
     content_type :json
     begin
-      # Try and delete the host
-      Minicron::Hub::Host.destroy(params[:id])
+      Minicron::Hub::Host.transaction do
+        # Look up the host
+        host = Minicron::Hub::Host.includes({ :jobs => :schedules }).find(params[:id])
 
-      # This is what ember expects as the response
-      status 204
+        # Try and delete the host
+        Minicron::Hub::Host.destroy(params[:id])
+
+        # Get an ssh instance and open a connection
+        ssh = Minicron::Transport::SSH.new(
+          :host => host.host,
+          :port => host.port,
+          :private_key => "~/.ssh/minicron_host_#{host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Delete the host from the crontab
+        cron.delete_host(host)
+
+        # This is what ember expects as the response
+        status 204
+      end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       { :error => e.message }.to_json
