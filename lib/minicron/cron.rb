@@ -54,12 +54,22 @@ module Minicron
         raise Exception, "Unable to replace #{find} with #{replace} in the crontab"
       end
 
-      # Check the updated line is there
-      grep = conn.exec!("grep \"#{replace}\" /etc/crontab.tmp").to_s.strip
+      if replace == ''
+        # Check the original line is no longer there
+        grep = conn.exec!("grep \"#{find}\" /etc/crontab.tmp").to_s.strip
 
-      # Throw an exception if we can't see our new line at the end of the file
-      if grep != replace
-        raise Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
+        # Throw an exception if we can't see our new line at the end of the file
+        if grep != replace
+          raise Exception, "Expected to find nothing when grepping crontab but found #{grep}"
+        end
+      else
+        # Check the updated line is there
+        grep = conn.exec!("grep \"#{replace}\" /etc/crontab.tmp").to_s.strip
+
+        # Throw an exception if we can't see our new line at the end of the file
+        if grep != replace
+          raise Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
+        end
       end
 
       # And finally replace the crontab with the new one now we now the change worked
@@ -130,7 +140,7 @@ module Minicron
       find = build_minicron_command(job.command, schedule)
 
       # Replace the old schedule with nothing i.e deleting it
-      find_and_replace(conn, find, nil)
+      find_and_replace(conn, find, '')
 
       @ssh.close
     end
