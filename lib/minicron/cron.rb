@@ -1,5 +1,8 @@
 module Minicron
   # Used to interact with the crontab on hosts over an ssh connection
+  # TODO: I've had a moment of clarity, I don't need to do all the CRUD
+  # using unix commands. I can cat the crontab, manipulate it in ruby
+  # and then echo it back!
   class Cron
     # Initialise the cron class
     #
@@ -26,6 +29,41 @@ module Minicron
       command = escape_command(command)
 
       "#{schedule} root minicron run '#{command}'"
+    end
+
+    # Used to find a string and replace it with another in the crontab by
+    # using the sed command
+    #
+    # @param conn an instance of an open ssh connection
+    # @param find [String]
+    # @param replace [String]
+    def find_and_replace(conn, find, replace)
+      # Build the parts of the sed command we are going to run
+      sed = "sed -e \"s/#{Regexp.escape(find)}/#{Regexp.escape(replace)}/g\""
+      sed_redirect = '/etc/crontab > /etc/crontab.tmp'
+      test = "&& echo 'y' || echo 'n'"
+
+      # Build the full command
+      sed_command = "#{sed} #{sed_redirect} #{test}"
+
+      # Append it to the end of the crontab
+      update = conn.exec!(sed_command).strip
+
+      # Throw an exception if it failed
+      if update != 'y'
+        raise Exception, "Unable to replace #{find} with #{replace} in the crontab"
+      end
+
+      # Check the updated line is there
+      grep = conn.exec!("grep \"#{replace}\" /etc/crontab.tmp").to_s.strip
+
+      # Throw an exception if we can't see our new line at the end of the file
+      if grep != replace
+        raise Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
+      end
+
+      # And finally replace the crontab with the new one now we now the change worked
+      conn.exec!('mv /etc/crontab.tmp /etc/crontab')
     end
 
     # Add the schedule for this job to the crontab
@@ -74,32 +112,8 @@ module Minicron
       # And replacing it with the updated value
       replace = build_minicron_command(job.command, new_schedule)
 
-      # Build the parts of the sed command we are going to run
-      sed = "sed -e \"s/#{Regexp.escape(find)}/#{Regexp.escape(replace)}/g\""
-      sed_redirect = '/etc/crontab > /etc/crontab.tmp'
-      test = "&& echo 'y' || echo 'n'"
-
-      # Build the full command
-      sed_command = "#{sed} #{sed_redirect} #{test}"
-
-      # Append it to the end of the crontab
-      update = conn.exec!(sed_command).strip
-
-      # Throw an exception if it failed
-      if update != 'y'
-        raise Exception, "Unable to replace #{find} with #{replace} in the crontab"
-      end
-
-      # Check the updated line is there
-      grep = conn.exec!("grep \"#{replace}\" /etc/crontab.tmp").to_s.strip
-
-      # Throw an exception if we can't see our new line at the end of the file
-      if grep != replace
-        raise Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
-      end
-
-      # And finally replace the crontab with the new one now we now the change worked
-      conn.exec!('mv /etc/crontab.tmp /etc/crontab')
+      # Replace the old schedule with the new schedule
+      find_and_replace(conn, find, replace)
 
       @ssh.close
     end
@@ -115,32 +129,8 @@ module Minicron
       # We are looking for the current value of the schedule
       find = build_minicron_command(job.command, schedule)
 
-      # Build the parts of the sed command we are going to run
-      sed = "sed -e \"s/#{Regexp.escape(find)}//g\""
-      sed_redirect = '/etc/crontab > /etc/crontab.tmp'
-      test = "&& echo 'y' || echo 'n'"
-
-      # Build the full command
-      sed_command = "#{sed} #{sed_redirect} #{test}"
-
-      # Append it to the end of the crontab
-      update = conn.exec!(sed_command).strip
-
-      # Throw an exception if it failed
-      if update != 'y'
-        raise Exception, "Unable to remove #{find} from the crontab"
-      end
-
-      # Check the line is there
-      grep = conn.exec!("grep \"#{find}\" /etc/crontab.tmp").to_s.strip
-
-      # Throw an exception if we can't see our new line at the end of the file
-      if grep.length > 0
-        raise Exception, "Expected to find nothing when grepping for '#{find}' but found #{grep}"
-      end
-
-      # And finally replace the crontab with the new one now we now the change worked
-      conn.exec!('mv /etc/crontab.tmp /etc/crontab')
+      # Replace the old schedule with nothing i.e deleting it
+      find_and_replace(conn, find, nil)
 
       @ssh.close
     end
