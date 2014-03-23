@@ -99,7 +99,17 @@ Code Style
 
 Where possible I'm trying to follow [Ruby Community Styleguide](https://github.com/bbatsov/ruby-style-guide "Ruby Community Styleguide")
 
+Support
+--------
+
+Where possible I will try and provide support for minicron, you can get in touch with me via:
+
+- Twitter [@jamesrwhite](https://twitter.com/jamesrwhite)
+- Email [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
+
+Or feel free to open an issue and I'll do my best to help.
+
 License
 --------
 
-minicron is licensed under the GPL v3, [see here](https://github.com/jamesrwhite/minicron/blob/master/LICENSE "see here")
+minicron is licensed under the GPL v3, [see here for the full license](https://github.com/jamesrwhite/minicron/blob/master/LICENSE "see here")
