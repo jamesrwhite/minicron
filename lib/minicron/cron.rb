@@ -80,9 +80,10 @@ module Minicron
     #
     # @param job [Minicron::Hub::Job] an instance of a job model
     # @param schedule [String] the job schedule as a string
-    def add_schedule(job, schedule)
+    # @param conn an instance of an open ssh connection
+    def add_schedule(job, schedule, conn = nil)
       # Open an SSH connection
-      conn = @ssh.open
+      conn ||= @ssh.open
 
       # Prepare the line we are going to write to the crontab
       line = build_minicron_command(job.command, schedule)
@@ -103,8 +104,6 @@ module Minicron
       if tail != line
         raise Exception, "Expected to find '#{line}' at eof but found '#{tail}'"
       end
-
-      @ssh.close
     end
 
     # Update the schedule for this job in the crontab
@@ -112,9 +111,10 @@ module Minicron
     # @param job [Minicron::Hub::Job] an instance of a job model
     # @param old_schedule [String] the old job schedule as a string
     # @param new_schedule [String] the new job schedule as a string
-    def update_schedule(job, old_schedule, new_schedule)
+    # @param conn an instance of an open ssh connection
+    def update_schedule(job, old_schedule, new_schedule, conn = nil)
       # Open an SSH connection
-      conn = @ssh.open
+      conn ||= @ssh.open
 
       # We are looking for the current value of the schedule
       find = build_minicron_command(job.command, old_schedule)
@@ -124,31 +124,31 @@ module Minicron
 
       # Replace the old schedule with the new schedule
       find_and_replace(conn, find, replace)
-
-      @ssh.close
     end
 
     # Remove the schedule for this job from the crontab
     #
     # @param job [Minicron::Hub::Job] an instance of a job model
     # @param schedule [String] the job schedule as a string
-    def delete_schedule(job, schedule)
+    # @param conn an instance of an open ssh connection
+    def delete_schedule(job, schedule, conn = nil)
       # Open an SSH connection
-      conn = @ssh.open
+      conn ||= @ssh.open
 
       # We are looking for the current value of the schedule
       find = build_minicron_command(job.command, schedule)
 
       # Replace the old schedule with nothing i.e deleting it
       find_and_replace(conn, find, '')
-
-      @ssh.close
     end
 
     # Delete a job and all it's schedules from the crontab
     #
     # @param job [Minicron::Hub::Job] a job instance with it's schedules
-    def delete_job(job)
+    # @param conn an instance of an open ssh connection
+    def delete_job(job, conn = nil)
+      conn ||= @ssh.open
+
       # Loop through each schedule and delete them one by one
       # TODO: share the ssh connection for this so it's faster when
       # many schedules exist
@@ -156,14 +156,17 @@ module Minicron
       # we try and rollback somehow or just return the job with half its
       # schedules deleted?
       job.schedules.each do |schedule|
-        delete_schedule(job, schedule.schedule)
+        delete_schedule(job, schedule.schedule, conn)
       end
     end
 
     # Delete a host and all it's jobs from the crontab
     #
     # @param job [Minicron::Hub::Job] a job instance with it's schedules
-    def delete_host(host)
+    # @param conn an instance of an open ssh connection
+    def delete_host(host, conn = nil)
+      conn ||= @ssh.open
+
       # Loop through each job and delete them one by one
       # TODO: share the ssh connection for this so it's faster when
       # many schedules exist
@@ -171,7 +174,7 @@ module Minicron
       # we try and rollback somehow or just return the job with half its
       # schedules deleted?
       host.jobs.each do |job|
-        delete_job(job)
+        delete_job(job, conn)
       end
     end
   end

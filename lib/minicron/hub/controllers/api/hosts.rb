@@ -98,6 +98,9 @@ class Minicron::Hub::App
         # Delete the host from the crontab
         cron.delete_host(host)
 
+        # Tidy up
+        ssh.close
+
         # This is what ember expects as the response
         status 204
       end

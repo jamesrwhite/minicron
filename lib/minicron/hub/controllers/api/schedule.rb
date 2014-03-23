@@ -66,6 +66,9 @@ class Minicron::Hub::App
         # Add the schedule to the crontab
         cron.add_schedule(job, schedule.schedule)
 
+        # Tidy up
+        ssh.close
+
         # And finally save it
         schedule.save!
 
@@ -107,6 +110,9 @@ class Minicron::Hub::App
           request_body['schedule']['schedule']
         )
 
+        # Tidy up
+        ssh.close
+
         # And finally save it
         schedule.schedule = request_body['schedule']['schedule']
         schedule.save!
@@ -144,6 +150,9 @@ class Minicron::Hub::App
 
         # Delete the schedule from the crontab
         cron.delete_schedule(schedule.job, schedule.schedule)
+
+        # Tidy up
+        ssh.close
 
         # This is what ember expects as the response
         status 204
