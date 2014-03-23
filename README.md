@@ -1,29 +1,12 @@
 minicron [![Build Status](https://api.travis-ci.org/jamesrwhite/minicron.png)](http://travis-ci.org/jamesrwhite/minicron) [![Code Climate](https://codeclimate.com/github/jamesrwhite/minicron.png)](https://codeclimate.com/github/jamesrwhite/minicron) [![Dependency Status](https://gemnasium.com/jamesrwhite/minicron.png)](https://gemnasium.com/jamesrwhite/minicron) [![Inline docs](http://inch-pages.github.io/github/jamesrwhite/minicron.png)](http://inch-pages.github.io/github/jamesrwhite/minicron)
 =======
 
-minicron is a system I'm building as part of my university dissertation. It aims to complement ````cron```` by making it easier to manage and monitor cron jobs. minicron can largely be thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also providers a web interface to the data and makes it easy to manage your cron jobs.
-
-Todo
-------
-
-- CLI
-  - <del>Send data from CLI that runs commands to the 'hub'</del> &#10003;
-  - <del>This will be via either WebSockets, a Message Queue or HTTP(s)</del> &#10003;
-  - <del>Added configuration file/options to CLI, file most likely using [toml](https://github.com/mojombo/toml "toml")</del> &#10003;
-  - Config to allow where job output is to be read from, currently assumed to be STDOUT/STDERR (could be log files)?
-  - If connection retries fail give up and then persist the command output to disk for later resending
-
-- Hub (Web UI / API)
-  - <del>Collect data sent via CLI and store it in a db</del> &#10003;
-  - <del>Display both realtime and historic data</del> &#10003;
-  - CRUD functionality for cron jobs via SSH - in progress
-  - Permissions support
-  - Alerting (email, sms and push notifications support)
+minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides a web interface to the data and makes it easy to manage your cron jobs.
 
 Installation
 -------------
 
-minicron is currently under heavy development and as such I have not released it to rubygems.org yet. If you wish to test the current version you can clone this repo ````bundle```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db load```` to setup the db structure.
+minicron is currently under heavy development, I plan to release version 0.1 to rubygems shortly but I would not recommend relying on it yet. If you wish to test the current version you can clone this repo ````bundle install```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db load```` to setup the db structure.
 
 Requirements
 -------------
@@ -40,6 +23,9 @@ Requirements
 #### Database
 - MySQL
 - Support for PostgreSQL and SQlite is planned in the future
+
+#### Browser
+- I have been testing the web interface in the latest versions of Chrome, Firefox and Safari. I'm currently unsure of how it functions in the various of Internet Explorer but in theory it should support IE9+
 
 #### OS
 - Should run on any linux/bsd based OS that the above ruby versions run on.
@@ -59,7 +45,7 @@ minicron run 'command --options'
 You can alter the way in which the command alters it's output by passing the --mode option to the run argument with the value of either 'line' or 'char'. Most of the time you'll want to use the default value of line but for some commands e.g a script that outputs a progress bar minicron printing the output each character at a time can be useful.
 
 ````
-minicron run --mode char 'python progress_bar.py'
+minicron run 'mysqldump db > backup.sql'
 ````
 
 The global ````--verbose```` option can also be passed to the ````run```` argument like so ````minicron run --verbose ls````, for further information see ````minicron help run````.
@@ -68,13 +54,17 @@ The global ````--verbose```` option can also be passed to the ````run```` argume
 
 Running ````minicron```` with no arguments is an alias to running ````minicron help````, ````minicron -h```` or ````minicron --help````. You can also use the help argument to get information on any command as shown above in the run a command section or alternatively you can pass the ````-h```` or ````--help```` options like so ````minicron run -h````.
 
+#### Server
+
+To launch the server (aka the Hub) run ````minicron server```` - by default it will bind to port 9292 on the host 127.0.0.1. See [sample.nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for an example of how to run minicron behind a reverse proxy.
+
 #### Version
 
-Like many command line programs minicron will show it's version number when the global options ````-v```` or ````--version```` are passed.
+Like many command line programs minicron will show it's version number when the global options ````-v```` or ````--version```` are passed to the CLI.
 
 #### Configuration
 
-Many configuration options can be passed in manually but you can also pass a file path to the ````--config```` global option. The file is expected to be in the [toml](https://github.com/mojombo/toml "toml") format. The default options are specified in the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml "default.config.toml") file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via the command line will take precedence over those taken from a config file.
+Some configuration options can be passed in manually but the recommend way to configure minicron is through the use of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected to be in the [toml](https://github.com/mojombo/toml "toml") format. The default options are specified in the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml "default.config.toml") file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via the command line will take precedence over those taken from a config file.
 
 Documentation
 -------------
@@ -95,13 +85,14 @@ Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://git
 
 Areas that I would love some help with:
 
-- Validation and error handling improvements
-- UI improvements
-- Documentation improvements
-- General testing, create issues for any bugs you find
-- Look for ````TODO:```` notices littered around the code
-- Code refactoring
+- Any of the unassigned [issues here](https://github.com/jamesrwhite/minicron/issues?state=open).
+- General testing of the system, let me know what you think and create issues for any issues you find!
 - Tests!!
+- Validation and error handling improvements
+- Documentation improvements. Find something confusing or unexpected, let me know and I'll document it!
+- Look for ````TODO:```` notices littered around the code, I'm trying to convert them all to issues but there are a lot.
+- Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect.
+- UI improvements
 
 Code Style
 ----------
