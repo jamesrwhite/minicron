@@ -6,8 +6,15 @@ class Minicron::Hub::App
   # TODO: Add offset/limit
   get '/api/schedules' do
     content_type :json
-    schedules = Minicron::Hub::Schedule.all.order(:id => :asc)
-                                       .includes({ :job => [:executions, :schedules] })
+
+    if params[:ids]
+      schedules = Minicron::Hub::Schedule.where(:id => params[:ids])
+                                         .order(:id => :asc)
+                                         .includes({ :job => [:executions, :schedules] })
+    else
+      schedules = Minicron::Hub::Schedule.all.order(:id => :asc)
+                                         .includes({ :job => [:executions, :schedules] })
+    end
 
     ScheduleSerializer.new(schedules).serialize.to_json
   end
