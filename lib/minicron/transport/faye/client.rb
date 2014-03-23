@@ -41,9 +41,9 @@ module Minicron
         ensure_em_running
 
         # Wait until there is some space in the queue so we don't overwhelm the server
-        # until queue.length <= 10
-        #   sleep 1
-        # end
+        until queue.length <= 10
+          sleep 1
+        end
 
         # Make the request
         req = EventMachine::HttpRequest.new(
@@ -61,8 +61,6 @@ module Minicron
         # Set up the retry count for this request if it didn't already exist
         @retry_counts[req_id] ||= 0
 
-        # p "[minicron] Sending #{req_id}"
-
         # Did the request succeed? If so remove it from the queue
         req.callback do
           @responses.push({
@@ -70,8 +68,6 @@ module Minicron
             :header => req.response_header,
             :body => req.response
           })
-
-          # p "[minicron] ACK #{req_id}"
 
           queue.delete(req_id)
         end
@@ -84,10 +80,7 @@ module Minicron
             :body => req.response
           })
 
-          # p "[minicron] #{req.response}"
-
           if @retry_counts[req_id] < @retries
-            # puts "[minicron] Retrying #{req_id} x#{@retry_counts[req_id]}"
             @retry_counts[req_id] += 1
             request(body)
           end
@@ -97,11 +90,9 @@ module Minicron
       # Blocks until all messages in the sending queue have completed
       def ensure_delivery
         # Keep waiting until the queue is empty but only if we need to
-        # p "[minicron] init queue length is #{queue.length}"
         if queue.length > 0
           until queue.length == 0
             sleep 0.05
-            # p "[minicron] queue length is #{queue.length}"
           end
         end
 
