@@ -1,3 +1,23 @@
+<script type="text/x-handlebars" id="components/schedule-editor">
+  <form class="form-horizontal" role="form" {{action 'save' on='submit'}}>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Schedule</label>
+      <div class="col-sm-10">
+        {{input value=job_id type="hidden"}}
+        {{input value=schedule_id type="hidden"}}
+        {{input value=schedule type="text" class="form-control"}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-success">Save</button>
+        <button {{action 'cancel' schedule}} class="btn btn-danger">Cancel</button>
+      </div>
+    </div>
+  </form>
+</script>
+
 <script type="text/x-handlebars" id="schedule/index">
   <header class="clearfix">
     <h2 class="pull-left">Schedule #{{id}} for Job '{{job.name}}'</h2>
@@ -22,22 +42,7 @@
   </header>
   <hr/>
 
-  <form class="form-horizontal" role="form" {{action 'save' on='submit'}}>
-    {{input value=id type="hidden"}}
-
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Schedule</label>
-      <div class="col-sm-10">
-        {{input value=schedule type="text" class="form-control" placeholder="When will the job run?"}}
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-success">Save</button>
-        <button {{action 'cancel' this}} class="btn btn-danger">Cancel</button>
-      </div>
-    </div>
-  </form>
+  {{schedule-editor save='save' cancel='cancel' job_id=id}}
 </script>
 
 <script type="text/x-handlebars" id="schedule/edit">
@@ -47,18 +52,5 @@
   </header>
   <hr/>
 
-  <form class="form-horizontal" role="form" {{action 'save' on='submit'}}>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Schedule</label>
-      <div class="col-sm-10">
-        {{input value=schedule type="text" class="form-control" placeholder="When will the job run?"}}
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-success">Save</button>
-        <button {{action 'cancel' this}} class="btn btn-danger">Cancel</button>
-      </div>
-    </div>
-  </form>
+  {{schedule-editor save='save' cancel='cancel' job_id=job.id schedule_id=id schedule=schedule}}
 </script>
