@@ -148,6 +148,46 @@ a.list-group-item:hover {
   width: 718px; // Find a better way to do this
 }
 
+// Schedule editor
+#schedule-editor {
+  .panel-heading {
+    background: #747279;
+    color: #fff;
+  }
+
+  .panel > a:hover {
+    text-decoration: none;
+
+    .panel-heading {
+      background-color: #84828A;
+    }
+  }
+
+  .tab-pane {
+    padding: 25px 0 10px 0;
+  }
+
+  .btn-group {
+    display: block;
+
+    .btn-primary {
+      background: #EEECF1;
+      color: #413A4B;
+      border-color: #C7C0D3;
+      border-radius: 0;
+    }
+
+    .active {
+      background-color: #342F42;
+      color: #fff;
+      border-color: #342F42;
+      -webkit-box-shadow: 0;
+      box-shadow: 0;
+    }
+  }
+}
+// End Schedule editor
+
 // Tomorrow Night Ansi Colour Scheme
 .tomorrow-night-eighties-ansi-theme {
   .ansi-black-fg {
