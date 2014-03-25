@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "host_id",                            null: false
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
+    t.index ["created_at"], :name => "created_at"
     t.index ["host_id"], :name => "host_id"
     t.index ["job_hash"], :name => "job_hash", :unique => true
     t.foreign_key ["host_id"], "hosts", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "jobs_ibfk_1"
@@ -41,7 +42,10 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "started_at"
     t.datetime "finished_at"
     t.integer  "exit_status"
+    t.index ["created_at"], :name => "created_at"
+    t.index ["finished_at"], :name => "finished_at"
     t.index ["job_id"], :name => "job_id"
+    t.index ["started_at"], :name => "started_at"
     t.foreign_key ["job_id"], "jobs", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "executions_ibfk_2"
   end
 
@@ -51,16 +55,27 @@ ActiveRecord::Schema.define(version: 0) do
     t.text     "output",       null: false
     t.datetime "timestamp",    null: false
     t.index ["execution_id"], :name => "execution_id"
+    t.index ["seq"], :name => "seq"
     t.foreign_key ["execution_id"], "executions", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "job_execution_outputs_ibfk_1"
   end
 
   create_table "schedules", force: true do |t|
-    t.integer  "job_id",                              null: false
-    t.string   "schedule",   limit: 128, default: "", null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.integer  "job_id",                       null: false
+    t.string   "minute",           limit: 179
+    t.string   "hour",             limit: 71
+    t.string   "day_of_the_month", limit: 92
+    t.string   "month",            limit: 25
+    t.string   "day_of_the_week",  limit: 20
+    t.string   "special",          limit: 9
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.index ["day_of_the_month"], :name => "day_of_the_month"
+    t.index ["day_of_the_week"], :name => "day_of_the_week"
+    t.index ["hour"], :name => "hour"
     t.index ["job_id"], :name => "job_id"
-    t.index ["schedule"], :name => "schedule"
+    t.index ["minute"], :name => "minute"
+    t.index ["month"], :name => "month"
+    t.index ["special"], :name => "special"
     t.foreign_key ["job_id"], "jobs", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "schedules_ibfk_1"
   end
 
