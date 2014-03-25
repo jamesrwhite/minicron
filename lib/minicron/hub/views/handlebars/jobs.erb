@@ -126,7 +126,7 @@
       {{#each execution in executions}}
         {{! TODO: contextual classes here for execution status }}
         <tr>
-          <td>{{#link-to 'execution' execution.id}}{{id}}{{/link-to}}</td>
+          <td>{{#link-to 'execution' execution.id}}{{execution.id}}{{/link-to}}</td>
           <td>{{date execution/started_at}}</td>
           <td>{{date execution.finished_at}}</td>
           <td>{{execution.exit_status}}</td>
