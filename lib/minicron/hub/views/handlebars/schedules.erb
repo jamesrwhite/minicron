@@ -18,7 +18,7 @@
             <div class="tab-content">
               <div class="tab-pane active" id="every-minute">The job will run every minute</div>
               <div class="tab-pane" id="every-n-minutes">
-                The job will run every <input type="number" min="1" max="59" value="5" class="every-n"></span> minutes
+                The job will run every <input  id="every-n-minutes-value" type="number" min="1" max="59" value="5" class="every-n"></span> minutes
               </div>
               <div class="tab-pane" id="each-selected-minute">
                 <div class="btn-group clearfix" data-toggle="buttons">
@@ -120,7 +120,7 @@
             <div class="tab-content">
               <div class="tab-pane active" id="every-hour">The job will run every hour</div>
               <div class="tab-pane" id="every-n-hours">
-                The job will run every <input type="number" min="1" max="59" value="5" class="every-n"></span> hours
+                The job will run every <input id="every-n-hours-value" type="number" min="1" max="23" value="5" class="every-n"></span> hours
               </div>
               <div class="tab-pane" id="each-selected-hour">
                 <div class="btn-group clearfix" data-toggle="buttons">
@@ -295,7 +295,7 @@
       <div class="col-sm-10">
         {{input value=job_id type="hidden"}}
         {{input value=schedule_id type="hidden"}}
-        {{input value=schedule type="text" class="form-control"}}
+        <span id="schedule-input">{{input value=formatted type="text" class="form-control"}}</span>
       </div>
     </div>
 
@@ -320,7 +320,7 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Schedule</label>
       <div class="col-sm-10">
-        <div class="form-control form-control-view">{{schedule}}</div>
+        <div class="form-control form-control-view">{{formatted}}</div>
       </div>
     </div>
   </form>
@@ -332,7 +332,10 @@
   </header>
   <hr/>
 
-  {{schedule-editor save='save' cancel='cancel' job_id=id}}
+  {{schedule-editor
+    save='save'
+    cancel='cancel'
+    job_id=id}}
 </script>
 
 <script type="text/x-handlebars" id="schedule/edit">
@@ -342,5 +345,9 @@
   </header>
   <hr/>
 
-  {{schedule-editor save='save' cancel='cancel' job_id=job.id schedule_id=id schedule=schedule}}
+  {{schedule-editor
+    save='save'
+    cancel='cancel'
+    job_id=job.id
+    schedule_id=id}}
 </script>

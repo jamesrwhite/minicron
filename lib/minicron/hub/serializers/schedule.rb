@@ -31,6 +31,9 @@ class Minicron::Hub::App::ScheduleSerializer
       new_schedule[key] = value
     end
 
+    # Add the formatted version of the schedule
+    new_schedule['formatted'] = schedule.formatted
+
     # Add the schedule job to the sideloaded data
     new_job = {
       :schedules => [],

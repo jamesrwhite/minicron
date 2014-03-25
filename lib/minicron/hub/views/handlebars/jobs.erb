@@ -94,7 +94,7 @@
       {{#each schedule in schedules}}
         <tr>
           <td>{{schedule.id}}</td>
-          <td>{{schedule.schedule}}</td>
+          <td>{{schedule.formatted}}</td>
           <td>
             {{#link-to 'schedule' schedule.id class="btn btn-info btn-xs"}}View{{/link-to}}
             {{#link-to 'schedule.edit' schedule.id class="btn btn-warning btn-xs"}}Edit{{/link-to}}

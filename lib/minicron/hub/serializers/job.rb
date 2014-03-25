@@ -69,6 +69,9 @@ class Minicron::Hub::App::JobSerializer
         new_schedule[key] = value
       end
 
+      # Add the formatted version of the schedule
+      new_schedule['formatted'] = schedule.formatted
+
       @response[:schedules].push(new_schedule)
       new_job[:schedules].push(schedule.id)
     end

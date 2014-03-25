@@ -35,18 +35,28 @@ class Minicron::Hub::App
 
       # First we need to check a schedule like this doesn't already exist
       exists = Minicron::Hub::Schedule.exists?(
-        :schedule => request_body['schedule']['schedule'],
+        :minute => request_body['schedule']['minute'],
+        :hour => request_body['schedule']['hour'],
+        :day_of_the_month => request_body['schedule']['day_of_the_month'],
+        :month => request_body['schedule']['month'],
+        :day_of_the_week => request_body['schedule']['day_of_the_week'],
+        :special => request_body['schedule']['special'],
         :job_id => request_body['schedule']['job']
       )
 
       if exists
-        raise Exception, "The schedule #{request_body['schedule']['schedule']} already exists for this job"
+        raise Exception, "That schedule already exists for this job"
       end
 
       Minicron::Hub::Schedule.transaction do
         # Create the new schedule
         schedule = Minicron::Hub::Schedule.create(
-          :schedule => request_body['schedule']['schedule'],
+          :minute => request_body['schedule']['minute'],
+          :hour => request_body['schedule']['hour'],
+          :day_of_the_month => request_body['schedule']['day_of_the_month'],
+          :month => request_body['schedule']['month'],
+          :day_of_the_week => request_body['schedule']['day_of_the_week'],
+          :special => request_body['schedule']['special'],
           :job_id => request_body['schedule']['job']
         )
 
@@ -64,7 +74,7 @@ class Minicron::Hub::App
         cron = Minicron::Cron.new(ssh)
 
         # Add the schedule to the crontab
-        cron.add_schedule(job, schedule.schedule)
+        cron.add_schedule(job, schedule.formatted)
 
         # Tidy up
         ssh.close
@@ -106,7 +116,7 @@ class Minicron::Hub::App
         # Update the schedule
         cron.update_schedule(
           schedule.job,
-          schedule.schedule,
+          schedule.formatted,
           request_body['schedule']['schedule']
         )
 
@@ -114,7 +124,12 @@ class Minicron::Hub::App
         ssh.close
 
         # And finally save it
-        schedule.schedule = request_body['schedule']['schedule']
+        schedule.minute = request_body['schedule']['minute'],
+        schedule.hour = request_body['schedule']['hour'],
+        schedule.day_of_the_month = request_body['schedule']['day_of_the_month'],
+        schedule.month = request_body['schedule']['month'],
+        schedule.day_of_the_week = request_body['schedule']['day_of_the_week'],
+        schedule.special = request_body['schedule']['special'],
         schedule.save!
 
         # Return the new schedule
@@ -149,7 +164,7 @@ class Minicron::Hub::App
         cron = Minicron::Cron.new(ssh)
 
         # Delete the schedule from the crontab
-        cron.delete_schedule(schedule.job, schedule.schedule)
+        cron.delete_schedule(schedule.job, schedule.formatted)
 
         # Tidy up
         ssh.close
