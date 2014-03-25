@@ -102,6 +102,7 @@ class Minicron::Hub::App
       Minicron::Hub::Schedule.transaction do
         # Find the schedule
         schedule = Minicron::Hub::Schedule.includes({ :job => [:executions, :schedules] }).find(params[:id])
+        old_schedule = schedule.formatted
 
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
@@ -113,23 +114,25 @@ class Minicron::Hub::App
         # Get an instance of the cron class
         cron = Minicron::Cron.new(ssh)
 
+        # Update the instance of the new schedule
+        schedule.minute = request_body['schedule']['minute']
+        schedule.hour = request_body['schedule']['hour']
+        schedule.day_of_the_month = request_body['schedule']['day_of_the_month']
+        schedule.month = request_body['schedule']['month']
+        schedule.day_of_the_week = request_body['schedule']['day_of_the_week']
+        schedule.special = request_body['schedule']['special']
+
         # Update the schedule
         cron.update_schedule(
           schedule.job,
-          schedule.formatted,
-          request_body['schedule']['schedule']
+          old_schedule,
+          schedule.formatted
         )
 
         # Tidy up
         ssh.close
 
         # And finally save it
-        schedule.minute = request_body['schedule']['minute'],
-        schedule.hour = request_body['schedule']['hour'],
-        schedule.day_of_the_month = request_body['schedule']['day_of_the_month'],
-        schedule.month = request_body['schedule']['month'],
-        schedule.day_of_the_week = request_body['schedule']['day_of_the_week'],
-        schedule.special = request_body['schedule']['special'],
         schedule.save!
 
         # Return the new schedule

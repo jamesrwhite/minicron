@@ -1,13 +1,21 @@
 class Minicron::Hub::Schedule < ActiveRecord::Base
   belongs_to :job
 
-  # Format the schedule based on all it's components
+  # The formatted schedule
   def formatted
+    Minicron::Hub::Schedule.format(self)
+  end
+
+  # Format the schedule based on all it's components
+  #
+  # @param schedule [Minicron::Hub::Schedule]
+  # @return string
+  def self.format(schedule)
     # If it's not a 'special' schedule then build up the full schedule string
-    if read_attribute(:special) == '' || read_attribute(:special) == nil
-      "#{read_attribute(:minute)} #{read_attribute(:hour)} #{read_attribute(:day_of_the_month)} #{read_attribute(:month)} #{read_attribute(:day_of_the_week)}"
+    if schedule.special == '' || schedule.special == nil
+      "#{schedule.minute} #{schedule.hour} #{schedule.day_of_the_month} #{schedule.month} #{schedule.day_of_the_week}"
     else
-      read_attribute(:special)
+      schedule.special
     end
   end
 end

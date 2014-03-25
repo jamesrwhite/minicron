@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module Minicron
   # Used to interact with the crontab on hosts over an ssh connection
   # TODO: I've had a moment of clarity, I don't need to do all the CRUD
@@ -38,25 +40,26 @@ module Minicron
     # @param find [String]
     # @param replace [String]
     def find_and_replace(conn, find, replace)
-      # Build the parts of the sed command we are going to run
-      sed = "sed -e \"s/#{Regexp.escape(find)}/#{Regexp.escape(replace)}/g\""
-      sed_redirect = '/etc/crontab > /etc/crontab.tmp'
-      test = "&& echo 'y' || echo 'n'"
+      # TODO: move ssh test here for crontab permissions
 
-      # Build the full command
-      sed_command = "#{sed} #{sed_redirect} #{test}"
+      # Get the full crontab
+      crontab = conn.exec!('cat /etc/crontab').to_s.strip
 
-      # Append it to the end of the crontab
-      update = conn.exec!(sed_command).strip
+      # Replace the full string with the replacement string
+      crontab[find] = replace
+
+      # Echo the crontab back to the tmp crontab
+      update = conn.exec!("echo #{crontab.shellescape} > /etc/crontab.tmp && echo 'y' || echo 'n'").to_s.strip
 
       # Throw an exception if it failed
       if update != 'y'
-        raise Exception, "Unable to replace #{find} with #{replace} in the crontab"
+        raise Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab"
       end
 
+      # If it's a delete
       if replace == ''
         # Check the original line is no longer there
-        grep = conn.exec!("grep \"#{find}\" /etc/crontab.tmp").to_s.strip
+        grep = conn.exec!("grep -F \"#{find}\" /etc/crontab.tmp").to_s.strip
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
@@ -64,7 +67,7 @@ module Minicron
         end
       else
         # Check the updated line is there
-        grep = conn.exec!("grep \"#{replace}\" /etc/crontab.tmp").to_s.strip
+        grep = conn.exec!("grep -F \"#{replace}\" /etc/crontab.tmp").to_s.strip
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
@@ -73,7 +76,11 @@ module Minicron
       end
 
       # And finally replace the crontab with the new one now we now the change worked
-      conn.exec!('mv /etc/crontab.tmp /etc/crontab')
+      move = conn.exec!("mv /etc/crontab.tmp /etc/crontab && echo 'y' || echo 'n'").to_s.strip
+
+      if move != 'y'
+        raise Exception, 'Unable to move tmp crontab with updated crontab'
+      end
     end
 
     # Add the schedule for this job to the crontab
@@ -156,7 +163,7 @@ module Minicron
       # we try and rollback somehow or just return the job with half its
       # schedules deleted?
       job.schedules.each do |schedule|
-        delete_schedule(job, schedule.schedule, conn)
+        delete_schedule(job, schedule.formatted, conn)
       end
     end
 
