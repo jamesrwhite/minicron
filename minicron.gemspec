@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
     For more info see the project README on GitHub.
   }
-  spec.homepage              = 'https://github.com/jamesrwhite/minicron/tree/master/cli'
+  spec.homepage              = 'https://github.com/jamesrwhite/minicron'
   spec.license               = 'GPL-3.0'
   spec.required_ruby_version = '>= 1.9.3'
   spec.post_install_message  = 'Thanks for installing minicron!'
