@@ -46,7 +46,11 @@ module Minicron
       crontab = conn.exec!('cat /etc/crontab').to_s.strip
 
       # Replace the full string with the replacement string
-      crontab[find] = replace
+      begin
+        crontab[find] = replace
+      rescue Exception => e
+        raise Exception "Unable to replace '#{find}' with '#{replace}' in the crontab, reason: #{e}"
+      end
 
       # Echo the crontab back to the tmp crontab
       update = conn.exec!("echo #{crontab.shellescape} > /etc/crontab.tmp && echo 'y' || echo 'n'").to_s.strip
