@@ -4,7 +4,7 @@ html, body, body > .ember-view, .main-container {
 
 body {
   padding-top: 66px;
-  background-color: #222024;
+  background-color: #38343D;
 }
 
 // Making the navbar items look clickable
@@ -151,15 +151,18 @@ a.list-group-item:hover {
 // Schedule editor
 #schedule-editor {
   .panel-heading {
-    background: #747279;
+    background: #342F42;
     color: #fff;
+    border: 1px solid #342F42;
+    border-radius: 0;
   }
 
   .panel > a:hover {
     text-decoration: none;
+    border-color: #D4D2D8;
 
     .panel-heading {
-      background-color: #84828A;
+      background-color: #23202B;
     }
   }
 
