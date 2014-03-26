@@ -38,7 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra-assetpack', '~> 0.3', '>= 0.3.2'
   spec.add_runtime_dependency 'sass', '~> 3.2', '>= 3.2.14'
   spec.add_runtime_dependency 'oj', '~> 2.6'
-  spec.add_runtime_dependency 'schema_plus', '~> 1.4', '>= 1.4.1'
   spec.add_runtime_dependency 'sshkey', '~> 1.6', '>= 1.6.1'
   spec.add_runtime_dependency 'net-ssh', '~> 2.8'
 

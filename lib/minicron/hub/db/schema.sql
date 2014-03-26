@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-03-26 23:05:30 +0000
+# Generation Time: 2014-03-26 23:53:36 +0000
 # ************************************************************
 
 
@@ -31,11 +31,10 @@ CREATE TABLE `executions` (
   `finished_at` datetime DEFAULT NULL,
   `exit_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `job_id` (`job_id`),
   KEY `created_at` (`created_at`),
-  KEY `started_at` (`started_at`),
   KEY `finished_at` (`finished_at`),
-  CONSTRAINT `executions_ibfk_2` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `job_id` (`job_id`),
+  KEY `started_at` (`started_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -48,7 +47,7 @@ CREATE TABLE `hosts` (
   `name` varchar(255) DEFAULT NULL,
   `fqdn` varchar(255) NOT NULL DEFAULT '',
   `host` varchar(255) NOT NULL DEFAULT '',
-  `port` int(5) NOT NULL DEFAULT '22',
+  `port` int(11) NOT NULL DEFAULT '22',
   `public_key` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -69,8 +68,7 @@ CREATE TABLE `job_execution_outputs` (
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `execution_id` (`execution_id`),
-  KEY `seq` (`seq`),
-  CONSTRAINT `job_execution_outputs_ibfk_1` FOREIGN KEY (`execution_id`) REFERENCES `executions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `seq` (`seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -88,9 +86,8 @@ CREATE TABLE `jobs` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `job_hash` (`job_hash`),
-  KEY `host_id` (`host_id`),
   KEY `created_at` (`created_at`),
-  CONSTRAINT `jobs_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `host_id` (`host_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -110,14 +107,13 @@ CREATE TABLE `schedules` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `day_of_the_month` (`day_of_the_month`),
+  KEY `day_of_the_week` (`day_of_the_week`),
+  KEY `hour` (`hour`),
   KEY `job_id` (`job_id`),
   KEY `minute` (`minute`),
-  KEY `hour` (`hour`),
-  KEY `day_of_the_month` (`day_of_the_month`),
   KEY `month` (`month`),
-  KEY `day_of_the_week` (`day_of_the_week`),
-  KEY `special` (`special`),
-  CONSTRAINT `schedules_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `special` (`special`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

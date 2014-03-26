@@ -12,6 +12,18 @@
 
 ActiveRecord::Schema.define(version: 0) do
 
+  create_table "executions", force: true do |t|
+    t.integer  "job_id",      null: false
+    t.datetime "created_at",  null: false
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.integer  "exit_status"
+    t.index ["created_at"], :name => "created_at"
+    t.index ["finished_at"], :name => "finished_at"
+    t.index ["job_id"], :name => "job_id"
+    t.index ["started_at"], :name => "started_at"
+  end
+
   create_table "hosts", force: true do |t|
     t.string   "name"
     t.string   "fqdn",       default: "", null: false
@@ -21,6 +33,15 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.index ["fqdn"], :name => "hostname"
+  end
+
+  create_table "job_execution_outputs", force: true do |t|
+    t.integer  "execution_id", null: false
+    t.integer  "seq",          null: false
+    t.text     "output",       null: false
+    t.datetime "timestamp",    null: false
+    t.index ["execution_id"], :name => "execution_id"
+    t.index ["seq"], :name => "seq"
   end
 
   create_table "jobs", force: true do |t|
@@ -33,30 +54,6 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["created_at"], :name => "created_at"
     t.index ["host_id"], :name => "host_id"
     t.index ["job_hash"], :name => "job_hash", :unique => true
-    t.foreign_key ["host_id"], "hosts", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "jobs_ibfk_1"
-  end
-
-  create_table "executions", force: true do |t|
-    t.integer  "job_id",      null: false
-    t.datetime "created_at",  null: false
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.integer  "exit_status"
-    t.index ["created_at"], :name => "created_at"
-    t.index ["finished_at"], :name => "finished_at"
-    t.index ["job_id"], :name => "job_id"
-    t.index ["started_at"], :name => "started_at"
-    t.foreign_key ["job_id"], "jobs", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "executions_ibfk_2"
-  end
-
-  create_table "job_execution_outputs", force: true do |t|
-    t.integer  "execution_id", null: false
-    t.integer  "seq",          null: false
-    t.text     "output",       null: false
-    t.datetime "timestamp",    null: false
-    t.index ["execution_id"], :name => "execution_id"
-    t.index ["seq"], :name => "seq"
-    t.foreign_key ["execution_id"], "executions", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "job_execution_outputs_ibfk_1"
   end
 
   create_table "schedules", force: true do |t|
@@ -76,7 +73,6 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["minute"], :name => "minute"
     t.index ["month"], :name => "month"
     t.index ["special"], :name => "special"
-    t.foreign_key ["job_id"], "jobs", ["id"], :on_update => :cascade, :on_delete => :cascade, :name => "schedules_ibfk_1"
   end
 
 end
