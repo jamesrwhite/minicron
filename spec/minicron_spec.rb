@@ -64,7 +64,8 @@ describe Minicron do
       it 'should update the config class variable with the toml file config' do
         expected_valid_config = {
           'global' => {
-            'verbose' => true
+            'verbose' => true,
+            'trace' => false
           },
           'client' => {
             'scheme' => 'http',
@@ -89,8 +90,7 @@ describe Minicron do
           },
           'cli' => {
             'mode' => 'line',
-            'dry_run' => false,
-            'trace' => false
+            'dry_run' => false
           }
         }
 

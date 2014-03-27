@@ -3,6 +3,7 @@
 # Global options
 [global]
 verbose = true
+trace = false
 
 # Client options
 [client]
@@ -32,4 +33,3 @@ password = "password"
 [cli]
 mode = "line" # [line, char]
 dry_run = false
-trace = false

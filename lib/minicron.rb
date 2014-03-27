@@ -9,7 +9,8 @@ module Minicron
   # Default configuration, this can be overriden
   @config = {
     'global' => {
-      'verbose' => false
+      'verbose' => false,
+      'trace' => false
     },
     'client' => {
       'scheme' => 'http',
@@ -34,8 +35,7 @@ module Minicron
     },
     'cli' => {
       'mode' => 'line',
-      'dry_run' => false,
-      'trace' => false
+      'dry_run' => false
     }
   }
 
