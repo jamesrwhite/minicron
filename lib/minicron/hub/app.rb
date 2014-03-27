@@ -13,6 +13,18 @@ module Minicron::Hub
     # Set the application root
     set :root, Minicron::HUB_PATH
 
+    configure do
+      # Don't log them. We'll do that ourself
+      set :dump_errors, false
+
+      # Don't capture any errors. Throw them up the stack
+      set :raise_errors, true
+
+      # Disable internal middleware for presenting errors
+      # as useful HTML pages
+      set :show_exceptions, false
+    end
+
     # Configure how we server assets
     assets do
       serve '/css',   :from => 'assets/css'
@@ -43,6 +55,8 @@ module Minicron::Hub
       ]
     end
 
+    # Called on class initilisation, sets up the database and requires all
+    # the application files
     def initialize
       super
 
@@ -65,6 +79,7 @@ module Minicron::Hub
       end
     end
 
+    # Used to set up the database connection
     def self.setup_db
       # For debug, TODO: remove this
       puts "Using #{Minicron.config['database']['type']}"
@@ -81,6 +96,33 @@ module Minicron::Hub
         }
       else
         raise Exception, "The database #{Minicron.config['database']['type']} is not supported"
+      end
+    end
+  end
+
+  # Based on http://hawkins.io/2013/06/error-handling-in-sinatra-apis/
+  class ExceptionHandling
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      begin
+        @app.call env
+      rescue => ex
+        if Minicron.config['global']['trace']
+          env['rack.errors'].puts(ex)
+          env['rack.errors'].puts(ex.backtrace.join("\n"))
+          env['rack.errors'].flush
+        end
+
+        # Display the error message
+        hash = { :error => ex.to_s }
+
+        # Display the full trace if tracing is enabled
+        hash[:trace] = ex.backtrace if Minicron.config['global']['trace']
+
+        [500, { 'Content-Type' => 'application/json' }, [hash.to_json]]
       end
     end
   end

@@ -1,0 +1,33 @@
+<script type="text/x-handlebars" id="error">
+  <div class="alert alert-danger">
+    Error
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="fatal-error">
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="main-container">
+      <div class="navbar-header">
+        {{#link-to 'index' class="navbar-brand"}}minicron{{/link-to}}
+      </div>
+
+      <ul class="nav navbar-nav">
+        {{#link-to 'executions' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Executions</a>{{/link-to}}
+        {{#link-to 'jobs' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Jobs</a>{{/link-to}}
+        {{#link-to 'hosts' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Hosts</a>{{/link-to}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="main-container clearfix">
+    <div class="sidebar"></div>
+
+    <div class="main-panel">
+      <div class="inner">
+        <div class="alert alert-danger">
+          Fatal Error
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

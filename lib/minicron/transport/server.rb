@@ -23,6 +23,7 @@ module Minicron
           # The 'hub', aka our sinatra web interface
           map '/' do
             require Minicron::LIB_PATH + '/minicron/hub/app'
+            use Minicron::Hub::ExceptionHandling
             run Minicron::Hub::App.new
           end
 
@@ -32,8 +33,7 @@ module Minicron
           # The faye server the server and browser clients talk to
           map faye_path do
             require Minicron::LIB_PATH + '/minicron/transport/faye/server'
-            faye = Minicron::Transport::FayeServer.new
-            run faye.server
+            run Minicron::Transport::FayeServer.new.server
           end
         end
 
