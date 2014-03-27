@@ -1,7 +1,6 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'sinatra/activerecord/rake'
-require 'schema_plus'
 require 'minicron'
 require 'minicron/hub/app'
 
