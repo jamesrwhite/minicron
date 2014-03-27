@@ -220,11 +220,10 @@ module Minicron
           # Parse the file and cli config options
           parse_config(opts)
 
-          # These are inlined here because scheme_plus loads the whole of rails -.-
+          # These are inlined as we only need them in this use case
           require 'rake'
           require 'minicron/hub/app'
           require 'sinatra/activerecord/rake'
-          require 'schema_plus'
 
           # Setup the db
           Minicron::Hub::App.setup_db
