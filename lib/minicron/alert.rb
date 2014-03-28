@@ -1,26 +1,28 @@
 require 'minicron/hub/models/alert'
+require 'minicron/hub/models/job'
 require 'minicron/alert/email'
 
 module Minicron
   class Alert
     # Send an alert
     #
-    # @option options [Integer] schedule_id
+    # @option options [Minicron::Hub::Schedule] schedule a schedule instance
     # @option options [Integer,nil] execution_id only applies to 'fail' alerts
     # @option options [String] kind 'fail' or 'miss'
     # @option options [Time] expected_at when the schedule was expected to execute
     # @option options [String] medium the medium to send the alert via
-    # @option options [String] message the message the alert should contain
     def send(options = {})
-      p options
+      # Look up the job for this schedule
+      options[:job] = Minicron::Hub::Job.find(options[:schedule].job_id)
+
       case options[:medium]
       when 'email'
         email = Minicron::Email.new
         email.send(
           Minicron.config['alerts']['email']['to'],
           Minicron.config['alerts']['email']['from'],
-          'minicron alert!',
-          options[:message]
+          "minicron alert for job '#{options[:job].name}'!",
+          email.get_message(options)
         )
       else
         raise Exception, "The medium '#{medium}' is not supported!"
@@ -28,7 +30,7 @@ module Minicron
 
       # Store that we sent the alert
       Minicron::Hub::Alert.create(
-        :schedule_id => options[:schedule_id],
+        :schedule_id => options[:schedule].id,
         :kind => options[:kind],
         :expected_at => options[:expected_at],
         :medium => options[:medium],

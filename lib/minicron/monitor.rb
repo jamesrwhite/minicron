@@ -43,11 +43,10 @@ module Minicron
         # Check if the medium is enabled and alert hasn't already been sent
         if value['enabled'] && !alert.sent?('miss', schedule.id, expected_at, medium)
           alert.send(
-            :schedule_id => schedule.id,
+            :schedule => schedule,
             :kind => 'miss',
             :expected_at => expected_at,
-            :medium => medium,
-            :message => 'Yo, something done broke.'
+            :medium => medium
           )
         end
       end
@@ -58,11 +57,11 @@ module Minicron
       # Activate the monitor
       @active = true
 
+      # Establish a database connection
+      setup_db
+
       # Start a thread for the monitor
       @thread = Thread.new do
-        # Establish a database connection
-        setup_db
-
         # While the monitor is active run it in a loop ~every second
         while @active do
           # Get all the schedules
@@ -92,7 +91,7 @@ module Minicron
             end
           end
 
-          sleep 10
+          sleep 60
         end
       end
     end
