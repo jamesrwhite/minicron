@@ -192,7 +192,7 @@ module Minicron
 
       # Check if --trace was pased or not
       if @cli.instance_variable_get(:@args).include? '--trace'
-        Minicron.config['trace'] = true
+        Minicron.config['global']['trace'] = true
       end
 
       # Add a global option for verbose mode

@@ -10,7 +10,7 @@ begin
       STDOUT.flush
     end
   end
-# Handle ctrl-c any other nasty interruptions
+# Handle ctrl-c and other nasty interruptions
 rescue Interrupt, SignalException
   puts "\nExiting.."
 # Accept failure
