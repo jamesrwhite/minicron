@@ -17,10 +17,10 @@ Goals
 
 Some rough goals that minicron is trying to achieve.
 
-- Have minimal external dependencies
-- Fault tolerance
 - Remove the need to understand cron syntax
 - Increase visiblity into cron failures / missed executions
+- Have minimal external dependencies
+- Fault tolerance
 
 Installation
 -------------
