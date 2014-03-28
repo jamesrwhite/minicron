@@ -96,6 +96,18 @@ Areas that I would love some help with:
 - Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect.
 - UI improvements
 
+Goals
+------
+
+- Have minimal external dependencies
+  - There's lots of places in minicron where I could have easily made good use of NoSQL databases, Message Queues etc but that would increase the complexity of using minicron. When SQLite support is added there will be essentially no external depencies! (currently MySQL is required with PostgreSQL support planned)
+
+- Fault tolerance
+  - If something goes wrong minicron in general should not crash and more specifically the execution of cron jobs should not be impacted. (currently this goal isn't really met but I plan to make improvements to better meet it)
+
+- Remove need to understand cron syntax
+  - This is mostly met by the cron editor GUI but it can still be improved. For example at the moment viewing a cron shows the raw expression, the editor can only be used when editing a schedule.
+
 Code Style
 ----------
 
