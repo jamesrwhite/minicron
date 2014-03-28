@@ -6,7 +6,9 @@ minicron aims to complement ````cron```` by making it easier to manage and monit
 Installation
 -------------
 
-minicron is currently under heavy development, I plan to release version 0.1 to rubygems shortly but I would not recommend relying on it yet. If you wish to test the current version you can clone this repo ````bundle install```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db load```` to setup the db structure or set it up manually using the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql).
+minicron is currently under heavy development, I will using be semantic versioning for the relases and I plan to release version 0.1 to rubygems shortly. I would not recommend that you use this in production yet but I encourage to give it a try in a non critical environment and help me improve it.
+
+If you wish to test the current version you can clone this repo ````bundle install```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db load```` to setup the db structure or set it up manually using the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql).
 
 Requirements
 -------------
