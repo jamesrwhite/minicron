@@ -12,6 +12,17 @@
 
 ActiveRecord::Schema.define(version: 0) do
 
+  create_table "alerts", force: true do |t|
+    t.integer  "schedule_id",                         null: false
+    t.integer  "execution_id"
+    t.string   "kind",         limit: 4, default: "", null: false
+    t.datetime "expected_at",                         null: false
+    t.string   "medium",       limit: 5, default: "", null: false
+    t.datetime "sent_at",                             null: false
+  end
+
+  add_index "alerts", ["schedule_id", "kind", "expected_at", "medium"], name: "schedule_id", unique: true, using: :btree
+
   create_table "executions", force: true do |t|
     t.integer  "job_id",      null: false
     t.datetime "created_at",  null: false

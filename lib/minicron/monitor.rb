@@ -34,13 +34,21 @@ module Minicron
 
     # What to do when a cron didn't run when it was expected to do
     #
-    # @param cron a CronParser instance
     # @param schedule [Minicron::Hub::Schedule] a schedule instance
-    def handle_missed_schedule(cron, schedule)
-      Minicron.config['alerts'].each do |type, type_value|
-        if type_value['enabled']
-          alert = Minicron::Alert.new
-          alert.send(type, 'Yo, stuff be broken.')
+    # @param expected_at [DateTime] when the schedule was expected to execute
+    def handle_missed_schedule(schedule, expected_at)
+      alert = Minicron::Alert.new
+
+      Minicron.config['alerts'].each do |medium, value|
+        # Check if the medium is enabled and alert hasn't already been sent
+        if value['enabled'] && !alert.sent?('miss', schedule.id, expected_at, medium)
+          alert.send(
+            :schedule_id => schedule.id,
+            :kind => 'miss',
+            :expected_at => expected_at,
+            :medium => medium,
+            :message => 'Yo, something done broke.'
+          )
         end
       end
     end
@@ -66,25 +74,25 @@ module Minicron
             cron = CronParser.new(schedule.formatted)
 
             # Find the time the cron was last expected to run
-            last_expected = cron.last(Time.now.utc)
+            expected_at = cron.last(Time.now.utc)
 
-            p "Expected #{schedule.id} to run at #{last_expected}"
+            # We need to wait until after a minute past the expected run time
+            if Time.now.utc > (expected_at + 60)
+              # Check if this execution was created inside a minute window
+              # starting when it was expected to run
+              check = Minicron::Hub::Execution.exists?(
+                :created_at => expected_at..(expected_at + 60),
+                :job_id => schedule.job_id
+              )
 
-            # Check if this execution was created inside a minute window
-            # starting when it was expected to run
-            check = Minicron::Hub::Execution.exists?(
-              :created_at => last_expected..(last_expected + 60),
-              :job_id => schedule.job_id
-            )
-
-            # If the check failed
-            if check == false
-              p 'Handling missed schedule..'
-              handle_missed_schedule(cron, schedule)
+              # If the check failed
+              unless check
+                handle_missed_schedule(schedule, expected_at)
+              end
             end
           end
 
-          sleep 5
+          sleep 10
         end
       end
     end

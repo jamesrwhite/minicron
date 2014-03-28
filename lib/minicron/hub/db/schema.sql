@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-03-26 23:53:36 +0000
+# Generation Time: 2014-03-28 19:45:52 +0000
 # ************************************************************
 
 
@@ -18,6 +18,23 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump of table alerts
+# ------------------------------------------------------------
+
+CREATE TABLE `alerts` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `schedule_id` int(11) NOT NULL,
+  `execution_id` int(11) DEFAULT NULL,
+  `kind` varchar(4) NOT NULL DEFAULT '',
+  `expected_at` datetime NOT NULL,
+  `medium` varchar(5) NOT NULL DEFAULT '',
+  `sent_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `schedule_id` (`schedule_id`,`kind`,`expected_at`,`medium`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 # Dump of table executions
