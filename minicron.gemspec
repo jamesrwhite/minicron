@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'oj', '~> 2.6'
   spec.add_runtime_dependency 'sshkey', '~> 1.6', '>= 1.6.1'
   spec.add_runtime_dependency 'net-ssh', '~> 2.8'
+  spec.add_runtime_dependency 'parse-cron', '~> 0.1', '>= 0.1.4'
 
   # Databases we want to support
   spec.add_runtime_dependency 'mysql2', '~> 0.3', '>= 0.3.15'

@@ -6,6 +6,7 @@ require 'minicron/constants'
 require 'minicron/transport'
 require 'minicron/transport/client'
 require 'minicron/transport/server'
+require 'minicron/monitor'
 
 include Commander::UI
 
@@ -249,6 +250,10 @@ module Minicron
         c.action do |args, opts|
           # Parse the file and @cli config options
           parse_config(opts)
+
+          # Run the execution monitor (this runs in a separate thread)
+          monitor = Minicron::Monitor.new
+          monitor.start!
 
           # Start the server!
           server = Minicron::Transport::Server.new
