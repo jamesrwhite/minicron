@@ -3,6 +3,23 @@ minicron [![Build Status](https://api.travis-ci.org/jamesrwhite/minicron.png)](h
 
 minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides a web interface to the data and makes it easy to manage your cron jobs.
 
+- [Goals](https://github.com/jamesrwhite/minicron/blob/master/README.md#goals)
+- [Installation](https://github.com/jamesrwhite/minicron/blob/master/README.md#installation)
+- [Requirements](https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements)
+- [Usage](https://github.com/jamesrwhite/minicron/blob/master/README.md#usage)
+- [Documentation](https://github.com/jamesrwhite/minicron/blob/master/README.md#documentation)
+- [Contributing](https://github.com/jamesrwhite/minicron/blob/master/README.md#contributing)
+- [Support](https://github.com/jamesrwhite/minicron/blob/master/README.md#support)
+- [License](https://github.com/jamesrwhite/minicron/blob/master/README.md#license)
+
+Goals
+------
+
+- Have minimal external dependencies
+- Fault tolerance
+- Remove the need to understand cron syntax
+- Send alerts on job failure or missed executions
+
 Installation
 -------------
 
@@ -71,7 +88,7 @@ Some configuration options can be passed in manually but the recommend way to co
 Documentation
 -------------
 
-minicron uses [Yard](http://yardoc.org/ "Yard") for it's documentation, you can either generate it and view it locally using the following commands:
+minicron uses [Yard](http://yardoc.org/ "Yard") for it's code documentation, you can either generate it and view it locally using the following commands:
 
 ````
 yard doc
@@ -88,30 +105,13 @@ Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://git
 Areas that I would love some help with:
 
 - Any of the unassigned [issues here](https://github.com/jamesrwhite/minicron/issues?state=open).
-- General testing of the system, let me know what you think and create issues for any issues you find!
+- General testing of the system, let me know what you think and create issues for any bugs you find!
 - Tests!!
 - Validation and error handling improvements
-- Documentation improvements. Find something confusing or unexpected, let me know and I'll document it!
-- Look for ````TODO:```` notices littered around the code, I'm trying to convert them all to issues but there are a lot.
+- Documentation improvements. Find something confusing or unexpected, let me know and I'll add or improve documentation for it!
+- Look for ````TODO:```` notices littered around the code, I'm trying to convert them all to issues but there are a lot..
 - Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect.
 - UI improvements
-
-Goals
-------
-
-- Have minimal external dependencies
-  - There's lots of places in minicron where I could have easily made good use of NoSQL databases, Message Queues etc but that would increase the complexity of using minicron. When SQLite support is added there will be essentially no external depencies! (currently MySQL is required with PostgreSQL support planned)
-
-- Fault tolerance
-  - If something goes wrong minicron in general should not crash and more specifically the execution of cron jobs should not be impacted. (currently this goal isn't really met but I plan to make improvements to better meet it)
-
-- Remove need to understand cron syntax
-  - This is mostly met by the cron editor GUI but it can still be improved. For example at the moment viewing a cron shows the raw expression, the editor can only be used when editing a schedule.
-
-Code Style
-----------
-
-Where possible I'm trying to follow [Ruby Community Styleguide](https://github.com/bbatsov/ruby-style-guide "Ruby Community Styleguide")
 
 Support
 --------
