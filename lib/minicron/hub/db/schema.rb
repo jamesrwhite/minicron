@@ -18,11 +18,12 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "started_at"
     t.datetime "finished_at"
     t.integer  "exit_status"
-    t.index ["created_at"], :name => "created_at"
-    t.index ["finished_at"], :name => "finished_at"
-    t.index ["job_id"], :name => "job_id"
-    t.index ["started_at"], :name => "started_at"
   end
+
+  add_index "executions", ["created_at"], name: "created_at", using: :btree
+  add_index "executions", ["finished_at"], name: "finished_at", using: :btree
+  add_index "executions", ["job_id"], name: "job_id", using: :btree
+  add_index "executions", ["started_at"], name: "started_at", using: :btree
 
   create_table "hosts", force: true do |t|
     t.string   "name"
@@ -32,17 +33,19 @@ ActiveRecord::Schema.define(version: 0) do
     t.text     "public_key"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
-    t.index ["fqdn"], :name => "hostname"
   end
+
+  add_index "hosts", ["fqdn"], name: "hostname", using: :btree
 
   create_table "job_execution_outputs", force: true do |t|
     t.integer  "execution_id", null: false
     t.integer  "seq",          null: false
     t.text     "output",       null: false
     t.datetime "timestamp",    null: false
-    t.index ["execution_id"], :name => "execution_id"
-    t.index ["seq"], :name => "seq"
   end
+
+  add_index "job_execution_outputs", ["execution_id"], name: "execution_id", using: :btree
+  add_index "job_execution_outputs", ["seq"], name: "seq", using: :btree
 
   create_table "jobs", force: true do |t|
     t.string   "job_hash",   limit: 32, default: "", null: false
@@ -51,10 +54,11 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "host_id",                            null: false
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
-    t.index ["created_at"], :name => "created_at"
-    t.index ["host_id"], :name => "host_id"
-    t.index ["job_hash"], :name => "job_hash", :unique => true
   end
+
+  add_index "jobs", ["created_at"], name: "created_at", using: :btree
+  add_index "jobs", ["host_id"], name: "host_id", using: :btree
+  add_index "jobs", ["job_hash"], name: "job_hash", unique: true, using: :btree
 
   create_table "schedules", force: true do |t|
     t.integer  "job_id",                       null: false
@@ -66,13 +70,14 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "special",          limit: 9
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.index ["day_of_the_month"], :name => "day_of_the_month"
-    t.index ["day_of_the_week"], :name => "day_of_the_week"
-    t.index ["hour"], :name => "hour"
-    t.index ["job_id"], :name => "job_id"
-    t.index ["minute"], :name => "minute"
-    t.index ["month"], :name => "month"
-    t.index ["special"], :name => "special"
   end
+
+  add_index "schedules", ["day_of_the_month"], name: "day_of_the_month", using: :btree
+  add_index "schedules", ["day_of_the_week"], name: "day_of_the_week", using: :btree
+  add_index "schedules", ["hour"], name: "hour", using: :btree
+  add_index "schedules", ["job_id"], name: "job_id", using: :btree
+  add_index "schedules", ["minute"], name: "minute", using: :btree
+  add_index "schedules", ["month"], name: "month", using: :btree
+  add_index "schedules", ["special"], name: "special", using: :btree
 
 end
