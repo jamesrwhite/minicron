@@ -2,6 +2,7 @@ require 'active_record'
 require 'parse-cron'
 require 'minicron/hub/models/schedule'
 require 'minicron/hub/models/execution'
+require 'minicron/alert'
 
 module Minicron
   # Used to monitor the executions in the database and look for any failures
@@ -9,6 +10,9 @@ module Minicron
   class Monitor
     def initialize
       @active = false
+
+      # Kill the thread when exceptions arne't caught, TODO: should this be removed?
+      Thread.abort_on_exception = true
     end
 
     # Establishes a database connection
@@ -26,6 +30,15 @@ module Minicron
       else
         raise Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
+    end
+
+    # What to do when a cron didn't run when it was expected to do
+    #
+    # @param cron a CronParser instance
+    # @param schedule [Minicron::Hub::Schedule] a schedule instance
+    def handle_missed_schedule(cron, schedule)
+      alert = Minicron::Alert.new
+      alert.send(:email, 'Yo, stuff be broken.')
     end
 
     # Starts the execution monitor in a new thread
@@ -53,15 +66,21 @@ module Minicron
 
             p "Expected #{schedule.id} to run at #{last_expected}"
 
-            # Check if this execution happened or not!
+            # Check if this execution was created inside a minute window
+            # starting when it was expected to run
             check = Minicron::Hub::Execution.exists?(
-              :created_at => last_expected..(last_expected + 60)
+              :created_at => last_expected..(last_expected + 60),
+              :job_id => schedule.job_id
             )
 
-            if check then p 'It did!' else p "It didn't :(" end
+            # If the check failed
+            if check == false
+              p 'Handling missed schedule..'
+              handle_missed_schedule(cron, schedule)
+            end
           end
 
-          sleep 1
+          sleep 5
         end
       end
     end

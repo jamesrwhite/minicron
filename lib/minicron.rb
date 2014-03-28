@@ -36,6 +36,11 @@ module Minicron
     'cli' => {
       'mode' => 'line',
       'dry_run' => false
+    },
+    'alerts' => {
+      'email' => {
+        'enabled' => false
+      }
     }
   }
 
