@@ -15,10 +15,12 @@ minicron aims to complement ````cron```` by making it easier to manage and monit
 Goals
 ------
 
+Some rough goals that minicron is trying to achieve.
+
 - Have minimal external dependencies
 - Fault tolerance
 - Remove the need to understand cron syntax
-- Send alerts on job failure or missed executions
+- Increase visiblity into cron failures / missed executions
 
 Installation
 -------------
