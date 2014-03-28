@@ -81,9 +81,6 @@ module Minicron::Hub
 
     # Used to set up the database connection
     def self.setup_db
-      # For debug, TODO: remove this
-      puts "Using #{Minicron.config['database']['type']}"
-
       # Configure the database
       case Minicron.config['database']['type']
       when 'mysql'
