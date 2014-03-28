@@ -91,6 +91,13 @@ describe Minicron do
           'cli' => {
             'mode' => 'line',
             'dry_run' => false
+          },
+          'alerts' => {
+            'email' => {
+              'enabled' => true,
+              'to' => 'dev.jameswhite@gmail.com',
+              'from' => 'mail.minicron@gmail.com'
+            }
           }
         }
 

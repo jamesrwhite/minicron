@@ -33,3 +33,10 @@ password = "password"
 [cli]
 mode = "line" # [line, char]
 dry_run = false
+
+# Alerting options
+[alerts]
+  [alerts.email]
+  enabled = true
+  to = "dev.jameswhite@gmail.com"
+  from = "mail.minicron@gmail.com"
