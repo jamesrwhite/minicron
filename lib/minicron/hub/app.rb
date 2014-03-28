@@ -106,23 +106,29 @@ module Minicron::Hub
       @app = app
     end
 
+    def handle_exception(env, e, status)
+      if Minicron.config['global']['trace']
+        env['rack.errors'].puts(e)
+        env['rack.errors'].puts(e.backtrace.join("\n"))
+        env['rack.errors'].flush
+      end
+
+      # Display the error message
+      hash = { :error => e.to_s }
+
+      # Display the full trace if tracing is enabled
+      hash[:trace] = e.backtrace if Minicron.config['global']['trace']
+
+      [status, { 'Content-Type' => 'application/json' }, [hash.to_json]]
+    end
+
     def call(env)
       begin
         @app.call env
-      rescue => ex
-        if Minicron.config['global']['trace']
-          env['rack.errors'].puts(ex)
-          env['rack.errors'].puts(ex.backtrace.join("\n"))
-          env['rack.errors'].flush
-        end
-
-        # Display the error message
-        hash = { :error => ex.to_s }
-
-        # Display the full trace if tracing is enabled
-        hash[:trace] = ex.backtrace if Minicron.config['global']['trace']
-
-        [500, { 'Content-Type' => 'application/json' }, [hash.to_json]]
+      rescue ActiveRecord::RecordNotFound => e
+        handle_exception(env, e, 404)
+      rescue => e
+        handle_exception(env, e, 500)
       end
     end
   end
