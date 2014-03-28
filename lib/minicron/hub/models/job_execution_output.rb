@@ -1,3 +1,7 @@
-class Minicron::Hub::JobExecutionOutput < ActiveRecord::Base
-  belongs_to :execution
+module Minicron
+  module Hub
+    class JobExecutionOutput < ActiveRecord::Base
+      belongs_to :execution
+    end
+  end
 end
