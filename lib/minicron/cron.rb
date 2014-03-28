@@ -49,7 +49,7 @@ module Minicron
       begin
         crontab[find] = replace
       rescue Exception => e
-        raise Exception "Unable to replace '#{find}' with '#{replace}' in the crontab, reason: #{e}"
+        raise Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab, reason: #{e}"
       end
 
       # Echo the crontab back to the tmp crontab
