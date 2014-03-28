@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-03-26 23:53:36 +0000
+# Generation Time: 2014-03-28 07:49:15 +0000
 # ************************************************************
 
 
@@ -30,11 +30,13 @@ CREATE TABLE `executions` (
   `started_at` datetime DEFAULT NULL,
   `finished_at` datetime DEFAULT NULL,
   `exit_status` int(11) DEFAULT NULL,
+  `alert_sent` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `created_at` (`created_at`),
   KEY `finished_at` (`finished_at`),
   KEY `job_id` (`job_id`),
-  KEY `started_at` (`started_at`)
+  KEY `started_at` (`started_at`),
+  KEY `alert_sent` (`alert_sent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
