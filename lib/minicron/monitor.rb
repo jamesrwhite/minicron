@@ -37,8 +37,12 @@ module Minicron
     # @param cron a CronParser instance
     # @param schedule [Minicron::Hub::Schedule] a schedule instance
     def handle_missed_schedule(cron, schedule)
-      alert = Minicron::Alert.new
-      alert.send(:email, 'Yo, stuff be broken.')
+      Minicron.config['alerts'].each do |type, type_value|
+        if type_value['enabled']
+          alert = Minicron::Alert.new
+          alert.send(type, 'Yo, stuff be broken.')
+        end
+      end
     end
 
     # Starts the execution monitor in a new thread
