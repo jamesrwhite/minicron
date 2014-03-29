@@ -32,26 +32,6 @@ module Minicron
       end
     end
 
-    # What to do when a cron didn't run when it was expected to do
-    #
-    # @param schedule [Minicron::Hub::Schedule] a schedule instance
-    # @param expected_at [DateTime] when the schedule was expected to execute
-    def handle_missed_schedule(schedule, expected_at)
-      alert = Minicron::Alert.new
-
-      Minicron.config['alerts'].each do |medium, value|
-        # Check if the medium is enabled and alert hasn't already been sent
-        if value['enabled'] && !alert.sent?('miss', schedule.id, expected_at, medium)
-          alert.send(
-            :schedule => schedule,
-            :kind => 'miss',
-            :expected_at => expected_at,
-            :medium => medium
-          )
-        end
-      end
-    end
-
     # Starts the execution monitor in a new thread
     def start!
       # Activate the monitor
@@ -62,7 +42,14 @@ module Minicron
 
       # Start a thread for the monitor
       @thread = Thread.new do
-        # While the monitor is active run it in a loop ~every second
+        # Get an instance of the alert class
+        alert = Minicron::Alert.new
+
+        # Delay the start of the monitor loop for a moniter so we don't immediately
+        # send an alert for a job the system wasn't 'up' for
+        sleep 60
+
+        # While the monitor is active run it in a loop ~every minute
         while @active do
           # Get all the schedules
           schedules = Minicron::Hub::Schedule.all
@@ -86,7 +73,7 @@ module Minicron
 
               # If the check failed
               unless check
-                handle_missed_schedule(schedule, expected_at)
+                alert.send_all(schedule, expected_at)
               end
             end
           end
