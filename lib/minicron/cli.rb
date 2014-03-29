@@ -30,7 +30,6 @@ module Minicron
           'dry_run' => opts.dry_run
         },
         'server' => {
-          'scheme' => opts.scheme,
           'host' => opts.host,
           'port' => opts.port,
           'path' => opts.path

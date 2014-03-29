@@ -76,7 +76,6 @@ describe Minicron do
             'inactivity_timeout' => 5
           },
           'server' => {
-            'scheme' => 'http',
             'host' => '127.0.0.1',
             'port' => 9292,
             'path' => '/'
