@@ -40,3 +40,6 @@ dry_run = false
 
   [alerts.sms]
   enabled = false
+
+  [alerts.pagerduty]
+  enabled = false

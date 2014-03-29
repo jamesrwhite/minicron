@@ -1,5 +1,6 @@
 require 'minicron/alert/email'
 require 'minicron/alert/sms'
+require 'minicron/alert/pagerduty'
 require 'minicron/hub/models/alert'
 require 'minicron/hub/models/job'
 
@@ -40,24 +41,16 @@ module Minicron
       # Look up the job for this schedule
       options[:job] = Minicron::Hub::Job.find(options[:job_id])
 
+      # Switch the medium that the alert will be sent via
       case options[:medium]
       when 'email'
-        email = Minicron::Email.new
-        email.send(
-          Minicron.config['alerts']['email']['from'],
-          Minicron.config['alerts']['email']['to'],
-          "minicron alert for job '#{options[:job].name}'!",
-          email.get_message(options)
-        )
+        send_email(options)
       when 'sms'
-        sms = Minicron::SMS.new
-        sms.send(
-          Minicron.config['alerts']['sms']['from'],
-          Minicron.config['alerts']['sms']['to'],
-          sms.get_message(options)
-        )
+        send_sms(options)
+      when 'pagerduty'
+        send_pagerduty(options)
       else
-        raise Exception, "The medium '#{medium}' is not supported!"
+        raise Exception, "The medium '#{options[:medium]}' is not supported!"
       end
 
       # Store that we sent the alert
@@ -68,6 +61,36 @@ module Minicron
         :expected_at => options[:expected_at],
         :medium => options[:medium],
         :sent_at => Time.now.utc
+      )
+    end
+
+    # Send an email alert, this has the same options as #send
+    def send_email(options = {})
+      email = Minicron::Email.new
+      email.send(
+        Minicron.config['alerts']['email']['from'],
+        Minicron.config['alerts']['email']['to'],
+        "minicron alert for job '#{options[:job].name}'!",
+        email.get_message(options)
+      )
+    end
+
+    # Send an sms alert, this has the same options as #send
+    def send_sms(options = {})
+      sms = Minicron::SMS.new
+      sms.send(
+        Minicron.config['alerts']['sms']['from'],
+        Minicron.config['alerts']['sms']['to'],
+        sms.get_message(options)
+      )
+    end
+
+    # Send a pagerduty alert, this has the same options as #send
+    def send_pagerduty(options = {})
+      pagerduty = Minicron::PagerDuty.new
+      pagerduty.send(
+        options[:kind] == 'fail' ? 'Job failed!' : 'Job missed!',
+        pagerduty.get_message(options)
       )
     end
 

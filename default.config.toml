@@ -37,7 +37,7 @@ dry_run = false
 [alerts]
   [alerts.email]
   enabled = false
-  # from = "from@example.com"
+  # from = "from@example.com" # "Your Name <from@example.com>" syntax is also supported
   # to = "to@example.com"
 
   [alerts.sms]
@@ -47,3 +47,7 @@ dry_run = false
     [alerts.sms.twilio]
     # account_sid = "YOUR_TWILIO_ACCOUNT_SID"
     # auth_token = "YOUR_TWILIO_AUTH_TOKEN"
+
+  [alerts.pagerduty]
+  enabled = false
+  # service_key = "YOUR_PAGERDUTY_SERVICE_KEY"

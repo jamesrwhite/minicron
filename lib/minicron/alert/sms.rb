@@ -23,7 +23,7 @@ module Minicron
     def get_message(options = {})
       case options[:kind]
       when 'miss'
-        "minicron alert - job missed!\nJob ##{options[:job_id]} failed to execute at its expected time - #{options[:expected_at]}"
+        "minicron alert - job missed!\nJob ##{options[:job_id]} failed to execute at its expected time: #{options[:expected_at]}"
       when 'fail'
         "minicron alert - job failed!\nExecution ##{options[:execution_id]} of Job ##{options[:job_id]} failed"
       else
@@ -37,7 +37,6 @@ module Minicron
     # @param to [String]
     # @param message [String]
     def send(from, to, message)
-      # Send the message
       @client.account.messages.create(
         :from => from,
         :to => to,

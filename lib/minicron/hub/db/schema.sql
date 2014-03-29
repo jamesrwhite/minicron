@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-03-29 01:59:23 +0000
+# Generation Time: 2014-03-29 07:06:21 +0000
 # ************************************************************
 
 
@@ -29,7 +29,7 @@ CREATE TABLE `alerts` (
   `execution_id` int(11) DEFAULT NULL,
   `kind` varchar(4) NOT NULL DEFAULT '',
   `expected_at` datetime DEFAULT NULL,
-  `medium` varchar(5) NOT NULL DEFAULT '',
+  `medium` varchar(9) NOT NULL DEFAULT '',
   `sent_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `schedule_id` (`schedule_id`),

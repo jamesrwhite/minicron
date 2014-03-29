@@ -1,7 +1,13 @@
-require 'mail'
+require 'pagerduty'
 
 module Minicron
-  class Email
+  class PagerDuty
+    # Used to set up on the pagerduty client
+    def initialize
+      # Get an instance of the Pagerduty client
+      @client = ::Pagerduty.new(Minicron.config['alerts']['pagerduty']['service_key'])
+    end
+
     # Return the message for an alert
     #
     # @option options [Minicron::Hub::Job] job a job instance
@@ -14,29 +20,20 @@ module Minicron
     def get_message(options = {})
       case options[:kind]
       when 'miss'
-        "Job ##{options[:job_id]} (#{options[:job].name}) failed to execute at its expected time: #{options[:expected_at]}."
+        "Job ##{options[:job_id]} failed to execute at its expected time - #{options[:expected_at]}"
       when 'fail'
-        "Execution ##{options[:execution_id]} of Job ##{options[:job_id]} (#{options[:job].name}) failed."
+        "Execution ##{options[:execution_id]} of Job ##{options[:job_id]} failed"
       else
         raise Exception, "The kind '#{options[:kind]} is not supported!"
       end
     end
 
-    # Send an email alert
+    # Send a pager duty alert
     #
-    # @param from [String]
-    # @param to [String]
-    # @param subject [String]
+    # @param title [String]
     # @param message [String]
-    def send(from, to, subject, message)
-      mail = Mail.new do
-        to       to
-        from     from
-        subject  subject
-        body     message
-      end
-
-      mail.deliver!
+    def send(title, message)
+      @client.trigger(title, { :message => message })
     end
   end
 end

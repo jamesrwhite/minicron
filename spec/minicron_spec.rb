@@ -97,6 +97,9 @@ describe Minicron do
             },
             'sms' => {
               'enabled' => false
+            },
+            'pagerduty' => {
+              'enabled' => false
             }
           }
         }

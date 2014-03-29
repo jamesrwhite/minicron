@@ -11,7 +11,8 @@ module Minicron
     def initialize
       @active = false
 
-      # Kill the thread when exceptions arne't caught, TODO: should this be removed?
+      # Kill the thread when exceptions arne't caught so we can see the message
+      # TODO: should this be removed?
       Thread.abort_on_exception = true
     end
 

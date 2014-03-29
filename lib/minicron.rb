@@ -42,6 +42,9 @@ module Minicron
       },
       'sms' => {
         'enabled' => false
+      },
+      'pagerduty' => {
+        'enabled' => false
       }
     }
   }

@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "schedule_id"
     t.integer  "execution_id"
     t.string   "kind",         limit: 4, default: "", null: false
-    t.datetime "expected_at",                         null: false
-    t.string   "medium",       limit: 5, default: "", null: false
+    t.datetime "expected_at"
+    t.string   "medium",       limit: 9, default: "", null: false
     t.datetime "sent_at",                             null: false
   end
 
