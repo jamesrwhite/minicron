@@ -208,7 +208,7 @@ module Minicron
     # Add the `minicron db` command
     def add_db_cli_command
       @cli.command :db do |c|
-        c.syntax = 'minicron db [load|dump]'
+        c.syntax = 'minicron db [setup|dump]'
         c.description = 'Loads or dumps the minicron database schema.'
 
         c.action do |args, opts|
@@ -228,8 +228,11 @@ module Minicron
           # Setup the db
           Minicron::Hub::App.setup_db
 
+          # Adjust the task name
+          task = args.first == 'setup' ? 'load' : args.first
+
           # Run the task
-          Rake.application['db:schema:' + args.first].invoke
+          Rake.application['db:schema:' + task].invoke
         end
       end
     end
