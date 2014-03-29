@@ -18,7 +18,7 @@ minicron aims to complement ````cron```` by making it easier to manage and monit
 Background
 -----------
 
-I'm developing minicron as part of my dissertation at university, I need to have a version of it hand it by mid may but I plan to continue development after that date.
+I'm developing minicron as part of my dissertation at university, I need to have a release of it hand it by May 16th but I plan to continue development after that.
 
 Goals
 ------
@@ -125,7 +125,7 @@ Areas that I would love some help with:
 - Tests!!
 - Validation and error handling improvements
 - Documentation improvements. Find something confusing or unexpected, let me know and I'll add or improve documentation for it!
-- Look for ````TODO:```` notices littered around the code, I'm trying to convert them all to issues but there are a lot..
+- Look for '[TODO:](https://github.com/jamesrwhite/minicron/search?q=TODO%3A)' notices littered around the code, I'm trying to convert them all to issues but there are a lot..
 - Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect
 - UI improvements
 
