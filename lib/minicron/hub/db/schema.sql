@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-03-28 19:45:52 +0000
+# Generation Time: 2014-03-29 01:59:23 +0000
 # ************************************************************
 
 
@@ -25,14 +25,18 @@
 
 CREATE TABLE `alerts` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `schedule_id` int(11) NOT NULL,
+  `schedule_id` int(11) DEFAULT NULL,
   `execution_id` int(11) DEFAULT NULL,
   `kind` varchar(4) NOT NULL DEFAULT '',
-  `expected_at` datetime NOT NULL,
+  `expected_at` datetime DEFAULT NULL,
   `medium` varchar(5) NOT NULL DEFAULT '',
   `sent_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `schedule_id` (`schedule_id`,`kind`,`expected_at`,`medium`)
+  KEY `schedule_id` (`schedule_id`),
+  KEY `execution_id` (`execution_id`),
+  KEY `kind` (`kind`),
+  KEY `expected_at` (`expected_at`),
+  KEY `medium` (`medium`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

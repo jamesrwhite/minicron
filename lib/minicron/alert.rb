@@ -6,23 +6,21 @@ module Minicron
   class Alert
     # Send an alert using all enabled mediums
     #
-    # @param schedule [Minicron::Hub::Schedule] a schedule instance
-    # @param expected_at [DateTime] when the schedule was expected to execute
+    # @option options [String] kind 'fail' or 'miss'
+    # @option options [Integer, nil] schedule_id only applies to 'miss' alerts
     # @option options [Integer, nil] execution_id only used by 'fail' alerts
-    def send_all(schedule, expected_at, options = {})
+    # @option options [Integer] job_id used by the #send method
+    # @option options [Time] expected_at only applies to 'miss' alerts
+    def send_all(options = {})
       Minicron.config['alerts'].each do |medium, value|
-        # Set up the options hash for the sent? check
-        sent_options = {
-          :schedule_id => schedule.id,
-          :execution_id => options[:execution_id]
-        }
-
         # Check if the medium is enabled and alert hasn't already been sent
-        if value['enabled'] && !sent?('miss', expected_at, medium, sent_options)
+        if value['enabled'] && !sent?(options)
           send(
-            :schedule => schedule,
-            :kind => 'miss',
-            :expected_at => expected_at,
+            :kind => options[:kind],
+            :schedule_id => options[:schedule_id],
+            :execution_id => options[:execution_id],
+            :job_id => options[:job_id],
+            :expected_at => options[:expected_at],
             :medium => medium
           )
         end
@@ -31,15 +29,15 @@ module Minicron
 
     # Send an individual alert
     #
-    # @option options [Minicron::Hub::Schedule] schedule a schedule instance
-    # @option options [Integer,nil] execution_id only applies to 'fail' alerts
     # @option options [String] kind 'fail' or 'miss'
+    # @option options [Integer, nil] schedule_id only applies to 'miss' alerts
+    # @option options [Integer, nil] execution_id only used by 'fail' alerts
+    # @option options [Integer] job_id used to look up the job name for the alert message
     # @option options [Time] expected_at when the schedule was expected to execute
     # @option options [String] medium the medium to send the alert via
-    # @option options [Integer, nil] execution_id only used by 'fail' alerts
     def send(options = {})
       # Look up the job for this schedule
-      options[:job] = Minicron::Hub::Job.find(options[:schedule].job_id)
+      options[:job] = Minicron::Hub::Job.find(options[:job_id])
 
       case options[:medium]
       when 'email'
@@ -56,7 +54,7 @@ module Minicron
 
       # Store that we sent the alert
       Minicron::Hub::Alert.create(
-        :schedule_id => options[:schedule].id,
+        :schedule_id => options[:schedule_id],
         :execution_id => options[:execution_id],
         :kind => options[:kind],
         :expected_at => options[:expected_at],
@@ -65,21 +63,21 @@ module Minicron
       )
     end
 
-    # Queries the database to determine if an alert for the given expected schedule
-    # execution and medium has already been marked as sent
+    # Queries the database to determine if an alert for this kind has already
+    # been sent
     #
-    # @param kind [String] 'miss' or 'fail'
-    # @param expected_at [Time]
-    # @param medium [String]
-    # @option options [Integer] schedule_id
-    # @option options [Integer, nil] execution_id
-    def sent?(kind, expected_at, medium, options = {})
+    # @option options [String] kind 'fail' or 'miss'
+    # @option options [Integer, nil] schedule_id only applies to 'miss' alerts
+    # @option options [Integer, nil] execution_id only used by 'fail' alerts
+    # @option options [Time] expected_at when the schedule was expected to execute
+    # @option options [String] medium the medium to send the alert via
+    def sent?(options = {})
       Minicron::Hub::Alert.exists?(
+        :kind => options[:kind],
         :schedule_id => options[:schedule_id],
         :execution_id => options[:execution_id],
-        :kind => kind,
-        :expected_at => expected_at,
-        :medium => medium
+        :expected_at => options[:expected_at],
+        :medium => options[:medium]
       )
     end
   end

@@ -73,7 +73,13 @@ module Minicron
 
               # If the check failed
               unless check
-                alert.send_all(schedule, expected_at)
+                alert.send_all(
+                  :kind => 'miss',
+                  :schedule_id => schedule.id,
+                  :expected_at => expected_at,
+                  :job_id => schedule.job_id,
+                  :expected_at => expected_at
+                )
               end
             end
           end

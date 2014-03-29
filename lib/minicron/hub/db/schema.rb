@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 0) do
 
   create_table "alerts", force: true do |t|
-    t.integer  "schedule_id",                         null: false
+    t.integer  "schedule_id"
     t.integer  "execution_id"
     t.string   "kind",         limit: 4, default: "", null: false
     t.datetime "expected_at",                         null: false
@@ -21,7 +21,11 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "sent_at",                             null: false
   end
 
-  add_index "alerts", ["schedule_id", "kind", "expected_at", "medium"], name: "schedule_id", unique: true, using: :btree
+  add_index "alerts", ["execution_id"], name: "execution_id", using: :btree
+  add_index "alerts", ["expected_at"], name: "expected_at", using: :btree
+  add_index "alerts", ["kind"], name: "kind", using: :btree
+  add_index "alerts", ["medium"], name: "medium", using: :btree
+  add_index "alerts", ["schedule_id"], name: "schedule_id", using: :btree
 
   create_table "executions", force: true do |t|
     t.integer  "job_id",      null: false
