@@ -1,6 +1,7 @@
+require 'minicron/alert/email'
+require 'minicron/alert/sms'
 require 'minicron/hub/models/alert'
 require 'minicron/hub/models/job'
-require 'minicron/alert/email'
 
 module Minicron
   class Alert
@@ -43,10 +44,17 @@ module Minicron
       when 'email'
         email = Minicron::Email.new
         email.send(
-          Minicron.config['alerts']['email']['to'],
           Minicron.config['alerts']['email']['from'],
+          Minicron.config['alerts']['email']['to'],
           "minicron alert for job '#{options[:job].name}'!",
           email.get_message(options)
+        )
+      when 'sms'
+        sms = Minicron::SMS.new
+        sms.send(
+          Minicron.config['alerts']['sms']['from'],
+          Minicron.config['alerts']['sms']['to'],
+          sms.get_message(options)
         )
       else
         raise Exception, "The medium '#{medium}' is not supported!"

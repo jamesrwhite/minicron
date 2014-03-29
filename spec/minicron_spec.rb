@@ -94,9 +94,10 @@ describe Minicron do
           },
           'alerts' => {
             'email' => {
-              'enabled' => true,
-              'to' => 'dev.jameswhite@gmail.com',
-              'from' => 'mail.minicron@gmail.com'
+              'enabled' => false
+            },
+            'sms' => {
+              'enabled' => false
             }
           }
         }

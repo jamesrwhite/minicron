@@ -1,7 +1,16 @@
-require 'mail'
+require 'twilio-ruby'
 
 module Minicron
-  class Email
+  class SMS
+    # Used to set up on the twilio client
+    def initialize
+      # Get an instance of the twilio client
+      @client = Twilio::REST::Client.new(
+        Minicron.config['alerts']['sms']['twilio']['account_sid'],
+        Minicron.config['alerts']['sms']['twilio']['auth_token']
+      )
+    end
+
     # Return the message for an alert
     #
     # @option options [Minicron::Hub::Job] job a job instance
@@ -14,30 +23,26 @@ module Minicron
     def get_message(options = {})
       case options[:kind]
       when 'miss'
-        "Job ##{options[:job_id]} (#{options[:job].name}) failed to execute at its expected time - #{options[:expected_at]}."
+        "minicron alert - job missed!\nJob ##{options[:job_id]} failed to execute at its expected time - #{options[:expected_at]}"
       when 'fail'
-        "Execution ##{options[:execution_id]} of Job ##{options[:job_id]} (#{options[:job].name}) failed."
+        "minicron alert - job failed!\nExecution ##{options[:execution_id]} of Job ##{options[:job_id]} failed"
       else
         raise Exception, "The kind '#{options[:kind]} is not supported!"
       end
     end
 
-    # Send an email alert
+    # Send an sms alert
     #
     # @param from [String]
     # @param to [String]
-    # @param subject [String]
     # @param message [String]
-    def send(from, to, subject, message)
-      # Set up the email
-      mail = Mail.new do
-        to       to
-        from     from
-        subject  subject
-        body     message
-      end
-
-      mail.deliver!
+    def send(from, to, message)
+      # Send the message
+      @client.account.messages.create(
+        :from => from,
+        :to => to,
+        :body => message
+      )
     end
   end
 end

@@ -40,6 +40,9 @@ module Minicron
     'alerts' => {
       'email' => {
         'enabled' => false
+      },
+      'sms' => {
+        'enabled' => false
       }
     }
   }

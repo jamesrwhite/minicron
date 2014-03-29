@@ -37,6 +37,14 @@ dry_run = false
 # Alerting options
 [alerts]
   [alerts.email]
-  enabled = true
-  to = "dev.jameswhite@gmail.com"
-  from = "mail.minicron@gmail.com"
+  enabled = false
+  # from = "from@example.com"
+  # to = "to@example.com"
+
+  [alerts.sms]
+  enabled = false
+  # from = "+442222222222"
+  # to = "+443333333333"
+    [alerts.sms.twilio]
+    # account_sid = "YOUR_TWILIO_ACCOUNT_SID"
+    # auth_token = "YOUR_TWILIO_AUTH_TOKEN"
