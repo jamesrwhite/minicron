@@ -10,10 +10,6 @@ module Minicron
   class Monitor
     def initialize
       @active = false
-
-      # Kill the thread when exceptions arne't caught so we can see the message
-      # TODO: should this be removed?
-      Thread.abort_on_exception = true
     end
 
     # Establishes a database connection
@@ -54,7 +50,14 @@ module Minicron
 
           # Loop every schedule we know about
           schedules.each do |schedule|
-            monitor(schedule)
+            begin
+              monitor(schedule)
+            rescue Exception => e
+              if Minicron.config['global']['trace']
+                puts e.message
+                puts e.backtrace
+              end
+            end
           end
 
           sleep 60
