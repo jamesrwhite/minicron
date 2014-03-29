@@ -5,6 +5,7 @@ minicron
 
 minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides a web interface to the data and makes it easy to manage your cron jobs.
 
+- [Background](https://github.com/jamesrwhite/minicron/blob/master/README.md#background)
 - [Goals](https://github.com/jamesrwhite/minicron/blob/master/README.md#goals)
 - [Installation](https://github.com/jamesrwhite/minicron/blob/master/README.md#installation)
 - [Requirements](https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements)
@@ -13,6 +14,11 @@ minicron aims to complement ````cron```` by making it easier to manage and monit
 - [Contributing](https://github.com/jamesrwhite/minicron/blob/master/README.md#contributing)
 - [Support](https://github.com/jamesrwhite/minicron/blob/master/README.md#support)
 - [License](https://github.com/jamesrwhite/minicron/blob/master/README.md#license)
+
+Background
+-----------
+
+I'm developing minicron as part of my dissertation at university, I need to have a version of it hand it by mid may but I plan to continue development after that date.
 
 Goals
 ------
@@ -29,7 +35,11 @@ Installation
 
 minicron is currently under heavy development, I will using be semantic versioning for the relases and I plan to release version 0.1 to rubygems shortly. I would not recommend that you use this in production yet but I encourage to give it a try in a non critical environment and help me improve it.
 
-If you wish to test the current version you can clone this repo ````bundle install```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db load```` to setup the db structure or set it up manually using the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql).
+If you wish to test the current version you can clone this repo ````bundle install```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db setup````
+
+> **WARNING** this will drop any existing tables in the configured database and create new ones
+
+or set it up manually using the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql).
 
 Requirements
 -------------
@@ -79,7 +89,9 @@ Running ````minicron```` with no arguments is an alias to running ````minicron h
 
 #### Server
 
-To launch the server (aka the Hub) run ````minicron server```` - by default it will bind to port 9292 on the host 127.0.0.1. See [sample.nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for an example of how to run minicron behind a reverse proxy.
+To launch the server (aka the Hub) run ````minicron server```` - by default it will bind to port 9292 on the host 127.0.0.1 but this can be configured by the command line arguments ````--host```` ````--port```` and ````--path```` or in the config file.
+
+See [sample.nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for an example of how to run minicron behind a reverse proxy. It should be possible to run minicron behind any web server/reverse proxy as long as it supports WebSockets.
 
 #### Version
 
@@ -114,7 +126,7 @@ Areas that I would love some help with:
 - Validation and error handling improvements
 - Documentation improvements. Find something confusing or unexpected, let me know and I'll add or improve documentation for it!
 - Look for ````TODO:```` notices littered around the code, I'm trying to convert them all to issues but there are a lot..
-- Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect.
+- Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect
 - UI improvements
 
 Support
