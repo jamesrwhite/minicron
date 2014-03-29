@@ -124,7 +124,7 @@ module Minicron::Hub
         @app.call env
       rescue ActiveRecord::RecordNotFound => e
         handle_exception(env, e, 404)
-      rescue => e
+      rescue Exception => e
         handle_exception(env, e, 500)
       end
     end
