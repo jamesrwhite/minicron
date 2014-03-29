@@ -177,8 +177,9 @@ module Minicron
       Rainbow.enabled = false
     end
 
-    # Sets the basic options for a commander cli instance
     private
+
+    # Sets the basic options for a commander cli instance
     def setup_cli
       # basic information for the help menu
       @cli.program :name, 'minicron'
@@ -205,7 +206,6 @@ module Minicron
     end
 
     # Add the `minicron db` command
-    private
     def add_db_cli_command
       @cli.command :db do |c|
         c.syntax = 'minicron db [load|dump]'
@@ -235,7 +235,6 @@ module Minicron
     end
 
     # Add the `minicron server` command
-    private
     def add_server_cli_command
       @cli.command :server do |c|
         c.syntax = 'minicron server'
@@ -267,7 +266,6 @@ module Minicron
 
     # Add the `minicron run [command]` command
     # @yieldparam output [String] output from the cli
-    private
     def add_run_cli_command
       # Add the run command to the cli
       @cli.command :run do |c|

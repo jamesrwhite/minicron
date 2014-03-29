@@ -43,9 +43,6 @@ module Minicron
 
       # Start a thread for the monitor
       @thread = Thread.new do
-        # Get an instance of the alert class
-        alert = Minicron::Alert.new
-
         # Delay the start of the monitor loop for a moniter so we don't immediately
         # send an alert for a job the system wasn't 'up' for
         sleep 60
@@ -57,32 +54,7 @@ module Minicron
 
           # Loop every schedule we know about
           schedules.each do |schedule|
-            # Parse the cron expression
-            cron = CronParser.new(schedule.formatted)
-
-            # Find the time the cron was last expected to run
-            expected_at = cron.last(Time.now.utc)
-
-            # We need to wait until after a minute past the expected run time
-            if Time.now.utc > (expected_at + 60)
-              # Check if this execution was created inside a minute window
-              # starting when it was expected to run
-              check = Minicron::Hub::Execution.exists?(
-                :created_at => expected_at..(expected_at + 60),
-                :job_id => schedule.job_id
-              )
-
-              # If the check failed
-              unless check
-                alert.send_all(
-                  :kind => 'miss',
-                  :schedule_id => schedule.id,
-                  :expected_at => expected_at,
-                  :job_id => schedule.job_id,
-                  :expected_at => expected_at
-                )
-              end
-            end
+            monitor(schedule)
           end
 
           sleep 60
@@ -99,6 +71,43 @@ module Minicron
     # Is the execution monitor running?
     def running?
       @active
+    end
+
+    private
+
+    # Handle the monitoring of a cron schedule
+    #
+    # @param schedule [Minicron::Hub::Schedule]
+    def monitor(schedule)
+      # Get an instance of the alert class
+      alert = Minicron::Alert.new
+
+      # Parse the cron expression
+      cron = CronParser.new(schedule.formatted)
+
+      # Find the time the cron was last expected to run
+      expected_at = cron.last(Time.now.utc)
+
+      # We need to wait until after a minute past the expected run time
+      if Time.now.utc > (expected_at + 60)
+        # Check if this execution was created inside a minute window
+        # starting when it was expected to run
+        check = Minicron::Hub::Execution.exists?(
+          :created_at => expected_at..(expected_at + 60),
+          :job_id => schedule.job_id
+        )
+
+        # If the check failed
+        unless check
+          alert.send_all(
+            :kind => 'miss',
+            :schedule_id => schedule.id,
+            :expected_at => expected_at,
+            :job_id => schedule.job_id,
+            :expected_at => expected_at
+          )
+        end
+      end
     end
   end
 end
