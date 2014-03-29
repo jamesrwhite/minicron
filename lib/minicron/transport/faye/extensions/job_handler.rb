@@ -1,3 +1,4 @@
+require 'minicron/alert'
 require 'minicron/hub/models/host'
 require 'minicron/hub/models/job'
 require 'minicron/hub/models/execution'
@@ -6,6 +7,10 @@ require 'minicron/hub/models/job_execution_output'
 module Minicron
   module Transport
     # An extension to the Faye server to store some of the data it receives
+    #
+    # TODO: A lot of this need more validation checks and error handling
+    #       currently it's just assumed the correct data is passed and the server
+    #       can crash if it isn't
     class FayeJobHandler
       # Called by Faye when a message is recieved
       #
@@ -16,17 +21,9 @@ module Minicron
 
         # Is it a job messages
         if segments[1] == 'job'
-          # TODO: All of these need more validation checks and error handling
-          # currently it's just assumed the correct data is passed and the server
-          # crashes if it isn't!
           data = message['data']['message']
           ts = message['data']['ts']
           seq = message['data']['seq']
-
-          # Check that the job id is a valid length
-          if segments[2].length != 32
-            # TODO: Do something clever here
-          end
 
           # Is it a setup message?
           if segments[3] == 'status' && data['action'] == 'SETUP'
@@ -100,6 +97,16 @@ module Minicron
             Minicron::Hub::Execution.where(:id => segments[3]).update_all(
               :exit_status => data[5..-1]
             )
+
+            # If the exit status was above 0 we need to trigger a failure alert
+            if data[5..-1].to_i > 0
+              alert = Minicron::Alert.new
+              alert.send_all(
+                :kind => 'fail',
+                :execution_id => segments[3],
+                :job_id => segments[2]
+              )
+            end
           end
         end
 
