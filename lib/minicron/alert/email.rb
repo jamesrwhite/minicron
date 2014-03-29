@@ -2,6 +2,16 @@ require 'mail'
 
 module Minicron
   class Email
+    # Configure the mail client
+    def initialize
+      Mail.defaults do
+        delivery_method(
+          :smtp,
+          :address => Minicron.config['alerts']['email']['smtp']['address'],
+          :port => Minicron.config['alerts']['email']['smtp']['port']
+        )
+      end
+    end
     # Return the message for an alert
     #
     # @option options [Minicron::Hub::Job] job a job instance
@@ -29,14 +39,12 @@ module Minicron
     # @param subject [String]
     # @param message [String]
     def send(from, to, subject, message)
-      mail = Mail.new do
+      Mail.deliver do
         to       to
         from     from
         subject  subject
         body     message
       end
-
-      mail.deliver!
     end
   end
 end

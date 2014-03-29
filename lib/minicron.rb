@@ -38,7 +38,11 @@ module Minicron
     },
     'alerts' => {
       'email' => {
-        'enabled' => false
+        'enabled' => false,
+        'smtp' => {
+          'address' => 'localhost',
+          'port' => 25
+        }
       },
       'sms' => {
         'enabled' => false

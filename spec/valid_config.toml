@@ -37,6 +37,9 @@ dry_run = false
 [alerts]
   [alerts.email]
   enabled = false
+    [alerts.email.smtp]
+    address = "localhost"
+    port = 25
 
   [alerts.sms]
   enabled = false

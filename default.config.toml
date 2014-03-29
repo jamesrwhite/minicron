@@ -39,6 +39,9 @@ dry_run = false
   enabled = false
   # from = "from@example.com" # "Your Name <from@example.com>" syntax is also supported
   # to = "to@example.com"
+    [alerts.email.smtp]
+    address = "localhost"
+    port = 25
 
   [alerts.sms]
   enabled = false
