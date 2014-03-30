@@ -18,7 +18,7 @@ minicron aims to complement ````cron```` by making it easier to manage and monit
 Background
 -----------
 
-I'm developing minicron as part of my dissertation at university, I need to have a release of it hand it by May 16th but I plan to continue development after that.
+I'm developing minicron as part of my dissertation at university which is due in May but I plan to continue development after that. My inspiration for developing minicron comes from time spent working at [Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
 
 Goals
 ------
@@ -26,7 +26,7 @@ Goals
 Some rough goals that minicron is trying to achieve.
 
 - Remove the need to understand cron syntax
-- Increase visiblity into cron failures / missed executions
+- Increase visiblity into cron failures and missed executions
 - Have minimal external dependencies
 - Fault tolerance
 
