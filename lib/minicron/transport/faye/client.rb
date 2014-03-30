@@ -40,11 +40,6 @@ module Minicron
         # Make sure eventmachine is running
         ensure_em_running
 
-        # Wait until there is some space in the queue so we don't overwhelm the server
-        until queue.length <= 10
-          sleep 1
-        end
-
         # Make the request
         req = EventMachine::HttpRequest.new(
           @url,
