@@ -205,6 +205,34 @@ module Minicron
       @cli.global_option '--config FILE', 'Set the config file to use'
     end
 
+    # Setup a job by sending the SETUP command to the server
+    #
+    # @param command [String] the job command
+    # @param faye a faye client instance
+    # @return [Hash] the job_id and execution_id
+    def setup_job(command, faye)
+      # Get the fully qualified domain name of the currnet host
+      fqdn = `hostname -f`.strip
+
+      # Get the short hostname of the current host
+      hostname = `hostname -s`.strip
+
+      # Get the md5 hash for the job
+      job_hash = Minicron::Transport.get_job_hash(command, fqdn)
+
+      # Fire up eventmachine
+      faye.ensure_em_running
+
+      # Setup the job on the server
+      ids = faye.setup(job_hash, command, fqdn, hostname)
+
+      # Wait until we get the execution id
+      faye.ensure_delivery
+
+      # Return the ids
+      ids
+    end
+
     # Add the `minicron db` command
     def add_db_cli_command
       @cli.command :db do |c|
@@ -295,23 +323,8 @@ module Minicron
                 Minicron.config['client']['path']
               )
 
-              # Get the fully qualified domain name of the currnet host
-              fqdn = `hostname -f`.strip
-
-              # Get the short hostname of the current host
-              hostname = `hostname -s`.strip
-
-              # Get the md5 hash for the job
-              job_hash = Minicron::Transport.get_job_hash(args.first, fqdn)
-
-              # Fire up eventmachine
-              faye.ensure_em_running
-
-              # Setup the job on the server
-              ids = faye.setup(job_hash, args.first, fqdn, hostname)
-
-              # Wait until we get the execution id
-              faye.ensure_delivery
+              # Set up the job and get the jexecution and job ids back from the server
+              ids = setup_job(args.first, faye)
             end
 
             # Execute the command and yield the output
