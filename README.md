@@ -6,7 +6,8 @@ minicron
 minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides a web interface to the data and makes it easy to manage your cron jobs.
 
 - [Background](https://github.com/jamesrwhite/minicron/blob/master/README.md#background)
-- [Goals](https://github.com/jamesrwhite/minicron/blob/master/README.md#goals)
+- [Goals](https://github.com/jamesrwhite/minicron/blob/master/README.md#features)
+- [Features](https://github.com/jamesrwhite/minicron/blob/master/README.md#goals)
 - [Installation](https://github.com/jamesrwhite/minicron/blob/master/README.md#installation)
 - [Requirements](https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements)
 - [Usage](https://github.com/jamesrwhite/minicron/blob/master/README.md#usage)
@@ -30,6 +31,21 @@ Some rough goals that minicron is trying to achieve.
 - Increase visiblity into cron failures and missed executions
 - Have minimal external dependencies
 - Fault tolerance
+
+Features
+---------
+
+- Web UI
+  - CRUD for cron jobs using ssh
+  - GUI for cron schedule create/read/update
+  - View realtime output/status as jobs run
+  - Historical data for all job executions
+- Alerts when jobs executions are missed or fail via:
+  - Email
+  - SMS ([using Twilio](https://www.twilio.com))
+  - [PagerDuty](www.pagerduty.com)
+
+Lots more is planned for the feature, see issues tagged [feature](https://github.com/jamesrwhite/minicron/issues?labels=feature&milestone=&page=1&state=open).
 
 Installation
 -------------
