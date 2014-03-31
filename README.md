@@ -11,6 +11,7 @@ minicron aims to complement ````cron```` by making it easier to manage and monit
 - [Requirements](https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements)
 - [Usage](https://github.com/jamesrwhite/minicron/blob/master/README.md#usage)
 - [Documentation](https://github.com/jamesrwhite/minicron/blob/master/README.md#documentation)
+- [Versioning](https://github.com/jamesrwhite/minicron/blob/master/README.md#versioning)
 - [Contributing](https://github.com/jamesrwhite/minicron/blob/master/README.md#contributing)
 - [Support](https://github.com/jamesrwhite/minicron/blob/master/README.md#support)
 - [License](https://github.com/jamesrwhite/minicron/blob/master/README.md#license)
@@ -33,9 +34,19 @@ Some rough goals that minicron is trying to achieve.
 Installation
 -------------
 
-minicron is currently under heavy development, I will using be semantic versioning for the relases and I plan to release version 0.1 to rubygems shortly. I would not recommend that you use this in production yet but I encourage to give it a try in a non critical environment and help me improve it.
+minicron is currently under heavy development and as such I would not recommend that you use this in production yet but I encourage you to give it a try in a non critical environment and help me improve it.
 
-If you wish to test the current version you can clone this repo ````bundle install```` and ````rake install````. Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db setup````
+#### Development Install
+
+If you wish to test the latest from GitHub version you can clone this repo ````bundle install```` and ````rake install````.
+
+#### Released Install
+
+To install the latest release (currently 0.1) you can ````gem install minicron````.
+
+#### Database Setup
+
+Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db setup````
 
 > **WARNING** this will drop any existing tables in the configured database and create new ones
 
@@ -112,6 +123,21 @@ yard server
 ````
 
 or view the most up to date version online at [RubyDoc.info](http://rdoc.info/github/jamesrwhite/minicron/master/frames "RubyDoc.info").
+
+Versioning
+-----------
+
+Where possible all releases will follow the [semantic versioning](http://semver.org/) guidelines.
+
+Releases will be numbered with the following format:
+
+`<major>.<minor>.<patch>`
+
+Based on the following guidelines:
+
+* A new *major* release indicates a large change where backwards compatibility is broken.
+* A new *minor* release indicates a normal change that maintains backwards compatibility.
+* A new *patch* release indicates a bugfix or small change which does not affect compatibility.
 
 Contributing
 ------------
