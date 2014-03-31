@@ -256,7 +256,7 @@ module Minicron
           # Setup the db
           Minicron::Hub::App.setup_db
 
-          # Tell activerecord where the db folder, it annoying just assumes it is db/
+          # Tell activerecord where the db folder is, it assumes it is in db/
           Sinatra::ActiveRecordTasks.db_dir = 'lib/minicron/hub/db'
 
           # Adjust the task name
