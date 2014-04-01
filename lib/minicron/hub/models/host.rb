@@ -1,7 +1,7 @@
 module Minicron
   module Hub
     class Host < ActiveRecord::Base
-      has_many :jobs, :dependent => :delete_all
+      has_many :jobs, :dependent => :destroy
 
       # Default the name of the host to the fqdn itself if no name is set
       def name

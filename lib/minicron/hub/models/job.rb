@@ -2,8 +2,8 @@ module Minicron
   module Hub
     class Job < ActiveRecord::Base
       belongs_to :host
-      has_many :executions, :dependent => :delete_all
-      has_many :schedules, :dependent => :delete_all
+      has_many :executions, :dependent => :destroy
+      has_many :schedules, :dependent => :destroy
 
       # Default the name of the command to the command itself if no name is set
       def name
