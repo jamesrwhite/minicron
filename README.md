@@ -78,19 +78,13 @@ Installation
 
 minicron is currently under heavy development and as such I would not recommend that you use this in production yet but I encourage you to give it a try in a non critical environment and help me improve it.
 
-#### Development Install
-
-If you wish to test the latest from GitHub version you can clone this repo ````bundle install```` and ````rake install````.
-
-#### Released Install
-
 To install the latest release (currently 0.1) you can ````gem install minicron````.
 
 #### Database Setup
 
-Set your database configuration options in ````/etc/minicron.toml```` and you can then ````minicron db setup````
+Set your database configuration options in ````/etc/minicron.toml````, you can use the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml) as a guide on what options are configurable. You can then ````minicron db setup````
 
-> **WARNING** this will drop any existing tables in the configured database and create new ones
+> **WARNING** this will drop any existing tables of the same name in the configured database and create new ones
 
 or set it up manually using the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql).
 
