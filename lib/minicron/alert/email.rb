@@ -8,7 +8,11 @@ module Minicron
         delivery_method(
           :smtp,
           :address => Minicron.config['alerts']['email']['smtp']['address'],
-          :port => Minicron.config['alerts']['email']['smtp']['port']
+          :port => Minicron.config['alerts']['email']['smtp']['port'],
+          :domain => Minicron.config['alerts']['email']['smtp']['domain'],
+          :user_name => Minicron.config['alerts']['email']['smtp']['user_name'],
+          :password => Minicron.config['alerts']['email']['smtp']['password'],
+          :enable_starttls_auto => Minicron.config['alerts']['email']['smtp']['enable_starttls_auto']
         )
       end
     end

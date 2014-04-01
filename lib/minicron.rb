@@ -41,7 +41,12 @@ module Minicron
         'enabled' => false,
         'smtp' => {
           'address' => 'localhost',
-          'port' => 25
+          'port' => 25,
+          'domain' => 'localhost.localdomain',
+          'user_name' => nil,
+          'password' => nil,
+          'authentication' => nil,
+          'enable_starttls_auto' => true
         }
       },
       'sms' => {

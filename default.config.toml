@@ -40,8 +40,13 @@ dry_run = false
   # from = "from@example.com" # "Your Name <from@example.com>" syntax is also supported
   # to = "to@example.com"
     [alerts.email.smtp]
-    address = "localhost"
-    port = 25
+    address = "localhost" # "smtp.gmail.com" for gmail
+    port = 25 # 587 for gmail
+    # domain = "your.domain.name"
+    # user_name = "username@email.com"
+    # password = "password"
+    # authentication = "plain"
+    enable_starttls_auto = true
 
   [alerts.sms]
   enabled = false
