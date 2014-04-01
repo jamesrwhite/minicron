@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "name"
     t.string   "fqdn",       default: "", null: false
     t.string   "host",       default: "", null: false
-    t.integer  "port",       default: 22, null: false
+    t.integer  "port",                    null: false
     t.text     "public_key"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false

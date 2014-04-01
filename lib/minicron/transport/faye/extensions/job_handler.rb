@@ -70,7 +70,8 @@ module Minicron
           host = Minicron::Hub::Host.create(
             :name => data['hostname'],
             :fqdn => data['fqdn'],
-            :host => request.ip
+            :host => request.ip,
+            :port => 22
           )
 
           # Generate a new SSH key - TODO: add passphrase

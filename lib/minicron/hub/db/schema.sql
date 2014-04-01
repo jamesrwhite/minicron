@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-03-29 07:06:21 +0000
+# Generation Time: 2014-04-01 03:35:39 +0000
 # ************************************************************
 
 
@@ -23,8 +23,10 @@
 # Dump of table alerts
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `alerts`;
+
 CREATE TABLE `alerts` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `schedule_id` int(11) DEFAULT NULL,
   `execution_id` int(11) DEFAULT NULL,
   `kind` varchar(4) NOT NULL DEFAULT '',
@@ -32,17 +34,19 @@ CREATE TABLE `alerts` (
   `medium` varchar(9) NOT NULL DEFAULT '',
   `sent_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `schedule_id` (`schedule_id`),
-  KEY `execution_id` (`execution_id`),
-  KEY `kind` (`kind`),
-  KEY `expected_at` (`expected_at`),
-  KEY `medium` (`medium`)
+  KEY `execution_id` (`execution_id`) USING BTREE,
+  KEY `expected_at` (`expected_at`) USING BTREE,
+  KEY `kind` (`kind`) USING BTREE,
+  KEY `medium` (`medium`) USING BTREE,
+  KEY `schedule_id` (`schedule_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 # Dump of table executions
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `executions`;
 
 CREATE TABLE `executions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -52,10 +56,10 @@ CREATE TABLE `executions` (
   `finished_at` datetime DEFAULT NULL,
   `exit_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `created_at` (`created_at`),
-  KEY `finished_at` (`finished_at`),
-  KEY `job_id` (`job_id`),
-  KEY `started_at` (`started_at`)
+  KEY `created_at` (`created_at`) USING BTREE,
+  KEY `finished_at` (`finished_at`) USING BTREE,
+  KEY `job_id` (`job_id`) USING BTREE,
+  KEY `started_at` (`started_at`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -63,23 +67,27 @@ CREATE TABLE `executions` (
 # Dump of table hosts
 # ------------------------------------------------------------
 
+DROP TABLE IF EXISTS `hosts`;
+
 CREATE TABLE `hosts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `fqdn` varchar(255) NOT NULL DEFAULT '',
   `host` varchar(255) NOT NULL DEFAULT '',
-  `port` int(11) NOT NULL DEFAULT '22',
+  `port` int(11) NOT NULL,
   `public_key` text,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `hostname` (`fqdn`)
+  KEY `hostname` (`fqdn`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 # Dump of table job_execution_outputs
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `job_execution_outputs`;
 
 CREATE TABLE `job_execution_outputs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -88,14 +96,16 @@ CREATE TABLE `job_execution_outputs` (
   `output` text NOT NULL,
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `execution_id` (`execution_id`),
-  KEY `seq` (`seq`)
+  KEY `execution_id` (`execution_id`) USING BTREE,
+  KEY `seq` (`seq`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 # Dump of table jobs
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `jobs`;
 
 CREATE TABLE `jobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -106,15 +116,17 @@ CREATE TABLE `jobs` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `job_hash` (`job_hash`),
-  KEY `created_at` (`created_at`),
-  KEY `host_id` (`host_id`)
+  UNIQUE KEY `job_hash` (`job_hash`) USING BTREE,
+  KEY `created_at` (`created_at`) USING BTREE,
+  KEY `host_id` (`host_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 # Dump of table schedules
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `schedules`;
 
 CREATE TABLE `schedules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -128,19 +140,21 @@ CREATE TABLE `schedules` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `day_of_the_month` (`day_of_the_month`),
-  KEY `day_of_the_week` (`day_of_the_week`),
-  KEY `hour` (`hour`),
-  KEY `job_id` (`job_id`),
-  KEY `minute` (`minute`),
-  KEY `month` (`month`),
-  KEY `special` (`special`)
+  KEY `day_of_the_month` (`day_of_the_month`) USING BTREE,
+  KEY `day_of_the_week` (`day_of_the_week`) USING BTREE,
+  KEY `hour` (`hour`) USING BTREE,
+  KEY `job_id` (`job_id`) USING BTREE,
+  KEY `minute` (`minute`) USING BTREE,
+  KEY `month` (`month`) USING BTREE,
+  KEY `special` (`special`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
 # Dump of table schema_migrations
 # ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `schema_migrations`;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
