@@ -1,5 +1,11 @@
 <script type="text/x-handlebars" id="executions/index">
-  Nothing to see here, why not set up a {{#link-to 'jobs'}}job{{/link-to}}?
+  <header>
+    <h2>Welcome to minicron!</h2>
+  </header>
+  <hr/>
+
+  To get started you need to {{#link-to 'hosts.new'}}set up a host{{/link-to}} and
+  then you can {{#link-to 'jobs.new'}}add your first job{{/link-to}}!
 </script>
 
 <script type="text/x-handlebars" id="execution/index">
