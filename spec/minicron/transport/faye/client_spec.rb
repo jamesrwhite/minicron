@@ -14,7 +14,7 @@ describe Minicron::Transport::FayeClient do
 
   describe '#ensure_em_running' do
     context 'when eventmachine is not running' do
-      it 'should start eventmachine' #do
+      it 'should start eventmachine' # do
       #   eventmachine.stub(:reactor_running?).and_return(false, true)
       #   eventmachine.stub(:run)
       #   eventmachine.should_receive(:reactor_running?).twice
@@ -25,7 +25,7 @@ describe Minicron::Transport::FayeClient do
     end
 
     context 'when eventmachine is running' do
-      it 'should not start eventmachine' #do
+      it 'should not start eventmachine' # do
     #     eventmachine.stub(:reactor_running?).and_return true
     #     eventmachine.should_receive(:reactor_running?).twice
 
@@ -46,8 +46,8 @@ describe Minicron::Transport::FayeClient do
   end
 
   describe '#tidy_up'
-   it 'should stop eventmachine' do
-    eventmachine.should_receive(:stop)
-    client.new('http', '127.0.0.1', '80', '/test').tidy_up
-  end
+  it 'should stop eventmachine' do
+   eventmachine.should_receive(:stop)
+   client.new('http', '127.0.0.1', '80', '/test').tidy_up
+ end
 end

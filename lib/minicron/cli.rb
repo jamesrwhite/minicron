@@ -130,7 +130,7 @@ module Minicron
           end
         end
       rescue Errno::ENOENT
-        fail Exception, "Running the command `#{command}` failed, are you sure it exists?"
+        raise Exception, "Running the command `#{command}` failed, are you sure it exists?"
       ensure
         # Record the time the command finished
         finish = Time.now.utc - subtract_total
@@ -142,7 +142,7 @@ module Minicron
 
         # Output some debug info
         if options[:verbose]
-          yield structured :verbose, "\n" + "[minicron]".colour(:magenta)
+          yield structured :verbose, "\n" + '[minicron]'.colour(:magenta)
           yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
           yield structured :verbose, '[minicron]'.colour(:magenta)
           yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
@@ -352,7 +352,7 @@ module Minicron
               faye.send(:job_id => ids[:job_id], :execution_id => ids[:execution_id], :type => :output, :message => e.message)
             end
 
-            fail e
+            raise e
           ensure
             # Ensure that all messages are delivered and that we
             unless Minicron.config['cli']['dry_run']

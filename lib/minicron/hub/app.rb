@@ -84,15 +84,15 @@ module Minicron::Hub
       # Configure the database
       case Minicron.config['database']['type']
       when 'mysql'
-        set :database, {
-          :adapter => 'mysql2',
-          :host => Minicron.config['database']['host'],
-          :database => Minicron.config['database']['database'],
-          :username => Minicron.config['database']['username'],
-          :password => Minicron.config['database']['password']
-        }
+        set :database,
+            :adapter => 'mysql2',
+            :host => Minicron.config['database']['host'],
+            :database => Minicron.config['database']['database'],
+            :username => Minicron.config['database']['username'],
+            :password => Minicron.config['database']['password']
+
       else
-        raise Exception, "The database #{Minicron.config['database']['type']} is not supported"
+        fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
     end
   end

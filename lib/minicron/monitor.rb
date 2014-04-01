@@ -25,7 +25,7 @@ module Minicron
           :password => Minicron.config['database']['password']
         )
       else
-        raise Exception, "The database #{Minicron.config['database']['type']} is not supported"
+        fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
     end
 

@@ -10,10 +10,10 @@ class Minicron::Hub::App
     if params[:ids]
       schedules = Minicron::Hub::Schedule.where(:id => params[:ids])
                                          .order(:id => :asc)
-                                         .includes({ :job => [:executions, :schedules] })
+                                         .includes(:job => [:executions, :schedules])
     else
       schedules = Minicron::Hub::Schedule.all.order(:id => :asc)
-                                         .includes({ :job => [:executions, :schedules] })
+                                         .includes(:job => [:executions, :schedules])
     end
 
     Minicron::Hub::ScheduleSerializer.new(schedules).serialize.to_json
@@ -22,7 +22,7 @@ class Minicron::Hub::App
   # Get a single schedule by it ID
   get '/api/schedules/:id' do
     content_type :json
-    schedule = Minicron::Hub::Schedule.includes({ :job => [:executions, :schedules] }).find(params[:id])
+    schedule = Minicron::Hub::Schedule.includes(:job => [:executions, :schedules]).find(params[:id])
     Minicron::Hub::ScheduleSerializer.new(schedule).serialize.to_json
   end
 
@@ -45,7 +45,7 @@ class Minicron::Hub::App
       )
 
       if exists
-        raise Exception, "That schedule already exists for this job"
+        fail Exception, 'That schedule already exists for this job'
       end
 
       Minicron::Hub::Schedule.transaction do
@@ -101,7 +101,7 @@ class Minicron::Hub::App
 
       Minicron::Hub::Schedule.transaction do
         # Find the schedule
-        schedule = Minicron::Hub::Schedule.includes({ :job => [:executions, :schedules] }).find(params[:id])
+        schedule = Minicron::Hub::Schedule.includes(:job => [:executions, :schedules]).find(params[:id])
         old_schedule = schedule.formatted
 
         # Get an ssh instance
@@ -151,7 +151,7 @@ class Minicron::Hub::App
     begin
       Minicron::Hub::Schedule.transaction do
         # Find the schedule
-        schedule = Minicron::Hub::Schedule.includes({ :job => :host }).find(params[:id])
+        schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:id])
 
         # Try and delete the schedule
         Minicron::Hub::Schedule.destroy(params[:id])

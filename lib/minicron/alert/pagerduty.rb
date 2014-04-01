@@ -34,7 +34,7 @@ module Minicron
     # @param title [String]
     # @param message [String]
     def send(title, message)
-      @client.trigger(title, { :message => message })
+      @client.trigger(title,  :message => message)
     end
   end
 end

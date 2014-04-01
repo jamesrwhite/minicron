@@ -43,7 +43,7 @@ class Minicron::Hub::App
       host.save!
 
       # Return the new host
-      HostSerializer.new(host).serialize.to_json
+      Minicron::Hub::HostSerializer.new(host).serialize.to_json
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       status 422
@@ -87,7 +87,7 @@ class Minicron::Hub::App
     begin
       Minicron::Hub::Host.transaction do
         # Look up the host
-        host = Minicron::Hub::Host.includes({ :jobs => :schedules }).find(params[:id])
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(params[:id])
 
         # Try and delete the host
         Minicron::Hub::Host.destroy(params[:id])

@@ -5,7 +5,7 @@ describe Minicron::CLI do
   let(:thin_server) { Thin::Server }
 
   describe '#server' do
-    it 'should start the minicron server' #do
+    it 'should start the minicron server' # do
       # server.should_receive(:start!)
       # server.should_receive(:running?)
       # server.should_receive(:server)
@@ -42,7 +42,7 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.new.run(['lol', '--trace'])
+              Minicron::CLI.new.run(%w(lol --trace))
             end.to raise_error SystemExit
           end
         end
@@ -52,7 +52,7 @@ describe Minicron::CLI do
         it 'should raise ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.new.run(['run', '--dry-run', '--trace'])
+              Minicron::CLI.new.run(%w(run --dry-run --trace))
             end.to raise_error ArgumentError
           end
         end
@@ -80,7 +80,7 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.new.run(['lol', '--trace'])
+              Minicron::CLI.new.run(%w(lol --trace))
             end.to raise_error SystemExit
           end
         end

@@ -73,7 +73,7 @@ module Minicron
     rescue Errno::ENOENT
       # Fail if the file doesn't exist unless it's the default config file
       if file_path != DEFAULT_CONFIG_FILE
-        fail Exception, "Unable to the load the file '#{file_path}', are you sure it exists?"
+        raise Exception, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
     rescue Errno::EACCES
       fail Exception, "Unable to the readthe file '#{file_path}', check it has the right permissions."
@@ -156,7 +156,6 @@ module Minicron
 
     filename
   end
-
 
   # Used to generate SSH keys for hosts but is completely generic
   #

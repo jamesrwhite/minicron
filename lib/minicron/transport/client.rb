@@ -73,7 +73,7 @@ module Minicron
         # Increment the sequence id
         @seq += 1
 
-        request({ :message => data.to_json })
+        request(:message => data.to_json)
       end
     end
   end
