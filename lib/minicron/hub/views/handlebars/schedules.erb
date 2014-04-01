@@ -313,7 +313,7 @@
 
 <script type="text/x-handlebars" id="schedule/index">
   <header class="clearfix">
-    <h2 class="pull-left">Schedule #{{id}} for Job '{{job.name}}'</h2>
+    <h2 class="pull-left">View Schedule #{{id}}</h2>
     <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
     {{#link-to 'schedule.edit' id class="pull-right btn btn-warning btn-sm"}}Edit{{/link-to}}
   </header>
@@ -329,7 +329,7 @@
 
 <script type="text/x-handlebars" id="schedules/new">
   <header>
-    <h2>Add New Schedule for Job '{{name}}'</h2>
+    <h2>Add New Schedule</h2>
   </header>
   <hr/>
 
@@ -341,7 +341,7 @@
 
 <script type="text/x-handlebars" id="schedule/edit">
   <header class="clearfix">
-    <h2 class="pull-left">Edit Schedule #{{id}} for Job '{{job.name}}'</h2>
+    <h2 class="pull-left">Edit Schedule #{{id}}</h2>
     <a {{action 'delete' this}} class="pull-right btn btn-danger btn-sm">Delete</a>
   </header>
   <hr/>
