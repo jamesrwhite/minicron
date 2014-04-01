@@ -10,8 +10,7 @@ Gem::Specification.new do |spec|
   spec.email                 = ['dev.jameswhite+minicron@gmail.com']
   spec.summary               = 'cli for minicron; a system a to manage and monitor cron jobs'
   spec.description           = %{
-    The minicron cli is part of the minicron system that aims to make it easier
-    to manage and monitor cron jobs.
+    minicron is system that aims to make it easier to manage and monitor cron jobs.
 
     For more info see the project README on GitHub.
   }
