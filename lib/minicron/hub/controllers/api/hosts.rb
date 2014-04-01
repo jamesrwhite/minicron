@@ -23,6 +23,9 @@ class Minicron::Hub::App
       # Load the JSON body
       request_body = Oj.load(request.body)
 
+      # Default the value of the port
+      request_body['host']['port'] ||= 22
+
       # Try and save the new host
       host = Minicron::Hub::Host.create(
         :name => request_body['host']['name'],
@@ -56,6 +59,9 @@ class Minicron::Hub::App
 
       # Find the host
       host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
+
+      # Default the value of the port
+      request_body['host']['port'] ||= 22
 
       # Update its data
       host.name = request_body['host']['name']
