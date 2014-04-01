@@ -25,6 +25,9 @@ class Minicron::Hub::App::HostSerializer
 
     # Add all the normal attributes of the host
     host.attributes.each do |key, value|
+      # To make our name method in the model work :/
+      value = host.name if key == 'name'
+
       new_host[key] = value
     end
 
