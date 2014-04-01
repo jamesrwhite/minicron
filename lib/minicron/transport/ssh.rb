@@ -14,7 +14,7 @@ module Minicron
         @private_key = File.expand_path(options[:private_key])
 
         # TODO: Make these configurable?
-        @user = `whoami`.strip
+        @user = 'root'
         @auth_methods = ['publickey']
         @host_key = 'ssh-rsa'
         @timeout = 10
