@@ -78,7 +78,7 @@ Installation
 
 minicron is currently under heavy development and as such I would not recommend that you use this in production yet but I encourage you to give it a try in a non critical environment and help me improve it.
 
-To install the latest release (currently 0.1) you can ````gem install minicron````.
+To install the latest release (currently 0.1.1) you can ````gem install minicron````.
 
 #### Database Setup
 
@@ -165,7 +165,7 @@ Areas that I would love some help with:
 - Validation and error handling improvements
 - Documentation improvements. Find something confusing or unexpected, let me know and I'll add or improve documentation for it!
 - Look for '[TODO:](https://github.com/jamesrwhite/minicron/search?q=TODO%3A)' notices littered around the code, I'm trying to convert them all to issues but there are a lot..
-- Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect
+- Code refactoring, I had a reasonably tight deadline to have the main concept done by so some parts are a bit rushed
 - UI improvements
 
 Support
