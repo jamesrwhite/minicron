@@ -8,8 +8,8 @@ minicron aims to complement ````cron```` by making it easier to manage and monit
 - [Background](https://github.com/jamesrwhite/minicron/blob/master/README.md#background)
 - [Goals](https://github.com/jamesrwhite/minicron/blob/master/README.md#features)
 - [Features](https://github.com/jamesrwhite/minicron/blob/master/README.md#goals)
-- [Installation](https://github.com/jamesrwhite/minicron/blob/master/README.md#installation)
 - [Requirements](https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements)
+- [Installation](https://github.com/jamesrwhite/minicron/blob/master/README.md#installation)
 - [Usage](https://github.com/jamesrwhite/minicron/blob/master/README.md#usage)
 - [Documentation](https://github.com/jamesrwhite/minicron/blob/master/README.md#documentation)
 - [Versioning](https://github.com/jamesrwhite/minicron/blob/master/README.md#versioning)
@@ -45,7 +45,7 @@ Features
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](www.pagerduty.com)
 
-Lots more is planned for the feature, see issues tagged [feature](https://github.com/jamesrwhite/minicron/issues?labels=feature&milestone=&page=1&state=open).
+Lots more is planned for the future, see issues tagged [feature](https://github.com/jamesrwhite/minicron/issues?labels=feature&milestone=&page=1&state=open).
 
 Requirements
 -------------
@@ -55,11 +55,9 @@ Requirements
   - 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
 - <del>Rubinius</del>
   - <del>Travis builds are run on the latest release</del> [*awaiting bug fix*](https://github.com/rubinius/rubinius/issues/2944)
-- JRuby
-  - As yet untested
-
 
 #### Database
+
 - MySQL
 - Support for PostgreSQL and SQlite is planned in the future
 
@@ -68,11 +66,12 @@ Requirements
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol. nginx for example supports web sockets from version 1.3.13 and up.
 
 #### Browser
-- I have been testing the web interface in the latest versions of Chrome, Firefox and Safari. I'm currently unsure of how it functions in the various of Internet Explorer but in theory it should support IE9+
+
+I have been testing the web interface in the latest versions of Chrome, Firefox and Safari. I'm currently unsure of how it functions in the various of Internet Explorer but in theory it should support IE9+
 
 #### OS
-- Should run on any linux/bsd based OS that the above ruby versions run on.
-- No windows support.
+
+Should run on any linux/bsd based OS that the above ruby versions run on.
 
 Installation
 -------------
