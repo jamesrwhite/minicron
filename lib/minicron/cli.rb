@@ -236,8 +236,8 @@ module Minicron
     # Add the `minicron db` command
     def add_db_cli_command
       @cli.command :db do |c|
-        c.syntax = 'minicron db [setup|dump]'
-        c.description = 'Loads or dumps the minicron database schema.'
+        c.syntax = 'minicron db [setup]'
+        c.description = 'Sets up the minicron database schema.'
 
         c.action do |args, opts|
           # Check that exactly one argument has been passed
