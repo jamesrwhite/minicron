@@ -1,3 +1,4 @@
+require 'minicron'
 require 'minicron/transport/ssh'
 
 class Minicron::Hub::App
@@ -106,6 +107,12 @@ class Minicron::Hub::App
 
         # Tidy up
         ssh.close
+
+        # Delete the pub/priv key pair
+        private_key_path = Minicron.sanitize_filename(File.expand_path("~/.ssh/minicron_host_#{host.id}_rsa"))
+        public_key_path = Minicron.sanitize_filename(File.expand_path("~/.ssh/minicron_host_#{host.id}_rsa.pub"))
+        File.delete(private_key_path)
+        File.delete(public_key_path)
 
         # This is what ember expects as the response
         status 204
