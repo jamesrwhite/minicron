@@ -25,13 +25,11 @@ module Minicron
         @ssh = Net::SSH.start(
           @host,
           @user,
-          {
-            :port => @port,
-            :keys => [@private_key],
-            :auth_methods => @auth_methods,
-            :host_key => @host_key,
-            :timeout => @timeout
-          }
+          :port => @port,
+          :keys => [@private_key],
+          :auth_methods => @auth_methods,
+          :host_key => @host_key,
+          :timeout => @timeout
         )
       end
 

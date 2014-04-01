@@ -66,7 +66,7 @@ module Minicron
         host = Minicron::Hub::Host.where(:fqdn => data['fqdn']).first
 
         # Create it if it didn't exist!
-        if not host
+        if !host
           host = Minicron::Hub::Host.create(
             :name => data['hostname'],
             :fqdn => data['fqdn'],

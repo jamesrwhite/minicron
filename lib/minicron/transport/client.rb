@@ -24,12 +24,12 @@ module Minicron
       # @return [Hash]
       def setup(job_hash, command, fqdn, hostname)
         # Send a request to set up the job
-        publish("/job/#{job_hash}/status", {
+        publish("/job/#{job_hash}/status",
           :action => 'SETUP',
           :command => command,
           :fqdn => fqdn,
           :hostname => hostname
-        })
+        )
 
         # Wait for the response..
         ensure_delivery
@@ -64,11 +64,11 @@ module Minicron
       # @param message [String]
       def publish(channel, message)
         # Set up the data to send to faye
-        data = {:channel => channel, :data => {
-          :ts => Time.now.utc.strftime("%Y-%m-%d %H:%M:%S"),
+        data = { :channel => channel, :data => {
+          :ts => Time.now.utc.strftime('%Y-%m-%d %H:%M:%S'),
           :message => message,
           :seq => @seq
-        }}
+        } }
 
         # Increment the sequence id
         @seq += 1

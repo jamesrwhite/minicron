@@ -16,14 +16,14 @@ class Minicron::Hub::App
                                          .includes({ :job => [:executions, :schedules] })
     end
 
-    ScheduleSerializer.new(schedules).serialize.to_json
+    Minicron::Hub::ScheduleSerializer.new(schedules).serialize.to_json
   end
 
   # Get a single schedule by it ID
   get '/api/schedules/:id' do
     content_type :json
     schedule = Minicron::Hub::Schedule.includes({ :job => [:executions, :schedules] }).find(params[:id])
-    ScheduleSerializer.new(schedule).serialize.to_json
+    Minicron::Hub::ScheduleSerializer.new(schedule).serialize.to_json
   end
 
   # Create a new schedule
@@ -83,7 +83,7 @@ class Minicron::Hub::App
         schedule.save!
 
         # Return the new schedule
-        ScheduleSerializer.new(schedule).serialize.to_json
+        Minicron::Hub::ScheduleSerializer.new(schedule).serialize.to_json
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
@@ -136,7 +136,7 @@ class Minicron::Hub::App
         schedule.save!
 
         # Return the new schedule
-        ScheduleSerializer.new(schedule).serialize.to_json
+        Minicron::Hub::ScheduleSerializer.new(schedule).serialize.to_json
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e

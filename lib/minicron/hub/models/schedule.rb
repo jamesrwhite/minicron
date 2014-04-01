@@ -14,7 +14,7 @@ module Minicron
       # @return string
       def self.format(schedule)
         # If it's not a 'special' schedule then build up the full schedule string
-        if schedule.special == '' || schedule.special == nil
+        if schedule.special == '' || schedule.special.nil?
           "#{schedule.minute} #{schedule.hour} #{schedule.day_of_the_month} #{schedule.month} #{schedule.day_of_the_week}"
         else
           schedule.special

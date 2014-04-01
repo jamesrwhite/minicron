@@ -11,6 +11,8 @@ require 'minicron/monitor'
 include Commander::UI
 
 module Minicron
+  # Handles the main CLI interaction of minicron
+  # TODO: this class is probably too complicated and should be refactored a bit
   class CLI
     # Function to the parse the config of the options passed to commands
     #
@@ -128,8 +130,6 @@ module Minicron
           end
         end
       rescue Errno::ENOENT
-        exit_status = 1
-
         fail Exception, "Running the command `#{command}` failed, are you sure it exists?"
       ensure
         # Record the time the command finished

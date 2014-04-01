@@ -1,6 +1,7 @@
 require 'mail'
 
 module Minicron
+  # Allows the sending of email alerts
   class Email
     # Configure the mail client
     def initialize
@@ -32,7 +33,7 @@ module Minicron
       when 'fail'
         "Execution ##{options[:execution_id]} of Job ##{options[:job_id]} '#{options[:job].name}' failed."
       else
-        raise Exception, "The kind '#{options[:kind]} is not supported!"
+        fail Exception, "The kind '#{options[:kind]} is not supported!"
       end
     end
 

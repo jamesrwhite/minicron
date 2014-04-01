@@ -5,7 +5,7 @@ module Minicron
 
       # Default the name of the host to the fqdn itself if no name is set
       def name
-        if read_attribute(:name) == '' || read_attribute(:name) == nil
+        if read_attribute(:name) == '' || read_attribute(:name).nil?
           read_attribute(:fqdn)
         else
           read_attribute(:name)

@@ -7,14 +7,14 @@ class Minicron::Hub::App
   get '/api/hosts' do
     content_type :json
     hosts = Minicron::Hub::Host.all.includes(:jobs).order(:id => :asc)
-    HostSerializer.new(hosts).serialize.to_json
+    Minicron::Hub::HostSerializer.new(hosts).serialize.to_json
   end
 
   # Get a single host by its ID
   get '/api/hosts/:id' do
     content_type :json
     host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
-    HostSerializer.new(host).serialize.to_json
+    Minicron::Hub::HostSerializer.new(host).serialize.to_json
   end
 
   # Create a new host
@@ -73,7 +73,7 @@ class Minicron::Hub::App
       host.save!
 
       # Return the new host
-      HostSerializer.new(host).serialize.to_json
+      Minicron::Hub::HostSerializer.new(host).serialize.to_json
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       status 422

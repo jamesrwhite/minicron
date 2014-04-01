@@ -5,7 +5,7 @@ class Minicron::Hub::App
     content_type :json
     executions = Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)
                                          .includes({:job => :host}, :job_execution_outputs)
-    ExecutionSerializer.new(executions).serialize.to_json
+    Minicron::Hub::ExecutionSerializer.new(executions).serialize.to_json
   end
 
   # Get a single job execution by its ID
@@ -13,7 +13,7 @@ class Minicron::Hub::App
     content_type :json
     execution = Minicron::Hub::Execution.includes({:job => :host}, :job_execution_outputs)
                                         .find(params[:id])
-    ExecutionSerializer.new(execution).serialize.to_json
+    Minicron::Hub::ExecutionSerializer.new(execution).serialize.to_json
   end
 
   # Delete an existing execution

@@ -49,7 +49,7 @@ module Minicron
       begin
         crontab[find] = replace
       rescue Exception => e
-        raise Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab, reason: #{e}"
+        fail Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab, reason: #{e}"
       end
 
       # Echo the crontab back to the tmp crontab
@@ -57,7 +57,7 @@ module Minicron
 
       # Throw an exception if it failed
       if update != 'y'
-        raise Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab"
+        fail Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab"
       end
 
       # If it's a delete
@@ -67,7 +67,7 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          raise Exception, "Expected to find nothing when grepping crontab but found #{grep}"
+          fail Exception, "Expected to find nothing when grepping crontab but found #{grep}"
         end
       else
         # Check the updated line is there
@@ -75,7 +75,7 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          raise Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
+          fail Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
         end
       end
 
@@ -83,7 +83,7 @@ module Minicron
       move = conn.exec!("mv /etc/crontab.tmp /etc/crontab && echo 'y' || echo 'n'").to_s.strip
 
       if move != 'y'
-        raise Exception, 'Unable to move tmp crontab with updated crontab'
+        fail Exception, 'Unable to move tmp crontab with updated crontab'
       end
     end
 
@@ -105,7 +105,7 @@ module Minicron
 
       # Throw an exception if it failed
       if write != 'y'
-        raise Exception, "Unable to write '#{line}' to the crontab"
+        fail Exception, "Unable to write '#{line}' to the crontab"
       end
 
       # Check the line is there
@@ -113,7 +113,7 @@ module Minicron
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
-        raise Exception, "Expected to find '#{line}' at eof but found '#{tail}'"
+        fail Exception, "Expected to find '#{line}' at eof but found '#{tail}'"
       end
     end
 

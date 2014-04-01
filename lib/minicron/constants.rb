@@ -1,3 +1,4 @@
+# The minicron module
 module Minicron
   VERSION = '0.1.1'
   DEFAULT_CONFIG_FILE = '/etc/minicron.toml'

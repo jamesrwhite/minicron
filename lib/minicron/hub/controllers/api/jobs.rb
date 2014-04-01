@@ -14,7 +14,7 @@ class Minicron::Hub::App
                                 .includes(:host, :schedules, { :executions => :job_execution_outputs })
     end
 
-    JobSerializer.new(jobs).serialize.to_json
+    Minicron::Hub::JobSerializer.new(jobs).serialize.to_json
   end
 
   # Get a single job by it ID
@@ -22,7 +22,7 @@ class Minicron::Hub::App
     content_type :json
     job = Minicron::Hub::Job.includes(:host, :schedules, { :executions => :job_execution_outputs })
                             .find(params[:id])
-    JobSerializer.new(job).serialize.to_json
+    Minicron::Hub::JobSerializer.new(job).serialize.to_json
   end
 
   # Create a new job
@@ -46,7 +46,7 @@ class Minicron::Hub::App
       job.save!
 
       # Return the new job
-      JobSerializer.new(job).serialize.to_json
+      Minicron::Hub::JobSerializer.new(job).serialize.to_json
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       status 422
@@ -71,7 +71,7 @@ class Minicron::Hub::App
       job.save!
 
       # Return the new job
-      JobSerializer.new(job).serialize.to_json
+      Minicron::Hub::JobSerializer.new(job).serialize.to_json
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       status 422

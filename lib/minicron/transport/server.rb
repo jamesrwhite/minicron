@@ -44,7 +44,7 @@ module Minicron
       # Stops the thin server if it's running
       # @return [Boolean] whether the server was stopped or not
       def stop!
-        return false unless running? && server != nil
+        return false unless running? && !server.nil?
 
         server.stop
         true
@@ -53,7 +53,7 @@ module Minicron
       # Returns a bool based on whether
       # @return [Boolean]
       def running?
-        return false unless server != nil
+        return false unless !server.nil?
 
         server.running?
       end

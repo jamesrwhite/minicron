@@ -58,22 +58,22 @@ module Minicron
 
         # Did the request succeed? If so remove it from the queue
         req.callback do
-          @responses.push({
+          @responses.push(
             :status => req.response_header.status,
             :header => req.response_header,
             :body => req.response
-          })
+          )
 
           queue.delete(req_id)
         end
 
         # If not retry the request up to @retries times
         req.errback do |error|
-          @responses.push({
+          @responses.push(
             :status => req.response_header.status,
             :header => req.response_header,
             :body => req.response
-          })
+          )
 
           if @retry_counts[req_id] < @retries
             @retry_counts[req_id] += 1

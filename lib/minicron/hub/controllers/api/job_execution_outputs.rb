@@ -16,7 +16,7 @@ class Minicron::Hub::App
       output = Minicron::Hub::JobExecutionOutput.all.order(:id => :asc)
     end
 
-    JobExecutionOutputSerializer.new(output).serialize.to_json
+    Minicron::Hub::JobExecutionOutputSerializer.new(output).serialize.to_json
   end
 
   # Get a single job execution output by it ID
@@ -25,6 +25,6 @@ class Minicron::Hub::App
     output = Minicron::Hub::JobExecutionOutput.includes(:execution)
                                               .order(:id => :asc)
                                               .find(params[:id])
-    JobExecutionOutputSerializer.new(output).serialize.to_json
+    Minicron::Hub::JobExecutionOutputSerializer.new(output).serialize.to_json
   end
 end

@@ -5,6 +5,7 @@ require 'minicron/hub/models/alert'
 require 'minicron/hub/models/job'
 
 module Minicron
+  # Allows the sending of alerts via multiple mediums
   class Alert
     # Send an alert using all enabled mediums
     #
@@ -50,7 +51,7 @@ module Minicron
       when 'pagerduty'
         send_pagerduty(options)
       else
-        raise Exception, "The medium '#{options[:medium]}' is not supported!"
+        fail Exception, "The medium '#{options[:medium]}' is not supported!"
       end
 
       # Store that we sent the alert

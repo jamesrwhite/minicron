@@ -1,6 +1,7 @@
 require 'twilio-ruby'
 
 module Minicron
+  # Allows the sending of SMS alerts via Twilio
   class SMS
     # Used to set up on the twilio client
     def initialize
@@ -27,7 +28,7 @@ module Minicron
       when 'fail'
         "minicron alert - job failed!\nExecution ##{options[:execution_id]} of Job ##{options[:job_id]} failed"
       else
-        raise Exception, "The kind '#{options[:kind]} is not supported!"
+        fail Exception, "The kind '#{options[:kind]} is not supported!"
       end
     end
 

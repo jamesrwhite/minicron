@@ -17,13 +17,13 @@ module Minicron
       case Minicron.config['database']['type']
       when 'mysql'
         # Establish a database connection
-        ActiveRecord::Base.establish_connection({
+        ActiveRecord::Base.establish_connection(
           :adapter => 'mysql2',
           :host => Minicron.config['database']['host'],
           :database => Minicron.config['database']['database'],
           :username => Minicron.config['database']['username'],
           :password => Minicron.config['database']['password']
-        })
+        )
       else
         raise Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
@@ -44,7 +44,7 @@ module Minicron
         sleep 60
 
         # While the monitor is active run it in a loop ~every minute
-        while @active do
+        while @active
           # Get all the schedules
           schedules = Minicron::Hub::Schedule.all
 

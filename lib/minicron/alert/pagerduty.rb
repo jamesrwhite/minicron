@@ -1,6 +1,7 @@
 require 'pagerduty'
 
 module Minicron
+  # Allows the sending of pagerduty alerts
   class PagerDuty
     # Used to set up on the pagerduty client
     def initialize
@@ -24,7 +25,7 @@ module Minicron
       when 'fail'
         "Execution ##{options[:execution_id]} of Job ##{options[:job_id]} failed"
       else
-        raise Exception, "The kind '#{options[:kind]} is not supported!"
+        fail Exception, "The kind '#{options[:kind]} is not supported!"
       end
     end
 
