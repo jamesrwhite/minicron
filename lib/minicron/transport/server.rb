@@ -12,11 +12,11 @@ module Minicron
       # @param host [String] the host e.g 0.0.0.0
       # @param port [Integer]
       # @param path [String] The absolute path to the server e.g /server
-      def start!(host, port, path)
+      def self.start!(host, port, path)
         return false if running?
 
         # Start the faye or rails apps depending on the path
-        server = Thin::Server.new(host, port) do
+        @server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions
 
@@ -37,25 +37,25 @@ module Minicron
           end
         end
 
-        server.start
+        @server.start
         true
       end
 
       # Stops the thin server if it's running
       # @return [Boolean] whether the server was stopped or not
-      def stop!
-        return false unless running? && !server.nil?
+      def self.stop!
+        return false unless running? && !@server.nil?
 
-        server.stop
+        @server.stop
         true
       end
 
       # Returns a bool based on whether
       # @return [Boolean]
-      def running?
-        return false unless !server.nil?
+      def self.running?
+        return false unless !@server.nil?
 
-        server.running?
+        @server.running?
       end
     end
   end

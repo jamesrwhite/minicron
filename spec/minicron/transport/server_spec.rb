@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Minicron::Transport::Server do
-  let(:server) { Minicron::Transport::Server.new }
+  let(:server) { Minicron::Transport::Server }
   let(:thin_server) { Thin::Server }
 
   describe '#start!' do
@@ -17,7 +17,7 @@ describe Minicron::Transport::Server do
     context 'when the server is not running' do
       it 'should return true' do
         server.should_receive(:running?).and_return false
-        thin_server.should_receive(:new).and_return thin_server
+      	thin_server.should_receive(:new).and_return thin_server
         thin_server.stub(:start)
 
         expect(server.start!('127.0.0.1', 1337, '/lol')).to eq true
@@ -37,8 +37,6 @@ describe Minicron::Transport::Server do
     context 'when the server is running' do
       it 'should return true' do
         server.should_receive(:running?).and_return true
-        server.should_receive(:server).and_return thin_server
-        server.should_receive(:server).and_return thin_server
         thin_server.should_receive(:stop).and_return true
 
         expect(server.stop!).to eq true
@@ -49,8 +47,6 @@ describe Minicron::Transport::Server do
   describe '#running?' do
     context 'when the server is not running' do
       it 'should return false' do
-        server.should_receive(:server).and_return thin_server
-        server.should_receive(:server).and_return thin_server
         thin_server.should_receive(:running?).and_return false
 
         expect(server.running?).to eq false
@@ -59,8 +55,6 @@ describe Minicron::Transport::Server do
 
     context 'when the server is running' do
       it 'should return true' do
-        server.should_receive(:server).and_return thin_server
-        server.should_receive(:server).and_return thin_server
         thin_server.should_receive(:running?).and_return true
 
         expect(server.running?).to eq true

@@ -242,8 +242,7 @@ module Minicron
       monitor.start!
 
       # Start the server!
-      server = Minicron::Transport::Server.new
-      server.start!(
+      Minicron::Transport::Server.start!(
         Minicron.config['server']['host'],
         Minicron.config['server']['port'],
         Minicron.config['server']['path']
@@ -288,7 +287,7 @@ module Minicron
     # Add the `minicron server` command
     def add_server_cli_command
       @cli.command :server do |c|
-        c.syntax = 'minicron server [start|stop|restart|status]'
+        c.syntax = 'minicron server [start|stop|status]'
         c.description = 'Controls the minicron server.'
         c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
         c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
@@ -313,8 +312,6 @@ module Minicron
             insidious.start! { start_server }
           when 'stop'
             insidious.stop!
-          when 'restart'
-            insidious.restart! { start_server }
           when 'status'
             if insidious.running?
               puts 'minicron is running'

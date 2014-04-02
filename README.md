@@ -144,7 +144,7 @@ by default it will bind to port 9292 on the host 127.0.0.1 but this can be confi
 arguments ````--host```` ````--port```` and ````--path```` or in the config file.
 
 By default the server will run as a daemon with its process id stored in ````/tmp/minicron.pid````
-you can also use the ````stop```` ````restart```` and ````status```` commands to control the server.
+you can also use the ````stop```` and ````status```` commands to control the server.
 
 To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the ````--debug````
 option.
