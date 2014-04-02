@@ -2,6 +2,7 @@ require 'pty'
 require 'English'
 require 'rainbow/ext/string'
 require 'commander'
+require 'insidious'
 require 'minicron/constants'
 require 'minicron/transport'
 require 'minicron/transport/client'
@@ -233,6 +234,21 @@ module Minicron
       ids
     end
 
+    # Start the server and monitor
+    def start_server
+      # Run the execution monitor (this runs in a separate thread)
+      monitor = Minicron::Monitor.new
+      monitor.start!
+
+      # Start the server!
+      server = Minicron::Transport::Server.new
+      server.start!(
+        Minicron.config['server']['host'],
+        Minicron.config['server']['port'],
+        Minicron.config['server']['path']
+      )
+    end
+
     # Add the `minicron db` command
     def add_db_cli_command
       @cli.command :db do |c|
@@ -271,8 +287,8 @@ module Minicron
     # Add the `minicron server` command
     def add_server_cli_command
       @cli.command :server do |c|
-        c.syntax = 'minicron server'
-        c.description = 'Starts the minicron server.'
+        c.syntax = 'minicron server [start|stop|restart|status]'
+        c.description = 'Controls the minicron server.'
         c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
         c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
         c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
@@ -281,17 +297,28 @@ module Minicron
           # Parse the file and @cli config options
           parse_config(opts)
 
-          # Run the execution monitor (this runs in a separate thread)
-          monitor = Minicron::Monitor.new
-          monitor.start!
+          # If we get no arguments then default the action to start
+          action = args.first.nil? ? 'start' : args.first
 
-          # Start the server!
-          server = Minicron::Transport::Server.new
-          server.start!(
-            Minicron.config['server']['host'],
-            Minicron.config['server']['port'],
-            Minicron.config['server']['path']
+          # Get an instance of insidious and set the pid file
+          insidious = Insidious.new(
+            :pid_file => '/tmp/minicron.pid'
           )
+
+          case action
+          when 'start'
+            insidious.start! { start_server }
+          when 'stop'
+            insidious.stop!
+          when 'restart'
+            insidious.restart! { start_server }
+          when 'status'
+            if insidious.running?
+              puts 'minicron is running'
+            else
+              puts 'minicron is not running'
+            end
+          end
         end
       end
     end
