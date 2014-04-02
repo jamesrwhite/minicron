@@ -33,14 +33,59 @@
         <h1>
 <a name="minicron" class="anchor" href="#minicron"><span class="octicon octicon-link"></span></a>minicron</h1>
 
-<p><a href="http://travis-ci.org/jamesrwhite/minicron"><img src="https://api.travis-ci.org/jamesrwhite/minicron.png" alt="Build Status"></a> <a href="https://codeclimate.com/github/jamesrwhite/minicron"><img src="https://codeclimate.com/github/jamesrwhite/minicron.png" alt="Code Climate"></a> <a href="https://gemnasium.com/jamesrwhite/minicron"><img src="https://gemnasium.com/jamesrwhite/minicron.png" alt="Dependency Status"></a> <a href="http://inch-pages.github.io/github/jamesrwhite/minicron"><img src="http://inch-pages.github.io/github/jamesrwhite/minicron.png" alt="Inline docs"></a></p>
+<p><a href="https://rubygems.org/gems/minicron"><img src="http://img.shields.io/gem/v/minicron.svg" alt="Gem Version"></a>
+<a href="http://travis-ci.org/jamesrwhite/minicron"><img src="http://img.shields.io/travis/jamesrwhite/minicron.svg" alt="Build Status"></a>
+<a href="https://coveralls.io/r/jamesrwhite/minicron?branch=master"><img src="http://img.shields.io/coveralls/jamesrwhite/minicron.svg" alt="Coverage Status"></a>
+<a href="https://codeclimate.com/github/jamesrwhite/minicron"><img src="http://img.shields.io/codeclimate/github/jamesrwhite/minicron.svg" alt="Code Climate"></a>
+<a href="https://gemnasium.com/jamesrwhite/minicron"><img src="http://img.shields.io/gemnasium/jamesrwhite/minicron.svg" alt="Dependency Status"></a>
+<a href="http://inch-pages.github.io/github/jamesrwhite/minicron"><img src="http://inch-pages.github.io/github/jamesrwhite/minicron.png" alt="Inline docs"></a></p>
 
-<p>minicron aims to complement <code>cron</code> by making it easier to manage and monitor cron jobs, it can largely be thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides a web interface to the data and makes it easy to manage your cron jobs.</p>
+<p>minicron aims to complement <code>cron</code> by making it easier to manage and monitor cron jobs, it can largely be
+thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your
+server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point
+where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides
+a web interface to the data and makes it easy to manage your cron jobs.</p>
+
+<ul>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#background">Background</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#goals">Features</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements">Requirements</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#installation">Installation</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#usage">Usage</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#documentation">Documentation</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#versioning">Versioning</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#contributing">Contributing</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#support">Support</a></li>
+<li><a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#license">License</a></li>
+</ul><h2>
+<a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
+
+<p>I'm developing minicron as part of my dissertation at university which is due in May but I plan to continue
+development after that. My inspiration for developing minicron comes from time spent working at
+<a href="http://www.miniclip.com">Miniclip</a> where the management and monitoring of cron jobs at times proved to be tricky!</p>
 
 <h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
-<p>minicron is currently under heavy development, I plan to release version 0.1 to rubygems shortly but I would not recommend relying on it yet. If you wish to test the current version you can clone this repo <code>bundle install</code> and <code>rake install</code>. Set your database configuration options in <code>/etc/minicron.toml</code> and you can then <code>minicron db load</code> to setup the db structure.</p>
+<ul>
+<li>Web UI
+
+<ul>
+<li>CRUD for cron jobs using ssh</li>
+<li>GUI for cron schedule create/read/update</li>
+<li>View realtime output/status as jobs run</li>
+<li>Historical data for all job executions</li>
+</ul>
+</li>
+<li>Alerts when jobs executions are missed or fail via:
+
+<ul>
+<li>Email</li>
+<li>SMS (<a href="https://www.twilio.com">using Twilio</a>)</li>
+<li><a href="www.pagerduty.com">PagerDuty</a></li>
+</ul>
+</li>
+</ul><p>Lots more is planned for the future, see issues tagged <a href="https://github.com/jamesrwhite/minicron/issues?labels=feature&amp;milestone=&amp;page=1&amp;state=open">feature</a>.</p>
 
 <h2>
 <a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
@@ -49,27 +94,13 @@
 <a name="ruby" class="anchor" href="#ruby"><span class="octicon octicon-link"></span></a>Ruby</h4>
 
 <ul>
-<li>MRI
-
-<ul>
-<li>1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)</li>
-</ul>
+<li>
+<strong>MRI</strong>: 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)</li>
+<li>
+<del><strong>Rubinius</strong>: Travis builds are run on the latest release</del> <a href="https://github.com/rubinius/rubinius/issues/2944"><em>awaiting bug fix</em></a>
 </li>
 <li>
-<del>Rubinius</del>
-
-<ul>
-<li>
-<del>Travis builds are run on the latest release</del> <a href="https://github.com/rubinius/rubinius/issues/2944"><em>awaiting bug fix</em></a>
-</li>
-</ul>
-</li>
-<li>JRuby
-
-<ul>
-<li>As yet untested</li>
-</ul>
-</li>
+<strong>JRuby:</strong> currently untested but most likely needs some workn</li>
 </ul><h4>
 <a name="database" class="anchor" href="#database"><span class="octicon octicon-link"></span></a>Database</h4>
 
@@ -77,66 +108,151 @@
 <li>MySQL</li>
 <li>Support for PostgreSQL and SQlite is planned in the future</li>
 </ul><h4>
+<a name="web-server--reverse-proxy" class="anchor" href="#web-server--reverse-proxy"><span class="octicon octicon-link"></span></a>Web Server / Reverse Proxy</h4>
+
+<p>If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
+nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">example config</a> for nginx.</p>
+
+<h4>
 <a name="browser" class="anchor" href="#browser"><span class="octicon octicon-link"></span></a>Browser</h4>
 
-<ul>
-<li>I have been testing the web interface in the latest versions of Chrome, Firefox and Safari. I'm currently unsure of how it functions in the various of Internet Explorer but in theory it should support IE9+</li>
-</ul><h4>
+<p>I have been testing the web interface in the latest versions of Chrome, Firefox and Safari.
+I'm currently unsure of how it functions in the various of Internet Explorer but in theory it should support IE9+</p>
+
+<h4>
 <a name="os" class="anchor" href="#os"><span class="octicon octicon-link"></span></a>OS</h4>
 
-<ul>
-<li>Should run on any linux/bsd based OS that the above ruby versions run on.</li>
-<li>No windows support.</li>
-</ul><h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<p>Should run on any linux/bsd based OS that the above ruby versions run on.</p>
 
-<p>minicron is packaged as a gem and can be interacted with from the command line once you have installed it. The current commands are as follows:</p>
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>minicron is currently under heavy development and as such I would not recommend that you use this in production yet
+but I encourage you to give it a try in a non critical environment and help me to improve it.</p>
+
+<ol>
+<li><p>First check you meet the <a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements">requirements</a></p></li>
+<li><p>On some distributions you may need to install the <code>ruby-dev</code> and <code>build-essential</code> packages</p></li>
+<li><p>To install the latest release (currently 0.2) you can <code>gem install minicron</code>, depending on your ruby setup
+you may need to run this with <code>sudo</code></p></li>
+<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml">default.config.toml</a> as a guide on what options are configurable</p></li>
+<li>
+<p>Make sure you have created an empty database with the name you set in <code>/etc/minicron.toml</code></p>
+
+<blockquote>
+<p><strong>WARNING</strong></p>
+
+<p>the step below will drop any existing tables in the configured database and create new ones i.e:</p>
+
+<div class="highlight highlight-sql"><pre><span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">jobs</span><span class="p">;</span> <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">jobs</span> <span class="p">..</span>
+</pre></div>
+</blockquote>
+</li>
+<li><p>You can then <code>minicron db setup</code> to create the database schema, alternatively you can use
+the <a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql">schema dump provided</a></p></li>
+<li><p>Done! See the usage section below for more details on how to use minicron now you have it installed</p></li>
+</ol><h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
 <h4>
 <a name="run-a-command" class="anchor" href="#run-a-command"><span class="octicon octicon-link"></span></a>Run a command</h4>
 
-<pre><code>minicron run 'command --options'
-</code></pre>
+<div class="highlight highlight-bash"><pre>minicron run <span class="s1">'mysqldump db &gt; backup.sql'</span>
+</pre></div>
 
-<p>You can alter the way in which the command alters it's output by passing the --mode option to the run argument with the value of either 'line' or 'char'. Most of the time you'll want to use the default value of line but for some commands e.g a script that outputs a progress bar minicron printing the output each character at a time can be useful.</p>
+<p>The global <code>--verbose</code> option can also be passed to the <code>run</code> argument like so</p>
 
-<pre><code>minicron run 'mysqldump db &gt; backup.sql'
-</code></pre>
+<div class="highlight highlight-bash"><pre>minicron run --verbose ls
+</pre></div>
 
-<p>The global <code>--verbose</code> option can also be passed to the <code>run</code> argument like so <code>minicron run --verbose ls</code>, for further information see <code>minicron help run</code>.</p>
+<p>You can also run a command in 'dry run' mode to test if it works without sending the output to the server.</p>
+
+<div class="highlight highlight-bash"><pre>minicron run --dry-run <span class="s1">'zip -r backup.zip website'</span>
+</pre></div>
+
+<p>for further information see <code>minicron help run</code>.</p>
 
 <h4>
 <a name="get-help" class="anchor" href="#get-help"><span class="octicon octicon-link"></span></a>Get help</h4>
 
-<p>Running <code>minicron</code> with no arguments is an alias to running <code>minicron help</code>, <code>minicron -h</code> or <code>minicron --help</code>. You can also use the help argument to get information on any command as shown above in the run a command section or alternatively you can pass the <code>-h</code> or <code>--help</code> options like so <code>minicron run -h</code>.</p>
+<p>Running <code>minicron</code> with no arguments is an alias to running <code>minicron help</code>, <code>minicron -h</code> or <code>minicron --help</code>.
+You can also use the help argument to get information on any command as shown above in the run a command section
+or alternatively you can pass the <code>-h</code> or <code>--help</code> options like so <code>minicron run -h</code>.</p>
 
 <h4>
 <a name="server" class="anchor" href="#server"><span class="octicon octicon-link"></span></a>Server</h4>
 
-<p>To launch the server (aka the Hub) run <code>minicron server</code> - by default it will bind to port 9292 on the host 127.0.0.1. See <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">sample.nginx.conf</a> for an example of how to run minicron behind a reverse proxy.</p>
+<p>To launch the server (aka the Hub) run</p>
+
+<div class="highlight highlight-bash"><pre>minicron server start
+</pre></div>
+
+<p>by default it will bind to port 9292 on the host 127.0.0.1 but this can be configured by the command line
+arguments <code>--host</code> <code>--port</code> and <code>--path</code> or in the config file.</p>
+
+<p>By default the server will run as a daemon with its process id stored in <code>/tmp/minicron.pid</code>
+you can also use the <code>stop</code> <code>restart</code> and <code>status</code> commands to control the server.</p>
+
+<p>To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the <code>--debug</code>
+option.</p>
+
+<p>See <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">sample.nginx.conf</a> for an example of
+how to run minicron behind a reverse proxy.</p>
+
+<h4>
+<a name="connecting-to-a-host-via-ssh" class="anchor" href="#connecting-to-a-host-via-ssh"><span class="octicon octicon-link"></span></a>Connecting to a host via SSH</h4>
+
+<p>To be able to perform CRUD operations on the crontab minicron needs to connect via SSH to the host.
+When you set up a host minicron automatically creates a public/private key pair for you and stores it
+in <code>~/.ssh</code> on the host the minicron server is being run on using the naming schema <code>minicron_host_*HOST_ID*_rsa(.pub)</code>.
+To be able edit the crontab on a host minicron <em>needs</em> to connect to the host as the root user so you will
+need to to copy the public key to the hosts authorized_keys file e.g <code>/root/.ssh/authorized_keys</code> on
+most linux distributions or <code>/var/root/.ssh/authorized_keys</code> on OSX.</p>
 
 <h4>
 <a name="version" class="anchor" href="#version"><span class="octicon octicon-link"></span></a>Version</h4>
 
-<p>Like many command line programs minicron will show it's version number when the global options <code>-v</code> or <code>--version</code> are passed to the CLI.</p>
+<p>Like many command line programs minicron will show it's version number when the global options <code>-v</code>
+or <code>--version</code> are passed to the CLI.</p>
 
 <h4>
 <a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h4>
 
-<p>Some configuration options can be passed in manually but the recommend way to configure minicron is through the use of a config file. You can specify the path to the file using the <code>--config</code> global option. The file is expected to be in the <a href="https://github.com/mojombo/toml" title="toml">toml</a> format. The default options are specified in the <a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml" title="default.config.toml">default.config.toml</a> file and minicron will parse a config located in <code>/etc/minicron.toml</code> if it exists. Options specified via the command line will take precedence over those taken from a config file.</p>
+<p>Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
+of a config file. You can specify the path to the file using the <code>--config</code> global option. The file is expected
+to be in the <a href="https://github.com/mojombo/toml" title="toml">toml</a> format. The default options are specified in the
+<a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml" title="default.config.toml">default.config.toml</a>
+file and minicron will parse a config located in <code>/etc/minicron.toml</code> if it exists. Options specified via
+the command line will take precedence over those taken from a config file.</p>
 
 <h2>
 <a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
 
-<p>minicron uses <a href="http://yardoc.org/" title="Yard">Yard</a> for it's documentation, you can either generate it and view it locally using the following commands:</p>
+<p>minicron uses <a href="http://yardoc.org/" title="Yard">Yard</a> for it's code documentation, you can either generate it and view
+it locally using the following commands:</p>
 
-<pre><code>yard doc
+<div class="highlight highlight-bash"><pre>yard doc
 yard server
-</code></pre>
+</pre></div>
 
 <p>or view the most up to date version online at <a href="http://rdoc.info/github/jamesrwhite/minicron/master/frames" title="RubyDoc.info">RubyDoc.info</a>.</p>
 
 <h2>
+<a name="versioning" class="anchor" href="#versioning"><span class="octicon octicon-link"></span></a>Versioning</h2>
+
+<p>Where possible all releases will follow the <a href="http://semver.org/">semantic versioning</a> guidelines.</p>
+
+<p>Releases will be numbered with the following format:</p>
+
+<p><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code></p>
+
+<p>Based on the following guidelines:</p>
+
+<ul>
+<li>A new <em>major</em> release indicates a large change where backwards compatibility is broken.</li>
+<li>A new <em>minor</em> release indicates a normal change that maintains backwards compatibility.</li>
+<li>A new <em>patch</em> release indicates a bugfix or small change which does not affect compatibility.</li>
+</ul><h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <p>Feedback and pull requests are welcome, please see <a href="https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md" title="CONTRIBUTING.md">CONTRIBUTING.md</a> for more info.</p>
@@ -145,19 +261,16 @@ yard server
 
 <ul>
 <li>Any of the unassigned <a href="https://github.com/jamesrwhite/minicron/issues?state=open">issues here</a>.</li>
-<li>General testing of the system, let me know what you think and create issues for any issues you find!</li>
+<li>General testing of the system, let me know what you think and create issues for any bugs you find!</li>
 <li>Tests!!</li>
 <li>Validation and error handling improvements</li>
-<li>Documentation improvements. Find something confusing or unexpected, let me know and I'll document it!</li>
-<li>Look for <code>TODO:</code> notices littered around the code, I'm trying to convert them all to issues but there are a lot.</li>
-<li>Code refactoring, I had to have 0.1 ready by a certain deadline so some parts are far from perfect.</li>
+<li>Documentation improvements. Find something confusing or unexpected, let me know and I'll add or improve
+documentation for it!</li>
+<li>Look for '<a href="https://github.com/jamesrwhite/minicron/search?q=TODO%3A">TODO:</a>' notices littered around the code,
+I'm trying to convert them all to issues but there are a lot..</li>
+<li>Code refactoring, I had a reasonably tight deadline to have the main concept done by so some parts are a bit rushed</li>
 <li>UI improvements</li>
 </ul><h2>
-<a name="code-style" class="anchor" href="#code-style"><span class="octicon octicon-link"></span></a>Code Style</h2>
-
-<p>Where possible I'm trying to follow <a href="https://github.com/bbatsov/ruby-style-guide" title="Ruby Community Styleguide">Ruby Community Styleguide</a></p>
-
-<h2>
 <a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h2>
 
 <p>Where possible I will try and provide support for minicron, you can get in touch with me via:</p>
