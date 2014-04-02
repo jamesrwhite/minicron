@@ -28,6 +28,7 @@ describe Minicron::Transport::Server do
   describe '#stop!' do
     context 'when the server is not running' do
       it 'should return false' do
+        server.server = nil
         server.should_receive(:running?).and_return false
 
         expect(server.stop!).to eq false
@@ -36,6 +37,7 @@ describe Minicron::Transport::Server do
 
     context 'when the server is running' do
       it 'should return true' do
+        server.server = thin_server
         server.should_receive(:running?).and_return true
         thin_server.should_receive(:stop).and_return true
 
@@ -47,7 +49,8 @@ describe Minicron::Transport::Server do
   describe '#running?' do
     context 'when the server is not running' do
       it 'should return false' do
-        expect(server.running?).to eq false
+        server.server = nil
+        expect(Minicron::Transport::Server.running?).to eq false
       end
     end
 
