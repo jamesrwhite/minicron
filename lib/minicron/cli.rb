@@ -35,7 +35,8 @@ module Minicron
         'server' => {
           'host' => opts.host,
           'port' => opts.port,
-          'path' => opts.path
+          'path' => opts.path,
+          'debug' => opts.debug
         }
       )
     end
@@ -292,6 +293,7 @@ module Minicron
         c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
         c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
         c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
+        c.option '--debug', "Enable debug mode. Default: #{Minicron.config['server']['debug']}"
 
         c.action do |args, opts|
           # Parse the file and @cli config options
@@ -302,7 +304,8 @@ module Minicron
 
           # Get an instance of insidious and set the pid file
           insidious = Insidious.new(
-            :pid_file => '/tmp/minicron.pid'
+            :pid_file => '/tmp/minicron.pid',
+            :daemonize => Minicron.config['server']['debug'] == false
           )
 
           case action

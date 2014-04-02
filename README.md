@@ -146,6 +146,9 @@ arguments ````--host```` ````--port```` and ````--path```` or in the config file
 By default the server will run as a daemon with its process id stored in ````/tmp/minicron.pid````
 you can also use the ````stop```` ````restart```` and ````status```` commands to control the server.
 
+To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the ````--debug````
+option.
+
 See [sample.nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for an example of
 how to run minicron behind a reverse proxy.
 

@@ -23,7 +23,8 @@ module Minicron
     'server' => {
       'host' => '127.0.0.1',
       'port' => 9292,
-      'path' => '/'
+      'path' => '/',
+      'debug' => false
     },
     'database' => {
       'type' => 'mysql',
