@@ -55,6 +55,7 @@ describe Minicron::Transport::Server do
 
     context 'when the server is running' do
       it 'should return true' do
+        server.server = thin_server
         thin_server.should_receive(:running?).and_return true
 
         expect(server.running?).to eq true

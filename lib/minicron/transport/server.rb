@@ -5,7 +5,11 @@ module Minicron
   module Transport
     # Used to mangage the web server minicron runs on
     class Server
-      attr_reader :server
+      @server = nil
+
+      class << self
+        attr_accessor :server
+      end
 
       # Starts the thin server
       #
