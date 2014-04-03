@@ -159,4 +159,16 @@ describe Minicron do
       `rm ~/.ssh/minicron_rspec_1337_rsa*`
     end
   end
+
+  describe '.get_fqdn' do
+    it 'should return the fqdn as a string with no newline' do
+      expect(Minicron.get_fqdn).to eq `hostname -f`.strip
+    end
+  end
+
+  describe '.get_hostname' do
+    it 'should return the hostname as a string with no newline' do
+      expect(Minicron.get_hostname).to eq `hostname -s`.strip
+    end
+  end
 end
