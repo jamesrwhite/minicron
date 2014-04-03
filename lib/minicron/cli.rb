@@ -318,6 +318,8 @@ module Minicron
             else
               puts 'minicron is not running'
             end
+          else
+            fail ArgumentError, 'Invalid action, expected [start|stop|status]. See `minicron help server`'
           end
         end
       end
