@@ -44,6 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'twilio-ruby', '~> 3.1', '>= 3.11.5'
   spec.add_runtime_dependency 'pagerduty', '~> 1.3', '>= 1.3.4'
   spec.add_runtime_dependency 'insidious', '~> 0.1'
+  spec.add_runtime_dependency 'escape', '0.0.4'
 
   # Databases we want to support
   spec.add_runtime_dependency 'mysql2', '~> 0.3', '>= 0.3.15'

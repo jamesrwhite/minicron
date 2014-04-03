@@ -1,4 +1,4 @@
-require 'shellwords'
+require 'escape'
 
 module Minicron
   # Used to interact with the crontab on hosts over an ssh connection
@@ -13,24 +13,16 @@ module Minicron
       @ssh = ssh
     end
 
-    # Escape the quotes in a command
-    #
-    # @param command [String]
-    # @return [String]
-    def escape_command(command)
-      command.gsub(/\\|'/) { |c| "\\#{c}" }
-    end
-
     # Build the minicron command to be used in the crontab
     #
     # @param command [String]
     # @param schedule [String]
     # @return [String]
     def build_minicron_command(command, schedule)
-      # Escape any quotes in the command
-      command = escape_command(command)
+      # Escape the command so it will work in bourne shells
+      cron_command = Escape.shell_command(["minicron run '#{command}'"])
 
-      "#{schedule} root minicron run '#{command}'"
+      "#{schedule} root #{cron_command}"
     end
 
     # Used to find a string and replace it with another in the crontab by
