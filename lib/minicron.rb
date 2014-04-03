@@ -93,7 +93,7 @@ module Minicron
           end
         end
       else
-        options[key] = value
+        @config[key] = value
       end
     end
   end
