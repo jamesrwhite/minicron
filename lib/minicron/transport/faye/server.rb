@@ -13,7 +13,7 @@ module Minicron
         Faye::WebSocket.load_adapter('thin')
 
         # Show debug verbose output if requested
-        if Minicron.config['global']['verbose']
+        if Minicron.config['verbose']
           log = Logger.new(STDOUT)
           log.level = Logger::DEBUG
           Faye.logger = log
@@ -35,23 +35,23 @@ module Minicron
 
       def add_faye_events
         @server.on(:handshake) do |client_id|
-          p [:handshake, client_id] if Minicron.config['global']['verbose']
+          p [:handshake, client_id] if Minicron.config['verbose']
         end
 
         @server.on(:subscribe) do |client_id, channel|
-          p [:subscribe, client_id, channel] if Minicron.config['global']['verbose']
+          p [:subscribe, client_id, channel] if Minicron.config['verbose']
         end
 
         @server.on(:unsubscribe) do |client_id, channel|
-          p [:unsubscribe, client_id, channel] if Minicron.config['global']['verbose']
+          p [:unsubscribe, client_id, channel] if Minicron.config['verbose']
         end
 
         @server.on(:publish) do |client_id, channel, data|
-          p [:published, client_id, channel, data] if Minicron.config['global']['verbose']
+          p [:published, client_id, channel, data] if Minicron.config['verbose']
         end
 
         @server.on(:disconnect) do |client_id|
-          p [:disconnect, client_id] if Minicron.config['global']['verbose']
+          p [:disconnect, client_id] if Minicron.config['verbose']
         end
       end
     end

@@ -1,7 +1,6 @@
 # Example config file
 
 # Global options
-[global]
 verbose = false
 trace = false
 

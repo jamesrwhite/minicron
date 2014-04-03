@@ -53,7 +53,7 @@ module Minicron
             begin
               monitor(schedule)
             rescue Exception => e
-              if Minicron.config['global']['trace']
+              if Minicron.config['trace']
                 puts e.message
                 puts e.backtrace
               end

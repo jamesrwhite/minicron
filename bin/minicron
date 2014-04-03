@@ -19,7 +19,7 @@ rescue Interrupt, SignalException
 rescue Exception => e
   $stderr.write("#{e.message}\n")
 
-  if Minicron.config['cli']['trace']
+  if Minicron.config['trace']
     puts
     fail e
   end

@@ -127,7 +127,7 @@ module Minicron
               end
 
               # Execute the command and yield the output
-              Minicron::CLI.run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['global']['verbose']) do |output|
+              Minicron::CLI.run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
                 when :status

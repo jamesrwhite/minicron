@@ -104,7 +104,7 @@ module Minicron::Hub
     end
 
     def handle_exception(env, e, status)
-      if Minicron.config['global']['trace']
+      if Minicron.config['trace']
         env['rack.errors'].puts(e)
         env['rack.errors'].puts(e.backtrace.join("\n"))
         env['rack.errors'].flush
@@ -114,7 +114,7 @@ module Minicron::Hub
       hash = { :error => e.to_s }
 
       # Display the full trace if tracing is enabled
-      hash[:trace] = e.backtrace if Minicron.config['global']['trace']
+      hash[:trace] = e.backtrace if Minicron.config['trace']
 
       [status, { 'Content-Type' => 'application/json' }, [hash.to_json]]
     end

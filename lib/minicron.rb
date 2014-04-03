@@ -7,10 +7,8 @@ require 'minicron/constants'
 module Minicron
   # Default configuration, this can be overriden
   @config = {
-    'global' => {
-      'verbose' => false,
-      'trace' => false
-    },
+    'verbose' => false,
+    'trace' => false,
     'client' => {
       'scheme' => 'http',
       'host' => '127.0.0.1',
@@ -87,11 +85,15 @@ module Minicron
   # @option options [Hash] server server options
   # @option options [Hash] cli cli options
   def self.parse_cli_config(options = {})
-    options.each do |type, _|
-      options[type].each do |key, value|
-        if value
-          @config[type][key] = value
+    options.each do |key, value|
+      if options[key].respond_to?(:each)
+        options[key].each do |k, v|
+          if !v.nil?
+            @config[key][k] = v
+          end
         end
+      else
+        options[key] = value
       end
     end
   end

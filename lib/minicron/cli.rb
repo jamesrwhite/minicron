@@ -25,10 +25,8 @@ module Minicron
 
       # Parse the cli options
       Minicron.parse_cli_config(
-        'global' => {
-          'verbose' => opts.verbose,
-          'trace' => opts.trace
-        },
+        'verbose' => opts.verbose,
+        'trace' => opts.trace,
         'cli' => {
           'mode' => opts.mode,
           'dry_run' => opts.dry_run
@@ -196,12 +194,12 @@ module Minicron
 
       # Check if --trace was pased or not
       if @cli.instance_variable_get(:@args).include? '--trace'
-        Minicron.config['global']['trace'] = true
+        Minicron.config['trace'] = true
       end
 
       # Add a global option for verbose mode
       @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['cli']['verbose']}" do
-        Minicron.config['global']['verbose'] = true
+        Minicron.config['verbose'] = true
       end
 
       # Add a global option for passing the path to a config file

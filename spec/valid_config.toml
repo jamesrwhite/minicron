@@ -1,7 +1,6 @@
 # Test valid config file
 
 # Global options
-[global]
 verbose = true
 trace = false
 
