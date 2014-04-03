@@ -124,11 +124,41 @@ describe Minicron do
     end
 
     context 'when a non existent toml file is passed' do
-      it 'should update the config class variable with the toml file config' do
+      it 'should raise an Exception' do
         expect do
           Minicron.parse_file_config('./nowhere/minicron.toml')
         end.to raise_error Exception
       end
+    end
+
+    context 'when a file without read permissions is passed' do
+      before (:each) do
+        File.write('/tmp/minicron_toml_test', '')
+        File.chmod(0200, '/tmp/minicron_toml_test')
+      end
+
+      it 'should raise an Exception' do
+        expect do
+          Minicron.parse_file_config('/tmp/minicron_toml_test')
+        end.to raise_error Exception
+      end
+
+      after (:each) do
+        File.delete('/tmp/minicron_toml_test')
+      end
+    end
+  end
+
+  describe '.generate_ssh_key' do
+    it 'should generate an ssh key pub/priv pair' do
+      Minicron.generate_ssh_key('rspec', 1337, 'rspec')
+
+      expect(File.exists?(File.expand_path('~/.ssh/minicron_rspec_1337_rsa'))).to eq true
+      expect(File.exists?(File.expand_path('~/.ssh/minicron_rspec_1337_rsa.pub'))).to eq true
+    end
+
+    after (:each) do
+      `rm ~/.ssh/minicron_rspec_1337_rsa*`
     end
   end
 end
