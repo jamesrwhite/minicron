@@ -77,7 +77,7 @@ module Minicron
         raise Exception, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
     rescue Errno::EACCES
-      fail Exception, "Unable to the readthe file '#{file_path}', check it has the right permissions."
+      fail Exception, "Unable to the read the file '#{file_path}', check it has the right permissions."
     rescue TOML::ParseError
       fail Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
     end
