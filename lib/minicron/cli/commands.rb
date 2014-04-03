@@ -148,7 +148,7 @@ module Minicron
                 faye.send(:job_id => ids[:job_id], :execution_id => ids[:execution_id], :type => :output, :message => e.message)
               end
 
-              raise e
+              raise Exception, e
             ensure
               # Ensure that all messages are delivered and that we
               unless Minicron.config['cli']['dry_run']
