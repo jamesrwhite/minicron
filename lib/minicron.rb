@@ -1,7 +1,6 @@
 require 'stringio'
 require 'toml'
 require 'sshkey'
-require 'minicron/cli'
 require 'minicron/constants'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>

@@ -1,12 +1,13 @@
 #!/usr/bin/env ruby
 require 'minicron'
+require 'minicron/cli'
 require 'minicron/transport/server'
 
 begin
   # Capture any output from STDERR so we can handle it how we want to
   Minicron.capture_output(:type => :stderr) do
     # Run the CLI and pass it all arguments passed to us
-    Minicron::CLI.new.run(ARGV) do |output|
+    Minicron::CLI.run(ARGV) do |output|
       print output
       STDOUT.flush
     end
