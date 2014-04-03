@@ -20,7 +20,7 @@ module Minicron
     # @return [String]
     def build_minicron_command(command, schedule)
       # Escape the command so it will work in bourne shells
-      cron_command = Escape.shell_command(["minicron run '#{command}'"])
+      cron_command = Escape.shell_command(['/bin/bash', '-l', '-c', "minicron run '#{command}'"])
 
       "#{schedule} root #{cron_command}"
     end
