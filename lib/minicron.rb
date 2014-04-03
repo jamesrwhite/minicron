@@ -143,21 +143,6 @@ module Minicron
     end
   end
 
-  # Sanitize a filename - taken from http://guides.rubyonrails.org/security.html
-  #
-  # @param filename [String]
-  # @return [String]
-  def self.sanitize_filename(filename)
-    filename.strip.tap do |name|
-      name.sub!(/\A.*(\\|\/)/, '')
-      # Finally, replace all non alphanumeric, underscore
-      # or periods with underscore
-      name.gsub!(/[^\w\.\-]/, '_')
-    end
-
-    filename
-  end
-
   # Used to generate SSH keys for hosts but is completely generic
   #
   # @param type [String] the thing that is using the key, this is just here
@@ -168,8 +153,8 @@ module Minicron
     key = SSHKey.generate(:comment => "minicron public key for #{name}")
 
     # Set the locations to save the public key private key pair
-    private_key_path = sanitize_filename(File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa"))
-    public_key_path = sanitize_filename(File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa.pub"))
+    private_key_path = File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa")
+    public_key_path = File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa.pub")
 
     # Save the public key private key pair
     File.write(private_key_path, key.private_key)
