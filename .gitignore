@@ -31,6 +31,9 @@ tmp
 # Ignore all logfiles and tempfiles.
 /log/*.log
 
+# Ignore sass cache
+.sass-cache
+
 # My random testing scripts
 testing
 newrelic.yml
