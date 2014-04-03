@@ -80,7 +80,7 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(%w(lol --trace))
+              Minicron::CLI.run(%w(gfdgdfg --trace))
             end.to raise_error SystemExit
           end
         end

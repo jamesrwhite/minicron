@@ -96,7 +96,7 @@ module Minicron
 
       # Tidy up after we are done with the client
       def tidy_up
-        EM.stop
+        EM.stop if EM.reactor_running?
       end
     end
   end

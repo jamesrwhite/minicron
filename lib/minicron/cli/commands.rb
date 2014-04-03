@@ -162,20 +162,6 @@ module Minicron
 
       private
 
-      # Get the system fully qualified domain name
-      #
-      # @return [String]
-      def self.get_fqdn
-        `hostname -f`.strip
-      end
-
-      # Get the system short hostname
-      #
-      # @return [String]
-      def get_hostname
-        `hostname -s`.strip
-      end
-
       # Setup a job by sending the SETUP command to the server
       #
       # @param command [String] the job command
@@ -183,10 +169,10 @@ module Minicron
       # @return [Hash] the job_id and execution_id
       def self.setup_job(command, faye)
         # Get the fully qualified domain name of the currnet host
-        fqdn = get_fqdn
+        fqdn = Minicron.get_fqdn
 
         # Get the short hostname of the current host
-        hostname = get_hostname
+        hostname = Minicron.get_hostname
 
         # Get the md5 hash for the job
         job_hash = Minicron::Transport.get_job_hash(command, fqdn)

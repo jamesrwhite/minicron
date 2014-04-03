@@ -167,4 +167,18 @@ module Minicron
 
     key
   end
+
+  # Get the system fully qualified domain name
+  #
+  # @return [String]
+  def self.get_fqdn
+    `hostname -f`.strip
+  end
+
+  # Get the system short hostname
+  #
+  # @return [String]
+  def self.get_hostname
+    `hostname -s`.strip
+  end
 end
