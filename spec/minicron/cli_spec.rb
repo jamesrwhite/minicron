@@ -42,7 +42,7 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(%w(lol --trace))
+              Minicron::CLI.run(%w(gfdjgfdlgj --trace))
             end.to raise_error SystemExit
           end
         end
@@ -80,7 +80,7 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(%w(gfdgdfg --trace))
+              Minicron::CLI.run(['dfsfsdfsdfs', '--trace'])
             end.to raise_error SystemExit
           end
         end
@@ -93,6 +93,16 @@ describe Minicron::CLI do
               Minicron::CLI.run(['run', '--dry-run', '--trace', '--config', './default.config.toml'])
             end.to raise_error ArgumentError
           end
+        end
+      end
+    end
+
+    context 'when run in --verbose mode' do
+      it 'should set the verbose to true' do
+        Minicron.capture_output :type => :stderr do
+          Minicron::CLI.run(['run', '--dry-run', '--trace', '--verbose', 'echo 1']) {}
+
+          expect(Minicron.config['verbose']).to eq true
         end
       end
     end
@@ -109,6 +119,14 @@ describe Minicron::CLI do
         end
 
         expect(output.split("\n").length).to eq 7
+      end
+    end
+
+    context 'when a non-existent command is run' do
+      it 'should raise an Exception' do
+        expect do
+          Minicron::CLI.run_command('fdsfsdfsd') {}
+        end.to raise_error Exception
       end
     end
   end
