@@ -80,11 +80,9 @@ module Minicron
     end
   end
 
-  # Parses the config options from the cli
-  # @option options [Hash] global global options
-  # @option options [Hash] server server options
-  # @option options [Hash] cli cli options
-  def self.parse_cli_config(options = {})
+  # Parses the config options from the given hash that matches the expected
+  # config format in Minicron.config
+  def self.parse_config_hash(options = {})
     options.each do |key, value|
       if options[key].respond_to?(:each)
         options[key].each do |k, v|

@@ -24,7 +24,7 @@ module Minicron
       Minicron.parse_file_config(opts.config)
 
       # Parse the cli options
-      Minicron.parse_cli_config(
+      Minicron.parse_config_hash(
         'verbose' => opts.verbose,
         'trace' => opts.trace,
         'cli' => {
