@@ -8,21 +8,19 @@ Gem::Specification.new do |spec|
   spec.version               = Minicron::VERSION
   spec.authors               = ['James White']
   spec.email                 = ['dev.jameswhite+minicron@gmail.com']
-  spec.summary               = 'cli for minicron; a system a to manage and monitor cron jobs'
-  spec.description           = %{
-    minicron is system that aims to make it easier to manage and monitor cron jobs.
-
-    For more info see the project README on GitHub.
-  }
+  spec.summary               = 'A system to make it easier to manage and monitor cron jobs'
   spec.homepage              = 'https://github.com/jamesrwhite/minicron'
   spec.license               = 'GPL-3.0'
-  spec.required_ruby_version = '>= 1.9.3'
   spec.post_install_message  = 'Thanks for installing minicron!'
 
   spec.require_paths = ['lib']
   spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,spec}/**/*']
   spec.test_files    = Dir['{spec}/**/*']
   spec.executables  << 'minicron'
+
+  spec.required_ruby_version = '>= 1.9.3'
+  spec.requirements << 'ruby-dev, you may need this for eventmachine'
+  spec.requirements << 'build-essential, you may need this for eventmachine'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
   spec.add_runtime_dependency 'commander', '~> 4.1', '>= 4.1.6'
