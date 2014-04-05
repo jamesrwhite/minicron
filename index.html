@@ -133,7 +133,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 <ol>
 <li><p>First check you meet the <a href="https://github.com/jamesrwhite/minicron/blob/master/README.md#requirements">requirements</a></p></li>
 <li><p>On some distributions you may need to install the <code>ruby-dev</code> and <code>build-essential</code> packages</p></li>
-<li><p>To install the latest release (currently 0.2) you can <code>gem install minicron</code>, depending on your ruby setup
+<li><p>To install the latest release (currently 0.3) you can <code>gem install minicron</code>, depending on your ruby setup
 you may need to run this with <code>sudo</code></p></li>
 <li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml">default.config.toml</a> as a guide on what options are configurable</p></li>
 <li>
@@ -191,7 +191,7 @@ or alternatively you can pass the <code>-h</code> or <code>--help</code> options
 arguments <code>--host</code> <code>--port</code> and <code>--path</code> or in the config file.</p>
 
 <p>By default the server will run as a daemon with its process id stored in <code>/tmp/minicron.pid</code>
-you can also use the <code>stop</code> <code>restart</code> and <code>status</code> commands to control the server.</p>
+you can also use the <code>stop</code> and <code>status</code> commands to control the server.</p>
 
 <p>To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the <code>--debug</code>
 option.</p>
