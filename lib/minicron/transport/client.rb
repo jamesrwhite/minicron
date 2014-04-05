@@ -36,7 +36,7 @@ module Minicron
 
         # TODO: Handle errors here!
         # Get the job and execution id from the response
-        ids = JSON.parse(responses.first[:body]).first['channel'].split('/')[3]
+        ids = JSON.parse(@responses.first[:body]).first['channel'].split('/')[3]
 
         # Split them up
         ids = ids.split('-')
@@ -51,8 +51,9 @@ module Minicron
       # Helper that wraps the publish function making it quicker to use
       #
       # @option options [String] job_id
-      # @option options [String, Symbol] type status or output
       # @option options [Integer] execution_id
+      # @option options [String, Symbol] type status or output
+      # @option options [String, Hash]
       def send(options = {})
         # Publish the message to the correct channel
         publish("/job/#{options[:job_id]}/#{options[:execution_id]}/#{options[:type]}", options[:message])
@@ -61,7 +62,7 @@ module Minicron
       # Publishes a message on the given channel to the server
       #
       # @param channel [String]
-      # @param message [String]
+      # @param message [String, Hash]
       def publish(channel, message)
         # Set up the data to send to faye
         data = { :channel => channel, :data => {
