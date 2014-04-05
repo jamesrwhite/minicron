@@ -1,3 +1,4 @@
+require 'shellwords'
 require 'escape'
 
 module Minicron
@@ -20,7 +21,8 @@ module Minicron
     # @return [String]
     def build_minicron_command(command, schedule)
       # Escape the command so it will work in bourne shells
-      cron_command = Escape.shell_command(['/bin/bash', '-l', '-c', "minicron run '#{command}'"])
+      command = Escape.shell_command(['minicron', 'run', command])
+      cron_command =Escape.shell_command(['/bin/bash', '-l', '-c', command])
 
       "#{schedule} root #{cron_command}"
     end
@@ -55,7 +57,7 @@ module Minicron
       # If it's a delete
       if replace == ''
         # Check the original line is no longer there
-        grep = conn.exec!("grep -F \"#{find}\" /etc/crontab.tmp").to_s.strip
+        grep = conn.exec!("grep -F #{find.shellescape} /etc/crontab.tmp").to_s.strip
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
@@ -63,7 +65,7 @@ module Minicron
         end
       else
         # Check the updated line is there
-        grep = conn.exec!("grep -F \"#{replace}\" /etc/crontab.tmp").to_s.strip
+        grep = conn.exec!("grep -F #{replace.shellescape} /etc/crontab.tmp").to_s.strip
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
@@ -90,14 +92,15 @@ module Minicron
 
       # Prepare the line we are going to write to the crontab
       line = build_minicron_command(job.command, schedule)
-      echo_line = "echo \"#{line}\" >> /etc/crontab && echo 'y' || echo 'n'"
+      escaped_line = line.shellescape
+      echo_line = "echo #{escaped_line} >> /etc/crontab && echo 'y' || echo 'n'"
 
       # Append it to the end of the crontab
       write = conn.exec!(echo_line).strip
 
       # Throw an exception if it failed
       if write != 'y'
-        fail Exception, "Unable to write '#{line}' to the crontab"
+        fail Exception, "Unable to echo #{escaped_line} to the crontab"
       end
 
       # Check the line is there
