@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'insidious'
 require 'minicron'
 require 'minicron/cli'
 require 'minicron/transport/server'
@@ -15,6 +16,13 @@ begin
 # Handle ctrl-c and other nasty interruptions
 rescue Interrupt, SignalException
   puts "\nExiting.."
+
+  # Stop the daemon if it's running i.e tidy up the pid file
+  insidious = Insidious.new(:pid_file => '/tmp/minicron.pid')
+
+  if insidious.running?
+    insidious.stop!
+  end
 # Accept failure
 rescue Exception => e
   $stderr.write("#{e.message}\n")
@@ -26,6 +34,7 @@ rescue Exception => e
 
   exit(1)
 ensure
+  # Shut down the server if it's running
   if Minicron::Transport::Server.running?
     Minicron::Transport::Server.stop!
   end
