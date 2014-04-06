@@ -3,9 +3,6 @@ require 'escape'
 
 module Minicron
   # Used to interact with the crontab on hosts over an ssh connection
-  # TODO: I've had a moment of clarity, I don't need to do all the CRUD
-  # using unix commands. I can cat the crontab, manipulate it in ruby
-  # and then echo it back!
   class Cron
     # Initialise the cron class
     #
