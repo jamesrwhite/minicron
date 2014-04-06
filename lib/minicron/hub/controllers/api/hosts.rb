@@ -2,7 +2,6 @@ require 'minicron/transport/ssh'
 
 class Minicron::Hub::App
   # Get all hosts that a job
-  # TODO: Add offset/limit
   get '/api/hosts' do
     content_type :json
     hosts = Minicron::Hub::Host.all.includes(:jobs).order(:id => :asc)

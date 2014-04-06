@@ -1,6 +1,5 @@
 class Minicron::Hub::App
   # Get all job executions
-  # TODO: Add offset/limit
   get '/api/executions' do
     content_type :json
     executions = Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)

@@ -3,7 +3,6 @@ require 'minicron/cron'
 
 class Minicron::Hub::App
   # Get all schedules
-  # TODO: Add offset/limit
   get '/api/schedules' do
     content_type :json
 

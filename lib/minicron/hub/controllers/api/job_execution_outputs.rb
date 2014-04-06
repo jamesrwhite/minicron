@@ -1,6 +1,5 @@
 class Minicron::Hub::App
   # Get all job execution outputs
-  # TODO: Add offset/limit
   get '/api/jobExecutionOutputs' do
     content_type :json
 

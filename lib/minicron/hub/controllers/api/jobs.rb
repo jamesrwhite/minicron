@@ -2,7 +2,6 @@ require 'minicron/transport'
 
 class Minicron::Hub::App
   # Get all jobs
-  # TODO: Add offset/limit
   get '/api/jobs' do
     content_type :json
 
