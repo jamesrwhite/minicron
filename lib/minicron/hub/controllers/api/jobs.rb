@@ -11,7 +11,7 @@ class Minicron::Hub::App
                                .where(:job_hash => params[:job_hash])
     else
       jobs = Minicron::Hub::Job.all.order(:created_at => :desc)
-                                .includes(:host, :schedules,  :executions => :job_execution_outputs)
+                               .includes(:host, :schedules,  :executions => :job_execution_outputs)
     end
 
     Minicron::Hub::JobSerializer.new(jobs).serialize.to_json
