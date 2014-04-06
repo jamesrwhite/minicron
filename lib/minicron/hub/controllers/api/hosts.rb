@@ -139,10 +139,10 @@ class Minicron::Hub::App
       conn = ssh.open
 
       # Check if the crontab is readable
-      read = conn.exec!('test -r /etc/crontab && echo "y" || echo "n"').strip
+      read = conn.exec!("/bin/sh -c 'test -r /etc/crontab && echo \"y\" || echo \"n\"'").strip
 
       # Check if the crontab is writeable
-      write = conn.exec!('test -w /etc/crontab && echo "y" || echo "n"').strip
+      write = conn.exec!("/bin/sh -c 'test -w /etc/crontab && echo \"y\" || echo \"n\"'").strip
 
       # Tidy up
       ssh.close
