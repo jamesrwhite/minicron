@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'minicron/transport/faye/client'
 
 describe Minicron::Transport::FayeClient do
   let(:client) { Minicron::Transport::FayeClient }

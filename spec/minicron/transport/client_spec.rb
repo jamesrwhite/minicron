@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'minicron/transport/client'
 
 describe Minicron::Transport::Client do
   describe '#initialize' do
