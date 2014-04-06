@@ -19,7 +19,7 @@ module Minicron
     def build_minicron_command(command, schedule)
       # Escape the command so it will work in bourne shells
       command = Escape.shell_command(['minicron', 'run', command])
-      cron_command =Escape.shell_command(['/bin/bash', '-l', '-c', command])
+      cron_command = Escape.shell_command(['/bin/bash', '-l', '-c', command])
 
       "#{schedule} root #{cron_command}"
     end
@@ -44,12 +44,7 @@ module Minicron
       end
 
       # Echo the crontab back to the tmp crontab
-      update = conn.exec!("echo #{crontab.shellescape} > /etc/crontab.tmp && echo 'y' || echo 'n'").to_s.strip
-
-      # Throw an exception if it failed
-      if update != 'y'
-        fail Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab"
-      end
+      conn.exec!("echo #{crontab.shellescape} > /etc/crontab.tmp").to_s.strip
 
       # If it's a delete
       if replace == ''
@@ -71,7 +66,7 @@ module Minicron
       end
 
       # And finally replace the crontab with the new one now we now the change worked
-      move = conn.exec!("mv /etc/crontab.tmp /etc/crontab && echo 'y' || echo 'n'").to_s.strip
+      move = conn.exec!("/bin/sh -c 'mv /etc/crontab.tmp /etc/crontab && echo \"y\" || echo \"n\"'").to_s.strip
 
       if move != 'y'
         fail Exception, 'Unable to move tmp crontab with updated crontab'
@@ -90,18 +85,13 @@ module Minicron
       # Prepare the line we are going to write to the crontab
       line = build_minicron_command(job.command, schedule)
       escaped_line = line.shellescape
-      echo_line = "echo #{escaped_line} >> /etc/crontab && echo 'y' || echo 'n'"
+      echo_line = "echo #{escaped_line} >> /etc/crontab"
 
       # Append it to the end of the crontab
-      write = conn.exec!(echo_line).strip
-
-      # Throw an exception if it failed
-      if write != 'y'
-        fail Exception, "Unable to echo #{escaped_line} to the crontab"
-      end
+      conn.exec!(echo_line).to_s.strip
 
       # Check the line is there
-      tail = conn.exec!('tail -n 1 /etc/crontab').strip
+      tail = conn.exec!('tail -n 1 /etc/crontab').to_s.strip
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
