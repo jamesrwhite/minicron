@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 0) do
   create_table "hosts", force: true do |t|
     t.string   "name"
     t.string   "fqdn",                  default: "", null: false
-    t.string   "user",       limit: 32
+    t.string   "user",       limit: 32, default: "", null: false
     t.string   "host",                  default: "", null: false
     t.integer  "port",                               null: false
     t.text     "public_key"

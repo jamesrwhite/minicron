@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-04-07 16:20:48 +0000
+# Generation Time: 2014-04-07 16:24:18 +0000
 # ************************************************************
 
 
@@ -73,7 +73,7 @@ CREATE TABLE `hosts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `fqdn` varchar(255) NOT NULL DEFAULT '',
-  `user` varchar(32) DEFAULT NULL,
+  `user` varchar(32) NOT NULL DEFAULT '',
   `host` varchar(255) NOT NULL DEFAULT '',
   `port` int(11) NOT NULL,
   `public_key` text,
