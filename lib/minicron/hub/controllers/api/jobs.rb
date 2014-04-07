@@ -38,6 +38,7 @@ class Minicron::Hub::App
       job = Minicron::Hub::Job.create(
         :job_hash => Minicron::Transport.get_job_hash(request_body['job']['command'], host.fqdn),
         :name => request_body['job']['name'],
+        :user => request_body['job']['user'],
         :command => request_body['job']['command'],
         :host_id => host.id
       )
@@ -64,8 +65,9 @@ class Minicron::Hub::App
       job = Minicron::Hub::Job.includes(:host, :schedules,  :executions => :job_execution_outputs)
                               .find(params[:id])
 
-      # Update the name
+      # Update the name and user
       job.name = request_body['job']['name']
+      job.user = request_body['job']['user']
 
       job.save!
 

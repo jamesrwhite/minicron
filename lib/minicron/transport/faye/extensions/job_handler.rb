@@ -86,6 +86,7 @@ module Minicron
         # Validate or create the job
         job = Minicron::Hub::Job.where(:job_hash => segments[2]).first_or_create do |j|
           j.job_hash = segments[2]
+          j.user = data['user']
           j.command = data['command']
           j.host_id = host.id
         end

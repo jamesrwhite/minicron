@@ -17,18 +17,20 @@ module Minicron
 
       # Used to set up a job on the server
       #
-      # @param job_hash [String]
-      # @param command [Integer]
-      # @param fqdn [String]
-      # @param hostname [String]
+      # @option options [String] job_hash
+      # @option options [String] user
+      # @option options [Integer] command
+      # @option options [String] fqdn
+      # @option options [String] hostname
       # @return [Hash]
-      def setup(job_hash, command, fqdn, hostname)
+      def setup(options = {})
         # Send a request to set up the job
-        publish("/job/#{job_hash}/status",
+        publish("/job/#{options[:job_hash]}/status",
           :action => 'SETUP',
-          :command => command,
-          :fqdn => fqdn,
-          :hostname => hostname
+          :user => options[:user],
+          :command => options[:command],
+          :fqdn => options[:fqdn],
+          :hostname => options[:hostname]
         )
 
         # Wait for the response..

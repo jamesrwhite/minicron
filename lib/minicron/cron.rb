@@ -13,15 +13,16 @@ module Minicron
 
     # Build the minicron command to be used in the crontab
     #
-    # @param command [String]
     # @param schedule [String]
+    # @param user [String]
+    # @param command [String]
     # @return [String]
-    def build_minicron_command(command, schedule)
+    def build_minicron_command(schedule, user, command)
       # Escape the command so it will work in bourne shells
       command = Escape.shell_command(['minicron', 'run', command])
       cron_command = Escape.shell_command(['/bin/bash', '-l', '-c', command])
 
-      "#{schedule} root #{cron_command}"
+      "#{schedule} #{user} #{cron_command}"
     end
 
     # Used to find a string and replace it with another in the crontab by
@@ -83,7 +84,7 @@ module Minicron
       conn ||= @ssh.open
 
       # Prepare the line we are going to write to the crontab
-      line = build_minicron_command(job.command, schedule)
+      line = build_minicron_command(schedule, job.user, job.command)
       escaped_line = line.shellescape
       echo_line = "echo #{escaped_line} >> /etc/crontab"
 
@@ -110,10 +111,10 @@ module Minicron
       conn ||= @ssh.open
 
       # We are looking for the current value of the schedule
-      find = build_minicron_command(job.command, old_schedule)
+      find = build_minicron_command(old_schedule, job.user, job.command)
 
       # And replacing it with the updated value
-      replace = build_minicron_command(job.command, new_schedule)
+      replace = build_minicron_command(new_schedule, job.user, job.command)
 
       # Replace the old schedule with the new schedule
       find_and_replace(conn, find, replace)
@@ -129,7 +130,7 @@ module Minicron
       conn ||= @ssh.open
 
       # We are looking for the current value of the schedule
-      find = build_minicron_command(job.command, schedule)
+      find = build_minicron_command(schedule, job.user, job.command)
 
       # Replace the old schedule with nothing i.e deleting it
       find_and_replace(conn, find, '')

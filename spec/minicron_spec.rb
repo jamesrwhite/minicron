@@ -171,4 +171,10 @@ describe Minicron do
       expect(Minicron.get_hostname).to eq `hostname -s`.strip
     end
   end
+
+  describe '.get_user' do
+    it 'should return the user as a string with no newline' do
+      expect(Minicron.get_user).to eq `whoami`.strip
+    end
+  end
 end

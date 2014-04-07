@@ -171,9 +171,6 @@ module Minicron
         # Get the fully qualified domain name of the currnet host
         fqdn = Minicron.get_fqdn
 
-        # Get the short hostname of the current host
-        hostname = Minicron.get_hostname
-
         # Get the md5 hash for the job
         job_hash = Minicron::Transport.get_job_hash(command, fqdn)
 
@@ -181,7 +178,13 @@ module Minicron
         faye.ensure_em_running
 
         # Setup the job on the server
-        ids = faye.setup(job_hash, command, fqdn, hostname)
+        ids = faye.setup(
+          :job_hash => job_hash,
+          :user => Minicron.get_user,
+          :command => command,
+          :fqdn => fqdn,
+          :hostname => Minicron.get_hostname
+        )
 
         # Wait until we get the execution id
         faye.ensure_delivery

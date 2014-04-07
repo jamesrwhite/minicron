@@ -179,4 +179,11 @@ module Minicron
   def self.get_hostname
     `hostname -s`.strip
   end
+
+  # Get the user minicron is being run as
+  #
+  # @return [String]
+  def self.get_user
+    `whoami`.strip
+  end
 end

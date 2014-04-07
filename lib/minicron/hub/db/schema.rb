@@ -64,10 +64,11 @@ ActiveRecord::Schema.define(version: 0) do
   add_index "job_execution_outputs", ["seq"], name: "seq", using: :btree
 
   create_table "jobs", force: true do |t|
+    t.integer  "host_id",                            null: false
     t.string   "job_hash",   limit: 32, default: "", null: false
     t.string   "name"
+    t.string   "user",       limit: 32,              null: false
     t.text     "command",                            null: false
-    t.integer  "host_id",                            null: false
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
   end

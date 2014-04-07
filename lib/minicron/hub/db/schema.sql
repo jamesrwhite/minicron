@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.16)
 # Database: minicron
-# Generation Time: 2014-04-07 16:24:18 +0000
+# Generation Time: 2014-04-07 17:06:03 +0000
 # ************************************************************
 
 
@@ -110,10 +110,11 @@ DROP TABLE IF EXISTS `jobs`;
 
 CREATE TABLE `jobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `host_id` int(11) NOT NULL,
   `job_hash` varchar(32) NOT NULL DEFAULT '',
   `name` varchar(255) DEFAULT NULL,
+  `user` varchar(32) NOT NULL,
   `command` text NOT NULL,
-  `host_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
