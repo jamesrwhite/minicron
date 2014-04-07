@@ -32,8 +32,6 @@ module Minicron
     # @param find [String]
     # @param replace [String]
     def find_and_replace(conn, find, replace)
-      # TODO: move ssh test here for crontab permissions
-
       # Get the full crontab
       crontab = conn.exec!('cat /etc/crontab').to_s.strip
 
