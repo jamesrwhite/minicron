@@ -64,6 +64,7 @@ class Minicron::Hub::App
 
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
+          :user => job.host.user,
           :host => job.host.host,
           :port => job.host.port,
           :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
@@ -105,6 +106,7 @@ class Minicron::Hub::App
 
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
+          :user => schedule.job.host.user,
           :host => schedule.job.host.host,
           :port => schedule.job.host.port,
           :private_key => "~/.ssh/minicron_host_#{schedule.job.host.id}_rsa"
@@ -157,6 +159,7 @@ class Minicron::Hub::App
 
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
+          :user => schedule.job.host.user,
           :host => schedule.job.host.host,
           :port => schedule.job.host.port,
           :private_key => "~/.ssh/minicron_host_#{schedule.job.host.id}_rsa"

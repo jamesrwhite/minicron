@@ -25,10 +25,14 @@ class Minicron::Hub::App
       # Default the value of the port
       request_body['host']['port'] ||= 22
 
+      # Default the value of the user
+      request_body['host']['user'] ||= 'root'
+
       # Try and save the new host
       host = Minicron::Hub::Host.create(
         :name => request_body['host']['name'],
         :fqdn => request_body['host']['fqdn'],
+        :user => request_body['host']['user'],
         :host => request_body['host']['host'],
         :port => request_body['host']['port']
       )
@@ -65,6 +69,7 @@ class Minicron::Hub::App
       # Update its data
       host.name = request_body['host']['name']
       host.fqdn = request_body['host']['fqdn']
+      host.user = request_body['host']['user']
       host.host = request_body['host']['host']
       host.port = request_body['host']['port']
 
@@ -92,6 +97,7 @@ class Minicron::Hub::App
 
         # Get an ssh instance and open a connection
         ssh = Minicron::Transport::SSH.new(
+          :user => host.user,
           :host => host.host,
           :port => host.port,
           :private_key => "~/.ssh/minicron_host_#{host.id}_rsa"
@@ -130,6 +136,7 @@ class Minicron::Hub::App
 
       # Set up the ssh instance
       ssh = Minicron::Transport::SSH.new(
+        :user => host.user,
         :host => host.host,
         :port => host.port,
         :private_key => "~/.ssh/minicron_host_#{host.id}_rsa"
