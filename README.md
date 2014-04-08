@@ -43,9 +43,9 @@ Features
 - Alerts when jobs executions are missed or fail via:
   - Email
   - SMS ([using Twilio](https://www.twilio.com))
-  - [PagerDuty](www.pagerduty.com)
+  - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
-Lots more is planned for the future, see issues tagged [feature](https://github.com/jamesrwhite/minicron/issues?labels=feature&milestone=&page=1&state=open).
+Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open).
 
 Requirements
 -------------
