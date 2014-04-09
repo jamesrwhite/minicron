@@ -28,9 +28,8 @@ a web interface to the data and makes it easy to manage your cron jobs.
 Background
 -----------
 
-I'm developing minicron as part of my dissertation at university which is due in May but I plan to continue
-development after that. My inspiration for developing minicron comes from time spent working at
-[Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
+I'm developing minicron as part of my dissertation at university which has to be completed by May but I plan to continue
+development after that. A large part of my inspiration for developing minicron comes from my time working at [Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
 
 Features
 ---------
@@ -214,7 +213,7 @@ Areas that I would love some help with:
 - General testing of the system, let me know what you think and create issues for any bugs you find!
 - Tests!!
 - Validation and error handling improvements
-- Documentation improvements. Find something confusing or unexpected, let me know and I'll add or improve
+- Documentation improvements. If you find something confusing or unexpected let me know and I'll add or improve
   documentation for it!
 - Look for '[TODO:](https://github.com/jamesrwhite/minicron/search?q=TODO%3A)' notices littered around the code,
   I'm trying to convert them all to issues but there are a lot..
