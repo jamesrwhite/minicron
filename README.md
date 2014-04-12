@@ -14,6 +14,7 @@ server(s) and executes your cron command and reports the status back to the Hub.
 where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.
 
+- [Screenshots](#screenshots)
 - [Background](#background)
 - [Features](#goals)
 - [Requirements](#requirements)
@@ -25,12 +26,18 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Support](#support)
 - [License](#license)
 
+Screenshots
+------------
+
+<img src="http://f.cl.ly/items/2o3q3x1N1X3n2t180H1u/Image%202014-04-12%20at%2010.54.39%20pm.png" height="100"/>
+
+More coming..
+
 Background
 -----------
 
-I'm developing minicron as part of my dissertation at university which is due in May but I plan to continue
-development after that. My inspiration for developing minicron comes from time spent working at
-[Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
+I'm developing minicron as part of my dissertation at university which has to be completed by May but I plan to continue
+development after that. A large part of my inspiration for developing minicron comes from my time working at [Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
 
 Features
 ---------
@@ -43,9 +50,9 @@ Features
 - Alerts when jobs executions are missed or fail via:
   - Email
   - SMS ([using Twilio](https://www.twilio.com))
-  - [PagerDuty](www.pagerduty.com)
+  - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
-Lots more is planned for the future, see issues tagged [feature](https://github.com/jamesrwhite/minicron/issues?labels=feature&milestone=&page=1&state=open).
+Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open).
 
 Requirements
 -------------
@@ -214,7 +221,7 @@ Areas that I would love some help with:
 - General testing of the system, let me know what you think and create issues for any bugs you find!
 - Tests!!
 - Validation and error handling improvements
-- Documentation improvements. Find something confusing or unexpected, let me know and I'll add or improve
+- Documentation improvements. If you find something confusing or unexpected let me know and I'll add or improve
   documentation for it!
 - Look for '[TODO:](https://github.com/jamesrwhite/minicron/search?q=TODO%3A)' notices littered around the code,
   I'm trying to convert them all to issues but there are a lot..
