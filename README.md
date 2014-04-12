@@ -14,6 +14,7 @@ server(s) and executes your cron command and reports the status back to the Hub.
 where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.
 
+- [Screenshots](#screenshots)
 - [Background](#background)
 - [Features](#goals)
 - [Requirements](#requirements)
