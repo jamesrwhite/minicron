@@ -37,7 +37,8 @@ Background
 -----------
 
 I'm developing minicron as part of my dissertation at university which has to be completed by May but I plan to continue
-development after that. A large part of my inspiration for developing minicron comes from my time working at [Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
+development after that. The inspiration for developing minicron comes from my own experience, in particular my time spent
+working at [Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
 
 Features
 ---------
@@ -52,7 +53,7 @@ Features
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
-Lots more is planned for the future, see [open issues](issues?state=open).
+Lots more is planned for the future, see [open issues](issues?state=open) or if you don't see the feature you want there add it!
 
 Requirements
 -------------
@@ -198,7 +199,8 @@ or view the most up to date version online at [RubyDoc.info](http://rdoc.info/gi
 Versioning
 -----------
 
-All stable releases will follow the [semantic versioning](http://semver.org/) guidelines. Until 1.0 hits I will try to document any major breaking changes in the release descriptions.
+All stable releases will follow the [semantic versioning](http://semver.org/) guidelines. Until 1.0 hits I will try to document any
+major breaking changes in the release descriptions.
 
 Releases will be numbered with the following format:
 
