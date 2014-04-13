@@ -198,7 +198,7 @@ or view the most up to date version online at [RubyDoc.info](http://rdoc.info/gi
 Versioning
 -----------
 
-Where possible all releases will follow the [semantic versioning](http://semver.org/) guidelines.
+All stable releases will follow the [semantic versioning](http://semver.org/) guidelines. Until 1.0 hits I will try to document any major breaking changes in the release descriptions.
 
 Releases will be numbered with the following format:
 
