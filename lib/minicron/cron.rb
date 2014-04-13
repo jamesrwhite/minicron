@@ -25,6 +25,27 @@ module Minicron
       "#{schedule} #{user} #{cron_command}"
     end
 
+    # Test an SSH connection and the permissions for the crontab
+    #
+    # @param conn an instance of an open ssh connection
+    # @return [Hash]
+    def test_ssh(conn = nil)
+      # Open an SSH connection
+      conn ||= @ssh.open
+
+      # Check if the crontab is readable
+      read = conn.exec!("/bin/sh -c 'test -r /etc/crontab && echo \"y\" || echo \"n\"'").strip
+
+      # Check if the crontab is writeable
+      write = conn.exec!("/bin/sh -c 'test -w /etc/crontab && echo \"y\" || echo \"n\"'").strip
+
+      {
+        :connect => true,
+        :read => read == 'y',
+        :write => write == 'y'
+      }
+    end
+
     # Used to find a string and replace it with another in the crontab by
     # using the sed command
     #
@@ -32,6 +53,22 @@ module Minicron
     # @param find [String]
     # @param replace [String]
     def find_and_replace(conn, find, replace)
+      begin
+        # Test the SSH connection first
+        test = test_ssh(conn)
+      rescue Exception => e
+        raise Exception, "Error connecting to host, reason: #{e.message}"
+      end
+
+      # Check the connection worked
+      raise Exception, "Unable to connect to host, reason: unknown" if !test[:connect]
+
+      # Check the crontab is readable
+      raise Exception, "Insufficient permissions to read from /etc/crontab" if !test[:read]
+
+      # Check the crontab is writeable
+      raise Exception, "Insufficient permissions to write to /etc/crontab" if !test[:write]
+
       # Get the full crontab
       crontab = conn.exec!('cat /etc/crontab').to_s.strip
 
@@ -43,12 +80,12 @@ module Minicron
       end
 
       # Echo the crontab back to the tmp crontab
-      conn.exec!("echo #{crontab.shellescape} > /etc/crontab.tmp").to_s.strip
+      conn.exec!("echo #{crontab.shellescape} > /tmp/minicron_crontab").to_s.strip
 
       # If it's a delete
       if replace == ''
         # Check the original line is no longer there
-        grep = conn.exec!("grep -F #{find.shellescape} /etc/crontab.tmp").to_s.strip
+        grep = conn.exec!("grep -F #{find.shellescape} /tmp/minicron_crontab").to_s.strip
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
@@ -56,7 +93,7 @@ module Minicron
         end
       else
         # Check the updated line is there
-        grep = conn.exec!("grep -F #{replace.shellescape} /etc/crontab.tmp").to_s.strip
+        grep = conn.exec!("grep -F #{replace.shellescape} /tmp/minicron_crontab").to_s.strip
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
@@ -65,10 +102,10 @@ module Minicron
       end
 
       # And finally replace the crontab with the new one now we now the change worked
-      move = conn.exec!("/bin/sh -c 'mv /etc/crontab.tmp /etc/crontab && echo \"y\" || echo \"n\"'").to_s.strip
+      move = conn.exec!("/bin/sh -c 'mv /tmp/minicron_crontab /etc/crontab && echo \"y\" || echo \"n\"'").to_s.strip
 
       if move != 'y'
-        fail Exception, 'Unable to move tmp crontab with updated crontab'
+        fail Exception, 'Unable to move /tmp/minicron_crontab to /etc/crontab, check the permissions?'
       end
     end
 
