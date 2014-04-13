@@ -127,7 +127,7 @@ module Minicron
               end
             rescue Exception => e
               raise Exception, "Unable to setup job, reason: #{e.message}"
-            ensure
+
               # Ensure that all messages are delivered and that we
               unless Minicron.config['cli']['dry_run']
                 faye.tidy_up
