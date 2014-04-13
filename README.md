@@ -70,7 +70,7 @@ Requirements
 #### Web Server / Reverse Proxy
 
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](blob/master/sample.nginx.conf) for nginx.
+nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](sample.nginx.conf) for nginx.
 
 #### Browser
 
@@ -94,7 +94,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 3. To install the latest release (currently 0.3) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
-4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [default.config.toml](blob/master/default.config.toml) as a guide on what options are configurable
+4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [default.config.toml](default.config.toml) as a guide on what options are configurable
 
 5. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
 
@@ -106,7 +106,7 @@ but I encourage you to give it a try in a non critical environment and help me t
   > ````
 
 6. You can then ````minicron db setup```` to create the database schema, alternatively you can use
-   the [schema dump provided](blob/master/lib/minicron/hub/db/schema.sql)
+   the [schema dump provided](lib/minicron/hub/db/schema.sql)
 
 7. Done! See the usage section below for more details on how to use minicron now you have it installed
 
@@ -156,7 +156,7 @@ you can also use the ````stop```` and ````status```` commands to control the ser
 To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the ````--debug````
 option.
 
-See [sample.nginx.conf](blob/master/sample.nginx.conf) for an example of
+See [sample.nginx.conf](sample.nginx.conf) for an example of
 how to run minicron behind a reverse proxy.
 
 #### Connecting to a host via SSH
@@ -178,7 +178,7 @@ or ````--version```` are passed to the CLI.
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
 to be in the [toml](https://github.com/mojombo/toml "toml") format. The default options are specified in the
-[default.config.toml](blob/master/default.config.toml "default.config.toml")
+[default.config.toml](default.config.toml "default.config.toml")
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
 
@@ -213,7 +213,7 @@ Based on the following guidelines:
 Contributing
 ------------
 
-Feedback and pull requests are welcome, please see [CONTRIBUTING.md](blob/master/CONTRIBUTING.md "CONTRIBUTING.md") for more info.
+Feedback and pull requests are welcome, please see [CONTRIBUTING.md](CONTRIBUTING.md "CONTRIBUTING.md") for more info.
 
 Areas that I would love some help with:
 
@@ -241,4 +241,4 @@ Or feel free to open an issue and I'll do my best to help.
 License
 --------
 
-minicron is licensed under the GPL v3, [see here for the full license](blob/master/LICENSE "see here")
+minicron is licensed under the GPL v3, [see here for the full license](LICENSE "see here")
