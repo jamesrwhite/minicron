@@ -125,7 +125,17 @@ module Minicron
                 # Set up the job and get the jexecution and job ids back from the server
                 ids = setup_job(args.first, faye)
               end
+            rescue Exception => e
+              raise Exception, "Unable to setup job, reason: #{e.message}"
+            ensure
+              # Ensure that all messages are delivered and that we
+              unless Minicron.config['cli']['dry_run']
+                faye.ensure_delivery
+                faye.tidy_up
+              end
+            end
 
+            begin
               # Execute the command and yield the output
               Minicron::CLI.run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type

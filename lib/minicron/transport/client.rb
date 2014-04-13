@@ -38,7 +38,11 @@ module Minicron
 
         # TODO: Handle errors here!
         # Get the job and execution id from the response
-        ids = JSON.parse(@responses.first[:body]).first['channel'].split('/')[3]
+        begin
+          ids = JSON.parse(@responses.first[:body]).first['channel'].split('/')[3]
+        rescue Exception => e
+          raise Exception, "Unable to parse JSON response of: '#{@responses.first[:body]}', reason: #{e.message}"
+        end
 
         # Split them up
         ids = ids.split('-')
