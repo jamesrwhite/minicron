@@ -75,9 +75,13 @@ module Minicron
             :body => req.response
           )
 
+          # Retry the request if we have another try left
           if @retry_counts[req_id] < @retries
             @retry_counts[req_id] += 1
             request(body)
+          # Otherwise remove it from the queue
+          elsif @retry_counts[req_id] == @retries
+            queue.delete(req_id)
           end
         end
       end
