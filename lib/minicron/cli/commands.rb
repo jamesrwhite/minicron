@@ -130,7 +130,6 @@ module Minicron
             ensure
               # Ensure that all messages are delivered and that we
               unless Minicron.config['cli']['dry_run']
-                faye.ensure_delivery
                 faye.tidy_up
               end
             end
