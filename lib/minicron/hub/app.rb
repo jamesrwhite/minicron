@@ -23,6 +23,10 @@ module Minicron::Hub
       # Disable internal middleware for presenting errors
       # as useful HTML pages
       set :show_exceptions, false
+
+      # Used to enable asset compression, currently nothing else
+      # relies on this
+      set :environment, :production
     end
 
     # Configure how we server assets
@@ -31,6 +35,8 @@ module Minicron::Hub
       serve '/js',    :from => 'assets/js'
       serve '/fonts', :from => 'assets/fonts'
       serve '/app',   :from => 'assets/app'
+
+      js_compression :simple
 
       # Set up the application css
       css :app, '/css/all.css', [
