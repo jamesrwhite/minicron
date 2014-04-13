@@ -79,7 +79,7 @@ I'm currently unsure of how it functions in the various of Internet Explorer but
 
 #### OS
 
-Should run on any linux/bsd based OS that the above ruby versions run on.
+Should run on osx and any linux/bsd based OS that the above ruby versions run on.
 
 Installation
 -------------
