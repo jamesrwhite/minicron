@@ -171,7 +171,7 @@ most linux distributions or ````/var/root/.ssh/authorized_keys```` on OSX.
 
 #### Version
 
-Like many command line programs minicron will show it's version number when the global options ````-v````
+Like many command line programs minicron will show its version number when the global options ````-v````
 or ````--version```` are passed to the CLI.
 
 #### Configuration
@@ -186,7 +186,7 @@ the command line will take precedence over those taken from a config file.
 Documentation
 -------------
 
-minicron uses [Yard](http://yardoc.org/ "Yard") for it's code documentation, you can either generate it and view
+minicron uses [Yard](http://yardoc.org/ "Yard") for its code documentation (currently the only *usage* documentation is what you're reading right now), you can either generate it and view
 it locally using the following commands:
 
 ````bash
