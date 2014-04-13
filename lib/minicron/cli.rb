@@ -188,6 +188,9 @@ module Minicron
       @cli.program :version, Minicron::VERSION
       @cli.program :description, 'cli for minicron; a system a to manage and monitor cron jobs'
 
+      # Display the output in a compact format
+      @cli.program :help_formatter, Commander::HelpFormatter::TerminalCompact
+
       # Set the default command to run
       @cli.default_command :help
 
