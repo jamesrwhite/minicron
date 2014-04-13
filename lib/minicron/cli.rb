@@ -200,7 +200,7 @@ module Minicron
       end
 
       # Add a global option for verbose mode
-      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['cli']['verbose']}" do
+      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose'].to_s}" do
         Minicron.config['verbose'] = true
       end
 
