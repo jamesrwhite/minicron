@@ -29,20 +29,32 @@ module Minicron
     #
     # @param conn an instance of an open ssh connection
     # @return [Hash]
-    def test_ssh(conn = nil)
+    def test_host_permissions(conn = nil)
       # Open an SSH connection
       conn ||= @ssh.open
 
+      # Check if /etc is writeable
+      etc_write = conn.exec!("/bin/sh -c 'test -w /etc && echo \"y\" || echo \"n\"'").strip
+
+      # Check if /etc is executable
+      etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
+
       # Check if the crontab is readable
-      read = conn.exec!("/bin/sh -c 'test -r /etc/crontab && echo \"y\" || echo \"n\"'").strip
+      crontab_read = conn.exec!("/bin/sh -c 'test -r /etc/crontab && echo \"y\" || echo \"n\"'").strip
 
       # Check if the crontab is writeable
-      write = conn.exec!("/bin/sh -c 'test -w /etc/crontab && echo \"y\" || echo \"n\"'").strip
+      crontab_write = conn.exec!("/bin/sh -c 'test -w /etc/crontab && echo \"y\" || echo \"n\"'").strip
 
       {
         :connect => true,
-        :read => read == 'y',
-        :write => write == 'y'
+        :etc => {
+          :write => etc_write == 'y',
+          :execute => etc_execute == 'y'
+        },
+        :crontab => {
+          :read => crontab_read == 'y',
+          :write => crontab_write == 'y'
+        }
       }
     end
 
@@ -55,7 +67,7 @@ module Minicron
     def find_and_replace(conn, find, replace)
       begin
         # Test the SSH connection first
-        test = test_ssh(conn)
+        test = test_host_permissions(conn)
       rescue Exception => e
         raise Exception, "Error connecting to host, reason: #{e.message}"
       end
@@ -64,10 +76,16 @@ module Minicron
       raise Exception, "Unable to connect to host, reason: unknown" if !test[:connect]
 
       # Check the crontab is readable
-      raise Exception, "Insufficient permissions to read from /etc/crontab" if !test[:read]
+      raise Exception, "Insufficient permissions to read from /etc/crontab" if !test[:crontab][:read]
 
       # Check the crontab is writeable
-      raise Exception, "Insufficient permissions to write to /etc/crontab" if !test[:write]
+      raise Exception, "Insufficient permissions to write to /etc/crontab" if !test[:crontab][:write]
+
+      # Check /etc is writeable
+      raise Exception, "/etc is not writeable by the current user" if !test[:etc][:write]
+
+      # Check /etc is executable
+      raise Exception, "/etc is not executable by the current user" if !test[:etc][:execute]
 
       # Get the full crontab
       crontab = conn.exec!('cat /etc/crontab').to_s.strip

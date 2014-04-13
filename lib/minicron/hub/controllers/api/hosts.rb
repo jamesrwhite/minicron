@@ -146,7 +146,7 @@ class Minicron::Hub::App
       cron = Minicron::Cron.new(ssh)
 
       # Test the SSH connection
-      test = cron.test_ssh
+      test = cron.test_host_permissions
 
       # Tidy up
       ssh.close
