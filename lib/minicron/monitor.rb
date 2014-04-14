@@ -38,12 +38,11 @@ module Minicron
       # Establish a database connection
       setup_db
 
+      # Set the start time of the monitir
+      @start_time = Time.now
+
       # Start a thread for the monitor
       @thread = Thread.new do
-        # Delay the start of the monitor loop for a moniter so we don't immediately
-        # send an alert for a job the system wasn't 'up' for
-        sleep 60
-
         # While the monitor is active run it in a loop ~every minute
         while @active
           # Get all the schedules
@@ -61,7 +60,7 @@ module Minicron
             end
           end
 
-          sleep 60
+          sleep 59
         end
       end
     end
@@ -90,14 +89,16 @@ module Minicron
       cron = CronParser.new(schedule.formatted)
 
       # Find the time the cron was last expected to run
-      expected_at = cron.last(Time.now.utc)
+      expected_at = cron.last(Time.now)
+      expected_by = expected_at + 60
 
-      # We need to wait until after a minute past the expected run time
-      if Time.now.utc > (expected_at + 60)
+      # We only need to check jobs that are expected to under the monitor start time
+      # and jobs that have passed their expected by time
+      if expected_at > @start_time && Time.now > expected_by
         # Check if this execution was created inside a minute window
         # starting when it was expected to run
         check = Minicron::Hub::Execution.exists?(
-          :created_at => expected_at..(expected_at + 60),
+          :created_at => expected_at..expected_by,
           :job_id => schedule.job_id
         )
 
