@@ -142,24 +142,17 @@ class Minicron::Hub::App
         :private_key => "~/.ssh/minicron_host_#{host.id}_rsa"
       )
 
-      # Open the connection
-      conn = ssh.open
+      # Get an instance of the cron class
+      cron = Minicron::Cron.new(ssh)
 
-      # Check if the crontab is readable
-      read = conn.exec!("/bin/sh -c 'test -r /etc/crontab && echo \"y\" || echo \"n\"'").strip
-
-      # Check if the crontab is writeable
-      write = conn.exec!("/bin/sh -c 'test -w /etc/crontab && echo \"y\" || echo \"n\"'").strip
+      # Test the SSH connection
+      test = cron.test_host_permissions
 
       # Tidy up
       ssh.close
 
       # Return the test results as JSON
-      {
-        :connect => true,
-        :read => read == 'y',
-        :write => write == 'y'
-      }.to_json
+      test.to_json
     rescue Exception => e
       status 422
       { :connect => false, :error => e.message }.to_json

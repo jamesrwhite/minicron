@@ -43,6 +43,11 @@ module Minicron
         # Make sure eventmachine is running
         ensure_em_running
 
+        # Wait until there is some space in the queue so we don't overwhelm the server
+        until queue.length <= 10
+          sleep 0.05
+        end
+
         # Make the request
         req = EventMachine::HttpRequest.new(
           @url,
@@ -78,9 +83,15 @@ module Minicron
             :body => req.response
           )
 
+          # Retry the request if we have another try left
           if @retry_counts[req_id] < @retries
             @retry_counts[req_id] += 1
+            # Wait a second and then retry
+            sleep 1
             request(body)
+          # Otherwise remove it from the queue
+          elsif @retry_counts[req_id] == @retries
+            queue.delete(req_id)
           end
         end
       end

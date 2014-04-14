@@ -4,6 +4,9 @@ require 'minicron'
 require 'minicron/cli'
 require 'minicron/transport/server'
 
+# Set the process name to something more useful
+$PROGRAM_NAME = "minicron #{ARGV.join(' ')}"
+
 begin
   # Capture any output from STDERR so we can handle it how we want to
   Minicron.capture_output(:type => :stderr) do
