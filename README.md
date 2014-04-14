@@ -53,7 +53,7 @@ Features
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
-Lots more is planned for the future, see [open issues](issues?state=open) or if you don't see the feature you want there add it!
+Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?milestone=1&state=open) or if you don't see the feature you want there add it!
 
 Requirements
 -------------
@@ -71,7 +71,7 @@ Requirements
 #### Web Server / Reverse Proxy
 
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](sample.nginx.conf) for nginx.
+nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for nginx.
 
 #### Browser
 
@@ -95,7 +95,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 3. To install the latest release (currently 0.4) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
-4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [default.config.toml](default.config.toml) as a guide on what options are configurable
+4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml) as a guide on what options are configurable
 
 5. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
 
@@ -107,7 +107,7 @@ but I encourage you to give it a try in a non critical environment and help me t
   > ````
 
 6. You can then ````minicron db setup```` to create the database schema, alternatively you can use
-   the [schema dump provided](lib/minicron/hub/db/schema.sql)
+   the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql)
 
 7. Done! See the usage section below for more details on how to use minicron now you have it installed
 
@@ -157,7 +157,7 @@ you can also use the ````stop```` and ````status```` commands to control the ser
 To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the ````--debug````
 option.
 
-See [sample.nginx.conf](sample.nginx.conf) for an example of
+See [sample.nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for an example of
 how to run minicron behind a reverse proxy.
 
 #### Connecting to a host via SSH
@@ -178,15 +178,15 @@ or ````--version```` are passed to the CLI.
 
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
-to be in the [toml](https://github.com/mojombo/toml "toml") format. The default options are specified in the
-[default.config.toml](default.config.toml "default.config.toml")
+to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
+[default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml)
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
 
 Documentation
 -------------
 
-minicron uses [Yard](http://yardoc.org/ "Yard") for its code documentation (currently the only *usage* documentation is what you're reading right now), you can either generate it and view
+minicron uses [Yard](http://yardoc.org/) for its code documentation (currently the only *usage* documentation is what you're reading right now), you can either generate it and view
 it locally using the following commands:
 
 ````bash
@@ -194,7 +194,7 @@ yard doc
 yard server
 ````
 
-or view the most up to date version online at [RubyDoc.info](http://rdoc.info/github/jamesrwhite/minicron/master/frames "RubyDoc.info").
+or view the most up to date version online at [RubyDoc.info](http://rdoc.info/github/jamesrwhite/minicron/master/frames).
 
 Versioning
 -----------
@@ -215,17 +215,17 @@ Based on the following guidelines:
 Contributing
 ------------
 
-Feedback and pull requests are welcome, please see [CONTRIBUTING.md](CONTRIBUTING.md "CONTRIBUTING.md") for more info.
+Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md) for more info.
 
 Areas that I would love some help with:
 
-- Any of the unassigned [issues here](issues?state=open).
+- Any of the unassigned [issues here](https://github.com/jamesrwhite/minicron/issues?state=open).
 - General testing of the system, let me know what you think and create issues for any bugs you find!
 - Tests!!
 - Validation and error handling improvements
 - Documentation improvements. If you find something confusing or unexpected let me know and I'll add or improve
   documentation for it!
-- Look for '[TODO:](search?q=TODO%3A)' notices littered around the code,
+- Look for '[TODO:](https://github.com/jamesrwhite/minicron/search?q=TODO%3A)' notices littered around the code,
   I'm trying to convert them all to issues but there are a lot..
 - Code refactoring, I had a reasonably tight deadline to have the main concept done by so some parts are a bit rushed
 - UI improvements
@@ -243,4 +243,4 @@ Or feel free to open an issue and I'll do my best to help.
 License
 --------
 
-minicron is licensed under the GPL v3, [see here for the full license](LICENSE "see here")
+minicron is licensed under the GPL v3, [see here for the full license](https://github.com/jamesrwhite/minicron/blob/master/LICENSE)
