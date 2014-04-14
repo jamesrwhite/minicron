@@ -14,7 +14,6 @@ server(s) and executes your cron command and reports the status back to the Hub.
 where data from one or many instances of the CLI are is recieved and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.
 
-- [Screenshots](#screenshots)
 - [Background](#background)
 - [Features](#goals)
 - [Requirements](#requirements)
@@ -53,7 +52,7 @@ Features
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
-Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?milestone=1&state=open) or if you don't see the feature you want there add it!
+Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if you don't see the feature you want there add it!
 
 Requirements
 -------------
