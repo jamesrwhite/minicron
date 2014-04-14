@@ -1,8 +1,23 @@
-require 'insidious'
-require 'minicron'
-require 'minicron/transport/client'
+autoload :Minicron,            'minicron'
+autoload :Insidious,           'insidious'
+autoload :Rake,                'rake'
+
+module Sinatra
+  autoload :ActiveRecordTasks, 'sinatra/activerecord/rake'
+end
 
 module Minicron
+  autoload :Transport,         'minicron/transport'
+
+  module Transport
+    autoload :Client,          'minicron/transport/client'
+    autoload :Server,          'minicron/transport/server'
+  end
+
+  module Hub
+    autoload :App,             'minicron/hub/app'
+  end
+
   module CLI
     class Commands
       # Add the `minicron db` command
@@ -19,11 +34,6 @@ module Minicron
 
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
-
-            # These are inlined as we only need them in this use case
-            require 'rake'
-            require 'minicron/hub/app'
-            require 'sinatra/activerecord/rake'
 
             # Setup the db
             Minicron::Hub::App.setup_db
@@ -143,6 +153,7 @@ module Minicron
                 yield output[:output] unless output[:type] == :status
               end
             rescue Exception => e
+              p e
               # Send the exception message to the server and yield it
               unless Minicron.config['cli']['dry_run']
                 faye.send(:job_id => ids[:job_id], :execution_id => ids[:execution_id], :type => :output, :message => e.message)

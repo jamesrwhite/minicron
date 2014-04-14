@@ -1,4 +1,4 @@
-autoload :JSON, 'json'
+require 'json'
 
 module Minicron
   module Transport
