@@ -1,5 +1,4 @@
 require 'digest/md5'
-require 'json'
 
 module Minicron
   # The transport module deals with interactions between the server and client

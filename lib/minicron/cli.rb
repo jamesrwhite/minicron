@@ -1,17 +1,23 @@
-require 'pty'
+autoload :PTY,        'pty'
+autoload :Minicron,   'minicron'
+
 require 'English'
 require 'rainbow/ext/string'
 require 'commander'
 require 'minicron/constants'
 require 'minicron/cli/commands'
-require 'minicron/transport'
-require 'minicron/transport/client'
-require 'minicron/transport/server'
-require 'minicron/monitor'
 
 include Commander::UI
 
 module Minicron
+  autoload :Transport, 'minicron/transport'
+  autoload :Monitor,   'minicron/monitor'
+
+  module Transport
+    autoload :Client, 'minicron/transport/client'
+    autoload :Server, 'minicron/transport/server'
+  end
+
   # Handles the main CLI interaction of minicron
   # TODO: this class is probably too complicated and should be refactored a bit
   module CLI

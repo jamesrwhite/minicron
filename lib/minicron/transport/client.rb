@@ -1,7 +1,9 @@
-require 'minicron/transport/faye/client'
+require 'json'
 
 module Minicron
   module Transport
+    autoload :FayeClient, 'minicron/transport/faye/client'
+
     class Client < Minicron::Transport::FayeClient
       # Instantiate a new instance of the client
       #

@@ -1,10 +1,13 @@
-require 'minicron/alert/email'
-require 'minicron/alert/sms'
-require 'minicron/alert/pagerduty'
-require 'minicron/hub/models/alert'
-require 'minicron/hub/models/job'
-
 module Minicron
+  autoload :Email,      'minicron/alert/email'
+  autoload :SMS,        'minicron/alert/sms'
+  autoload :PagerDuty,  'minicron/alert/pagerduty'
+
+  module Hub
+    autoload :Alert,    'minicron/hub/models/alert'
+    autoload :Job,      'minicron/hub/models/job'
+  end
+
   # Allows the sending of alerts via multiple mediums
   class Alert
     # Send an alert using all enabled mediums
