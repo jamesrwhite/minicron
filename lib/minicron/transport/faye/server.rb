@@ -1,10 +1,11 @@
-require 'thin'
-require 'rack'
-require 'faye'
-require 'minicron/transport/faye/extensions/job_handler'
+autoload :Thin, 'thin'
+autoload :Rack, 'rack'
+autoload :Faye, 'faye'
 
 module Minicron
   module Transport
+    autoload :FayeJobHandler, 'minicron/transport/faye/extensions/job_handler'
+
     class FayeServer
       attr_reader :server
 

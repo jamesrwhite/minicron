@@ -1,6 +1,9 @@
-require 'eventmachine'
-require 'em-http-request'
 require 'digest/md5'
+autoload :EM, 'eventmachine'
+
+module EventMachine
+  autoload :HttpRequest, 'em-http-request'
+end
 
 module Minicron
   module Transport

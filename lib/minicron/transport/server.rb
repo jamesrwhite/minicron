@@ -1,8 +1,15 @@
-require 'thin'
-require 'rack'
+autoload :Thin, 'thin'
+autoload :Rack, 'rack'
 
 module Minicron
+  module Hub
+    autoload :App,                'minicron/hub/app'
+    autoload :ExceptionHandling,  'minicron/hub/app'
+  end
+
   module Transport
+    autoload :FayeServer, 'minicron/transport/faye/server'
+
     # Used to mangage the web server minicron runs on
     class Server
       @server = nil
@@ -26,7 +33,6 @@ module Minicron
 
           # The 'hub', aka our sinatra web interface
           map '/' do
-            require Minicron::LIB_PATH + '/minicron/hub/app'
             use Minicron::Hub::ExceptionHandling
             run Minicron::Hub::App.new
           end
@@ -36,7 +42,6 @@ module Minicron
 
           # The faye server the server and browser clients talk to
           map faye_path do
-            require Minicron::LIB_PATH + '/minicron/transport/faye/server'
             run Minicron::Transport::FayeServer.new.server
           end
         end

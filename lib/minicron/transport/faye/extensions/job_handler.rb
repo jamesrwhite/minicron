@@ -1,10 +1,15 @@
 require 'minicron/alert'
-require 'minicron/hub/models/host'
-require 'minicron/hub/models/job'
-require 'minicron/hub/models/execution'
-require 'minicron/hub/models/job_execution_output'
 
 module Minicron
+  autoload :Alert,                'minicron/alert'
+
+  module Hub
+    autoload :Host,               'minicron/hub/models/host'
+    autoload :Job,                'minicron/hub/models/job'
+    autoload :Execution,          'minicron/hub/models/execution'
+    autoload :JobExecutionOutput, 'minicron/hub/models/job_execution_output'
+  end
+
   module Transport
     # An extension to the Faye server to store some of the data it receives
     #
