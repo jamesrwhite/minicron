@@ -162,7 +162,6 @@ module Minicron
                 yield output[:output] unless output[:type] == :status
               end
             rescue Exception => e
-              p e
               # Send the exception message to the server and yield it
               unless Minicron.config['cli']['dry_run']
                 faye.send(:job_id => ids[:job_id], :execution_id => ids[:execution_id], :type => :output, :message => e.message)
