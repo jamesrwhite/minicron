@@ -47,12 +47,12 @@ where data from one or many instances of the CLI are is recieved and stored in a
 a web interface to the data and makes it easy to manage your cron jobs.</p>
 
 <ul>
-<li><a href="#screenshots">Screenshots</a></li>
 <li><a href="#background">Background</a></li>
 <li><a href="#goals">Features</a></li>
 <li><a href="#requirements">Requirements</a></li>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#usage">Usage</a></li>
+<li><a href="#security">Security</a></li>
 <li><a href="#documentation">Documentation</a></li>
 <li><a href="#versioning">Versioning</a></li>
 <li><a href="#contributing">Contributing</a></li>
@@ -61,9 +61,7 @@ a web interface to the data and makes it easy to manage your cron jobs.</p>
 </ul><h2>
 <a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h2>
 
-<p><img src="http://f.cl.ly/items/2o3q3x1N1X3n2t180H1u/Image%202014-04-12%20at%2010.54.39%20pm.png" height="100"></p>
-
-<p>More coming..</p>
+<p><img src="http://f.cl.ly/items/1k1h3n2A3Z3P3v2o0733/Image%202014-04-15%20at%2012.50.56%20am.png" height="175"><img src="http://f.cl.ly/items/0c27341m2l1E230B0q1l/Image%202014-04-15%20at%2012.40.42%20am.png" height="175"><img src="http://f.cl.ly/items/0Y2O0P0j012s3C3t3a3E/Image%202014-04-15%20at%2012.39.19%20am.png" height="175"><img src="http://f.cl.ly/items/2R1f2m350W46423c220D/Image%202014-04-15%20at%2012.32.41%20am.png" height="175"></p>
 
 <h2>
 <a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
@@ -94,7 +92,7 @@ working at <a href="http://www.miniclip.com">Miniclip</a> where the management a
 <a href="http://www.pagerduty.com">PagerDuty</a> (SMS, Phone, Mobile Push Notifications and Email)</li>
 </ul>
 </li>
-</ul><p>Lots more is planned for the future, see <a href="issues?state=open">open issues</a> or if you don't see the feature you want there add it!</p>
+</ul><p>Lots more is planned for the future, see <a href="https://github.com/jamesrwhite/minicron/issues?state=open">open issues</a> or if you don't see the feature you want there add it!</p>
 
 <h2>
 <a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
@@ -120,7 +118,7 @@ working at <a href="http://www.miniclip.com">Miniclip</a> where the management a
 <a name="web-server--reverse-proxy" class="anchor" href="#web-server--reverse-proxy"><span class="octicon octicon-link"></span></a>Web Server / Reverse Proxy</h4>
 
 <p>If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="sample.nginx.conf">example config</a> for nginx.</p>
+nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">example config</a> for nginx.</p>
 
 <h4>
 <a name="browser" class="anchor" href="#browser"><span class="octicon octicon-link"></span></a>Browser</h4>
@@ -142,9 +140,9 @@ but I encourage you to give it a try in a non critical environment and help me t
 <ol>
 <li><p>First check you meet the <a href="#requirements">requirements</a></p></li>
 <li><p>On some distributions you may need to install the <code>ruby-dev</code> and <code>build-essential</code> packages</p></li>
-<li><p>To install the latest release (currently 0.3) you can <code>gem install minicron</code>, depending on your ruby setup
+<li><p>To install the latest release (currently 0.4) you can <code>gem install minicron</code>, depending on your ruby setup
 you may need to run this with <code>sudo</code></p></li>
-<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="default.config.toml">default.config.toml</a> as a guide on what options are configurable</p></li>
+<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml">default.config.toml</a> as a guide on what options are configurable</p></li>
 <li>
 <p>Make sure you have created an empty database with the name you set in <code>/etc/minicron.toml</code></p>
 
@@ -158,7 +156,7 @@ you may need to run this with <code>sudo</code></p></li>
 </blockquote>
 </li>
 <li><p>You can then <code>minicron db setup</code> to create the database schema, alternatively you can use
-the <a href="lib/minicron/hub/db/schema.sql">schema dump provided</a></p></li>
+the <a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql">schema dump provided</a></p></li>
 <li><p>Done! See the usage section below for more details on how to use minicron now you have it installed</p></li>
 </ol><h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
@@ -205,7 +203,7 @@ you can also use the <code>stop</code> and <code>status</code> commands to contr
 <p>To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the <code>--debug</code>
 option.</p>
 
-<p>See <a href="sample.nginx.conf">sample.nginx.conf</a> for an example of
+<p>See <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">sample.nginx.conf</a> for an example of
 how to run minicron behind a reverse proxy.</p>
 
 <h4>
@@ -214,8 +212,13 @@ how to run minicron behind a reverse proxy.</p>
 <p>To be able to perform CRUD operations on the crontab minicron needs to connect via SSH to the host.
 When you set up a host minicron automatically creates a public/private key pair for you and stores it
 in <code>~/.ssh</code> on the host the minicron server is being run on using the naming schema <code>minicron_host_*HOST_ID*_rsa(.pub)</code>.
-To be able edit the crontab on a host minicron <em>needs</em> to connect to the host as the root user so you will
-need to to copy the public key to the hosts authorized_keys file e.g <code>/root/.ssh/authorized_keys</code> on
+To be able edit the crontab on a host minicron needs to have permission to edit <code>/etc/crontab</code> and write and
+execute permissions on the <code>/etc</code> directory so it can move files there (the crontab). This will most
+likely mean allowing minicron to connect to the host as the root user although you could alter your permissions
+to allow for this not to be the case.</p>
+
+<p>As an example, to setup minicron SSH for the root user on a host copy the public key to the hosts
+authorized_keys file e.g <code>/root/.ssh/authorized_keys</code> on
 most linux distributions or <code>/var/root/.ssh/authorized_keys</code> on OSX.</p>
 
 <h4>
@@ -229,28 +232,44 @@ or <code>--version</code> are passed to the CLI.</p>
 
 <p>Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the <code>--config</code> global option. The file is expected
-to be in the <a href="https://github.com/mojombo/toml" title="toml">toml</a> format. The default options are specified in the
-<a href="default.config.toml" title="default.config.toml">default.config.toml</a>
+to be in the <a href="https://github.com/mojombo/toml">toml</a> format. The default options are specified in the
+<a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml">default.config.toml</a>
 file and minicron will parse a config located in <code>/etc/minicron.toml</code> if it exists. Options specified via
 the command line will take precedence over those taken from a config file.</p>
 
 <h2>
+<a name="security" class="anchor" href="#security"><span class="octicon octicon-link"></span></a>Security</h2>
+
+<p>As mentioned previously minicron is still under development and as such is missing some essential features as far as
+security is concerned. For example authentication still needs to be added to the Web UI, API and Faye (the websocket
+server that jobs use to communicate their status updates).</p>
+
+<blockquote>
+<p><strong>It is not recommended that you allow your minicron host to be accessible via the public internet!</strong></p>
+</blockquote>
+
+<p>Obviously without authentication anyone who knew the address of your minicron host would be able to set up
+a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publically but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
+firewall that only allows connections from an internal network and/or a VPN.</p>
+
+<h2>
 <a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
 
-<p>minicron uses <a href="http://yardoc.org/" title="Yard">Yard</a> for its code documentation (currently the only <em>usage</em> documentation is what you're reading right now), you can either generate it and view
+<p>minicron uses <a href="http://yardoc.org/">Yard</a> for its code documentation (currently the only <em>usage</em> documentation is what you're reading right now), you can either generate it and view
 it locally using the following commands:</p>
 
 <div class="highlight highlight-bash"><pre>yard doc
 yard server
 </pre></div>
 
-<p>or view the most up to date version online at <a href="http://rdoc.info/github/jamesrwhite/minicron/master/frames" title="RubyDoc.info">RubyDoc.info</a>.</p>
+<p>or view the most up to date version online at <a href="http://rdoc.info/github/jamesrwhite/minicron/master/frames">RubyDoc.info</a>.</p>
 
 <h2>
 <a name="versioning" class="anchor" href="#versioning"><span class="octicon octicon-link"></span></a>Versioning</h2>
 
-<p>All stable releases will follow the <a href="http://semver.org/">semantic versioning</a> guidelines. Until 1.0 hits I will try to document any
-major breaking changes in the release descriptions.</p>
+<p>All stable releases will follow the <a href="http://semver.org/">semantic versioning</a> guidelines. Until 1.0 hits I will try
+to document any breaking changes in the release descriptions but you should proceed with caution before relying
+on anything etc etc</p>
 
 <p>Releases will be numbered with the following format:</p>
 
@@ -265,20 +284,19 @@ major breaking changes in the release descriptions.</p>
 </ul><h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-<p>Feedback and pull requests are welcome, please see <a href="CONTRIBUTING.md" title="CONTRIBUTING.md">CONTRIBUTING.md</a> for more info.</p>
+<p>Feedback and pull requests are welcome, please see <a href="https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for more info.</p>
 
 <p>Areas that I would love some help with:</p>
 
 <ul>
-<li>Any of the unassigned <a href="issues?state=open">issues here</a>.</li>
+<li>Any of the unassigned <a href="https://github.com/jamesrwhite/minicron/issues?state=open">issues here</a>.</li>
 <li>General testing of the system, let me know what you think and create issues for any bugs you find!</li>
 <li>Tests!!</li>
 <li>Validation and error handling improvements</li>
-<li>Documentation improvements. If you find something confusing or unexpected let me know and I'll add or improve
-documentation for it!</li>
-<li>Look for '<a href="search?q=TODO%3A">TODO:</a>' notices littered around the code,
+<li>Documentation improvements.</li>
+<li>Look for '<a href="https://github.com/jamesrwhite/minicron/search?q=TODO%3A">TODO:</a>' notices littered around the code,
 I'm trying to convert them all to issues but there are a lot..</li>
-<li>Code refactoring, I had a reasonably tight deadline to have the main concept done by so some parts are a bit rushed</li>
+<li>Code refactoring, I had a deadline to meet for the initial versions so some parts are a tad rushed</li>
 <li>UI improvements</li>
 </ul><h2>
 <a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h2>
@@ -295,7 +313,7 @@ I'm trying to convert them all to issues but there are a lot..</li>
 <h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>minicron is licensed under the GPL v3, <a href="LICENSE" title="see here">see here for the full license</a></p>
+<p>minicron is licensed under the GPL v3, <a href="https://github.com/jamesrwhite/minicron/blob/master/LICENSE">see here for the full license</a></p>
       </section>
       <footer>
         <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
