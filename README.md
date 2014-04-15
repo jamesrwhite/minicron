@@ -19,6 +19,7 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Security](#security)
 - [Documentation](#documentation)
 - [Versioning](#versioning)
 - [Contributing](#contributing)
@@ -165,8 +166,13 @@ how to run minicron behind a reverse proxy.
 To be able to perform CRUD operations on the crontab minicron needs to connect via SSH to the host.
 When you set up a host minicron automatically creates a public/private key pair for you and stores it
 in ````~/.ssh```` on the host the minicron server is being run on using the naming schema ````minicron_host_*HOST_ID*_rsa(.pub)````.
-To be able edit the crontab on a host minicron *needs* to connect to the host as the root user so you will
-need to to copy the public key to the hosts authorized_keys file e.g ````/root/.ssh/authorized_keys```` on
+To be able edit the crontab on a host minicron needs to have permission to edit ````/etc/crontab```` and write and
+execute permissions on the ````/etc```` directory so it can move files there (the crontab). This will most
+likely mean allowing minicron to connect to the host as the root user although you could alter your permissions
+to allow for this not to be the case.
+
+As an example, to setup minicron SSH for the root user on a host copy the public key to the hosts
+authorized_keys file e.g ````/root/.ssh/authorized_keys```` on
 most linux distributions or ````/var/root/.ssh/authorized_keys```` on OSX.
 
 #### Version
@@ -182,6 +188,19 @@ to be in the [toml](https://github.com/mojombo/toml) format. The default options
 [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml)
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
+
+Security
+---------
+
+As mentioned previously minicron is still under development and as such is missing some essential features as far as
+security is concerned. For example authentication still needs to be added to the Web UI, API and Faye (the websocket
+server that jobs use to communicate their status updates).
+  
+  > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
+  
+Obviously without authentication anyone who knew the address of your minicron host would be able to set up
+a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publically but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
+firewall that only allows connections from an internal network and/or a VPN.
 
 Documentation
 -------------
@@ -223,11 +242,10 @@ Areas that I would love some help with:
 - General testing of the system, let me know what you think and create issues for any bugs you find!
 - Tests!!
 - Validation and error handling improvements
-- Documentation improvements. If you find something confusing or unexpected let me know and I'll add or improve
-  documentation for it!
+- Documentation improvements.
 - Look for '[TODO:](https://github.com/jamesrwhite/minicron/search?q=TODO%3A)' notices littered around the code,
   I'm trying to convert them all to issues but there are a lot..
-- Code refactoring, I had a reasonably tight deadline to have the main concept done by so some parts are a bit rushed
+- Code refactoring, I had a deadline to meet for the initial versions so some parts are a tad rushed
 - UI improvements
 
 Support
