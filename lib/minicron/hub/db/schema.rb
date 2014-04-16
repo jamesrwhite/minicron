@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "sent_at",                             null: false
   end
 
-  add_index "alerts", ["execution_id"], name: "execution_id", using: :btree
+  add_index "alerts", ["execution_id"], name: "alerts_execution_id", using: :btree
   add_index "alerts", ["expected_at"], name: "expected_at", using: :btree
   add_index "alerts", ["kind"], name: "kind", using: :btree
   add_index "alerts", ["medium"], name: "medium", using: :btree
@@ -35,9 +35,9 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer  "exit_status"
   end
 
-  add_index "executions", ["created_at"], name: "created_at", using: :btree
+  add_index "executions", ["created_at"], name: "executions_created_at", using: :btree
   add_index "executions", ["finished_at"], name: "finished_at", using: :btree
-  add_index "executions", ["job_id"], name: "job_id", using: :btree
+  add_index "executions", ["job_id"], name: "executions_job_id", using: :btree
   add_index "executions", ["started_at"], name: "started_at", using: :btree
 
   create_table "hosts", force: true do |t|
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "timestamp",    null: false
   end
 
-  add_index "job_execution_outputs", ["execution_id"], name: "execution_id", using: :btree
+  add_index "job_execution_outputs", ["execution_id"], name: "job_execution_outputs_execution_id", using: :btree
   add_index "job_execution_outputs", ["seq"], name: "seq", using: :btree
 
   create_table "jobs", force: true do |t|
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "updated_at",                         null: false
   end
 
-  add_index "jobs", ["created_at"], name: "created_at", using: :btree
+  add_index "jobs", ["created_at"], name: "jobs_created_at", using: :btree
   add_index "jobs", ["host_id"], name: "host_id", using: :btree
   add_index "jobs", ["job_hash"], name: "job_hash", unique: true, using: :btree
 
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 0) do
   add_index "schedules", ["day_of_the_month"], name: "day_of_the_month", using: :btree
   add_index "schedules", ["day_of_the_week"], name: "day_of_the_week", using: :btree
   add_index "schedules", ["hour"], name: "hour", using: :btree
-  add_index "schedules", ["job_id"], name: "job_id", using: :btree
+  add_index "schedules", ["job_id"], name: "schedules_job_id", using: :btree
   add_index "schedules", ["minute"], name: "minute", using: :btree
   add_index "schedules", ["month"], name: "month", using: :btree
   add_index "schedules", ["special"], name: "special", using: :btree

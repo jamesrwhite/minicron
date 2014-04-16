@@ -22,7 +22,7 @@ debug = false
 
 # Database options
 [database]
-type = "mysql" # [mysql]
+type = "mysql" # [mysql, sqlite]
 host = "127.0.0.1"
 database = "minicron"
 username = "minicron"

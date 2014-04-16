@@ -45,6 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'escape', '0.0.4'
 
   # Databases we want to support
+  spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.8'
   spec.add_runtime_dependency 'mysql2', '~> 0.3', '>= 0.3.15'
 
   spec.add_development_dependency 'bundler', '~> 1.5'

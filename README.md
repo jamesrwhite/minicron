@@ -67,7 +67,8 @@ Requirements
 #### Database
 
 - MySQL
-- Support for PostgreSQL and SQlite is planned in the future
+- SQLite >= 3.6.16
+- PostgreSQL - As yet untested
 
 #### Web Server / Reverse Proxy
 
