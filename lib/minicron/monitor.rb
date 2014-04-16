@@ -25,6 +25,11 @@ module Minicron
           :username => Minicron.config['database']['username'],
           :password => Minicron.config['database']['password']
         )
+      when 'sqlite'
+       ActiveRecord::Base.establish_connection(
+          :adapter => 'sqlite3',
+          :database => Minicron::HUB_PATH + '/db/minicron.sqlite3' # TODO: Allow configuring this but default to this value
+        )
       else
         fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end

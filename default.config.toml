@@ -22,11 +22,12 @@ debug = false
 
 # Database options
 [database]
-type = "mysql" # [mysql]
-host = "127.0.0.1"
-database = "minicron"
-username = "minicron"
-password = "password"
+type = "sqlite" # [mysql, sqlite]
+# The options below are for mysql only
+# host = "127.0.0.1"
+# database = "minicron"
+# username = "minicron"
+# password = "password"
 
 # CLI options
 [cli]
