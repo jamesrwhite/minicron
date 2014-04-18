@@ -24,6 +24,7 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Versioning](#versioning)
 - [Contributing](#contributing)
 - [Support](#support)
+- [Credit](#credit)
 - [License](#license)
 
 Screenshots
@@ -261,6 +262,13 @@ Where possible I will try and provide support for minicron, you can get in touch
 - Email [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
 
 Or feel free to open an issue and I'll do my best to help.
+
+Credit
+-------
+
+minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development. I started out trying to list all of them but it was taking way too much time so check out
+[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L25-L54) and
+[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L35-L65).
 
 License
 --------
