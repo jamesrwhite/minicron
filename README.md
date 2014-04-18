@@ -37,9 +37,10 @@ Screenshots
 Background
 -----------
 
-I'm developing minicron as part of my dissertation at university which has to be completed by May but I plan to continue
-development after that. The inspiration for developing minicron comes from my own experience, in particular my time spent
-working at [Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
+I'm developing minicron as part of my dissertation at university which has to be completed by mid May but I plan to continue
+its development after that. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
+in particular my time spent working at [Miniclip](http://www.miniclip.com) (which is where the name comes from, miniclip.. minicron, get it?)
+where the management and monitoring of cron jobs at times proved to be tricky!
 
 Features
 ---------
@@ -74,6 +75,7 @@ Requirements
 
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
 nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for nginx.
+It should also be possible to run it behind Apache I just haven't had time to add an example config for it yet.
 
 #### Browser
 
@@ -82,7 +84,7 @@ I'm currently unsure of how it functions in the various of Internet Explorer but
 
 #### OS
 
-Should run on osx and any linux/bsd based OS that the above ruby versions run on.
+Should run on OSX and any Linux/BSD based OS that the above ruby versions run on.
 
 Installation
 -------------
