@@ -11,7 +11,7 @@ minicron
 minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be
 thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your
 server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point
-where data from one or many instances of the CLI is recieved and stored in a database. The Hub also provides
+where data from one or many instances of the CLI is received and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.
 
 - [Background](#background)
@@ -203,7 +203,7 @@ server that jobs use to communicate their status updates).
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
   
 Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publically but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
+a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
 firewall that only allows connections from an internal network and/or a VPN.
 
 Documentation
