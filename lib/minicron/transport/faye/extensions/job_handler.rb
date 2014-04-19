@@ -17,7 +17,7 @@ module Minicron
     #       currently it's just assumed the correct data is passed and the server
     #       can crash if it isn't
     class FayeJobHandler
-      # Called by Faye when a message is recieved
+      # Called by Faye when a message is received
       #
       # @param message [Hash] The message data
       # @param request the rack request object
