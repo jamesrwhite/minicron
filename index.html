@@ -43,7 +43,7 @@
 <p>minicron aims to complement <code>cron</code> by making it easier to manage and monitor cron jobs, it can largely be
 thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your
 server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point
-where data from one or many instances of the CLI is recieved and stored in a database. The Hub also provides
+where data from one or many instances of the CLI is received and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.</p>
 
 <ul>
@@ -57,6 +57,7 @@ a web interface to the data and makes it easy to manage your cron jobs.</p>
 <li><a href="#versioning">Versioning</a></li>
 <li><a href="#contributing">Contributing</a></li>
 <li><a href="#support">Support</a></li>
+<li><a href="#credit">Credit</a></li>
 <li><a href="#license">License</a></li>
 </ul><h2>
 <a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h2>
@@ -66,9 +67,10 @@ a web interface to the data and makes it easy to manage your cron jobs.</p>
 <h2>
 <a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
 
-<p>I'm developing minicron as part of my dissertation at university which has to be completed by May but I plan to continue
-development after that. The inspiration for developing minicron comes from my own experience, in particular my time spent
-working at <a href="http://www.miniclip.com">Miniclip</a> where the management and monitoring of cron jobs at times proved to be tricky!</p>
+<p>I'm developing minicron as part of my dissertation at university which has to be completed by mid May but I plan to continue
+its development after that. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
+in particular my time spent working at <a href="http://www.miniclip.com">Miniclip</a> (which is where the name comes from, miniclip.. minicron, get it?)
+where the management and monitoring of cron jobs at times proved to be tricky!</p>
 
 <h2>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -119,7 +121,8 @@ working at <a href="http://www.miniclip.com">Miniclip</a> where the management a
 <a name="web-server--reverse-proxy" class="anchor" href="#web-server--reverse-proxy"><span class="octicon octicon-link"></span></a>Web Server / Reverse Proxy</h4>
 
 <p>If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">example config</a> for nginx.</p>
+nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">example config</a> for nginx.
+It should also be possible to run it behind Apache I just haven't had time to add an example config for it yet.</p>
 
 <h4>
 <a name="browser" class="anchor" href="#browser"><span class="octicon octicon-link"></span></a>Browser</h4>
@@ -130,7 +133,7 @@ I'm currently unsure of how it functions in the various of Internet Explorer but
 <h4>
 <a name="os" class="anchor" href="#os"><span class="octicon octicon-link"></span></a>OS</h4>
 
-<p>Should run on osx and any linux/bsd based OS that the above ruby versions run on.</p>
+<p>Should run on OSX and any Linux/BSD based OS that the above ruby versions run on.</p>
 
 <h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -250,7 +253,7 @@ server that jobs use to communicate their status updates).</p>
 </blockquote>
 
 <p>Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publically but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
+a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
 firewall that only allows connections from an internal network and/or a VPN.</p>
 
 <h2>
@@ -310,6 +313,13 @@ I'm trying to convert them all to issues but there are a lot..</li>
 <li>Email <a href="mailto:dev.jameswhite+minicron@gmail.com">dev.jameswhite+minicron@gmail.com</a>
 </li>
 </ul><p>Or feel free to open an issue and I'll do my best to help.</p>
+
+<h2>
+<a name="credit" class="anchor" href="#credit"><span class="octicon octicon-link"></span></a>Credit</h2>
+
+<p>minicron makes use of a <em>lot</em> of awesome open source projects that have saved me a lot of time in its development. I started out trying to list all of them but it was taking way too much time so check out
+<a href="https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L25-L54">minicron.gemspec</a> and
+<a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L35-L65">app.rb</a>.</p>
 
 <h2>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
