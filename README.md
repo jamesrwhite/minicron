@@ -63,8 +63,8 @@ Requirements
 
 #### Ruby
 - **MRI**: 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
-- <del>**Rubinius**: Travis builds are run on the latest release</del> [*awaiting bug fix*](https://github.com/rubinius/rubinius/issues/2944)
-- **JRuby:** currently untested but most likely needs some work
+- <del>**Rubinius**: Travis builds are run on the latest release</del> See: [#76](https://github.com/jamesrwhite/minicron/issues/76)
+- <del>**JRuby:**: Travis builds are run on the latest release</del> &nbsp;&nbsp;&nbsp;See: [#77](https://github.com/jamesrwhite/minicron/issues/77)
 
 #### Database
 
