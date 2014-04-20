@@ -11,7 +11,7 @@ minicron
 minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be
 thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your
 server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point
-where data from one or many instances of the CLI is recieved and stored in a database. The Hub also provides
+where data from one or many instances of the CLI is received and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.
 
 - [Background](#background)
@@ -24,6 +24,7 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Versioning](#versioning)
 - [Contributing](#contributing)
 - [Support](#support)
+- [Credit](#credit)
 - [License](#license)
 
 Screenshots
@@ -37,9 +38,10 @@ Screenshots
 Background
 -----------
 
-I'm developing minicron as part of my dissertation at university which has to be completed by May but I plan to continue
-development after that. The inspiration for developing minicron comes from my own experience, in particular my time spent
-working at [Miniclip](http://www.miniclip.com) where the management and monitoring of cron jobs at times proved to be tricky!
+I'm developing minicron as part of my dissertation at university which has to be completed by mid May but I plan to continue
+its development after that. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
+in particular my time spent working at [Miniclip](http://www.miniclip.com) (which is where the name comes from, miniclip.. minicron, get it?)
+where the management and monitoring of cron jobs at times proved to be tricky!
 
 Features
 ---------
@@ -61,8 +63,8 @@ Requirements
 
 #### Ruby
 - **MRI**: 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
-- <del>**Rubinius**: Travis builds are run on the latest release</del> [*awaiting bug fix*](https://github.com/rubinius/rubinius/issues/2944)
-- **JRuby:** currently untested but most likely needs some work
+- <del>**Rubinius**: Travis builds are run on the latest release</del> See: [#76](https://github.com/jamesrwhite/minicron/issues/76)
+- <del>**JRuby:**: Travis builds are run on the latest release</del> &nbsp;&nbsp;&nbsp;See: [#77](https://github.com/jamesrwhite/minicron/issues/77)
 
 #### Database
 
@@ -74,6 +76,7 @@ Requirements
 
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
 nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for nginx.
+It should also be possible to run it behind Apache I just haven't had time to add an example config for it yet.
 
 #### Browser
 
@@ -82,7 +85,7 @@ I'm currently unsure of how it functions in the various of Internet Explorer but
 
 #### OS
 
-Should run on osx and any linux/bsd based OS that the above ruby versions run on.
+Should run on OSX and any Linux/BSD based OS that the above ruby versions run on.
 
 Installation
 -------------
@@ -200,7 +203,7 @@ server that jobs use to communicate their status updates).
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
   
 Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publically but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
+a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
 firewall that only allows connections from an internal network and/or a VPN.
 
 Documentation
@@ -259,6 +262,13 @@ Where possible I will try and provide support for minicron, you can get in touch
 - Email [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
 
 Or feel free to open an issue and I'll do my best to help.
+
+Credit
+-------
+
+minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development. I started out trying to list all of them but it was taking way too much time so check out
+[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L25-L54) and
+[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L35-L65).
 
 License
 --------
