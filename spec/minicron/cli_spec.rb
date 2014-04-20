@@ -119,7 +119,7 @@ describe Minicron::CLI do
           output += line[:output]
         end
 
-        expect(output.split("\n").length).to eq 7
+        expect(output.clean.split("\n").length).to eq 7
       end
     end
 
