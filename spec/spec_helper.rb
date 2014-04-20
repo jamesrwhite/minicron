@@ -20,7 +20,7 @@ end
 # Normalise varied new line usage
 class String
   def clean
-    strip.encode(encoding, :universal_newline => true)
+    strip.gsub(/\r\n?/, "\n")
   end
 end
 

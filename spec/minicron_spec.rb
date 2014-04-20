@@ -127,7 +127,7 @@ describe Minicron do
 
     context 'when a file without read permissions is passed' do
       before (:each) do
-        File.write('/tmp/minicron_toml_test', '')
+        File.write('/tmp/minicron_toml_test', 'hey')
         File.chmod(0200, '/tmp/minicron_toml_test')
       end
 
