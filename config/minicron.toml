@@ -2,7 +2,7 @@
 
 # Global options
 verbose = false
-trace = false
+trace = false # Useful for debugging
 
 # Client options
 [client]
@@ -18,7 +18,7 @@ inactivity_timeout = 5
 host = "127.0.0.1"
 port = 9292
 path = "/"
-debug = false
+debug = false # When true the server will not run as a daemon
 
 # Database options
 [database]
@@ -31,8 +31,8 @@ type = "sqlite" # [mysql, sqlite]
 
 # CLI options
 [cli]
-mode = "line" # [line, char]
-dry_run = false
+mode = "line" # [line, char] - line by line output or char by char
+dry_run = false # When true the command is run but not sent to the server
 
 # Alerting options
 [alerts]
