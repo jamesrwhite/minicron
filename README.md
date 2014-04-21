@@ -240,7 +240,7 @@ Based on the following guidelines:
 Roadmap
 --------
 
-I'm going to work a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..
+I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..
 
 - Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25) and
   [#30](https://github.com/jamesrwhite/minicron/issues/30))
