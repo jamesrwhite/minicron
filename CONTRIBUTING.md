@@ -17,6 +17,6 @@ Pull requests of all sizes are very much appreciated, below is a quick guide on 
 
 7. Submit your pull request!
 
-Where possible I'm trying to adhere to the [Ruby Community Styleguide](https://github.com/bbatsov/ruby-style-guide "Ruby Community Styleguide") so please try to do so when making your changes.
+Where possible I'm trying to adhere to the [Ruby Community Styleguide](https://github.com/bbatsov/ruby-style-guide "Ruby Community Styleguide") so please try to do so when making your changes. Install a plugin for [EditorConfig](http://editorconfig.org) and your IDE should do a lot of this for you automatically!
 
 Thanks!
