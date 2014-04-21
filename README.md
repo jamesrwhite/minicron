@@ -75,7 +75,7 @@ Requirements
 #### Web Server / Reverse Proxy
 
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for nginx.
+nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
 It should also be possible to run it behind Apache I just haven't had time to add an example config for it yet.
 
 #### Browser
@@ -100,7 +100,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 3. To install the latest release (currently 0.5) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
-4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml) as a guide on what options are configurable
+4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
 
 5. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
 
@@ -162,7 +162,7 @@ you can also use the ````stop```` and ````status```` commands to control the ser
 To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the ````--debug````
 option.
 
-See [sample.nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf) for an example of
+See [nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for an example of
 how to run minicron behind a reverse proxy.
 
 #### Connecting to a host via SSH
@@ -189,7 +189,7 @@ or ````--version```` are passed to the CLI.
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
 to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
-[default.config.toml](https://github.com/jamesrwhite/minicron/blob/master/default.config.toml)
+[minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml)
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
 
@@ -199,9 +199,9 @@ Security
 As mentioned previously minicron is still under development and as such is missing some essential features as far as
 security is concerned. For example authentication still needs to be added to the Web UI, API and Faye (the websocket
 server that jobs use to communicate their status updates).
-  
+
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
-  
+
 Obviously without authentication anyone who knew the address of your minicron host would be able to set up
 a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
 firewall that only allows connections from an internal network and/or a VPN.
