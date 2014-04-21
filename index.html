@@ -55,6 +55,7 @@ a web interface to the data and makes it easy to manage your cron jobs.</p>
 <li><a href="#security">Security</a></li>
 <li><a href="#documentation">Documentation</a></li>
 <li><a href="#versioning">Versioning</a></li>
+<li><a href="#roadmap">Roadmap</a></li>
 <li><a href="#contributing">Contributing</a></li>
 <li><a href="#support">Support</a></li>
 <li><a href="#credit">Credit</a></li>
@@ -106,10 +107,11 @@ where the management and monitoring of cron jobs at times proved to be tricky!</
 <li>
 <strong>MRI</strong>: 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)</li>
 <li>
-<del><strong>Rubinius</strong>: Travis builds are run on the latest release</del> <a href="https://github.com/rubinius/rubinius/issues/2944"><em>awaiting bug fix</em></a>
+<del><strong>Rubinius</strong>: Travis builds are run on the latest release</del> See: <a href="https://github.com/jamesrwhite/minicron/issues/76">#76</a>
 </li>
 <li>
-<strong>JRuby:</strong> currently untested but most likely needs some work</li>
+<del><strong>JRuby:</strong>: Travis builds are run on the latest release</del>    See: <a href="https://github.com/jamesrwhite/minicron/issues/77">#77</a>
+</li>
 </ul><h4>
 <a name="database" class="anchor" href="#database"><span class="octicon octicon-link"></span></a>Database</h4>
 
@@ -121,7 +123,7 @@ where the management and monitoring of cron jobs at times proved to be tricky!</
 <a name="web-server--reverse-proxy" class="anchor" href="#web-server--reverse-proxy"><span class="octicon octicon-link"></span></a>Web Server / Reverse Proxy</h4>
 
 <p>If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">example config</a> for nginx.
+nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf">example config</a> for nginx.
 It should also be possible to run it behind Apache I just haven't had time to add an example config for it yet.</p>
 
 <h4>
@@ -146,7 +148,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 <li><p>On some distributions you may need to install the <code>ruby-dev</code> and <code>build-essential</code> packages</p></li>
 <li><p>To install the latest release (currently 0.5) you can <code>gem install minicron</code>, depending on your ruby setup
 you may need to run this with <code>sudo</code></p></li>
-<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml">default.config.toml</a> as a guide on what options are configurable</p></li>
+<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml">minicron.toml</a> as a guide on what options are configurable</p></li>
 <li>
 <p>Make sure you have created an empty database with the name you set in <code>/etc/minicron.toml</code></p>
 
@@ -207,7 +209,7 @@ you can also use the <code>stop</code> and <code>status</code> commands to contr
 <p>To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the <code>--debug</code>
 option.</p>
 
-<p>See <a href="https://github.com/jamesrwhite/minicron/blob/master/sample.nginx.conf">sample.nginx.conf</a> for an example of
+<p>See <a href="https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf">nginx.conf</a> for an example of
 how to run minicron behind a reverse proxy.</p>
 
 <h4>
@@ -237,7 +239,7 @@ or <code>--version</code> are passed to the CLI.</p>
 <p>Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the <code>--config</code> global option. The file is expected
 to be in the <a href="https://github.com/mojombo/toml">toml</a> format. The default options are specified in the
-<a href="https://github.com/jamesrwhite/minicron/blob/master/default.config.toml">default.config.toml</a>
+<a href="https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml">minicron.toml</a>
 file and minicron will parse a config located in <code>/etc/minicron.toml</code> if it exists. Options specified via
 the command line will take precedence over those taken from a config file.</p>
 
@@ -285,6 +287,31 @@ on anything etc etc</p>
 <li>A new <em>major</em> release indicates a large change where backwards compatibility is broken.</li>
 <li>A new <em>minor</em> release indicates a normal change that maintains backwards compatibility.</li>
 <li>A new <em>patch</em> release indicates a bugfix or small change which does not affect compatibility.</li>
+</ul><h2>
+<a name="roadmap" class="anchor" href="#roadmap"><span class="octicon octicon-link"></span></a>Roadmap</h2>
+
+<p>I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..</p>
+
+<ul>
+<li>Full cron syntax support (<a href="https://github.com/jamesrwhite/minicron/issues/25">#25</a> and
+<a href="https://github.com/jamesrwhite/minicron/issues/30">#30</a>)</li>
+<li>More robust handling of failure in various places/situations</li>
+<li>Better test coverage for core features</li>
+<li>Support for other Ruby runtimes</li>
+<li>Make it as easy as possible to install/deploy minicron</li>
+<li>More 3rd party alerting integrations</li>
+<li>Finalise and document the REST API that the frontend uses</li>
+<li>Revision control for changes and acitvity tracking</li>
+<li>Support for crontabs in differing locations</li>
+<li>Better experience on mobile/tablet</li>
+<li>Improved security through authentication and permissions</li>
+<li>Better configuration management</li>
+<li>Per job configs? Not sure exactly how this would work but it would be handy
+<a href="https://github.com/jamesrwhite/minicron/issues/82">#82</a>
+</li>
+<li>Better performance when lots of data exists in the system (pagination, lazy loading etc)</li>
+<li>UI improvements, it's just tweaked bootstrap 3 at the moment</li>
+<li>Various other improvements that hopefully already have issues assigned for them..</li>
 </ul><h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
