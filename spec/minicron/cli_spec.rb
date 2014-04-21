@@ -19,7 +19,7 @@ describe Minicron::CLI do
 
   describe '#run' do
     before :each do
-      Minicron.parse_file_config('./default.config.toml')
+      Minicron.parse_file_config('./config/minicron.toml')
     end
 
     context 'when in --dry-run mode' do
@@ -62,7 +62,7 @@ describe Minicron::CLI do
 
     context 'when in --dry-run mode with a valid --config file passed' do
       it 'should run a simple command and print the output to stdout' do
-        Minicron::CLI.run(['run', 'echo hello', '--dry-run', '--trace', '--config', './default.config.toml']) do |output|
+        Minicron::CLI.run(['run', 'echo hello', '--dry-run', '--trace', '--config', './config/minicron.toml']) do |output|
           expect(output.clean).to eq 'hello'
         end
       end
@@ -70,7 +70,7 @@ describe Minicron::CLI do
       it 'should run a simple multi-line command and print the output to stdout' do
         command_output = ''
 
-        Minicron::CLI.run(['run', 'echo "hello\nworld"', '--dry-run', '--trace', '--config', './default.config.toml']) do |output|
+        Minicron::CLI.run(['run', 'echo "hello\nworld"', '--dry-run', '--trace', '--config', './config/minicron.toml']) do |output|
           command_output += output
         end
 
@@ -91,7 +91,7 @@ describe Minicron::CLI do
         it 'should raise ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(['run', '--dry-run', '--trace', '--config', './default.config.toml'])
+              Minicron::CLI.run(['run', '--dry-run', '--trace', '--config', './config/minicron.toml'])
             end.to raise_error ArgumentError
           end
         end
