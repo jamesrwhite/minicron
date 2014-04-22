@@ -197,8 +197,6 @@ module Minicron
       conn ||= @ssh.open
 
       # Loop through each schedule and delete them one by one
-      # TODO: share the ssh connection for this so it's faster when
-      # many schedules exist
       # TODO: what if one schedule removal fails but others don't? Should
       # we try and rollback somehow or just return the job with half its
       # schedules deleted?
@@ -215,8 +213,6 @@ module Minicron
       conn ||= @ssh.open
 
       # Loop through each job and delete them one by one
-      # TODO: share the ssh connection for this so it's faster when
-      # many schedules exist
       # TODO: what if one schedule removal fails but others don't? Should
       # we try and rollback somehow or just return the job with half its
       # schedules deleted?
