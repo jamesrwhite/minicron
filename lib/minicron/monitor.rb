@@ -1,10 +1,10 @@
-autoload :ActiveRecord, 'active_record'
-autoload :CronParser,   'parse-cron'
 require 'minicron/hub/models/schedule'
 require 'minicron/hub/models/execution'
+autoload :ActiveRecord, 'active_record'
+autoload :CronParser,   'parse-cron'
 
 module Minicron
-  autoload :Alert,    'minicron/alert'
+  autoload :Alert,      'minicron/alert'
 
   # Used to monitor the executions in the database and look for any failures
   # or missed executions based on the schedules minicron knows about

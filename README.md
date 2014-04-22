@@ -22,6 +22,7 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Security](#security)
 - [Documentation](#documentation)
 - [Versioning](#versioning)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Support](#support)
 - [Credit](#credit)
@@ -235,6 +236,30 @@ Based on the following guidelines:
 * A new *major* release indicates a large change where backwards compatibility is broken.
 * A new *minor* release indicates a normal change that maintains backwards compatibility.
 * A new *patch* release indicates a bugfix or small change which does not affect compatibility.
+
+Roadmap
+--------
+
+I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..
+
+- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25) and
+  [#30](https://github.com/jamesrwhite/minicron/issues/30))
+- More robust handling of failure in various places/situations
+- Better test coverage for core features
+- Support for other Ruby runtimes
+- Make it as easy as possible to install/deploy minicron
+- More 3rd party alerting integrations
+- Finalise and document the REST API that the frontend uses
+- Revision control for changes and acitvity tracking
+- Support for crontabs in differing locations
+- Better experience on mobile/tablet
+- Improved security through authentication and permissions
+- Better configuration management
+- Per job configs? Not sure exactly how this would work but it would be handy
+  [#82](https://github.com/jamesrwhite/minicron/issues/82)
+- Better performance when lots of data exists in the system (pagination, lazy loading etc)
+- UI improvements, it's just tweaked bootstrap 3 at the moment
+- Various other improvements that hopefully already have issues assigned for them..
 
 Contributing
 ------------
