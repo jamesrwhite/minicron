@@ -1,7 +1,8 @@
-require 'minicron/hub/models/schedule'
-require 'minicron/hub/models/execution'
 autoload :ActiveRecord, 'active_record'
 autoload :CronParser,   'parse-cron'
+
+require 'minicron/hub/models/schedule'
+require 'minicron/hub/models/execution'
 
 module Minicron
   autoload :Alert,      'minicron/alert'

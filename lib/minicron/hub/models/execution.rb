@@ -1,3 +1,5 @@
+autoload :ActiveRecord, 'active_record'
+
 module Minicron
   module Hub
     class Execution < ActiveRecord::Base
