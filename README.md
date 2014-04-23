@@ -69,7 +69,7 @@ Requirements
 
 #### Database
 
-- MySQL
+- MySQL (See [here](https://github.com/brianmario/mysql2#compatibility) for compatability info)
 - SQlite >= 3.6.16
 - Support for PostgreSQL is planned in the future
 
