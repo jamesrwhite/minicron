@@ -113,7 +113,7 @@ but I encourage you to give it a try in a non critical environment and help me t
   > ````
 
 6. You can then ````minicron db setup```` to create the database schema, alternatively you can use
-   the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql)
+   the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql) (MySQL)
 
 7. Done! See the usage section below for more details on how to use minicron now you have it installed
 
