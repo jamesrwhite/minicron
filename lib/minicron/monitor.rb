@@ -27,9 +27,15 @@ module Minicron
           :password => Minicron.config['database']['password']
         )
       when 'sqlite'
+        # Calculate the realtive path to the db because sqlite or activerecord is
+        # weird and doesn't seem to handle abs paths correctly
+        root = Pathname.new(Minicron::BASE_PATH)
+        db = Pathname.new(Minicron::HUB_PATH + '/db')
+        db_rel_path = db.relative_path_from(root)
+
        ActiveRecord::Base.establish_connection(
           :adapter => 'sqlite3',
-          :database => Minicron::HUB_PATH + '/db/minicron.sqlite3' # TODO: Allow configuring this but default to this value
+          :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
         )
       else
         fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
