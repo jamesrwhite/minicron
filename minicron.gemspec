@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra', '~> 1.4', '>= 1.4.4'
   spec.add_runtime_dependency 'erubis', '~> 2.7'
   spec.add_runtime_dependency 'activerecord', '~> 4.0', '>= 4.0.3'
-  spec.add_runtime_dependency 'sinatra-activerecord', '~> 1.6'
+  spec.add_runtime_dependency 'sinatra-activerecord', '~> 1.7'
   spec.add_runtime_dependency 'sinatra-assetpack', '~> 0.3', '>= 0.3.2'
   spec.add_runtime_dependency 'sass', '~> 3.2', '>= 3.2.14'
   spec.add_runtime_dependency 'oj', '~> 2.6'
