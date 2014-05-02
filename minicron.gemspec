@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.requirements << 'build-essential (you may need this for eventmachine)'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
-  spec.add_runtime_dependency 'commander', '~> 4.1', '>= 4.1.6'
+  spec.add_runtime_dependency 'commander', '~> 4.2'
   spec.add_runtime_dependency 'thin', '~> 1.6', '>= 1.6.1'
   spec.add_runtime_dependency 'faye', '~> 1.0', '>= 1.0.1'
   spec.add_runtime_dependency 'eventmachine', '~> 1.0', '>= 1.0.3'
