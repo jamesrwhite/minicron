@@ -69,8 +69,16 @@ Requirements
 
 #### Database
 
-- MySQL (See [here](https://github.com/brianmario/mysql2#compatibility) for compatability info)
-- SQlite >= 3.6.16
+**Default**
+
+- SQLite >= 3.6.16
+  (via the sqlite3 gem which may require libsqlite3-dev or sqlite-devel depending on your OS)
+
+**Also Supported**
+
+These databases are also supported but you will need to manaually install the gems for them
+
+- MySQL via mysql2 (See [here](https://github.com/brianmario/mysql2#compatibility) for compatability info)
 - Support for PostgreSQL is planned in the future
 
 #### Web Server / Reverse Proxy
@@ -283,9 +291,8 @@ Support
 
 Where possible I will try and provide support for minicron, you can get in touch with me via:
 
-- Twitter: [@jamesrwhite](https://twitter.com/jamesrwhite)
-  or [@minicron_dev](https://twitter.com/minicron_dev)
-- Email: [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
+- Twitter [@jamesrwhite](https://twitter.com/jamesrwhite)
+- Email [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
 
 Or feel free to open an issue and I'll do my best to help.
 
