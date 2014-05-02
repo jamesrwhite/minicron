@@ -19,8 +19,9 @@ Gem::Specification.new do |spec|
   spec.executables  << 'minicron'
 
   spec.required_ruby_version = '>= 1.9.3'
-  spec.requirements << 'ruby-dev  (you may need this for eventmachine)'
-  spec.requirements << 'build-essential (you may need this for eventmachine)'
+  spec.requirements << 'libsqlite3-dev or sqlite-devel (sqlite3 dependencies for debian/ubuntu and redhat/centos/fedora respectively)'
+  spec.requirements << 'ruby-dev (you may need this to be able to install eventmachine)'
+  spec.requirements << 'build-essential (you may need this to be able to install eventmachine)'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
   spec.add_runtime_dependency 'commander', '~> 4.1', '>= 4.1.6'
@@ -43,10 +44,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'pagerduty', '~> 1.3', '>= 1.3.4'
   spec.add_runtime_dependency 'insidious', '~> 0.3'
   spec.add_runtime_dependency 'escape', '0.0.4'
-
-  # Databases we want to support
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.8'
-  spec.add_runtime_dependency 'mysql2', '~> 0.3', '>= 0.3.15'
 
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.1'
