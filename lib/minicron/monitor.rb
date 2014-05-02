@@ -29,7 +29,7 @@ module Minicron
       when 'sqlite'
         # Calculate the realtive path to the db because sqlite or activerecord is
         # weird and doesn't seem to handle abs paths correctly
-        root = Pathname.new(Minicron::BASE_PATH)
+        root = Pathname.new(Dir.pwd)
         db = Pathname.new(Minicron::HUB_PATH + '/db')
         db_rel_path = db.relative_path_from(root)
 
