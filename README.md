@@ -291,8 +291,9 @@ Support
 
 Where possible I will try and provide support for minicron, you can get in touch with me via:
 
-- Twitter [@jamesrwhite](https://twitter.com/jamesrwhite)
-- Email [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
+- Twitter: [@jamesrwhite](https://twitter.com/jamesrwhite)
+  or [@minicron_dev](https://twitter.com/minicron_dev)
+- Email: [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
 
 Or feel free to open an issue and I'll do my best to help.
 
