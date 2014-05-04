@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # http://code.google.com/p/sequel-pro/
 #
-# Host: 127.0.0.1 (MySQL 5.6.16)
+# Host: 127.0.0.1 (MySQL 5.6.17)
 # Database: minicron
-# Generation Time: 2014-04-07 17:06:03 +0000
+# Generation Time: 2014-05-04 22:28:09 +0000
 # ************************************************************
 
 
@@ -34,7 +34,7 @@ CREATE TABLE `alerts` (
   `medium` varchar(9) NOT NULL DEFAULT '',
   `sent_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `execution_id` (`execution_id`) USING BTREE,
+  KEY `alerts_execution_id` (`execution_id`) USING BTREE,
   KEY `expected_at` (`expected_at`) USING BTREE,
   KEY `kind` (`kind`) USING BTREE,
   KEY `medium` (`medium`) USING BTREE,
@@ -56,9 +56,9 @@ CREATE TABLE `executions` (
   `finished_at` datetime DEFAULT NULL,
   `exit_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `created_at` (`created_at`) USING BTREE,
+  KEY `executions_created_at` (`created_at`) USING BTREE,
   KEY `finished_at` (`finished_at`) USING BTREE,
-  KEY `job_id` (`job_id`) USING BTREE,
+  KEY `executions_job_id` (`job_id`) USING BTREE,
   KEY `started_at` (`started_at`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -97,7 +97,7 @@ CREATE TABLE `job_execution_outputs` (
   `output` text NOT NULL,
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `execution_id` (`execution_id`) USING BTREE,
+  KEY `job_execution_outputs_execution_id` (`execution_id`) USING BTREE,
   KEY `seq` (`seq`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -119,7 +119,7 @@ CREATE TABLE `jobs` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `job_hash` (`job_hash`) USING BTREE,
-  KEY `created_at` (`created_at`) USING BTREE,
+  KEY `jobs_created_at` (`created_at`) USING BTREE,
   KEY `host_id` (`host_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -133,11 +133,11 @@ DROP TABLE IF EXISTS `schedules`;
 CREATE TABLE `schedules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_id` int(11) NOT NULL,
-  `minute` varchar(179) DEFAULT NULL,
-  `hour` varchar(71) DEFAULT NULL,
-  `day_of_the_month` varchar(92) DEFAULT NULL,
-  `month` varchar(25) DEFAULT NULL,
-  `day_of_the_week` varchar(20) DEFAULT NULL,
+  `minute` varchar(169) DEFAULT NULL,
+  `hour` varchar(61) DEFAULT NULL,
+  `day_of_the_month` varchar(83) DEFAULT NULL,
+  `month` varchar(26) DEFAULT NULL,
+  `day_of_the_week` varchar(13) DEFAULT NULL,
   `special` varchar(9) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE `schedules` (
   KEY `day_of_the_month` (`day_of_the_month`) USING BTREE,
   KEY `day_of_the_week` (`day_of_the_week`) USING BTREE,
   KEY `hour` (`hour`) USING BTREE,
-  KEY `job_id` (`job_id`) USING BTREE,
+  KEY `schedules_job_id` (`job_id`) USING BTREE,
   KEY `minute` (`minute`) USING BTREE,
   KEY `month` (`month`) USING BTREE,
   KEY `special` (`special`) USING BTREE
@@ -157,11 +157,6 @@ CREATE TABLE `schedules` (
 # ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `schema_migrations`;
-
-CREATE TABLE `schema_migrations` (
-  `version` varchar(255) NOT NULL,
-  UNIQUE KEY `unique_schema_migrations` (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

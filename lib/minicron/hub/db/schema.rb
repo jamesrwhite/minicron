@@ -79,11 +79,11 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table "schedules", force: true do |t|
     t.integer  "job_id",                       null: false
-    t.string   "minute",           limit: 179
-    t.string   "hour",             limit: 71
-    t.string   "day_of_the_month", limit: 92
-    t.string   "month",            limit: 25
-    t.string   "day_of_the_week",  limit: 20
+    t.string   "minute",           limit: 169
+    t.string   "hour",             limit: 61
+    t.string   "day_of_the_month", limit: 83
+    t.string   "month",            limit: 26
+    t.string   "day_of_the_week",  limit: 13
     t.string   "special",          limit: 9
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
