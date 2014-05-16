@@ -37,7 +37,8 @@ body {
 .main-panel, .sidebar {
   float: left;
   height: 100%;
-  overflow-y: scroll;
+  overflow: hidden;
+  position: relative;
 }
 
 // Main content panel
