@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table "executions", force: true do |t|
     t.integer  "job_id",      null: false
+    t.integer  "number",      null: false
     t.datetime "created_at",  null: false
     t.datetime "started_at"
     t.datetime "finished_at"
@@ -37,6 +38,7 @@ ActiveRecord::Schema.define(version: 0) do
 
   add_index "executions", ["created_at"], name: "executions_created_at", using: :btree
   add_index "executions", ["finished_at"], name: "finished_at", using: :btree
+  add_index "executions", ["job_id", "number"], name: "unique_number_per_job", unique: true, using: :btree
   add_index "executions", ["job_id"], name: "executions_job_id", using: :btree
   add_index "executions", ["started_at"], name: "started_at", using: :btree
 
