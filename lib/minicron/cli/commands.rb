@@ -132,7 +132,8 @@ module Minicron
                   Minicron.config['client']['path']
                 )
 
-                # Set up the job and get the jexecution and job ids back from the server
+                # Set up the job and get the execution and job ids back from the server
+                # The execution number is also returned but it's only used by the frontend
                 ids = setup_job(args.first, faye)
               end
             rescue Exception => e

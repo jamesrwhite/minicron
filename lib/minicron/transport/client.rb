@@ -52,7 +52,8 @@ module Minicron
         # Return them as a hash
         {
           :job_id => ids[0],
-          :execution_id => ids[1]
+          :execution_id => ids[1],
+          :number => ids[2]
         }
       end
 
