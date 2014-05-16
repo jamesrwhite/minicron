@@ -20,6 +20,9 @@ namespace :db do
   # Tell active record where the db dir is
   Sinatra::ActiveRecordTasks.db_dir = Minicron::HUB_PATH + '/db'
 
+  # Parse the file config in /etc/minicron.toml
+  Minicron.parse_file_config(nil)
+
   # Connect to the DB
   Minicron::Hub::App.setup_db
 end

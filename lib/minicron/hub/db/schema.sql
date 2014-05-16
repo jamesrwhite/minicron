@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.17)
 # Database: minicron
-# Generation Time: 2014-05-04 22:28:09 +0000
+# Generation Time: 2014-05-16 15:07:06 +0000
 # ************************************************************
 
 
@@ -51,11 +51,13 @@ DROP TABLE IF EXISTS `executions`;
 CREATE TABLE `executions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_id` int(11) NOT NULL,
+  `number` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `started_at` datetime DEFAULT NULL,
   `finished_at` datetime DEFAULT NULL,
   `exit_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_number_per_job` (`job_id`,`number`),
   KEY `executions_created_at` (`created_at`) USING BTREE,
   KEY `finished_at` (`finished_at`) USING BTREE,
   KEY `executions_job_id` (`job_id`) USING BTREE,
