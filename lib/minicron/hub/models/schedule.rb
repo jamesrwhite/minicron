@@ -4,6 +4,7 @@ module Minicron
   module Hub
     class Schedule < ActiveRecord::Base
       belongs_to :job
+      has_many :alerts, :dependent => :destroy
 
       # The formatted schedule
       def formatted
