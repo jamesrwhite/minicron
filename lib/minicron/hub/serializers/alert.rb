@@ -31,6 +31,9 @@ module Minicron
           # To make our name method in the model work :/
           value = alert.name if key == 'name'
 
+          # Remove _id from keys
+          key = key[-3, 3] == '_id' ? key[0..-4] : key
+
           new_alert[key] = value
         end
 
