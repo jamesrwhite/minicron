@@ -8,8 +8,9 @@ module Minicron
       def serialize
         @response = {
           :alerts => [],
-          :schedules => [],
-          :executions => []
+          :jobs => [],
+          :executions => [],
+          :schedules => []
         }
 
         if @alerts.respond_to? :each
@@ -37,11 +38,15 @@ module Minicron
           new_alert[key] = value
         end
 
-        # Add the schedule for the alert if it has one
-        @response[:schedules].push(alert.schedule) if !alert.schedule.nil?
+        # Add the job for the alert if it has one
+        @response[:jobs].push(alert.job)
 
         # Add the execution for the alert if it has one
         @response[:executions].push(alert.execution) if !alert.execution.nil?
+
+
+        # Add the schedule for the alert if it has one
+        @response[:schedules].push(alert.schedule) if !alert.schedule.nil?
 
         # Append the new alert to the @responseh
         @response[:alerts].push(new_alert)
