@@ -68,8 +68,7 @@ a web interface to the data and makes it easy to manage your cron jobs.</p>
 <h2>
 <a name="background" class="anchor" href="#background"><span class="octicon octicon-link"></span></a>Background</h2>
 
-<p>I'm developing minicron as part of my dissertation at university which has to be completed by mid May but I plan to continue
-its development after that. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
+<p>I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
 in particular my time spent working at <a href="http://www.miniclip.com">Miniclip</a> (which is where the name comes from, miniclip.. minicron, get it?)
 where the management and monitoring of cron jobs at times proved to be tricky!</p>
 
@@ -115,9 +114,17 @@ where the management and monitoring of cron jobs at times proved to be tricky!</
 </ul><h4>
 <a name="database" class="anchor" href="#database"><span class="octicon octicon-link"></span></a>Database</h4>
 
+<p><strong>Default</strong></p>
+
 <ul>
-<li>MySQL (See <a href="https://github.com/brianmario/mysql2#compatibility">here</a> for compatability info)</li>
-<li>SQlite &gt;= 3.6.16</li>
+<li>SQLite &gt;= 3.6.16
+(via the sqlite3 gem which may require libsqlite3-dev or sqlite-devel depending on your OS)</li>
+</ul><p><strong>Also Supported</strong></p>
+
+<p>These databases are also supported but you will need to manaually install the gems for them</p>
+
+<ul>
+<li>MySQL via mysql2 (See <a href="https://github.com/brianmario/mysql2#compatibility">here</a> for compatability info)</li>
 <li>Support for PostgreSQL is planned in the future</li>
 </ul><h4>
 <a name="web-server--reverse-proxy" class="anchor" href="#web-server--reverse-proxy"><span class="octicon octicon-link"></span></a>Web Server / Reverse Proxy</h4>
@@ -146,7 +153,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 <ol>
 <li><p>First check you meet the <a href="#requirements">requirements</a></p></li>
 <li><p>On some distributions you may need to install the <code>ruby-dev</code> and <code>build-essential</code> packages</p></li>
-<li><p>To install the latest release (currently 0.5) you can <code>gem install minicron</code>, depending on your ruby setup
+<li><p>To install the latest release (currently 0.6.1) you can <code>gem install minicron</code>, depending on your ruby setup
 you may need to run this with <code>sudo</code></p></li>
 <li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml">minicron.toml</a> as a guide on what options are configurable</p></li>
 <li>
@@ -335,9 +342,10 @@ I'm trying to convert them all to issues but there are a lot..</li>
 <p>Where possible I will try and provide support for minicron, you can get in touch with me via:</p>
 
 <ul>
-<li>Twitter <a href="https://twitter.com/jamesrwhite">@jamesrwhite</a>
+<li>Twitter: <a href="https://twitter.com/jamesrwhite">@jamesrwhite</a>
+or <a href="https://twitter.com/minicron_dev">@minicron_dev</a>
 </li>
-<li>Email <a href="mailto:dev.jameswhite+minicron@gmail.com">dev.jameswhite+minicron@gmail.com</a>
+<li>Email: <a href="mailto:dev.jameswhite+minicron@gmail.com">dev.jameswhite+minicron@gmail.com</a>
 </li>
 </ul><p>Or feel free to open an issue and I'll do my best to help.</p>
 
