@@ -38,15 +38,19 @@ module Minicron
           new_alert[key] = value
         end
 
-        # Add the job for the alert if it has one
-        @response[:jobs].push(alert.job)
+        # Is it an execution alert?
+        if !alert.execution.nil?
+          @response[:executions].push(alert.execution)
+          @response[:jobs].push(alert.execution.job)
+          new_alert[:job] = alert.execution.job.id
+        end
 
-        # Add the execution for the alert if it has one
-        @response[:executions].push(alert.execution) if !alert.execution.nil?
-
-
-        # Add the schedule for the alert if it has one
-        @response[:schedules].push(alert.schedule) if !alert.schedule.nil?
+        # Is it an schedule alert?
+        if !alert.schedule.nil?
+          @response[:schedules].push(alert.schedule)
+          @response[:jobs].push(alert.schedule.job)
+          new_alert[:job] = alert.schedule.job.id
+        end
 
         # Append the new alert to the @responseh
         @response[:alerts].push(new_alert)
