@@ -39,8 +39,7 @@ Screenshots
 Background
 -----------
 
-I'm developing minicron as part of my dissertation at university which has to be completed by mid May but I plan to continue
-its development after that. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
+I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
 in particular my time spent working at [Miniclip](http://www.miniclip.com) (which is where the name comes from, miniclip.. minicron, get it?)
 where the management and monitoring of cron jobs at times proved to be tricky!
 
