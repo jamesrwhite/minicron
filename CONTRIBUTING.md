@@ -8,7 +8,7 @@ Pull requests of all sizes are very much appreciated, below is a quick guide on 
 2. minicron uses [Git Flow](https://github.com/nvie/gitflow) so preferably make sure you have that installed,
    [here](https://www.youtube.com/watch?v=I-73cssiVC4) is a good explanation of how to use it
 
-3. Check out the `develop` branch and start a feature `git flow feature start yourfeature`
+3. Check out the `develop` branch, `git flow init` (w/ default prompt values), and start a feature `git flow feature start yourfeature`.
 
 3. Install a local copy of minicron like so: ````bundle```` & ````rake install````
 
