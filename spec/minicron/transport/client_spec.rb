@@ -46,7 +46,7 @@ describe Minicron::Transport::Client do
     it 'should call #publish with the correct params' do
       client = Minicron::Transport::Client.new('http', 'example.com', 99, '/')
 
-      client.should_receive(:publish).with('/job/1/2/output', 'test')
+      expect(client).to receive(:publish).with('/job/1/2/output', 'test')
 
       client.send(
         :job_id => 1,
@@ -60,7 +60,7 @@ describe Minicron::Transport::Client do
   describe '#publish' do
     it 'should call #request with the correct params' do
       client = Minicron::Transport::Client.new('https', 'test.com', 139, '/test')
-      client.stub(:request)
+      allow(client).to receive(:request)
 
       json = { :channel => '/job/1/2/status', :data => {
         :ts => Time.now.utc.strftime('%Y-%m-%d %H:%M:%S'),
@@ -68,7 +68,7 @@ describe Minicron::Transport::Client do
         :seq => 1
       } }.to_json
 
-      client.should_receive(:request).with(:message => json)
+      expect(client).to receive(:request).with(:message => json)
 
       client.publish('/job/1/2/status', 'test')
 
