@@ -8,8 +8,8 @@ describe Minicron::Transport::Server do
   describe '#start!' do
     context 'when the server is running' do
       it 'should return false' do
-        server.stub(:server).and_return thin_server
-        server.should_receive(:running?).and_return true
+        allow(server).to receive(:server).and_return thin_server
+        expect(server).to receive(:running?).and_return true
 
         expect(server.start!('127.0.0.1', 1337, '/lol')).to eq false
       end
@@ -17,9 +17,9 @@ describe Minicron::Transport::Server do
 
     context 'when the server is not running' do
       it 'should return true' do
-        server.should_receive(:running?).and_return false
-      	thin_server.should_receive(:new).and_return thin_server
-        thin_server.stub(:start)
+        expect(server).to receive(:running?).and_return false
+      	expect(thin_server).to receive(:new).and_return thin_server
+        allow(thin_server).to receive(:start)
 
         expect(server.start!('127.0.0.1', 1337, '/lol')).to eq true
       end
@@ -30,7 +30,7 @@ describe Minicron::Transport::Server do
     context 'when the server is not running' do
       it 'should return false' do
         server.server = nil
-        server.should_receive(:running?).and_return false
+        expect(server).to receive(:running?).and_return false
 
         expect(server.stop!).to eq false
       end
@@ -39,8 +39,8 @@ describe Minicron::Transport::Server do
     context 'when the server is running' do
       it 'should return true' do
         server.server = thin_server
-        server.should_receive(:running?).and_return true
-        thin_server.should_receive(:stop).and_return true
+        expect(server).to receive(:running?).and_return true
+        expect(thin_server).to receive(:stop).and_return true
 
         expect(server.stop!).to eq true
       end
@@ -58,7 +58,7 @@ describe Minicron::Transport::Server do
     context 'when the server is running' do
       it 'should return true' do
         server.server = thin_server
-        thin_server.should_receive(:running?).and_return true
+        expect(thin_server).to receive(:running?).and_return true
 
         expect(server.running?).to eq true
       end

@@ -59,7 +59,7 @@ describe Minicron::PagerDuty do
     it 'should trigger an alert on the pagerduty client' do
       pagerduty = Minicron::PagerDuty.new
 
-      pagerduty.instance_variable_get(:@client).should_receive(:trigger).with('title', :message => 'yo')
+      expect(pagerduty.instance_variable_get(:@client)).to receive(:trigger).with('title', :message => 'yo')
 
       pagerduty.send('title', 'yo')
     end
