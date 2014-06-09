@@ -1,0 +1,104 @@
+<script type="text/x-handlebars" id="alerts/index">
+  <header class="clearfix">
+    <h2 class="pull-left">Alerts</h2>
+  </header>
+  <hr/>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Job</th>
+        <th>Kind</th>
+        <th>Medium</th>
+        <th>Sent</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {{#each model}}
+      <tr>
+        <td>{{#link-to 'alert' id}}{{id}}{{/link-to}}</td>
+        <td>{{#link-to 'job' job.id}}{{job.name}}{{/link-to}}</td>
+        <td>{{kind}}</td>
+        <td>{{medium}}</td>
+        <td>{{time_ago sent_at}}</td>
+        <td>
+          {{#link-to 'alert' id class="btn btn-info btn-xs"}}View{{/link-to}}
+        </td>
+      </tr>
+    {{/each}}
+    </body>
+  </table>
+</script>
+
+<script type="text/x-handlebars" id="alert/index">
+  <section>
+    <header>
+      <h2>Alert #{{id}}</h2>
+    </header>
+    <hr/>
+
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Kind</label>
+        <div class="col-sm-10">
+          <div class="form-control form-control-view">{{kind}}</div>
+        </div>
+      </div>
+      {{#if isFail}}
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Exit Status</label>
+          <div class="col-sm-10">
+            <div class="form-control form-control-view">{{execution.exit_status}}</div>
+          </div>
+        </div>
+      {{/if}}
+      {{#if isMiss}}
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Expected At</label>
+          <div class="col-sm-10">
+            <div class="form-control form-control-view">{{date expected_at}}</div>
+          </div>
+        </div>
+      {{/if}}
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Medium</label>
+        <div class="col-sm-10">
+          <div class="form-control form-control-view">{{medium}}</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Sent</label>
+        <div class="col-sm-10">
+          <div class="form-control form-control-view">{{time_ago sent_at}}</div>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <header class="clearfix">
+      <h2 class="pull-left">Job</h2>
+      {{#link-to 'job.edit' job.id class="pull-right btn btn-warning btn-sm"}}Edit{{/link-to}}
+      {{#link-to 'job' job.id class="pull-right btn btn-info btn-sm"}}View{{/link-to}}
+    </header>
+    <hr/>
+
+    <form class="form-horizontal" role="form">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <div class="form-control form-control-view">{{job.name}}</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Command</label>
+        <div class="col-sm-10">
+          <div class="form-control form-control-view">{{job.command}}</div>
+        </div>
+      </div>
+    </form>
+  </section>
+</script>

@@ -45,7 +45,8 @@ module Minicron::Hub
       # Set up the application css
       css :app, '/css/all.css', [
         '/css/bootswatch.min.css',
-        '/css/main.css'
+        '/css/main.css',
+        '/css/perfect-scrollbar-0.4.10.min.css'
       ]
 
       # Set up the application javascript
@@ -53,12 +54,13 @@ module Minicron::Hub
         # Dependencies, the order of these is important
         '/js/jquery-2.1.0.min.js',
         '/js/handlebars-1.3.0.min.js',
-        '/js/ember-1.4.1.min.js',
+        '/js/ember-1.5.1.min.js',
         '/js/ember-data-1.0.0-beta.7.f87cba88.min.js',
         '/js/faye-browser-1.0.1.min.js',
         '/js/ansi_up-1.1.1.min.js',
         '/js/bootstrap-3.1.1.min.js',
         '/js/moment-2.5.1.min.js',
+        '/js/perfect-scrollbar-0.4.10.with-mousewheel.min.js',
 
         # Ember application files
         '/app/**/*.js'
@@ -114,6 +116,9 @@ module Minicron::Hub
       else
         fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
+
+      # Enable ActiveRecord logging if in verbose mode
+      ActiveRecord::Base.logger = Minicron.config['verbose'] ? Logger.new(STDOUT) : nil
     end
   end
 

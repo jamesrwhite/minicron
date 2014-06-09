@@ -14,11 +14,11 @@ describe Minicron::Transport::FayeClient do
   end
 
   describe '#ensure_delivery' do
-    before(:each) { eventmachine.stub(:stop) }
+    before(:each) { allow(eventmachine).to receive(:stop) }
 
     it 'should block until the queue hash is empty and return nil' do
       client_instance = client.new('http', '127.0.0.1', '80', '/test')
-      client_instance.stub(:queue).and_return({ :a => 1 }, { :a => 1, :b => 2 }, { :b => 2 }, {})
+      allow(client_instance).to receive(:queue).and_return({ :a => 1 }, { :a => 1, :b => 2 }, { :b => 2 }, {})
 
       client_instance.ensure_delivery
       expect(client_instance.queue.length).to eq 0
@@ -50,8 +50,8 @@ describe Minicron::Transport::FayeClient do
   describe '#tidy_up' do
     context 'when eventmachine is running' do
       it 'should stop eventmachine' do
-        eventmachine.should_receive(:reactor_running?).and_return true
-        eventmachine.should_receive(:stop)
+        expect(eventmachine).to receive(:reactor_running?).and_return true
+        expect(eventmachine).to receive(:stop)
 
         client.new('http', '127.0.0.1', '80', '/test').tidy_up
       end
@@ -59,7 +59,7 @@ describe Minicron::Transport::FayeClient do
 
     context 'when eventmachine is not running' do
       it 'should do nothing' do
-        eventmachine.should_receive(:reactor_running?).and_return false
+        expect(eventmachine).to receive(:reactor_running?).and_return false
 
         client.new('http', '127.0.0.1', '80', '/test').tidy_up
       end

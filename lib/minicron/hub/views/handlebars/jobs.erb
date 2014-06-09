@@ -120,7 +120,7 @@
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-          <th>ID</th>
+          <th>#</th>
           <th>Started At</th>
           <th>Finished At</th>
           <th>Exit Status</th>
@@ -132,7 +132,7 @@
       {{#each execution in executions}}
         {{! TODO: contextual classes here for execution status }}
         <tr>
-          <td>{{#link-to 'execution' execution.id}}{{execution.id}}{{/link-to}}</td>
+          <td>{{#link-to 'execution' execution.id}}{{execution.number}}{{/link-to}}</td>
           <td>{{date execution/started_at}}</td>
           <td>{{date execution.finished_at}}</td>
           <td>{{execution.exit_status}}</td>

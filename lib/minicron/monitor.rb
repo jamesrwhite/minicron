@@ -40,6 +40,9 @@ module Minicron
       else
         fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
+
+      # Enable ActiveRecord logging if in verbose mode
+      ActiveRecord::Base.logger = Minicron.config['verbose'] ? Logger.new(STDOUT) : nil
     end
 
     # Starts the execution monitor in a new thread

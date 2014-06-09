@@ -53,7 +53,7 @@ module Minicron
       # Add the `minicron server` command
       def self.add_server_cli_command(cli)
         cli.command :server do |c|
-          c.syntax = 'minicron server [start|stop|status]'
+          c.syntax = 'minicron server [start|stop|restart|status]'
           c.description = 'Controls the minicron server.'
           c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
           c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
@@ -89,6 +89,19 @@ module Minicron
               end
             when 'stop'
               insidious.stop!
+            when 'restart'
+              insidious.restart! do
+                # Run the execution monitor (this runs in a separate thread)
+                monitor = Minicron::Monitor.new
+                monitor.start!
+
+                # Start the server!
+                Minicron::Transport::Server.start!(
+                  Minicron.config['server']['host'],
+                  Minicron.config['server']['port'],
+                  Minicron.config['server']['path']
+                )
+              end
             when 'status'
               if insidious.running?
                 puts 'minicron is running'
@@ -132,7 +145,8 @@ module Minicron
                   Minicron.config['client']['path']
                 )
 
-                # Set up the job and get the jexecution and job ids back from the server
+                # Set up the job and get the execution and job ids back from the server
+                # The execution number is also returned but it's only used by the frontend
                 ids = setup_job(args.first, faye)
               end
             rescue Exception => e

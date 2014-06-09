@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.17)
 # Database: minicron
-# Generation Time: 2014-05-04 22:28:09 +0000
+# Generation Time: 2014-05-19 00:33:32 +0000
 # ************************************************************
 
 
@@ -27,8 +27,9 @@ DROP TABLE IF EXISTS `alerts`;
 
 CREATE TABLE `alerts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `schedule_id` int(11) DEFAULT NULL,
+  `job_id` int(11) NOT NULL,
   `execution_id` int(11) DEFAULT NULL,
+  `schedule_id` int(11) DEFAULT NULL,
   `kind` varchar(4) NOT NULL DEFAULT '',
   `expected_at` datetime DEFAULT NULL,
   `medium` varchar(9) NOT NULL DEFAULT '',
@@ -38,7 +39,8 @@ CREATE TABLE `alerts` (
   KEY `expected_at` (`expected_at`) USING BTREE,
   KEY `kind` (`kind`) USING BTREE,
   KEY `medium` (`medium`) USING BTREE,
-  KEY `schedule_id` (`schedule_id`) USING BTREE
+  KEY `schedule_id` (`schedule_id`) USING BTREE,
+  KEY `alerts_job_id` (`job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -51,11 +53,13 @@ DROP TABLE IF EXISTS `executions`;
 CREATE TABLE `executions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job_id` int(11) NOT NULL,
+  `number` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `started_at` datetime DEFAULT NULL,
   `finished_at` datetime DEFAULT NULL,
   `exit_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_number_per_job` (`job_id`,`number`),
   KEY `executions_created_at` (`created_at`) USING BTREE,
   KEY `finished_at` (`finished_at`) USING BTREE,
   KEY `executions_job_id` (`job_id`) USING BTREE,
