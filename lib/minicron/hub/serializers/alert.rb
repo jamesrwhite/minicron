@@ -41,16 +41,22 @@ module Minicron
         # Is it an execution alert?
         if !alert.execution.nil?
           @response[:executions].push(alert.execution)
-          @response[:jobs].push(alert.execution.job)
+          job = alert.execution.job
           new_alert[:job] = alert.execution.job.id
         end
 
         # Is it an schedule alert?
         if !alert.schedule.nil?
           @response[:schedules].push(alert.schedule)
-          @response[:jobs].push(alert.schedule.job)
+          job = alert.schedule.job
           new_alert[:job] = alert.schedule.job.id
         end
+
+        # Patch the jobs host_id attrs
+        job = job.serializable_hash
+        job['host'] = job['host_id']
+        job.delete('host_id')
+        @response[:jobs].push(job)
 
         # Append the new alert to the @responseh
         @response[:alerts].push(new_alert)
