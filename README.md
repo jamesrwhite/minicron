@@ -211,7 +211,7 @@ server that jobs use to communicate their status updates).
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
 
 Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
+a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
 firewall that only allows connections from an internal network and/or a VPN.
 
 Documentation
