@@ -1,6 +1,21 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
+# Provisioning commands
+$script = <<SCRIPT
+apt-get install -y python-software-properties
+apt-add-repository ppa:brightbox/ruby-ng
+apt-get update
+apt-get install -y libsqlite3-dev ruby-dev build-essential
+apt-get install -y ruby rubygems ruby-switch
+apt-get install -y ruby1.9.3
+ruby-switch --set ruby1.9.1
+gem install --no-ri --no-rdoc minicron
+minicron db setup
+minicron server start
+echo "minicron is running on http://localhost:9292!"
+SCRIPT
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -18,9 +33,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # using a specific IP.
   config.vm.network "private_network", ip: "192.168.33.10"
 
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  # Provision the VM using the inline script at the top of this file
+  config.vm.provision "shell", inline: $script
 end
