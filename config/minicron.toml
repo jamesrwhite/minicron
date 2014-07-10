@@ -7,7 +7,7 @@ trace = false # Useful for debugging
 # Client options
 [client]
 scheme = "http" # [http, https]
-host = "127.0.0.1"
+host = "0.0.0.0"
 port = 9292
 path = "/"
 connect_timeout = 5
@@ -15,7 +15,7 @@ inactivity_timeout = 5
 
 # Server options
 [server]
-host = "127.0.0.1"
+host = "0.0.0.0"
 port = 9292
 path = "/"
 debug = false # When true the server will not run as a daemon
