@@ -6,13 +6,17 @@ $script = <<SCRIPT
 apt-get install -y python-software-properties
 apt-add-repository ppa:brightbox/ruby-ng
 apt-get update
-apt-get install -y libsqlite3-dev ruby-dev build-essential
 apt-get install -y ruby rubygems ruby-switch
 apt-get install -y ruby1.9.3
+apt-get install -y libsqlite3-dev ruby-dev build-essential
+bash --login
 ruby-switch --set ruby1.9.1
 gem install --no-ri --no-rdoc minicron
 minicron db setup
 minicron server start
+ufw allow 2222
+ufw allow 9292
+ufw enable
 echo "minicron is running on http://localhost:9292!"
 SCRIPT
 
@@ -28,10 +32,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network "forwarded_port", guest: 9292, host: 9292
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.10"
 
   # Provision the VM using the inline script at the top of this file
   config.vm.provision "shell", inline: $script
