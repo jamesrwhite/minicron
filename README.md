@@ -105,7 +105,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
 
-3. To install the latest release (currently 0.7.1) you can ````gem install minicron````, depending on your ruby setup
+3. To install the latest release (currently 0.7.2) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
@@ -161,7 +161,7 @@ To launch the server (aka the Hub) run
 minicron server start
 ````
 
-by default it will bind to port 9292 on the host 127.0.0.1 but this can be configured by the command line
+by default it will bind to port 9292 on the host 0.0.0.0 but this can be configured by the command line
 arguments ````--host```` ````--port```` and ````--path```` or in the config file.
 
 By default the server will run as a daemon with its process id stored in ````/tmp/minicron.pid````
@@ -211,7 +211,7 @@ server that jobs use to communicate their status updates).
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
 
 Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentialyl malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
+a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
 firewall that only allows connections from an internal network and/or a VPN.
 
 Documentation
