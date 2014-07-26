@@ -161,7 +161,7 @@ To launch the server (aka the Hub) run
 minicron server start
 ````
 
-by default it will bind to port 9292 on the host 127.0.0.1 but this can be configured by the command line
+by default it will bind to port 9292 on the host 0.0.0.0 but this can be configured by the command line
 arguments ````--host```` ````--port```` and ````--path```` or in the config file.
 
 By default the server will run as a daemon with its process id stored in ````/tmp/minicron.pid````
