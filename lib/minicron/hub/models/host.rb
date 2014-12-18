@@ -1,4 +1,4 @@
-autoload :ActiveRecord, 'active_record'
+autoload :ActiveRecord, 'sinatra/activerecord'
 
 module Minicron
   module Hub

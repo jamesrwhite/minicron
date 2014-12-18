@@ -1,4 +1,4 @@
-autoload :ActiveRecord, 'active_record'
+autoload :ActiveRecord, 'sinatra/activerecord'
 autoload :CronParser,   'parse-cron'
 
 require 'minicron/hub/models/schedule'
