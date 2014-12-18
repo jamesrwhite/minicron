@@ -19,6 +19,7 @@ host = "0.0.0.0"
 port = 9292
 path = "/"
 debug = false # When true the server will not run as a daemon
+pid_file = "/tmp/minicron.pid"
 
 # Database options
 [database]
