@@ -21,7 +21,7 @@ rescue Interrupt, SignalException
   puts "\nExiting.."
 
   # Stop the daemon if it's running i.e tidy up the pid file
-  insidious = Insidious.new(:pid_file => '/tmp/minicron.pid')
+  insidious = Insidious.new(:pid_file => Minicron.config['server']['pid_file'] || '/tmp/minicron.pid')
 
   if insidious.running?
     insidious.stop!
