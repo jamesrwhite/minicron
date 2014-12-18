@@ -52,12 +52,14 @@ module Minicron
 
       # Add the `minicron server` command
       def self.add_server_cli_command(cli)
+        default_pid_file = '/tmp/minicron.pid'
         cli.command :server do |c|
           c.syntax = 'minicron server [start|stop|restart|status]'
           c.description = 'Controls the minicron server.'
           c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
           c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
           c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
+          c.option '--pid_file STRING', String, "The path for daemon's PID file. Default: #{Minicron.config['server']['pid_file'] || default_pid_file}"
           c.option '--debug', "Enable debug mode. Default: #{Minicron.config['server']['debug']}"
 
           c.action do |args, opts|
@@ -69,7 +71,7 @@ module Minicron
 
             # Get an instance of insidious and set the pid file
             insidious = Insidious.new(
-              :pid_file => '/tmp/minicron.pid',
+              :pid_file => Minicron.config['server']['pid_file'] || default_pid_file,
               :daemonize => Minicron.config['server']['debug'] == false
             )
 

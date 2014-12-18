@@ -77,7 +77,8 @@ describe Minicron do
             'host' => '127.0.0.1',
             'port' => 9292,
             'path' => '/',
-            'debug' => false
+            'debug' => false,
+            'pid_file' => '/tmp/minicron.pid'
           },
           'database' => {
             'type' => 'sqlite'
