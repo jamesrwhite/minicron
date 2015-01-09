@@ -15,7 +15,7 @@ where data from one or many instances of the CLI is received and stored in a dat
 a web interface to the data and makes it easy to manage your cron jobs.
 
 - [Background](#background)
-- [Features](#goals)
+- [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
