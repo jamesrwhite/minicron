@@ -101,6 +101,8 @@ Installation
 minicron is currently under heavy development and as such I would not recommend that you use this in production yet
 but I encourage you to give it a try in a non critical environment and help me to improve it and work towards the first stable release (1.0).
 
+#### Manual
+
 1. First check you meet the [requirements](#requirements)
 
 2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
@@ -123,6 +125,24 @@ but I encourage you to give it a try in a non critical environment and help me t
    the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql) (MySQL)
 
 7. Done! See the usage section below for more details on how to use minicron now you have it installed
+
+#### Docker
+
+You can also run minicron in a docker container, see below for instructions how:
+
+`git clone https://github.com/jamesrwhite/minicron.git`
+
+`cd minicron`
+
+`docker build -t minicron-0.7.3 .`
+
+`docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.7.3`
+
+`docker ps | grep minicron`
+
+`docker exec *container_hash* minicron server start`
+
+Do this all right and if you `curl localhost:9292/api/jobs` you should be greeted with some JSON!
 
 Usage
 -----
