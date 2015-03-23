@@ -32,7 +32,7 @@ module Minicron
           use Rack::ShowExceptions
 
           # The 'hub', aka our sinatra web interface
-          map '/' do
+          map path do
             use Minicron::Hub::ExceptionHandling
             run Minicron::Hub::App.new
           end
