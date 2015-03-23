@@ -107,7 +107,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
 
-3. To install the latest release (currently 0.7.3) you can ````gem install minicron````, depending on your ruby setup
+3. To install the latest release (currently 0.7.4) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
@@ -134,9 +134,9 @@ You can also run minicron in a docker container, see below for instructions how:
 
 `cd minicron`
 
-`docker build -t minicron-0.7.3 .`
+`docker build -t minicron-0.7.4 .`
 
-`docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.7.3`
+`docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.7.4`
 
 `docker ps | grep minicron`
 
