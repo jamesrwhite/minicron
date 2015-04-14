@@ -62,8 +62,8 @@ module Minicron
           c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
           c.option '--pid_file STRING', String, "The path for daemon's PID file. Default: #{Minicron.config['server']['pid_file'] || default_pid_file}"
           c.option '--debug', "Enable debug mode. Default: #{Minicron.config['server']['debug']}"
-	  c.option '--cron_file', String, "The path to the cron file. Default: #{Minicron.config['server']['cron_file'] || default_cron_file}"
-
+	  c.option '--cron_file STRING', String, "The path for the cron file. Default: #{Minicron.config['server']['cron_file'] || default_cron_file}"
+	
           c.action do |args, opts|
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
@@ -74,7 +74,8 @@ module Minicron
             # Get an instance of insidious and set the pid file
             insidious = Insidious.new(
               :pid_file => Minicron.config['server']['pid_file'] || default_pid_file,
-              :daemonize => Minicron.config['server']['debug'] == false
+              :daemonize => Minicron.config['server']['debug'] == false,
+
             )
 
             case action
@@ -88,8 +89,7 @@ module Minicron
               Minicron::Transport::Server.start!(
                 Minicron.config['server']['host'],
                 Minicron.config['server']['port'],
-                Minicron.config['server']['path'],
-
+                Minicron.config['server']['path']
               )
               end
             when 'stop'
