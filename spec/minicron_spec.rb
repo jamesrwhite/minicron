@@ -79,6 +79,7 @@ describe Minicron do
             'path' => '/',
             'debug' => false,
             'pid_file' => '/tmp/minicron.pid'
+            'cron_file' => '/etc/crontab'
           },
           'database' => {
             'type' => 'sqlite'

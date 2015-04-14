@@ -23,7 +23,9 @@ module Minicron
       'host' => '0.0.0.0',
       'port' => 9292,
       'path' => '/',
-      'debug' => false
+      'debug' => false,
+      'pid_file' => '/tmp/minicron.pid',
+      'cron_file' => '/etc/crontab',
     },
     'database' => {
       'type' => 'sqlite'
