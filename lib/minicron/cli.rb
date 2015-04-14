@@ -41,7 +41,8 @@ module Minicron
           'port' => opts.port,
           'path' => opts.path,
           'debug' => opts.debug,
-          'pid_file' => opts.pid_file
+          'pid_file' => opts.pid_file,
+          'cron_file' => opts.cron_file
         }
       )
     end

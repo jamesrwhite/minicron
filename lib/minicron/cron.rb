@@ -40,10 +40,10 @@ module Minicron
       etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
 
       # Check if the crontab is readable
-      crontab_read = conn.exec!("/bin/sh -c 'test -r /etc/crontab && echo \"y\" || echo \"n\"'").strip
+      crontab_read = conn.exec!("/bin/sh -c 'test -r #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
 
       # Check if the crontab is writeable
-      crontab_write = conn.exec!("/bin/sh -c 'test -w /etc/crontab && echo \"y\" || echo \"n\"'").strip
+      crontab_write = conn.exec!("/bin/sh -c 'test -w #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
 
       {
         :connect => true,
@@ -76,10 +76,10 @@ module Minicron
       raise Exception, "Unable to connect to host, reason: unknown" if !test[:connect]
 
       # Check the crontab is readable
-      raise Exception, "Insufficient permissions to read from /etc/crontab" if !test[:crontab][:read]
+      raise Exception, "Insufficient permissions to read from the cron file" if !test[:crontab][:read]
 
       # Check the crontab is writeable
-      raise Exception, "Insufficient permissions to write to /etc/crontab" if !test[:crontab][:write]
+      raise Exception, "Insufficient permissions to write to the cron file" if !test[:crontab][:write]
 
       # Check /etc is writeable
       raise Exception, "/etc is not writeable by the current user" if !test[:etc][:write]
@@ -88,13 +88,13 @@ module Minicron
       raise Exception, "/etc is not executable by the current user" if !test[:etc][:execute]
 
       # Get the full crontab
-      crontab = conn.exec!('cat /etc/crontab').to_s.strip
+      crontab = conn.exec!("cat #{Minicron.config['server']['cron_file']}").to_s.strip
 
       # Replace the full string with the replacement string
       begin
         crontab[find] = replace
       rescue Exception => e
-        raise Exception, "Unable to replace '#{find}' with '#{replace}' in the crontab, reason: #{e}"
+        raise Exception, "Unable to replace '#{find}' with '#{replace}' in the cron file, reason: #{e}"
       end
 
       # Echo the crontab back to the tmp crontab
@@ -107,7 +107,7 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          fail Exception, "Expected to find nothing when grepping crontab but found #{grep}"
+          fail Exception, "Expected to find nothing when grepping the cron file but found #{grep}"
         end
       else
         # Check the updated line is there
@@ -115,15 +115,15 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          fail Exception, "Expected to find '#{replace}' when grepping crontab but found #{grep}"
+          fail Exception, "Expected to find '#{replace}' when grepping the cron file but found #{grep}"
         end
       end
 
       # And finally replace the crontab with the new one now we now the change worked
-      move = conn.exec!("/bin/sh -c 'mv /tmp/minicron_crontab /etc/crontab && echo \"y\" || echo \"n\"'").to_s.strip
+      move = conn.exec!("/bin/sh -c 'mv /tmp/minicron_crontab #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").to_s.strip
 
       if move != 'y'
-        fail Exception, 'Unable to move /tmp/minicron_crontab to /etc/crontab, check the permissions?'
+        fail Exception, "Unable to move /tmp/minicron_crontab to #{Minicron.config['server']['cron_file']}, check the permissions?"
       end
     end
 
@@ -139,13 +139,13 @@ module Minicron
       # Prepare the line we are going to write to the crontab
       line = build_minicron_command(schedule, job.user, job.command)
       escaped_line = line.shellescape
-      echo_line = "echo #{escaped_line} >> /etc/crontab"
+      echo_line = "echo #{escaped_line} >> #{Minicron.config['server']['cron_file']}"
 
       # Append it to the end of the crontab
       conn.exec!(echo_line).to_s.strip
 
       # Check the line is there
-      tail = conn.exec!('tail -n 1 /etc/crontab').to_s.strip
+      tail = conn.exec!("tail -n 1 #{Minicron.config['server']['cron_file']}").to_s.strip
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
@@ -213,9 +213,9 @@ module Minicron
       conn ||= @ssh.open
 
       # Loop through each job and delete them one by one
-      # TODO: what if one schedule removal fails but others don't? Should
-      # we try and rollback somehow or just return the job with half its
-      # schedules deleted?
+      # TODO: what if one job removal fails but others don't? Should
+      # we try and rollback somehow or just return the host with half its
+      # jobs deleted?
       host.jobs.each do |job|
         delete_job(job, conn)
       end

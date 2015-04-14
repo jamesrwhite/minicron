@@ -20,6 +20,7 @@ port = 9292
 path = "/"
 debug = false
 pid_file = "/tmp/minicron.pid"
+cron_file = "/etc/crontab"
 
 # Database options
 [database]
