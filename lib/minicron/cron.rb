@@ -10,7 +10,7 @@ module Minicron
     def initialize(ssh)
       @ssh = ssh
     end
-   $cron_file_path=Minicron.config['server']['cron_file']
+
     # Build the minicron command to be used in the crontab
     #
     # @param schedule [String]
@@ -40,10 +40,10 @@ module Minicron
       etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
 
       # Check if the crontab is readable
-      crontab_read = conn.exec!("/bin/sh -c 'test -r "+$cron_file_path+" && echo \"y\" || echo \"n\"'").strip
+      crontab_read = conn.exec!("/bin/sh -c 'test -r #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
 
       # Check if the crontab is writeable
-      crontab_write = conn.exec!("/bin/sh -c 'test -w "+$cron_file_path+" && echo \"y\" || echo \"n\"'").strip
+      crontab_write = conn.exec!("/bin/sh -c 'test -w #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
 
       {
         :connect => true,
@@ -88,7 +88,7 @@ module Minicron
       raise Exception, "/etc is not executable by the current user" if !test[:etc][:execute]
 
       # Get the full crontab
-      crontab = conn.exec!('cat '+$cron_file_path).to_s.strip
+      crontab = conn.exec!("cat #{Minicron.config['server']['cron_file']}").to_s.strip
 
       # Replace the full string with the replacement string
       begin
@@ -120,10 +120,10 @@ module Minicron
       end
 
       # And finally replace the crontab with the new one now we now the change worked
-      move = conn.exec!("/bin/sh -c 'mv /tmp/minicron_crontab #{$cron_file_path} && echo \"y\" || echo \"n\"'").to_s.strip
+      move = conn.exec!("/bin/sh -c 'mv /tmp/minicron_crontab #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").to_s.strip
 
       if move != 'y'
-        fail Exception, 'Unable to move /tmp/minicron_crontab to '+$cron_file_path+', check the permissions?'
+        fail Exception, "Unable to move /tmp/minicron_crontab to #{Minicron.config['server']['cron_file']}, check the permissions?"
       end
     end
 
@@ -139,13 +139,13 @@ module Minicron
       # Prepare the line we are going to write to the crontab
       line = build_minicron_command(schedule, job.user, job.command)
       escaped_line = line.shellescape
-      echo_line = "echo #{escaped_line} >> #{$cron_file_path}"
+      echo_line = "echo #{escaped_line} >> #{Minicron.config['server']['cron_file']}"
 
       # Append it to the end of the crontab
       conn.exec!(echo_line).to_s.strip
 
       # Check the line is there
-      tail = conn.exec!('tail -n 1 '+$cron_file_path).to_s.strip
+      tail = conn.exec!("tail -n 1 #{Minicron.config['server']['cron_file']}").to_s.strip
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
@@ -213,9 +213,9 @@ module Minicron
       conn ||= @ssh.open
 
       # Loop through each job and delete them one by one
-      # TODO: what if one schedule removal fails but others don't? Should
-      # we try and rollback somehow or just return the job with half its
-      # schedules deleted?
+      # TODO: what if one job removal fails but others don't? Should
+      # we try and rollback somehow or just return the host with half its
+      # jobs deleted?
       host.jobs.each do |job|
         delete_job(job, conn)
       end

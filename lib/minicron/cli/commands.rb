@@ -52,17 +52,15 @@ module Minicron
 
       # Add the `minicron server` command
       def self.add_server_cli_command(cli)
-        default_pid_file = '/tmp/minicron.pid'
-	default_cron_file = '/etc/cron.d/minicron'
         cli.command :server do |c|
           c.syntax = 'minicron server [start|stop|restart|status]'
           c.description = 'Controls the minicron server.'
           c.option '--host STRING', String, "The host for the server to listen on. Default: #{Minicron.config['server']['host']}"
           c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
           c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
-          c.option '--pid_file STRING', String, "The path for daemon's PID file. Default: #{Minicron.config['server']['pid_file'] || default_pid_file}"
+          c.option '--pid_file STRING', String, "The path for daemon's PID file. Default: #{Minicron.config['server']['pid_file']}"
+          c.option '--cron_file STRING', String, "The path to the cron file. Default: #{Minicron.config['server']['cron_file']}"
           c.option '--debug', "Enable debug mode. Default: #{Minicron.config['server']['debug']}"
-	  c.option '--cron_file', String, "The path to the cron file. Default: #{Minicron.config['server']['cron_file'] || default_cron_file}"
 
           c.action do |args, opts|
             # Parse the file and cli config options
@@ -73,24 +71,23 @@ module Minicron
 
             # Get an instance of insidious and set the pid file
             insidious = Insidious.new(
-              :pid_file => Minicron.config['server']['pid_file'] || default_pid_file,
+              :pid_file => Minicron.config['server']['pid_file'],
               :daemonize => Minicron.config['server']['debug'] == false
             )
 
             case action
             when 'start'
               insidious.start! do
-              # Run the execution monitor (this runs in a separate thread)
-              monitor = Minicron::Monitor.new
-              monitor.start!
+                # Run the execution monitor (this runs in a separate thread)
+                monitor = Minicron::Monitor.new
+                monitor.start!
 
-              # Start the server!
-              Minicron::Transport::Server.start!(
-                Minicron.config['server']['host'],
-                Minicron.config['server']['port'],
-                Minicron.config['server']['path'],
-
-              )
+                # Start the server!
+                Minicron::Transport::Server.start!(
+                  Minicron.config['server']['host'],
+                  Minicron.config['server']['port'],
+                  Minicron.config['server']['path'],
+                )
               end
             when 'stop'
               insidious.stop!
@@ -170,11 +167,21 @@ module Minicron
                 case output[:type]
                 when :status
                   unless Minicron.config['cli']['dry_run']
-                    faye.send(:job_id => ids[:job_id], :execution_id => ids[:execution_id], :type => :status, :message => output[:output])
+                    faye.send(
+                      :job_id => ids[:job_id],
+                      :execution_id => ids[:execution_id],
+                      :type => :status,
+                      :message => output[:output]
+                    )
                   end
                 when :command
                   unless Minicron.config['cli']['dry_run']
-                    faye.send(:job_id => ids[:job_id], :execution_id => ids[:execution_id], :type => :output, :message => output[:output])
+                    faye.send(
+                      :job_id => ids[:job_id],
+                      :execution_id => ids[:execution_id],
+                      :type => :output,
+                      :message => output[:output]
+                    )
                   end
                 end
 
@@ -183,7 +190,12 @@ module Minicron
             rescue Exception => e
               # Send the exception message to the server and yield it
               unless Minicron.config['cli']['dry_run']
-                faye.send(:job_id => ids[:job_id], :execution_id => ids[:execution_id], :type => :output, :message => e.message)
+                faye.send(
+                  :job_id => ids[:job_id],
+                  :execution_id => ids[:execution_id],
+                  :type => :output,
+                  :message => e.message
+                )
               end
 
               raise Exception, e
