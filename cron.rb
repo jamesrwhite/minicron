@@ -34,10 +34,10 @@ module Minicron
       conn ||= @ssh.open
 
       # Check if /etc is writeable
-      etc_write = conn.exec!("/bin/sh -c 'test -w /etc && echo \"y\" || echo \"n\"'").strip
+#      etc_write = conn.exec!("/bin/sh -c 'test -w /etc && echo \"y\" || echo \"n\"'").strip
 
       # Check if /etc is executable
-      etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
+#      etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
 
       # Check if the crontab is readable
       crontab_read = conn.exec!("/bin/sh -c 'test -r "+$cron_file_path+" && echo \"y\" || echo \"n\"'").strip
@@ -47,10 +47,10 @@ module Minicron
 
       {
         :connect => true,
-        :etc => {
-          :write => etc_write == 'y',
-          :execute => etc_execute == 'y'
-        },
+#        :etc => {
+#          :write => etc_write == 'y',
+#          :execute => etc_execute == 'y'
+#        },
         :crontab => {
           :read => crontab_read == 'y',
           :write => crontab_write == 'y'
