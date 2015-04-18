@@ -1,8 +1,23 @@
-<%= erb :'handlebars/loading' %>
-<%= erb :'handlebars/errors' %>
-<%= erb :'handlebars/application' %>
-<%= erb :'handlebars/executions' %>
-<%= erb :'handlebars/jobs' %>
-<%= erb :'handlebars/schedules' %>
-<%= erb :'handlebars/hosts' %>
-<%= erb :'handlebars/alerts' %>
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="main-container">
+    <div class="navbar-header">
+      <a class="navbar-brand">minicron</a>
+    </div>
+
+    <ul class="nav navbar-nav">
+      <li><a href="#">Executions</a></li>
+      <li><a href="#">Jobs</a></li>
+      <li><a href="#">Hosts</a></li>
+      <li><a href="#">Alerts</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="main-container clearfix">
+  <%= erb :'partials/sidebar' %>
+
+  <div class="main-panel">
+    <div class="inner">
+    </div>
+  </div>
+</div>
