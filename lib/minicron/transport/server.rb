@@ -4,7 +4,6 @@ autoload :Rack, 'rack'
 module Minicron
   module Hub
     autoload :App,                'minicron/hub/app'
-    autoload :ExceptionHandling,  'minicron/hub/app'
   end
 
   module Transport
@@ -33,7 +32,6 @@ module Minicron
 
           # The 'hub', aka our sinatra web interface
           map path do
-            use Minicron::Hub::ExceptionHandling
             run Minicron::Hub::App.new
           end
 
