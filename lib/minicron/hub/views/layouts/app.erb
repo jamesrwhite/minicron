@@ -8,11 +8,11 @@
 <body>
   <%= yield %>
 
+  <%= js :app, :media => 'screen' %>
   <script>
-    var config = {
+    window.Minicron.config = {
       path: '<%= Minicron.config['server']['path'] %>'
     };
   </script>
-  <%= js :app, :media => 'screen' %>
 </body>
 </html>
