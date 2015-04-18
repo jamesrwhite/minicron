@@ -38,7 +38,6 @@ module Minicron::Hub
       serve '/css',   :from => 'assets/css'
       serve '/js',    :from => 'assets/js'
       serve '/fonts', :from => 'assets/fonts'
-      serve '/app',   :from => 'assets/app'
 
       js_compression :simple
 
@@ -53,11 +52,7 @@ module Minicron::Hub
       js :app, '/js/all.js', [
         # Dependencies, the order of these is important
         '/js/jquery-2.1.0.min.js',
-        '/js/handlebars-1.3.0.min.js',
-        '/js/ember-1.5.1.min.js',
-        '/js/ember-data-1.0.0-beta.7.f87cba88.min.js',
         '/js/faye-browser-1.0.1.min.js',
-        '/js/ansi_up-1.1.1.min.js',
         '/js/bootstrap-3.1.1.min.js',
         '/js/moment-2.5.1.min.js',
         '/js/perfect-scrollbar-0.4.10.with-mousewheel.min.js',
@@ -119,39 +114,6 @@ module Minicron::Hub
 
       # Enable ActiveRecord logging if in verbose mode
       ActiveRecord::Base.logger = Minicron.config['verbose'] ? Logger.new(STDOUT) : nil
-    end
-  end
-
-  # Based on http://hawkins.io/2013/06/error-handling-in-sinatra-apis/
-  class ExceptionHandling
-    def initialize(app)
-      @app = app
-    end
-
-    def handle_exception(env, e, status)
-      if Minicron.config['trace']
-        env['rack.errors'].puts(e)
-        env['rack.errors'].puts(e.backtrace.join("\n"))
-        env['rack.errors'].flush
-      end
-
-      # Display the error message
-      hash = { :error => e.to_s }
-
-      # Display the full trace if tracing is enabled
-      hash[:trace] = e.backtrace if Minicron.config['trace']
-
-      [status, { 'Content-Type' => 'application/json' }, [hash.to_json]]
-    end
-
-    def call(env)
-      begin
-        @app.call env
-      rescue ActiveRecord::RecordNotFound => e
-        handle_exception(env, e, 404)
-      rescue Exception => e
-        handle_exception(env, e, 500)
-      end
     end
   end
 end
