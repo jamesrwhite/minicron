@@ -1,9 +1,11 @@
+require 'sinatra/base'
+
 autoload :Thin, 'thin'
 autoload :Rack, 'rack'
 
 module Minicron
   module Hub
-    autoload :App,                'minicron/hub/app'
+    autoload :App, 'minicron/hub/app'
   end
 
   module Transport
@@ -63,6 +65,11 @@ module Minicron
         return false unless !@server.nil?
 
         @server.running?
+      end
+
+      # Save doing this logic in every controller redirect
+      def self.get_prefix
+        Minicron.config['server']['path'] == '/' ? nil : Minicron.config['server']['path']
       end
     end
   end
