@@ -5,10 +5,10 @@
     </div>
 
     <ul class="nav navbar-nav">
-      <li><a href="#">Executions</a></li>
-      <li><a href="#">Jobs</a></li>
-      <li><a href="#">Hosts</a></li>
-      <li><a href="#">Alerts</a></li>
+      <li><a href="<%= "#{Minicron::Transport::Server.get_prefix}/executions" %>">Executions</a></li>
+      <li><a href="<%= "#{Minicron::Transport::Server.get_prefix}/jobs" %>">Jobs</a></li>
+      <li><a href="<%= "#{Minicron::Transport::Server.get_prefix}/hosts" %>">Hosts</a></li>
+      <li><a href="<%= "#{Minicron::Transport::Server.get_prefix}/alerts" %>">Alerts</a></li>
     </ul>
   </div>
 </div>
