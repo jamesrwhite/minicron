@@ -1,7 +1,7 @@
 <section>
   <header class="clearfix">
     <h2 class="pull-left">Execution <%= @execution.id %></h2>
-    <a href class="pull-right btn btn-danger btn-sm">Delete</a>
+    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{@execution.job.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
   </header>
   <hr/>
 
@@ -36,8 +36,8 @@
 <section>
   <header class="clearfix">
     <h2 class="pull-left">Job</h2>
-    <a href class="pull-right btn btn-warning btn-sm">Edit</a>
-    <a href class="pull-right btn btn-info btn-sm">View</a>
+    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{@execution.job.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
+    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{@execution.job.id}" %>" class="pull-right btn btn-info btn-sm">View</a>
   </header>
   <hr/>
 

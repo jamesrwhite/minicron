@@ -1,0 +1,32 @@
+<header class="clearfix">
+  <h2 class="pull-left">Jobs</h2>
+  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
+</header>
+<hr/>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Executions</th>
+      <th>Host</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @jobs.each do |job| %>
+      <tr>
+        <td><a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}" %>"><%= job.id %></a></td>
+        <td><%= job.name %></td>
+        <td><%= job.executions.count %></td>
+        <td><a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{job.host.id}" %>"><%= job.host.name %></a></td>
+        <td>
+          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}" %>" class="btn btn-info btn-xs">View</a>
+          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
+          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}/delete" %>" class="btn btn-danger btn-xs">Delete</a>
+        </th>
+      </tr>
+    <% end %>
+  </body>
+</table>

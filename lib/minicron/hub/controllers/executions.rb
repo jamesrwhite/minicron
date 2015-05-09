@@ -5,6 +5,6 @@ class Minicron::Hub::App
                                          .order(:created_at => :desc, :started_at => :desc)
                                          .find(params['execution_id'])
 
-    erb :execution, :layout => :'layouts/app'
+    erb :'executions/show', :layout => :'layouts/app'
   end
 end
