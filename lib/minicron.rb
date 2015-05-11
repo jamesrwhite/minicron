@@ -1,9 +1,9 @@
 require 'minicron/constants'
+require 'toml'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
   # Define module autoloading
-  autoload :TOML,             'toml'
   autoload :StringIO,         'stringio'
   autoload :SSHKey,           'sshkey'
 
