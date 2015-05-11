@@ -1,7 +1,7 @@
 <section>
   <header class="clearfix">
     <h2 class="pull-left">Execution <%= @execution.id %></h2>
-    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{@execution.job.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/execution/#{@execution.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
   </header>
   <hr/>
 
