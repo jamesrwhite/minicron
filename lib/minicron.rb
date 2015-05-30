@@ -26,6 +26,13 @@ module Minicron
       'debug' => false,
       'pid_file' => '/tmp/minicron.pid',
       'cron_file' => '/etc/crontab',
+      'session' => {
+        'name' => 'minicron.session',
+        'domain' => '0.0.0.0',
+        'path' => '/',
+        'ttl' => 86400,
+        'secret' => 'change_me'
+      }
     },
     'database' => {
       'type' => 'sqlite'

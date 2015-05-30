@@ -79,7 +79,14 @@ describe Minicron do
             'path' => '/',
             'debug' => false,
             'pid_file' => '/tmp/minicron.pid',
-            'cron_file' => '/etc/crontab'
+            'cron_file' => '/etc/crontab',
+            'session' => {
+              'name' => 'minicron.session',
+              'domain' => '127.0.0.1',
+              'path' => '/',
+              'ttl' => 86400,
+              'secret' => 'change_me'
+            }
           },
           'database' => {
             'type' => 'sqlite'

@@ -21,6 +21,12 @@ path = "/"
 debug = false
 pid_file = "/tmp/minicron.pid"
 cron_file = "/etc/crontab"
+  [server.session]
+  name = "minicron.session"
+  domain = "127.0.0.1"
+  path = "/"
+  ttl = 86400
+  secret = "change_me"
 
 # Database options
 [database]
@@ -40,9 +46,9 @@ dry_run = false
 [alerts]
   [alerts.email]
   enabled = false
-    [alerts.email.smtp]
-    address = "localhost"
-    port = 25
+      [alerts.email.smtp]
+      address = "localhost"
+      port = 25
 
   [alerts.sms]
   enabled = false
