@@ -73,22 +73,24 @@ class Minicron::Hub::App
         job.name = request_body['job']['name']
         job.user = request_body['job']['user']
 
-        # If the jobs user has been updated, update it in the crontab as well
-        ssh = Minicron::Transport::SSH.new(
-          :user => job.host.user,
-          :host => job.host.host,
-          :port => job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
-        )
+        # Only update the job user if it has changed
+        if old_user != job.user
+          ssh = Minicron::Transport::SSH.new(
+            :user => job.host.user,
+            :host => job.host.host,
+            :port => job.host.port,
+            :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+          )
 
-        # Get an instance of the cron class
-        cron = Minicron::Cron.new(ssh)
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
 
-        # Update the job schedules in the crontab
-        cron.update_user(job, old_user, job.user)
+          # Update the job schedules in the crontab
+          cron.update_user(job, old_user, job.user)
 
-        # Tidy up
-        ssh.close
+          # Tidy up
+          ssh.close
+        end
 
         job.save!
 
