@@ -149,7 +149,7 @@ module Minicron
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
-        fail Exception, "Expected to find '#{line}' at eof but found '#{tail}'"
+        fail Exception, "Expected to find '#{line}' at EOF but found '#{tail}'"
       end
     end
 
