@@ -37,8 +37,8 @@ module Minicron
                                      :path => Minicron.config['server']['session']['path'],
                                      :expire_after => Minicron.config['server']['session']['ttl'],
                                      :secret => Minicron.config['server']['session']['secret']
-          use Rack::Protection
-          use Rack::Protection::EscapedParams
+          # use Rack::Protection
+          # use Rack::Protection::EscapedParams
 
           # The 'hub', aka our sinatra web interface
           map path do
