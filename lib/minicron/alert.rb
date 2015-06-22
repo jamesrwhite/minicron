@@ -53,6 +53,8 @@ module Minicron
         send_sms(options)
       when 'pagerduty'
         send_pagerduty(options)
+      when 'aws_sns'
+        send_aws_sns(options)
       else
         fail Exception, "The medium '#{options[:medium]}' is not supported!"
       end
@@ -96,6 +98,15 @@ module Minicron
       pagerduty.send(
         options[:kind] == 'fail' ? 'Job failed!' : 'Job missed!',
         pagerduty.get_message(options)
+      )
+    end
+
+    # Send an aws sns alert, this has the same options as #send
+    def send_aws_sns(options = {})
+      sns = Minicron::AwsSns.new
+      sns.send(
+        "minicron alert for job '#{options[:job].name}'!",
+        sns.get_message(options)
       )
     end
 
