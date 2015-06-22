@@ -39,6 +39,7 @@ class Minicron::Hub::App
       redirect "#{Minicron::Transport::Server.get_prefix}/host/#{host.id}"
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
+      @previous = params
       @error = e.message
     end
 
