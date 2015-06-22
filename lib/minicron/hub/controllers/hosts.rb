@@ -31,7 +31,7 @@ class Minicron::Hub::App
       # Generate a new SSH key - TODO: add passphrase
       key = Minicron.generate_ssh_key('host', host.id, host.fqdn)
 
-      # And finally we store the public key in te db with the host for convenience
+      # And finally we store the public key in the db with the host for convenience
       host.public_key = key.ssh_public_key
       host.save!
 
@@ -44,6 +44,38 @@ class Minicron::Hub::App
     end
 
     erb :'hosts/new', :layout => :'layouts/app'
+  end
+
+  get '/host/:id/edit' do
+    # Find the host
+    @host = Minicron::Hub::Host.find(params[:id])
+
+    erb :'hosts/edit', :layout => :'layouts/app'
+  end
+
+  post '/host/:id/edit' do
+    begin
+      # Find the host
+      @host = Minicron::Hub::Host.find(params[:id])
+
+      # Update its data
+      @host.name = params[:name]
+      @host.fqdn = params[:fqdn]
+      @host.user = params[:user]
+      @host.host = params[:host]
+      @host.port = params[:port]
+
+      @host.save!
+
+      # Redirect to the updated host
+      redirect "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}"
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      @previous = params
+      @error = e.message
+    end
+
+    erb :'hosts/edit', :layout => :'layouts/app'
   end
 
   get '/host/:id' do
