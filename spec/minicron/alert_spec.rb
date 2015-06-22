@@ -3,7 +3,6 @@ require 'minicron/alert'
 require 'minicron/alert/aws_sns'
 
 describe Minicron::Alert do
-
   describe '#send' do
     context 'when medium is AWS SNS' do
       it 'sends message' do
@@ -13,11 +12,10 @@ describe Minicron::Alert do
         expect_any_instance_of(Minicron::Alert).to receive(:send_aws_sns)
 
         alert.send({
-          medium: 'aws_sns',
-          job_id: 1
+          :medium => 'aws_sns',
+          :job_id => 1
         })
       end
     end
   end
-
 end

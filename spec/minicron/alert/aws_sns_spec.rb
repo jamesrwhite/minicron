@@ -2,22 +2,21 @@ require 'spec_helper'
 require 'minicron/alert/aws_sns'
 
 describe Minicron::AwsSns do
-
   before (:each) do
     Minicron.parse_config_hash({
       'alerts' => {
         'aws_sns' => {
-          'secret_access_key' => 'jiuwmEf91KWMqzsUlV/xzuDku7otULnAmm7v/bSM',
-          'access_key_id' => 'AKIAJMUAH24YJW6BCX2Q',
+          'secret_access_key' => 'fd;sflksk;lfsdlfksdfsd',
+          'access_key_id' => 'fdsfsdfsdfsd',
           'region' => 'us-west-2',
-          'topic_arn' => 'arn:aws:sns:us-west-2:453856305308:minicron-test'
+          'topic_arn' => 'arn:aws:sns:us-west-2:2342423423:yo'
         }
       }
     })
   end
 
   describe '#intiailize' do
-    it 'should create an instance of the Twilio gem' do
+    it 'should create an instance of the SNS gem' do
       sns = Minicron::AwsSns.new
 
       expect(sns.instance_variable_get(:@client)).to be_a Aws::SNS::Client
@@ -83,5 +82,4 @@ describe Minicron::AwsSns do
       sns.send(subject, message)
     end
   end
-
 end
