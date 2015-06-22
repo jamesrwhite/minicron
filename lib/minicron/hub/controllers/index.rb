@@ -6,6 +6,11 @@ class Minicron::Hub::App
                            .order(:created_at => :desc, :started_at => :desc)
                            .first
 
-    redirect "#{Minicron::Transport::Server.get_prefix}/execution/#{recent.id}"
+    # Redirect the user to that execution if we found one
+    if recent
+      redirect "#{Minicron::Transport::Server.get_prefix}/execution/#{recent.id}"
+    else
+      erb :'index', :layout => :'layouts/app'
+    end
   end
 end
