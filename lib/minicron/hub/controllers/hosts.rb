@@ -8,17 +8,14 @@ class Minicron::Hub::App
   end
 
   get '/hosts/new' do
+    # Empty instance to simplify views
+    @previous = Minicron::Hub::Host.new
+
     erb :'hosts/new', :layout => :'layouts/app'
   end
 
   post '/hosts/new' do
     begin
-      # Default the value of the port
-      params[:port] ||= 22
-
-      # Default the value of the user
-      params[:user] ||= 'root'
-
       # Try and save the new host
       host = Minicron::Hub::Host.create(
         :name => params[:name],
