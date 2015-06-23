@@ -59,6 +59,9 @@ module Minicron
       },
       'pagerduty' => {
         'enabled' => false
+      },
+      'aws_sns' => {
+        'enabled' => false
       }
     }
   }

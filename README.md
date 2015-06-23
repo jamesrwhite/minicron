@@ -3,7 +3,7 @@ minicron
 
 [![Gem Version](http://img.shields.io/gem/v/minicron.svg)](https://rubygems.org/gems/minicron)
 [![Build Status](http://img.shields.io/travis/jamesrwhite/minicron.svg)](http://travis-ci.org/jamesrwhite/minicron)
-[![Coverage Status](http://img.shields.io/coveralls/jamesrwhite/minicron.svg)](https://coveralls.io/r/jamesrwhite/minicron?branch=master)
+[![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.svg?branch=develop)](https://coveralls.io/r/jamesrwhite/minicron?branch=develop)
 [![Code Climate](http://img.shields.io/codeclimate/github/jamesrwhite/minicron.svg)](https://codeclimate.com/github/jamesrwhite/minicron)
 [![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
 [![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)

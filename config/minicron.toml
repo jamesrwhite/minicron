@@ -68,3 +68,11 @@ dry_run = false # When true the command is run but not sent to the server
   [alerts.pagerduty]
   enabled = false
   # service_key = "YOUR_PAGERDUTY_SERVICE_KEY"
+
+  [alerts.aws_sns]
+  enabled = false
+  # secret_access_key = "YOUR_SECRET_ACCESS_KEY"
+  # access_key_id = "YOUR_ACCESS_KEY_ID"
+  # region = "AWS_REGION"
+  # topic_arn = "YOUR_SNS_TOPIC_ARN"
+
