@@ -7,7 +7,7 @@ trace = false # Useful for debugging
 # Client options
 [client]
 scheme = "http" # [http, https]
-host = "0.0.0.0"
+host = "127.0.0.1"
 port = 9292
 path = "/"
 connect_timeout = 5
@@ -15,7 +15,7 @@ inactivity_timeout = 5
 
 # Server options
 [server]
-host = "0.0.0.0"
+host = "127.0.0.1"
 port = 9292
 path = "/"
 debug = false # When true the server will not run as a daemon
@@ -23,7 +23,7 @@ pid_file = "/tmp/minicron.pid"
 cron_file = "/etc/crontab"
   [server.session]
   name = "minicron.session"
-  domain = "0.0.0.0"
+  domain = "127.0.0.1"
   path = "/"
   ttl = 86400
   secret = "change_me"

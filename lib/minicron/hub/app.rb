@@ -14,6 +14,7 @@ module Minicron::Hub
     # Set the application root
     set :root, Minicron::HUB_PATH
 
+    # General Sinatra configuration
     configure do
       # Don't log them. We'll do that ourself
       set :dump_errors, false

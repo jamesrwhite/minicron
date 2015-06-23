@@ -46,7 +46,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'escape', '0.0.4'
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.8'
   spec.add_runtime_dependency 'em-http-request', '~> 1.1'
-  spec.add_runtime_dependency 'rack-protection', '~> 1.5'
 
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.1'

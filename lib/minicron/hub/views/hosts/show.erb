@@ -1,91 +1,89 @@
-<section>
-  <header class="clearfix">
-    <h2 class="pull-left">Host '<%= @host.name %>'</h2>
-    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
-    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
-    <a href="#" class="pull-right btn btn-info btn-sm">Test Connection</a>
-  </header>
-  <hr/>
+<header class="clearfix">
+  <h2 class="pull-left">Host '<%= @host.name %>'</h2>
+  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
+  <a href="#" class="pull-right btn btn-info btn-sm">Test Connection</a>
+</header>
+<hr/>
 
-  <form class="form-horizontal" role="form">
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Name</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @host.name %></div>
-      </div>
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @host.name %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">FQDN</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @host.fqdn %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">FQDN</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @host.fqdn %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">User</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @host.user %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">User</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @host.user %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Host</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @host.host %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Host</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @host.host %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Port</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @host.port %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Port</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @host.port %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Public Key</label>
-      <div class="col-sm-10">
-        <pre class="form-control form-control-view"><%= @host.public_key %></pre>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Public Key</label>
+    <div class="col-sm-10">
+      <pre class="form-control form-control-view"><%= @host.public_key %></pre>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Created At</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @host.created_at %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Created At</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @host.created_at %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Updated At</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @host.updated_at %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Updated At</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @host.updated_at %></div>
     </div>
-  </form>
+  </div>
+</form>
 </section>
 
 <section>
-  <header class="clearfix">
-    <h2 class="pull-left">Jobs</h2>
-    <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
-  </header>
-  <hr/>
+<header class="clearfix">
+  <h2 class="pull-left">Jobs</h2>
+  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
+</header>
+<hr/>
 
-  <table class="table table-striped table-hover">
-    <thead>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Host</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @host.jobs.each do |job| %>
       <tr>
-        <th>Name</th>
-        <th>Host</th>
-        <th>Actions</th>
+        <td><%= job.name %></td>
+        <td><a href><%= job.host.name %></a></td>
+        <td>
+          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}" %>" class="btn btn-info btn-xs">View</a>
+          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
+        </th>
       </tr>
-    </thead>
-
-    <tbody>
-      <% @host.jobs.each do |job| %>
-        <tr>
-          <td><%= job.name %></td>
-          <td><a href><%= job.host.name %></a></td>
-          <td>
-            <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}" %>" class="btn btn-info btn-xs">View</a>
-            <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
-          </th>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
+    <% end %>
+  </tbody>
+</table>
