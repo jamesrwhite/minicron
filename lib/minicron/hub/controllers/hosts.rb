@@ -83,4 +83,52 @@ class Minicron::Hub::App
 
     erb :'hosts/show', :layout => :'layouts/app'
   end
+
+  get '/host/:id/delete' do
+    # Look up the host
+    @host = Minicron::Hub::Host.find(params[:id])
+
+    erb :'hosts/delete', :layout => :'layouts/app'
+  end
+
+  post '/host/:id/delete' do
+    # Look up the host
+    @host = Minicron::Hub::Host.find(params[:id])
+
+    begin
+      Minicron::Hub::Host.transaction do
+        # Try and delete the host
+        Minicron::Hub::Host.destroy(params[:id])
+
+        # Get an ssh instance and open a connection
+        ssh = Minicron::Transport::SSH.new(
+          :user => @host.user,
+          :host => @host.host,
+          :port => @host.port,
+          :private_key => "~/.ssh/minicron_host_#{@host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Delete the host from the crontab
+        cron.delete_host(@host)
+
+        # Tidy up
+        ssh.close
+
+        # Delete the pub/priv key pair
+        private_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa")
+        public_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa.pub")
+        File.delete(private_key_path)
+        File.delete(public_key_path)
+
+        redirect "#{Minicron::Transport::Server.get_prefix}/hosts"
+      end
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      @error = e.message
+      erb :'hosts/delete', :layout => :'layouts/app'
+    end
+  end
 end
