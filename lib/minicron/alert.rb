@@ -101,6 +101,7 @@ module Minicron
       )
     end
 
+    # Send an aws sns alert, this has the same options as #send
     def send_aws_sns(options = {})
       sns = Minicron::AwsSns.new
       sns.send(

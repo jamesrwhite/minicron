@@ -101,6 +101,9 @@ describe Minicron do
             },
             'pagerduty' => {
               'enabled' => false
+            },
+            'aws_sns' => {
+              'enabled' => false
             }
           }
         }

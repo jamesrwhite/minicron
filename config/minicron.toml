@@ -65,8 +65,8 @@ dry_run = false # When true the command is run but not sent to the server
 
   [alerts.aws_sns]
   enabled = false
-  # secret_access_key = "jiuwmEf91KWMqzsUlV/xzuDku7otULnAmm7v/bSM"
-  # access_key_id = "AKIAJMUAH24YJW6BCX2Q"
-  # region = "us-west-2"
-  # topic_arn = "arn:aws:sns:us-west-2:453856305308:minicron-test"
+  # secret_access_key = "YOUR_SECRET_ACCESS_KEY"
+  # access_key_id = "YOUR_ACCESS_KEY_ID"
+  # region = "AWS_REGION"
+  # topic_arn = "YOUR_SNS_TOPIC_ARN"
 
