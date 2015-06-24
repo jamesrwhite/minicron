@@ -1,8 +1,7 @@
 class Minicron::Hub::App
   get '/jobs' do
     # Look up all the jobs
-    @jobs = Minicron::Hub::Job.all.order(:created_at => :desc)
-                              .includes(:host, :executions)
+    @jobs = Minicron::Hub::Job.all.order(:created_at => :desc).includes(:host, :executions)
 
     erb :'jobs/index', :layout => :'layouts/app'
   end
@@ -98,8 +97,6 @@ class Minicron::Hub::App
           ssh.close
         end
 
-        puts @job.to_s
-
         @job.save!
 
         # Redirect to the updated job
@@ -110,6 +107,48 @@ class Minicron::Hub::App
       @job.restore_attributes
       @error = e.message
       erb :'jobs/edit', :layout => :'layouts/app'
+    end
+  end
+
+  get '/job/:id/delete' do
+    # Look up the job
+    @job = Minicron::Hub::Job.find(params[:id])
+
+    erb :'jobs/delete', :layout => :'layouts/app'
+  end
+
+  post '/job/:id/delete' do
+    # Look up the job
+    @job = Minicron::Hub::Job.find(params[:id])
+
+    begin
+      Minicron::Hub::Job.transaction do
+        # Try and delete the job
+        Minicron::Hub::Job.destroy(params[:id])
+
+        # Get an ssh instance
+        ssh = Minicron::Transport::SSH.new(
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Delete the job from the crontab
+        cron.delete_job(@job)
+
+        # Tidy up
+        ssh.close
+
+        redirect "#{Minicron::Transport::Server.get_prefix}/jobs"
+      end
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      @error = e.message
+      erb :'jobs/delete', :layout => :'layouts/app'
     end
   end
 end
