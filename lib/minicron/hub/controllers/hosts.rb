@@ -7,6 +7,13 @@ class Minicron::Hub::App
     erb :'hosts/index', :layout => :'layouts/app'
   end
 
+  get '/host/:id' do
+    # Look up the host
+    @host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
+
+    erb :'hosts/show', :layout => :'layouts/app'
+  end
+
   get '/hosts/new' do
     # Empty instance to simplify views
     @previous = Minicron::Hub::Host.new
@@ -68,17 +75,10 @@ class Minicron::Hub::App
       redirect "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}"
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
+      @host.restore_attributes
       @error = e.message
+      erb :'hosts/edit', :layout => :'layouts/app'
     end
-
-    erb :'hosts/edit', :layout => :'layouts/app'
-  end
-
-  get '/host/:id' do
-    # Look up the host
-    @host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
-
-    erb :'hosts/show', :layout => :'layouts/app'
   end
 
   get '/host/:id/delete' do
