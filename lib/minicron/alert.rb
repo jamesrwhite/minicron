@@ -2,6 +2,7 @@ module Minicron
   autoload :Email,      'minicron/alert/email'
   autoload :SMS,        'minicron/alert/sms'
   autoload :PagerDuty,  'minicron/alert/pagerduty'
+  autoload :AwsSns,     'minicron/alert/aws_sns'
 
   module Hub
     autoload :Alert,    'minicron/hub/models/alert'
