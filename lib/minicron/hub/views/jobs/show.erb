@@ -94,7 +94,7 @@
     <tbody>
       <% @job.executions.each do |execution| %>
         <tr>
-          <td><a href="<%= "#{Minicron::Transport::Server.get_prefix}/execution/#{execution.id}" %>"> <%= execution.number %></a></td>
+          <td><a href="<%= "#{Minicron::Transport::Server.get_prefix}/execution/#{execution.id}" %>"><%= execution.number %></a></td>
           <td><%= execution.started_at %></td>
           <td><%= execution.finished_at %></td>
           <td><%= execution.exit_status %></td>
