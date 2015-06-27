@@ -20,6 +20,9 @@ module Minicron
     # @option options [Time] expected_at only applies to 'miss' alerts
     def send_all(options = {})
       Minicron.config['alerts'].each do |medium, value|
+
+        options[:medium] = medium
+
         # Check if the medium is enabled and alert hasn't already been sent
         if value['enabled'] && !sent?(options)
           send(
@@ -28,7 +31,7 @@ module Minicron
             :execution_id => options[:execution_id],
             :job_id => options[:job_id],
             :expected_at => options[:expected_at],
-            :medium => medium
+            :medium => options[:medium]
           )
         end
       end
