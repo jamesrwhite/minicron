@@ -3,7 +3,7 @@ minicron
 
 [![Gem Version](http://img.shields.io/gem/v/minicron.svg)](https://rubygems.org/gems/minicron)
 [![Build Status](http://img.shields.io/travis/jamesrwhite/minicron.svg)](http://travis-ci.org/jamesrwhite/minicron)
-[![Coverage Status](http://img.shields.io/coveralls/jamesrwhite/minicron.svg)](https://coveralls.io/r/jamesrwhite/minicron?branch=master)
+[![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.svg?branch=develop)](https://coveralls.io/r/jamesrwhite/minicron?branch=develop)
 [![Code Climate](http://img.shields.io/codeclimate/github/jamesrwhite/minicron.svg)](https://codeclimate.com/github/jamesrwhite/minicron)
 [![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
 [![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)
@@ -107,7 +107,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
 
-3. To install the latest release (currently 0.7.5) you can ````gem install minicron````, depending on your ruby setup
+3. To install the latest release (currently 0.7.8) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable

@@ -78,7 +78,7 @@ describe Minicron do
             'port' => 9292,
             'path' => '/',
             'debug' => false,
-            'pid_file' => '/tmp/minicron.pid'
+            'pid_file' => '/tmp/minicron.pid',
             'cron_file' => '/etc/crontab'
           },
           'database' => {
@@ -100,6 +100,9 @@ describe Minicron do
               'enabled' => false
             },
             'pagerduty' => {
+              'enabled' => false
+            },
+            'aws_sns' => {
               'enabled' => false
             }
           }

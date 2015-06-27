@@ -58,21 +58,45 @@ class Minicron::Hub::App
   put '/api/jobs/:id' do
     content_type :json
     begin
-      # Load the JSON body
-      request_body = Oj.load(request.body)
+      Minicron::Hub::Job.transaction do
+        # Load the JSON body
+        request_body = Oj.load(request.body)
 
-      # Find the job
-      job = Minicron::Hub::Job.includes(:host, :schedules, :executions => :job_execution_outputs)
-                              .find(params[:id])
+        # Find the job
+        job = Minicron::Hub::Job.includes(:host, :schedules, :executions => :job_execution_outputs)
+                                .find(params[:id])
 
-      # Update the name and user
-      job.name = request_body['job']['name']
-      job.user = request_body['job']['user']
+        # Store a copy of the current job user in case we need to change it
+        old_user = job.user
 
-      job.save!
+        # Update the name and user
+        job.name = request_body['job']['name']
+        job.user = request_body['job']['user']
 
-      # Return the new job
-      Minicron::Hub::JobSerializer.new(job).serialize.to_json
+        # Only update the job user if it has changed
+        if old_user != job.user
+          ssh = Minicron::Transport::SSH.new(
+            :user => job.host.user,
+            :host => job.host.host,
+            :port => job.host.port,
+            :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+          )
+
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
+
+          # Update the job schedules in the crontab
+          cron.update_user(job, old_user, job.user)
+
+          # Tidy up
+          ssh.close
+        end
+
+        job.save!
+
+        # Return the new job
+        Minicron::Hub::JobSerializer.new(job).serialize.to_json
+      end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       status 422

@@ -49,3 +49,6 @@ dry_run = false
 
   [alerts.pagerduty]
   enabled = false
+
+  [alerts.aws_sns]
+  enabled = false

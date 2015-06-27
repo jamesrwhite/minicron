@@ -149,7 +149,7 @@ module Minicron
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
-        fail Exception, "Expected to find '#{line}' at eof but found '#{tail}'"
+        fail Exception, "Expected to find '#{line}' at EOF but found '#{tail}'"
       end
     end
 
@@ -171,6 +171,31 @@ module Minicron
 
       # Replace the old schedule with the new schedule
       find_and_replace(conn, find, replace)
+    end
+
+    # Update the user for a job and all its schedules
+    #
+    # @param job [Minicron::Hub::Job] an instance of a job model including the schedule relation
+    # @param old_user [String] the old job user as a string
+    # @param new_user [String] the new job user as a string
+    # @param conn an instance of an open ssh connection
+    def update_user(job, old_user, new_user, conn = nil)
+      conn ||= @ssh.open
+
+      # Loop through each schedule and delete them one by one
+      # TODO: what if one schedule update fails but others don't? Should
+      # we try and rollback somehow or just return the job with half its
+      # schedules deleted?
+      job.schedules.each do |schedule|
+        # We are looking for the current value of the schedule
+        find = build_minicron_command(schedule.formatted, old_user, job.command)
+
+        # And replacing it with the updated value
+        replace = build_minicron_command(schedule.formatted, new_user, job.command)
+
+        # Replace the old schedule with the new schedule
+        find_and_replace(conn, find, replace)
+      end
     end
 
     # Remove the schedule for this job from the crontab
