@@ -21,6 +21,7 @@ module Minicron
     def send_all(options = {})
       Minicron.config['alerts'].each do |medium, value|
 
+        # Add the alert medium into the options hash so that it can be passed to sent?
         options[:medium] = medium
 
         # Check if the medium is enabled and alert hasn't already been sent
