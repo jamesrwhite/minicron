@@ -111,7 +111,7 @@ module Minicron
       # and jobs that have passed their expected by time and the time the schedule
       # was last updated isn't before when it was expected, i.e we aren't checking for something
       # that should have happened earlier in the day.
-      if expected_at > @start_time && Time.now > expected_by && schedule.updated_at < expected_by
+      if expected_at > @start_time && Time.now > expected_by && expected_by > schedule.updated_at
         # Check if this execution was created inside a minute window
         # starting when it was expected to run
         check = Minicron::Hub::Execution.exists?(
