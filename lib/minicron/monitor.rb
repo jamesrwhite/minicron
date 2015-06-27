@@ -103,9 +103,11 @@ module Minicron
       # Parse the cron expression
       cron = CronParser.new(schedule.formatted)
 
-      # Find the time the cron was last expected to run
-      expected_at = cron.last(Time.now)
-      expected_by = expected_at + 60
+      # Find the time the cron was last expected to run with a 30 second pre buffer
+      # and a 30 second post buffer (in addition to the 60 already in place) incase
+      # jobs run early/late to allow for clock sync differences between client/hub
+      expected_at = cron.last(Time.now) - 30
+      expected_by = expected_at + 30 + 60 + 30 # pre buffer + minute wait + post buffer
 
       # We only need to check jobs that are expected to under the monitor start time
       # and jobs that have passed their expected by time and the time the schedule
