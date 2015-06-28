@@ -36,9 +36,4 @@ rescue Exception => e
   end
 
   exit(1)
-ensure
-  # Shut down the server if it's running
-  if Minicron::Transport::Server.running?
-    Minicron::Transport::Server.stop!
-  end
 end
