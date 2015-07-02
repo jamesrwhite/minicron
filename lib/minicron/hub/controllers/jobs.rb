@@ -151,4 +151,21 @@ class Minicron::Hub::App
       erb :'jobs/delete', :layout => :'layouts/app'
     end
   end
+
+  get '/job/:job_id/schedule/:schedule_id' do
+    # Look up the schedule
+    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:id])
+
+    erb :'jobs/schedules/show', :layout => :'layouts/app'
+  end
+
+  get '/job/:job_id/schedules/new' do
+    # Empty instance to simplify views
+    @previous = Minicron::Hub::Schedule.new
+
+    # Look up the job
+    @job = Minicron::Hub::Job.find(params[:job_id])
+
+    erb :'jobs/schedules/new', :layout => :'layouts/app'
+  end
 end
