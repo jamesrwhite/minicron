@@ -1,5 +1,3 @@
-require 'sinatra/base'
-
 autoload :Thin, 'thin'
 autoload :Rack, 'rack'
 
