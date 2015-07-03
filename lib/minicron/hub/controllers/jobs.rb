@@ -32,7 +32,7 @@ class Minicron::Hub::App
       host = Minicron::Hub::Host.find(params[:host])
 
       # Try and save the new job
-      job = Minicron::Hub::Job.create(
+      job = Minicron::Hub::Job.create!(
         :job_hash => Minicron::Transport.get_job_hash(params[:command], host.fqdn),
         :name => params[:name],
         :user => params[:user],
