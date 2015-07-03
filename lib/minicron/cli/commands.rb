@@ -139,8 +139,8 @@ module Minicron
             begin
               # Set up the job and get the job and execution ids
               unless Minicron.config['cli']['dry_run']
-                # Get a faye instance so we can send data about the job
-                faye = Minicron::Transport::Client.new(
+                # Get a client instance so we can send data about the job
+                client = Minicron::Transport::Client.new(
                   Minicron.config['client']['scheme'],
                   Minicron.config['client']['host'],
                   Minicron.config['client']['port'],
@@ -149,15 +149,10 @@ module Minicron
 
                 # Set up the job and get the execution and job ids back from the server
                 # The execution number is also returned but it's only used by the frontend
-                ids = setup_job(args.first, faye)
+                ids = setup_job(args.first, client)
               end
             rescue Exception => e
               raise Exception, "Unable to setup job, reason: #{e.message}"
-
-              # Ensure that all messages are delivered and that we
-              unless Minicron.config['cli']['dry_run']
-                faye.tidy_up
-              end
             end
 
             begin
@@ -165,46 +160,39 @@ module Minicron
               Minicron::CLI.run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
-                when :status
+                when :start, :finish, :exit
                   unless Minicron.config['cli']['dry_run']
-                    faye.send(
-                      :job_id => ids[:job_id],
-                      :execution_id => ids[:execution_id],
-                      :type => :status,
-                      :message => output[:output]
+                    client.status(
+                      output[:type],
+                      ids[:job_id],
+                      ids[:execution_id],
+                      output[:output]
                     )
                   end
-                when :command
+                when :output
                   unless Minicron.config['cli']['dry_run']
-                    faye.send(
-                      :job_id => ids[:job_id],
-                      :execution_id => ids[:execution_id],
-                      :type => :output,
-                      :message => output[:output]
+                    client.output(
+                      ids[:job_id],
+                      ids[:execution_id],
+                      output[:output]
                     )
                   end
                 end
 
-                yield output[:output] unless output[:type] == :status
+                # Yield the output unless it's a status message
+                yield output[:output] unless [:start, :finish, :exit].include?(output[:type])
               end
             rescue Exception => e
               # Send the exception message to the server and yield it
               unless Minicron.config['cli']['dry_run']
-                faye.send(
-                  :job_id => ids[:job_id],
-                  :execution_id => ids[:execution_id],
-                  :type => :output,
-                  :message => e.message
+                client.output(
+                  ids[:job_id],
+                  ids[:execution_id],
+                  e.message
                 )
               end
 
               raise Exception, e
-            ensure
-              # Ensure that all messages are delivered and that we
-              unless Minicron.config['cli']['dry_run']
-                faye.ensure_delivery
-                faye.tidy_up
-              end
             end
           end
         end
@@ -215,29 +203,23 @@ module Minicron
       # Setup a job by sending the SETUP command to the server
       #
       # @param command [String] the job command
-      # @param faye a faye client instance
+      # @param client a client instance
       # @return [Hash] the job_id and execution_id
-      def self.setup_job(command, faye)
-        # Get the fully qualified domain name of the currnet host
+      def self.setup_job(command, client)
+        # Get the fully qualified domain name of the current host
         fqdn = Minicron.get_fqdn
 
         # Get the md5 hash for the job
         job_hash = Minicron::Transport.get_job_hash(command, fqdn)
 
-        # Fire up eventmachine
-        faye.ensure_em_running
-
         # Setup the job on the server
-        ids = faye.setup(
-          :job_hash => job_hash,
-          :user => Minicron.get_user,
-          :command => command,
-          :fqdn => fqdn,
-          :hostname => Minicron.get_hostname
+        ids = client.setup(
+          job_hash,
+          Minicron.get_user,
+          command,
+          fqdn,
+          Minicron.get_hostname
         )
-
-        # Wait until we get the execution id
-        faye.ensure_delivery
 
         # Return the ids
         ids

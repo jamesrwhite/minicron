@@ -26,8 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
   spec.add_runtime_dependency 'commander', '~> 4.2'
   spec.add_runtime_dependency 'thin', '~> 1.6', '>= 1.6.1'
-  spec.add_runtime_dependency 'faye', '~> 1.0', '>= 1.0.1'
-  spec.add_runtime_dependency 'eventmachine', '~> 1.0', '>= 1.0.3'
   spec.add_runtime_dependency 'toml-rb', '~> 0.3', '>= 0.3.8'
   spec.add_runtime_dependency 'sinatra', '~> 1.4', '>= 1.4.4'
   spec.add_runtime_dependency 'erubis', '~> 2.7'
@@ -47,6 +45,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.8'
   spec.add_runtime_dependency 'em-http-request', '~> 1.1'
   spec.add_runtime_dependency 'aws-sdk', '~> 2.1'
+  spec.add_runtime_dependency 'net-http-persistent', '~> 2.9'
 
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.1'

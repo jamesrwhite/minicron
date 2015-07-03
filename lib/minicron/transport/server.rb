@@ -9,8 +9,6 @@ module Minicron
   end
 
   module Transport
-    autoload :FayeServer, 'minicron/transport/faye/server'
-
     # Used to mangage the web server minicron runs on
     class Server
       @server = nil
@@ -40,14 +38,6 @@ module Minicron
           # The 'hub', aka our sinatra web interface
           map path do
             run Minicron::Hub::App.new
-          end
-
-          # Set the path faye should start relative to
-          faye_path = path == '/' ? '/faye' : "#{path}/faye"
-
-          # The faye server the server and browser clients talk to
-          map faye_path do
-            run Minicron::Transport::FayeServer.new.server
           end
         end
 
