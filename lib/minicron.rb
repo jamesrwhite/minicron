@@ -1,11 +1,11 @@
 require 'minicron/constants'
 require 'toml'
+require 'sshkey'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
   # Define module autoloading
-  autoload :StringIO,         'stringio'
-  autoload :SSHKey,           'sshkey'
+  autoload :StringIO, 'stringio'
 
   # Default configuration, this can be overriden
   @config = {
