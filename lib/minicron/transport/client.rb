@@ -26,7 +26,7 @@ module Minicron
       # @return [Hash]
       def setup(job_hash, user, command, fqdn, hostname)
         # Send a request to set up the job
-        response = send("/job/setup", {
+        response = send("/jobs/setup", {
           :hash => job_hash,
           :user => user,
           :command => command,
@@ -37,7 +37,7 @@ module Minicron
         {
           :job_id => response[:job_id],
           :execution_id => response[:execution_id],
-          :number => response[:execution_number],
+          :execution_number => response[:execution_number],
         }
       end
 
@@ -50,7 +50,7 @@ module Minicron
       # @return [Hash]
       def status(status, job_id, execution_id, meta)
         # Send a job execution status to the server
-        response = send("/job/status", {
+        response = send("/jobs/status", {
           :status => status,
           :job_id => job_id,
           :execution_id => execution_id,
@@ -68,7 +68,7 @@ module Minicron
       # @return [Hash]
       def output(job_id, execution_id, output)
         # Send the job execution output to the server
-        response = send("/job/output", {
+        response = send("/jobs/output", {
           :job_id => job_id,
           :execution_id => execution_id,
           :output => output,
@@ -83,23 +83,20 @@ module Minicron
       # @param body [Hash] data to post to the server
       def send(path, body)
         # Set up the data to send to the server
-        data = {
-          :ts => Time.now.utc.strftime('%Y-%m-%d %H:%M:%S'),
-          :seq => @seq,
-          :data => body,
-        }
+        body[:ts] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+        body[:seq] = @seq
 
         # Increment the sequence id
         @seq += 1
 
-        post(path, data)
+        post(path, body)
       end
 
       private
 
-      def post(path, data)
+      def post(method, data)
         # Create a POST requests
-        uri = URI("#{@scheme}://#{@host}:#{@port}#{@path}") + path
+        uri = URI("#{@scheme}://#{@host}:#{@port}#{@path}#{method}")
         post = Net::HTTP::Post.new(uri.path)
         post.set_form_data(data)
 
