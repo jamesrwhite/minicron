@@ -32,7 +32,7 @@ class Minicron::Hub::App
       host = Minicron::Hub::Host.find(params[:host])
 
       # Try and save the new job
-      job = Minicron::Hub::Job.create(
+      job = Minicron::Hub::Job.create!(
         :job_hash => Minicron::Transport.get_job_hash(params[:command], host.fqdn),
         :name => params[:name],
         :user => params[:user],
@@ -150,5 +150,22 @@ class Minicron::Hub::App
       @error = e.message
       erb :'jobs/delete', :layout => :'layouts/app'
     end
+  end
+
+  get '/job/:job_id/schedule/:schedule_id' do
+    # Look up the schedule
+    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:id])
+
+    erb :'jobs/schedules/show', :layout => :'layouts/app'
+  end
+
+  get '/job/:job_id/schedules/new' do
+    # Empty instance to simplify views
+    @previous = Minicron::Hub::Schedule.new
+
+    # Look up the job
+    @job = Minicron::Hub::Job.find(params[:job_id])
+
+    erb :'jobs/schedules/new', :layout => :'layouts/app'
   end
 end

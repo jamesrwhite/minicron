@@ -24,7 +24,7 @@ class Minicron::Hub::App
   post '/hosts/new' do
     begin
       # Try and save the new host
-      host = Minicron::Hub::Host.create(
+      host = Minicron::Hub::Host.create!(
         :name => params[:name],
         :fqdn => params[:fqdn],
         :user => params[:user],

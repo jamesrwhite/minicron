@@ -2,6 +2,7 @@ require 'minicron'
 require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sinatra/assetpack'
+require 'sinatra/json'
 require 'erubis'
 require 'oj'
 require 'pathname'
@@ -58,7 +59,8 @@ module Minicron::Hub
         '/js/moment-2.5.1.min.js',
         '/js/perfect-scrollbar-0.4.10.with-mousewheel.min.js',
 
-        '/js/application.js'
+        '/js/application.js',
+        '/js/schedules.js'
       ]
     end
 
