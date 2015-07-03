@@ -2,6 +2,7 @@ module Minicron
   autoload :Email,      'minicron/alert/email'
   autoload :SMS,        'minicron/alert/sms'
   autoload :PagerDuty,  'minicron/alert/pagerduty'
+  autoload :AwsSns,     'minicron/alert/aws_sns'
 
   module Hub
     autoload :Alert,    'minicron/hub/models/alert'
@@ -19,6 +20,10 @@ module Minicron
     # @option options [Time] expected_at only applies to 'miss' alerts
     def send_all(options = {})
       Minicron.config['alerts'].each do |medium, value|
+
+        # Add the alert medium into the options hash so that it can be passed to sent?
+        options[:medium] = medium
+
         # Check if the medium is enabled and alert hasn't already been sent
         if value['enabled'] && !sent?(options)
           send(
@@ -27,7 +32,7 @@ module Minicron
             :execution_id => options[:execution_id],
             :job_id => options[:job_id],
             :expected_at => options[:expected_at],
-            :medium => medium
+            :medium => options[:medium]
           )
         end
       end
