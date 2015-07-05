@@ -89,6 +89,7 @@ module Minicron
         # Increment the sequence id
         @seq += 1
 
+        # TODO: error handling
         post(path, body)
       end
 
@@ -100,8 +101,8 @@ module Minicron
         post = Net::HTTP::Post.new(uri.path)
         post.set_form_data(data)
 
-        # Execute the POST request
-        response = @client.request(uri, post)
+        # Execute the POST request, TODO: error handling
+        @client.request(uri, post)
       end
     end
   end
