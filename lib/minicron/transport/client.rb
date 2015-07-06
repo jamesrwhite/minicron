@@ -1,5 +1,6 @@
 require 'json'
 require 'net/http/persistent'
+require 'oj'
 
 module Minicron
   module Transport
@@ -89,8 +90,22 @@ module Minicron
         # Increment the sequence id
         @seq += 1
 
-        # TODO: error handling
-        post(path, body)
+        # Fetch the result
+        result = post(path, body)
+
+        # Did the request succeed?
+        if result.body
+          # Get the response body and parse it
+          body = Oj.load(result.body)
+
+          if body[:error].nil?
+            body
+          else
+            raise Exception, "Error: #{body[:error]}"
+          end
+        else
+          raise Exception, 'No response body returned from API'
+        end
       end
 
       private
