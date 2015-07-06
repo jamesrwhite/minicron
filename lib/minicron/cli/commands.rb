@@ -136,23 +136,19 @@ module Minicron
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
 
-            begin
-              # Set up the job and get the job and execution ids
-              unless Minicron.config['cli']['dry_run']
-                # Get a client instance so we can send data about the job
-                client = Minicron::Transport::Client.new(
-                  Minicron.config['client']['scheme'],
-                  Minicron.config['client']['host'],
-                  Minicron.config['client']['port'],
-                  Minicron.config['client']['path']
-                )
+            # Set up the job and get the job and execution ids
+            unless Minicron.config['cli']['dry_run']
+              # Get a client instance so we can send data about the job
+              client = Minicron::Transport::Client.new(
+                Minicron.config['client']['scheme'],
+                Minicron.config['client']['host'],
+                Minicron.config['client']['port'],
+                Minicron.config['client']['path']
+              )
 
-                # Set up the job and get the execution and job ids back from the server
-                # The execution number is also returned but it's only used by the frontend
-                ids = setup_job(args.first, client)
-              end
-            rescue Exception => e
-              raise Exception, "Unable to setup job, reason: #{e.message}"
+              # Set up the job and get the execution and job ids back from the server
+              # The execution number is also returned but it's only used by the frontend
+              ids = setup_job(args.first, client)
             end
 
             begin
