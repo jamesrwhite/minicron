@@ -6,6 +6,8 @@ module Minicron
       belongs_to :job
       has_many :alerts, :dependent => :destroy
 
+      validates :job_id, :presence => true, :numericality => { :only_integer => true }
+
       # The formatted schedule
       def formatted
         Minicron::Hub::Schedule.format(self)
