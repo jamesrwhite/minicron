@@ -65,4 +65,72 @@ class Minicron::Hub::App
       })
     end
   end
+
+  post '/api/v1/jobs/status' do
+    begin
+      Minicron::Hub::Host.transaction do
+        case params[:status]
+        # Update the execution with the start time
+        when 'start'
+          Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
+            :started_at => params[:meta]
+          )
+        # Update the execution with the finish time
+        when 'finish'
+          Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
+            :finished_at => params[:meta]
+          )
+        # Update the execution with the exit status
+        when 'exit'
+          Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
+            :exit_status => params[:meta]
+          )
+
+          # If the exit status was above 0 we need to trigger a failure alert
+          if params[:meta].to_i > 0
+            alert = Minicron::Alert.new
+            alert.send_all(
+              :kind => 'fail',
+              :execution_id => segments[3],
+              :job_id => segments[2]
+            )
+          end
+        else
+          raise Exception, "Unknown status type: \"#{params[:status]}\""
+        end
+
+        json({
+          :success => true
+        })
+      end
+    rescue Exception => e
+      status 500
+      json({
+        :error => e.message
+      })
+    end
+  end
+
+  post '/api/v1/jobs/output' do
+    begin
+      Minicron::Hub::Host.transaction do
+        # Store the job execution output
+        Minicron::Hub::JobExecutionOutput.create(
+          :execution_id => params[:execution_id],
+          :output => params[:output],
+          :timestamp => params[:timestamp],
+          :seq => params[:seq]
+        )
+
+        json({
+          :success => true
+        })
+      end
+    rescue Exception => e
+      status 500
+      json({
+        :error => e.message
+      })
+    end
+  end
 end

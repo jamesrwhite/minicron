@@ -84,7 +84,7 @@ module Minicron
       # @param body [Hash] data to post to the server
       def send(path, body)
         # Set up the data to send to the server
-        body[:ts] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+        body[:timestamp] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
         body[:seq] = @seq
 
         # Increment the sequence id
