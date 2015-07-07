@@ -160,16 +160,16 @@ module Minicron
                   unless Minicron.config['cli']['dry_run']
                     client.status(
                       output[:type],
-                      ids[:job_id],
-                      ids[:execution_id],
+                      ids['job_id'],
+                      ids['execution_id'],
                       output[:output]
                     )
                   end
                 when :output
                   unless Minicron.config['cli']['dry_run']
                     client.output(
-                      ids[:job_id],
-                      ids[:execution_id],
+                      ids['job_id'],
+                      ids['execution_id'],
                       output[:output]
                     )
                   end
@@ -182,8 +182,8 @@ module Minicron
               # Send the exception message to the server and yield it
               unless Minicron.config['cli']['dry_run']
                 client.output(
-                  ids[:job_id],
-                  ids[:execution_id],
+                  ids['job_id'],
+                  ids['execution_id'],
                   e.message
                 )
               end
