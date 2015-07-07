@@ -95,8 +95,12 @@ module Minicron
 
         # Did the request succeed?
         if result.body
+          begin
           # Get the response body and parse it
           body = Oj.load(result.body)
+          rescue
+            raise Exception, "Error parsing JSON response: \"#{result.body}\""
+          end
 
           if body[:error].nil?
             body
