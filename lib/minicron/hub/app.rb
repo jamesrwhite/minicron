@@ -72,11 +72,6 @@ module Minicron::Hub
       # Initialize the db
       Minicron::Hub::App.setup_db
 
-      # Load all our model serializers
-      Dir[File.dirname(__FILE__) + '/serializers/*.rb'].each do |serializer|
-        require serializer
-      end
-
       # Load all our models
       Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
         require model
