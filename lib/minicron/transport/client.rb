@@ -36,9 +36,9 @@ module Minicron
         })
 
         {
-          :job_id => response[:job_id],
-          :execution_id => response[:execution_id],
-          :execution_number => response[:execution_number],
+          :job_id => response['job_id'],
+          :execution_id => response['execution_id'],
+          :execution_number => response['execution_number'],
         }
       end
 
@@ -96,14 +96,14 @@ module Minicron
         # Did the request succeed?
         if result.body
           begin
-          # Get the response body and parse it
-          body = Oj.load(result.body)
+            # Get the response body and parse it
+            response = Oj.load(result.body)
           rescue
             raise Exception, "Error parsing JSON response: \"#{result.body}\""
           end
 
-          if body[:error].nil?
-            body
+          if response[:error].nil?
+            response
           else
             raise Exception, "Error: #{body[:error]}"
           end

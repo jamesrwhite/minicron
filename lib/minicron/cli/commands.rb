@@ -148,7 +148,7 @@ module Minicron
 
               # Set up the job and get the execution and job ids back from the server
               # The execution number is also returned but it's only used by the frontend
-              ids = setup_job(args.first, client)
+              job = setup_job(args.first, client)
             end
 
             begin
@@ -160,16 +160,16 @@ module Minicron
                   unless Minicron.config['cli']['dry_run']
                     client.status(
                       output[:type],
-                      ids['job_id'],
-                      ids['execution_id'],
+                      job[:job_id],
+                      job[:execution_id],
                       output[:output]
                     )
                   end
                 when :output
                   unless Minicron.config['cli']['dry_run']
                     client.output(
-                      ids['job_id'],
-                      ids['execution_id'],
+                      job[:job_id],
+                      job[:execution_id],
                       output[:output]
                     )
                   end
@@ -182,8 +182,8 @@ module Minicron
               # Send the exception message to the server and yield it
               unless Minicron.config['cli']['dry_run']
                 client.output(
-                  ids['job_id'],
-                  ids['execution_id'],
+                  job[:job_id],
+                  job[:execution_id],
                   e.message
                 )
               end
@@ -209,16 +209,13 @@ module Minicron
         job_hash = Minicron::Transport.get_job_hash(command, fqdn)
 
         # Setup the job on the server
-        ids = client.setup(
+        client.setup(
           job_hash,
           Minicron.get_user,
           command,
           fqdn,
           Minicron.get_hostname
         )
-
-        # Return the ids
-        ids
       end
     end
   end
