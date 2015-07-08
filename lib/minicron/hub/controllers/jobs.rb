@@ -156,6 +156,9 @@ class Minicron::Hub::App
     # Look up the schedule
     @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:id])
 
+    # Look up the job
+    @job = Minicron::Hub::Job.find(params[:job_id])
+
     erb :'jobs/schedules/show', :layout => :'layouts/app'
   end
 
