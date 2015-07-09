@@ -302,7 +302,17 @@
     <hr/>
     <label class="col-sm-2 control-label">Schedule</label>
     <div class="col-sm-10">
-      <input value="<%= @job.id %>" type="hidden"/>
+      <input name="job_id" value="<%= @job.id %>" type="hidden"/>
+
+      <div id="hidden-schedule-inputs">
+        <input name="minute" value="*" type="hidden"/>
+        <input name="hour" value="*" type="hidden"/>
+        <input name="day_of_the_month" value="*" type="hidden"/>
+        <input name="month" value="*" type="hidden"/>
+        <input name="day_of_the_week" value="*" type="hidden"/>
+        <input name="special" value="" type="hidden"/>
+      </div>
+
       <span id="schedule-input">
         <input value="* * * * *" disabled="disabled" type="text" class="form-control"/>
     </div>
