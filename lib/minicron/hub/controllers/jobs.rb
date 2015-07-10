@@ -24,10 +24,10 @@ class Minicron::Hub::App
   end
 
   post '/jobs/new' do
-    # All the hosts for the select dropdown
-    @hosts = Minicron::Hub::Host.all
-
     begin
+      # All the hosts for the select dropdown
+      @hosts = Minicron::Hub::Host.all
+
       # First we need to look up the host
       host = Minicron::Hub::Host.find(params[:host])
 
@@ -63,10 +63,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/edit' do
-    # All the hosts for the select dropdown
-    @hosts = Minicron::Hub::Host.all
-
     begin
+      # All the hosts for the select dropdown
+      @hosts = Minicron::Hub::Host.all
+
       Minicron::Hub::Job.transaction do
         # Find the job
         @job = Minicron::Hub::Job.includes(:host).find(params[:id])
@@ -118,10 +118,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/delete' do
-    # Look up the job
-    @job = Minicron::Hub::Job.find(params[:id])
-
     begin
+      # Look up the job
+      @job = Minicron::Hub::Job.find(params[:id])
+
       Minicron::Hub::Job.transaction do
         # Try and delete the job
         Minicron::Hub::Job.destroy(params[:id])
@@ -170,5 +170,70 @@ class Minicron::Hub::App
     @job = Minicron::Hub::Job.find(params[:job_id])
 
     erb :'jobs/schedules/new', :layout => :'layouts/app'
+  end
+
+  post '/job/:job_id/schedules/new' do
+    begin
+      # Look up the job
+      @job = Minicron::Hub::Job.find(params[:job_id])
+
+      # First we need to check a schedule like this doesn't already exist
+      exists = Minicron::Hub::Schedule.exists?(
+        :minute => params[:minute],
+        :hour => params[:hour],
+        :day_of_the_month => params[:day_of_the_month],
+        :month => params[:month],
+        :day_of_the_week => params[:day_of_the_week],
+        :special => params[:special],
+        :job_id => params[:job_id]
+      )
+
+      if exists
+        fail Exception, 'That schedule already exists for this job'
+      end
+
+      Minicron::Hub::Schedule.transaction do
+        # Create the new schedule
+        schedule = Minicron::Hub::Schedule.create(
+          :minute => params[:minute],
+          :hour => params[:hour],
+          :day_of_the_month => params[:day_of_the_month],
+          :month => params[:month],
+          :day_of_the_week => params[:day_of_the_week],
+          :special => params[:special],
+          :job_id => params[:job_id]
+        )
+
+        # Get the job and host for the schedule
+        job = Minicron::Hub::Job.includes(:host).find(schedule.job_id)
+
+        # Get an ssh instance
+        ssh = Minicron::Transport::SSH.new(
+          :user => job.host.user,
+          :host => job.host.host,
+          :port => job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Add the schedule to the crontab
+        cron.add_schedule(job, schedule.formatted)
+
+        # Tidy up
+        ssh.close
+
+        # And finally save it
+        schedule.save!
+
+        # Redirect to the updated job
+        redirect "#{Minicron::Transport::Server.get_prefix}/job/#{@job.id}"
+      end
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      @error = e.message
+      erb :'jobs/schedules/new', :layout => :'layouts/app'
+    end
   end
 end
