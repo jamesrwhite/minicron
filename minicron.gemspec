@@ -55,4 +55,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard', '~> 2.12', '>= 2.12.6'
   spec.add_development_dependency 'guard-rspec', '~> 4.5', '>= 4.5.2'
   spec.add_development_dependency 'guard-bundler', '~> 2.1', '>= 2.1.0'
+  spec.add_development_dependency 'better_errors', '~> 2.1'
+  spec.add_development_dependency 'binding_of_caller', '0.7.3.pre1'
 end
