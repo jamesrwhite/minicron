@@ -30,23 +30,27 @@ module Minicron
     # @param conn an instance of an open ssh connection
     # @return [Hash]
     def test_host_permissions(conn = nil)
-      # Open an SSH connection
-      conn ||= @ssh.open
+      begin
+        # Open an SSH connection
+        conn ||= @ssh.open
 
-      # Check if /etc is writeable
-      etc_write = conn.exec!("/bin/sh -c 'test -w /etc && echo \"y\" || echo \"n\"'").strip
+        # Check if /etc is writeable
+        etc_write = conn.exec!("/bin/sh -c 'test -w /etc && echo \"y\" || echo \"n\"'").strip
 
-      # Check if /etc is executable
-      etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
+        # Check if /etc is executable
+        etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
 
-      # Check if the crontab is readable
-      crontab_read = conn.exec!("/bin/sh -c 'test -r #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
+        # Check if the crontab is readable
+        crontab_read = conn.exec!("/bin/sh -c 'test -r #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
 
-      # Check if the crontab is writeable
-      crontab_write = conn.exec!("/bin/sh -c 'test -w #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
+        # Check if the crontab is writeable
+        crontab_write = conn.exec!("/bin/sh -c 'test -w #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
+      rescue
+        conn = etc_write = etc_execute = crontab_read = crontab_write = false
+      end
 
       {
-        :connect => true,
+        :connect => conn != false,
         :etc => {
           :write => etc_write == 'y',
           :execute => etc_execute == 'y'

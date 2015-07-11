@@ -1,3 +1,5 @@
+require 'minicron/transport/ssh'
+
 class Minicron::Hub::App
   get '/hosts' do
     # Look up all the hosts
@@ -127,5 +129,33 @@ class Minicron::Hub::App
       @error = e.message
       erb :'hosts/delete', :layout => :'layouts/app'
     end
+  end
+
+  get '/host/:id/test' do
+    begin
+      # Get the host
+      @host = Minicron::Hub::Host.find(params[:id])
+
+      # Set up the ssh instance
+      ssh = Minicron::Transport::SSH.new(
+        :user => @host.user,
+        :host => @host.host,
+        :port => @host.port,
+        :private_key => "~/.ssh/minicron_host_#{@host.id}_rsa"
+      )
+
+      # Get an instance of the cron class
+      cron = Minicron::Cron.new(ssh)
+
+      # Test the SSH connection
+      @test = cron.test_host_permissions
+
+      # Tidy up
+      ssh.close
+    rescue Exception => e
+      @error = e.message
+    end
+
+    erb :'hosts/test', :layout => :'layouts/app'
   end
 end

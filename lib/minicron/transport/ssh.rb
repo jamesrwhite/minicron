@@ -43,7 +43,7 @@ module Minicron
 
       # Close the SSH connection
       def close
-        @ssh.close
+        @ssh.close unless @ssh.nil?
       end
     end
   end
