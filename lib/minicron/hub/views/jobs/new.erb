@@ -3,9 +3,6 @@
 </header>
 <hr/>
 
-<% if @error %>
-  <div class="alert alert-danger" role="alert"><%= @error %></div>
-<% end %>
 
 <form class="form-horizontal" role="form" method="POST">
   <div class="form-group">
@@ -40,7 +37,7 @@
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <input type="submit" class="btn btn-success" value="Save"/>
-      <a href="<%= "#{Minicron::Transport::Server.get_prefix}/jobs" %>" class="btn btn-danger">Cancel</a>
+      <a href="<%= "#{route_prefix}/jobs" %>" class="btn btn-danger">Cancel</a>
     </div>
   </div>
 </form>

@@ -43,7 +43,7 @@ class Minicron::Hub::App
       job.save!
 
       # Redirect to the new job
-      redirect "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}"
+      redirect "#{route_prefix}/job/#{job.id}"
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @previous = params
@@ -100,7 +100,7 @@ class Minicron::Hub::App
         @job.save!
 
         # Redirect to the updated job
-        redirect "#{Minicron::Transport::Server.get_prefix}/job/#{@job.id}"
+        redirect "#{route_prefix}/job/#{@job.id}"
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
@@ -143,7 +143,7 @@ class Minicron::Hub::App
         # Tidy up
         ssh.close
 
-        redirect "#{Minicron::Transport::Server.get_prefix}/jobs"
+        redirect "#{route_prefix}/jobs"
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
@@ -228,7 +228,7 @@ class Minicron::Hub::App
         schedule.save!
 
         # Redirect to the updated job
-        redirect "#{Minicron::Transport::Server.get_prefix}/job/#{@job.id}"
+        redirect "#{route_prefix}/job/#{@job.id}"
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e

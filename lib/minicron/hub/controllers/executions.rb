@@ -23,7 +23,7 @@ class Minicron::Hub::App
       # Try and delete the execution
       Minicron::Hub::Execution.destroy(params[:id])
 
-      redirect "#{Minicron::Transport::Server.get_prefix}/job/#{@execution.job.id}"
+      redirect "#{route_prefix}/job/#{@execution.job.id}"
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @error = e.message

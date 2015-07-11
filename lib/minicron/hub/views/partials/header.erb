@@ -6,9 +6,9 @@
 
     <ul class="nav navbar-nav">
       <li><a href="<%= Minicron.config['server']['path'] %>">Executions</a></li>
-      <li><a href="<%= "#{Minicron::Transport::Server.get_prefix}/jobs" %>">Jobs</a></li>
-      <li><a href="<%= "#{Minicron::Transport::Server.get_prefix}/hosts" %>">Hosts</a></li>
-      <li><a href="<%= "#{Minicron::Transport::Server.get_prefix}/alerts" %>">Alerts</a></li>
+      <li><a href="<%= "#{route_prefix}/jobs" %>">Jobs</a></li>
+      <li><a href="<%= "#{route_prefix}/hosts" %>">Hosts</a></li>
+      <li><a href="<%= "#{route_prefix}/alerts" %>">Alerts</a></li>
     </ul>
   </div>
 </div>

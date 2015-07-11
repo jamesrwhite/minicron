@@ -71,6 +71,13 @@ module Minicron::Hub
       ]
     end
 
+    # Register our helpers
+    helpers do
+      def route_prefix
+        Minicron::Transport::Server.get_prefix
+      end
+    end
+
     # Called on class initilisation, sets up the database and requires all
     # the application files
     def initialize

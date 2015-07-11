@@ -40,7 +40,7 @@ class Minicron::Hub::App
       host.save!
 
       # Redirect to the new host
-      redirect "#{Minicron::Transport::Server.get_prefix}/host/#{host.id}"
+      redirect "#{route_prefix}/host/#{host.id}"
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @previous = params
@@ -72,7 +72,7 @@ class Minicron::Hub::App
       @host.save!
 
       # Redirect to the updated host
-      redirect "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}"
+      redirect "#{route_prefix}/host/#{@host.id}"
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @host.restore_attributes
@@ -120,7 +120,7 @@ class Minicron::Hub::App
         File.delete(private_key_path)
         File.delete(public_key_path)
 
-        redirect "#{Minicron::Transport::Server.get_prefix}/hosts"
+        redirect "#{route_prefix}/hosts"
       end
     # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e

@@ -1,6 +1,6 @@
 <header class="clearfix">
   <h2 class="pull-left">Hosts</h2>
-  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/hosts/new" %>" class="pull-right btn btn-success btn-sm">Add New Host</a>
+  <a href="<%= "#{route_prefix}/hosts/new" %>" class="pull-right btn btn-success btn-sm">Add New Host</a>
 </header>
 <hr/>
 
@@ -19,9 +19,9 @@
         <td><%= host.name %></td>
         <td><%= host.fqdn %></td>
         <td>
-          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{host.id}" %>" class="btn btn-info btn-xs">View</a>
-          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{host.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
-          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{host.id}/delete" %>" class="btn btn-danger btn-xs">Delete</a>
+          <a href="<%= "#{route_prefix}/host/#{host.id}" %>" class="btn btn-info btn-xs">View</a>
+          <a href="<%= "#{route_prefix}/host/#{host.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
+          <a href="<%= "#{route_prefix}/host/#{host.id}/delete" %>" class="btn btn-danger btn-xs">Delete</a>
         </th>
       </tr>
     <% end %>

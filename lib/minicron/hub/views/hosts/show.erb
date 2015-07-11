@@ -1,8 +1,8 @@
 <header class="clearfix">
   <h2 class="pull-left">Host '<%= @host.name %>'</h2>
-  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
-  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/host/#{@host.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
-  <a href="#" class="pull-right btn btn-info btn-sm">Test Connection</a>
+  <a href="<%= "#{route_prefix}/host/#{@host.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{route_prefix}/host/#{@host.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
+  <a href="<%= "#{route_prefix}/host/#{@host.id}/test" %>" class="pull-right btn btn-info btn-sm">Test Connection</a>
 </header>
 <hr/>
 
@@ -61,7 +61,7 @@
 <section>
 <header class="clearfix">
   <h2 class="pull-left">Jobs</h2>
-  <a href="<%= "#{Minicron::Transport::Server.get_prefix}/jobs/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
+  <a href="<%= "#{route_prefix}/jobs/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
 </header>
 <hr/>
 
@@ -80,8 +80,8 @@
         <td><%= job.name %></td>
         <td><a href><%= job.host.name %></a></td>
         <td>
-          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}" %>" class="btn btn-info btn-xs">View</a>
-          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{job.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
+          <a href="<%= "#{route_prefix}/job/#{job.id}" %>" class="btn btn-info btn-xs">View</a>
+          <a href="<%= "#{route_prefix}/job/#{job.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
         </th>
       </tr>
     <% end %>

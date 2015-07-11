@@ -18,13 +18,13 @@
   <tbody>
     <% @alerts.each do |alert| %>
       <tr>
-        <td><a href="<%= "#{Minicron::Transport::Server.get_prefix}/alert/#{alert.id}" %>"><%= alert.id %></a></td>
-        <td><a href="<%= "#{Minicron::Transport::Server.get_prefix}/job/#{alert.job.id}" %>"><%= alert.job.name %></a></td>
+        <td><a href="<%= "#{route_prefix}/alert/#{alert.id}" %>"><%= alert.id %></a></td>
+        <td><a href="<%= "#{route_prefix}/job/#{alert.job.id}" %>"><%= alert.job.name %></a></td>
         <td><%= alert.kind %></td>
         <td><%= alert.medium %></td>
         <td><%= alert.sent_at %></td>
         <td>
-          <a href="<%= "#{Minicron::Transport::Server.get_prefix}/alert/#{alert.id}" %>" class="btn btn-xs btn-info">View</a>
+          <a href="<%= "#{route_prefix}/alert/#{alert.id}" %>" class="btn btn-xs btn-info">View</a>
         </td>
       </tr>
     <% end %>
