@@ -116,7 +116,7 @@ describe Minicron::CLI do
         output = ''
 
         Minicron::CLI.run_command('echo 1', :verbose => true) do |line|
-          output += line[:output]
+          output += "#{line[:output]}"
         end
 
         expect(output.clean.split("\n").length).to eq 7
