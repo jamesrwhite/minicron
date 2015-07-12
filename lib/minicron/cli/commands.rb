@@ -146,9 +146,21 @@ module Minicron
                 Minicron.config['client']['path']
               )
 
-              # Set up the job and get the execution and job ids back from the server
+              # Get the fully qualified domain name of the current host
+              fqdn = Minicron.get_fqdn
+
+              # Get the md5 hash for the job
+              job_hash = Minicron::Transport.get_job_hash(command, fqdn)
+
+              # Initialise the job and get the execution and job ids back from the server
               # The execution number is also returned but it's only used by the frontend
-              job = setup_job(args.first, client)
+              job = client.init(
+                job_hash,
+                Minicron.get_user,
+                command,
+                fqdn,
+                Minicron.get_hostname
+              )
             end
 
             begin
@@ -192,30 +204,6 @@ module Minicron
             end
           end
         end
-      end
-
-      private
-
-      # Setup a job by sending the SETUP command to the server
-      #
-      # @param command [String] the job command
-      # @param client a client instance
-      # @return [Hash] the job_id and execution_id
-      def self.setup_job(command, client)
-        # Get the fully qualified domain name of the current host
-        fqdn = Minicron.get_fqdn
-
-        # Get the md5 hash for the job
-        job_hash = Minicron::Transport.get_job_hash(command, fqdn)
-
-        # Setup the job on the server
-        client.setup(
-          job_hash,
-          Minicron.get_user,
-          command,
-          fqdn,
-          Minicron.get_hostname
-        )
       end
     end
   end

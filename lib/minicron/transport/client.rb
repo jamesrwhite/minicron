@@ -17,7 +17,7 @@ module Minicron
         @client = Net::HTTP::Persistent.new('minicron')
       end
 
-      # Used to set up a job on the server
+      # Used to init a job
       #
       # @param [String] job_hash
       # @param [String] user
@@ -25,9 +25,9 @@ module Minicron
       # @param [String] fqdn
       # @param [String] hostname
       # @return [Hash]
-      def setup(job_hash, user, command, fqdn, hostname)
+      def init(job_hash, user, command, fqdn, hostname)
         # Send a request to set up the job
-        response = send("/jobs/setup", {
+        response = send("/jobs/init", {
           :hash => job_hash,
           :user => user,
           :command => command,

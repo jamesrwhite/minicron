@@ -1,5 +1,5 @@
 class Minicron::Hub::App
-  post '/api/v1/jobs/setup' do
+  post '/api/v1/jobs/init' do
     begin
       Minicron::Hub::Host.transaction do
         # Try and find the host
