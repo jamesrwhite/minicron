@@ -146,6 +146,9 @@ module Minicron
                 Minicron.config['client']['path']
               )
 
+              # Get the command to run
+              command = args.first
+
               # Get the fully qualified domain name of the current host
               fqdn = Minicron.get_fqdn
 
