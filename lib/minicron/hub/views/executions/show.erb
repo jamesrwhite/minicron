@@ -69,5 +69,5 @@
   </header>
   <hr/>
 
-  <div class="output tomorrow-night-eighties-ansi-theme"><% @execution.job_execution_outputs.each do |output| %><%= output.output %><% end %></div>
+  <div class="output tomorrow-night-eighties-ansi-theme"><% @execution.job_execution_outputs.each do |output| %><%= ansi_to_html(output.output) %><% end %></div>
 </section>

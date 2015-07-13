@@ -7,6 +7,7 @@ require 'better_errors'
 require 'erubis'
 require 'oj'
 require 'pathname'
+require 'ansi-to-html'
 
 module Minicron::Hub
   class App < Sinatra::Base
@@ -75,6 +76,10 @@ module Minicron::Hub
     helpers do
       def route_prefix
         Minicron::Transport::Server.get_prefix
+      end
+
+      def ansi_to_html(output)
+        Ansi::To::Html.new(output).to_html(:solarized)
       end
     end
 

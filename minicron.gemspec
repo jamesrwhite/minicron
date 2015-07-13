@@ -47,6 +47,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'aws-sdk', '~> 2.1'
   spec.add_runtime_dependency 'net-http-persistent', '~> 2.9'
   spec.add_runtime_dependency 'sinatra-contrib', '~> 1.4'
+  spec.add_runtime_dependency 'ansi-to-html', '0.0.3'
 
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.1'
