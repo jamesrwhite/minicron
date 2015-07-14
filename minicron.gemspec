@@ -55,4 +55,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-bundler', '~> 2.1', '>= 2.1.0'
   spec.add_development_dependency 'better_errors', '~> 2.1'
   spec.add_development_dependency 'binding_of_caller', '0.7.3.pre1'
+  spec.add_development_dependency 'pry', '~> 0.10.1'
+  spec.add_development_dependency 'pry-byebug', '~> 3.1'
 end
