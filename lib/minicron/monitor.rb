@@ -1,6 +1,5 @@
-autoload :ActiveRecord, 'sinatra/activerecord'
-autoload :CronParser,   'parse-cron'
-
+require 'sinatra/activerecord'
+require 'parse-cron'
 require 'minicron/hub/models/schedule'
 require 'minicron/hub/models/execution'
 

@@ -1,12 +1,10 @@
 require 'minicron/constants'
 require 'toml'
 require 'sshkey'
+require 'stringio'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
-  # Define module autoloading
-  autoload :StringIO, 'stringio'
-
   # Exception classes
   class Error < StandardError; end
 

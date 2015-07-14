@@ -1,23 +1,13 @@
-autoload :Minicron,            'minicron'
-autoload :Insidious,           'insidious'
-autoload :Rake,                'rake'
-
-module Sinatra
-  autoload :ActiveRecordTasks, 'sinatra/activerecord/rake'
-end
+require 'minicron'
+require 'insidious'
+require 'rake'
+require 'sinatra/activerecord/rake'
+require 'minicron/transport'
+require 'minicron/transport/client'
+require 'minicron/transport/server'
+require 'minicron/hub/app'
 
 module Minicron
-  autoload :Transport,         'minicron/transport'
-
-  module Transport
-    autoload :Client,          'minicron/transport/client'
-    autoload :Server,          'minicron/transport/server'
-  end
-
-  module Hub
-    autoload :App,             'minicron/hub/app'
-  end
-
   module CLI
     class Commands
       # Add the `minicron db` command
