@@ -29,9 +29,13 @@ class Minicron::Hub::App
 
         # Create it if it didn't exist!
         if !job
+          # Default the name of the job to the command if it doesn't exist
+          params[:name] = params[:command] if params[:name].nil?
+
           job = Minicron::Hub::Job.create!(
             :job_hash => params[:hash],
             :user => params[:user],
+            :name => params[:name],
             :command => params[:command],
             :host_id => host.id,
           )
