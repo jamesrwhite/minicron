@@ -7,6 +7,9 @@ module Minicron
   # Define module autoloading
   autoload :StringIO, 'stringio'
 
+  # Exception classes
+  class Error < StandardError; end
+
   # Default configuration, this can be overriden
   @config = {
     'verbose' => false,
