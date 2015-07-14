@@ -5,8 +5,8 @@ module Minicron
     class Host < ActiveRecord::Base
       has_many :jobs, :dependent => :destroy
 
-      validates :name, :presence => true, :uniqueness => true
-      validates :fqdn, :presence => true
+      validates :name, :presence => true
+      validates :fqdn, :presence => true, :uniqueness => true
       validates :user, :presence => true
       validates :host, :presence => true
       validates :port, :presence => true, :numericality => { :only_integer => true }
