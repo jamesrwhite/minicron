@@ -20,8 +20,6 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 1.9.3'
   spec.requirements << 'libsqlite3-dev or sqlite-devel (sqlite3 dependencies for debian/ubuntu and redhat/centos/fedora respectively)'
-  spec.requirements << 'ruby-dev (you may need this to be able to install eventmachine)'
-  spec.requirements << 'build-essential (you may need this to be able to install eventmachine)'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
   spec.add_runtime_dependency 'commander', '~> 4.2'
@@ -43,7 +41,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'insidious', '~> 0.3'
   spec.add_runtime_dependency 'escape', '0.0.4'
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.8'
-  spec.add_runtime_dependency 'em-http-request', '~> 1.1'
   spec.add_runtime_dependency 'aws-sdk', '~> 2.1'
   spec.add_runtime_dependency 'net-http-persistent', '~> 2.9'
   spec.add_runtime_dependency 'sinatra-contrib', '~> 1.4'
