@@ -125,7 +125,7 @@ module Minicron
               yield structured :output, output
               subtract_total += Time.now.utc - subtract
             end
-          # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
+          # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L517
           rescue Errno::EIO
           ensure
             # Force waiting for the process to finish so we can get the exit status
