@@ -50,11 +50,11 @@ describe Minicron::CLI do
       end
 
       context 'when no argument is passed to the run action' do
-        it 'should raise ArgumentError' do
+        it 'should raise Minicron::ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
               Minicron::CLI.run(%w(run --dry-run --trace))
-            end.to raise_error ArgumentError
+            end.to raise_error Minicron::ArgumentError
           end
         end
       end
@@ -88,11 +88,11 @@ describe Minicron::CLI do
       end
 
       context 'when no argument is passed to the run action' do
-        it 'should raise ArgumentError' do
+        it 'should raise Minicron::ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
               Minicron::CLI.run(['run', '--dry-run', '--trace', '--config', './config/minicron.toml'])
-            end.to raise_error ArgumentError
+            end.to raise_error Minicron::ArgumentError
           end
         end
       end

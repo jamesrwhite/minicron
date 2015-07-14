@@ -29,7 +29,7 @@ module Minicron
       when 'fail'
         "minicron alert - job failed!\nExecution ##{options[:execution_id]} of Job ##{options[:job_id]} failed"
       else
-        raise Exception, "The kind '#{options[:kind]} is not supported!"
+        raise Minicron::ArgumentError, "The kind '#{options[:kind]} is not supported!"
       end
     end
 

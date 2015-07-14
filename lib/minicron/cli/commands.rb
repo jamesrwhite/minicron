@@ -19,7 +19,7 @@ module Minicron
           c.action do |args, opts|
             # Check that exactly one argument has been passed
             if args.length != 1
-              raise ArgumentError, 'A valid command to run is required! See `minicron help db`'
+              raise Minicron::ArgumentError, 'A valid command to run is required! See `minicron help db`'
             end
 
             # Parse the file and cli config options
@@ -101,7 +101,7 @@ module Minicron
                 puts 'minicron is not running'
               end
             else
-              raise ArgumentError, 'Invalid action, expected [start|stop|status]. See `minicron help server`'
+              raise Minicron::ArgumentError, 'Invalid action, expected [start|stop|status]. See `minicron help server`'
             end
           end
         end
@@ -120,7 +120,7 @@ module Minicron
           c.action do |args, opts|
             # Check that exactly one argument has been passed
             if args.length != 1
-              raise ArgumentError, 'A valid command to run is required! See `minicron help run`'
+              raise Minicron::ArgumentError, 'A valid command to run is required! See `minicron help run`'
             end
 
             # Parse the file and cli config options
@@ -193,7 +193,7 @@ module Minicron
                 )
               end
 
-              raise Exception, e
+              raise Minicron::CommandError, e
             end
           end
         end

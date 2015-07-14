@@ -48,13 +48,13 @@ describe Minicron do
     end
 
     context 'when an invalid :type is used' do
-      it 'should raise an ArgumentError' do
+      it 'should raise an Minicron::ArgumentError' do
         expect do
           Minicron.capture_output(:type => :lol) do
             $stdout.write 'I like turtles!'
             $stderr.write 'Quit yo jibber jabber, fool!'
           end
-        end.to raise_error ArgumentError
+        end.to raise_error Minicron::ArgumentError
       end
     end
   end

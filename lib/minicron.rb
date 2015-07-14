@@ -7,6 +7,13 @@ require 'stringio'
 module Minicron
   # Exception classes
   class Error < StandardError; end
+  class ArgumentError < Error; end
+  class ConfigError < Error; end
+  class DatabaseError < Error; end
+  class CommandError < Error; end
+  class CronError < Error; end
+  class ValidationError < Error; end
+  class ClientError < Error; end
 
   # Default configuration, this can be overriden
   @config = {
@@ -82,12 +89,12 @@ module Minicron
     rescue Errno::ENOENT
       # Fail if the file doesn't exist unless it's the default config file
       if file_path != DEFAULT_CONFIG_FILE
-        raise Exception, "Unable to the load the file '#{file_path}', are you sure it exists?"
+        raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
     rescue Errno::EACCES
-      raise Exception, "Unable to the read the file '#{file_path}', check it has the right permissions."
+      raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions."
     rescue TOML::ParseError
-      raise Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
+      raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
     end
   end
 
@@ -149,7 +156,10 @@ module Minicron
     when :stderr
       stderr
     else
-      { :stdout => stdout, :stderr => stderr }
+      {
+        :stdout => stdout,
+        :stderr => stderr
+      }
     end
   end
 

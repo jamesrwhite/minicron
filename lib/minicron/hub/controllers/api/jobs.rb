@@ -100,7 +100,7 @@ class Minicron::Hub::App
             )
           end
         else
-          raise Exception, "Unknown status type: \"#{params[:status]}\""
+          raise Minicron::ValidationError, "Unknown status type: \"#{params[:status]}\""
         end
 
         json({

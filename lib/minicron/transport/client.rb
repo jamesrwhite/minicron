@@ -99,16 +99,16 @@ module Minicron
             # Get the response body and parse it
             response = Oj.load(result.body)
           rescue
-            raise Exception, "[General Error] Invalid JSON response \"#{result.body}\""
+            raise Minicron::ClientError, "[General Error] Invalid JSON response \"#{result.body}\""
           end
 
           if response['error'].nil?
             response
           else
-            raise Exception, "[API Error] #{response['error']}"
+            raise Minicron::ClientError, "[API Error] #{response['error']}"
           end
         else
-          raise Exception, '[General Error] No response body returned from API'
+          raise Minicron::ClientError, '[General Error] No response body returned from API'
         end
       end
 

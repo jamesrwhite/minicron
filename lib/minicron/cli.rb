@@ -133,7 +133,7 @@ module Minicron
           end
         end
       rescue Errno::ENOENT
-        raise Exception, "Running the command `#{command}` failed, are you sure it exists?"
+        raise Minicron::CommandError, "Running the command `#{command}` failed, are you sure it exists?"
       ensure
         # Record the time the command finished
         finish = Time.now.utc - subtract_total
