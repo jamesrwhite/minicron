@@ -85,9 +85,9 @@ module Minicron
         raise Exception, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
     rescue Errno::EACCES
-      fail Exception, "Unable to the read the file '#{file_path}', check it has the right permissions."
+      raise Exception, "Unable to the read the file '#{file_path}', check it has the right permissions."
     rescue TOML::ParseError
-      fail Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
+      raise Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
     end
   end
 
@@ -130,7 +130,7 @@ module Minicron
     when :both
       $stderr = $stdout = stdout = stderr = StringIO.new
     else
-      fail ArgumentError, 'The type must be one of [stdout, stderr, both]'
+      raise ArgumentError, 'The type must be one of [stdout, stderr, both]'
     end
 
     # Yield to the code block to do whatever it has to do

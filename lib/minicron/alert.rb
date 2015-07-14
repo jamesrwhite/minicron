@@ -58,7 +58,7 @@ module Minicron
       when 'aws_sns'
         send_aws_sns(options)
       else
-        fail Exception, "The medium '#{options[:medium]}' is not supported!"
+        raise Exception, "The medium '#{options[:medium]}' is not supported!"
       end
 
       # Store that we sent the alert

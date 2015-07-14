@@ -33,7 +33,7 @@ module Minicron
       when 'fail'
         "Execution ##{options[:execution_id]} of Job ##{options[:job_id]} '#{options[:job].name}' failed."
       else
-        fail Exception, "The kind '#{options[:kind]} is not supported!"
+        raise Exception, "The kind '#{options[:kind]} is not supported!"
       end
     end
 

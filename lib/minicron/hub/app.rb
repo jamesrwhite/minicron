@@ -125,7 +125,7 @@ module Minicron::Hub
           :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
         )
       else
-        fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
+        raise Exception, "The database #{Minicron.config['database']['type']} is not supported"
       end
 
       # Enable ActiveRecord logging if in verbose mode

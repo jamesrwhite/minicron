@@ -189,7 +189,7 @@ class Minicron::Hub::App
       )
 
       if exists
-        fail Exception, 'That schedule already exists for this job'
+        raise Exception, 'That schedule already exists for this job'
       end
 
       Minicron::Hub::Schedule.transaction do

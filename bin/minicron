@@ -34,7 +34,7 @@ rescue Exception => e
 
   if Minicron.config['trace']
     puts
-    fail e
+    raise e
   end
 
   exit(1)

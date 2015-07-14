@@ -111,7 +111,7 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          fail Exception, "Expected to find nothing when grepping the cron file but found #{grep}"
+          raise Exception, "Expected to find nothing when grepping the cron file but found #{grep}"
         end
       else
         # Check the updated line is there
@@ -119,7 +119,7 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          fail Exception, "Expected to find '#{replace}' when grepping the cron file but found #{grep}"
+          raise Exception, "Expected to find '#{replace}' when grepping the cron file but found #{grep}"
         end
       end
 
@@ -127,7 +127,7 @@ module Minicron
       move = conn.exec!("/bin/sh -c 'mv /tmp/minicron_crontab #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").to_s.strip
 
       if move != 'y'
-        fail Exception, "Unable to move /tmp/minicron_crontab to #{Minicron.config['server']['cron_file']}, check the permissions?"
+        raise Exception, "Unable to move /tmp/minicron_crontab to #{Minicron.config['server']['cron_file']}, check the permissions?"
       end
     end
 
@@ -153,7 +153,7 @@ module Minicron
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
-        fail Exception, "Expected to find '#{line}' at EOF but found '#{tail}'"
+        raise Exception, "Expected to find '#{line}' at EOF but found '#{tail}'"
       end
     end
 
