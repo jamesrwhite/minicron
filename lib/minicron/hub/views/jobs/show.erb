@@ -65,8 +65,8 @@
         <tr>
           <td><%= schedule.formatted %></td>
           <td>
-            <a href="<%= "#{route_prefix}/schedule/#{schedule.id}" %>" class="btn btn-info btn-xs">View</a>
-            <a href="<%= "#{route_prefix}/schedule/#{schedule.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
+            <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{schedule.id}" %>" class="btn btn-info btn-xs">View</a>
+            <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{schedule.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
           </td>
         </tr>
       <% end %>

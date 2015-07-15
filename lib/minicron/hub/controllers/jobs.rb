@@ -154,7 +154,7 @@ class Minicron::Hub::App
 
   get '/job/:job_id/schedule/:schedule_id' do
     # Look up the schedule
-    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:id])
+    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
 
     # Look up the job
     @job = Minicron::Hub::Job.find(params[:job_id])
