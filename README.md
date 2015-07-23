@@ -78,7 +78,7 @@ Requirements
 These databases are also supported but you will need to manaually install the gems for them
 
 - MySQL via mysql2 (See [here](https://github.com/brianmario/mysql2#compatibility) for compatability info)
-- Support for PostgreSQL is planned in the future
+- PostgreSQL via pg (See [here](https://bitbucket.org/ged/ruby-pg/wiki/Home) for compatibility info)
 
 #### Web Server / Reverse Proxy
 
