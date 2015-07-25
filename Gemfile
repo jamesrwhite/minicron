@@ -5,3 +5,4 @@ gemspec
 
 gem 'coveralls', require: false
 gem 'mysql2',    require: false
+gem 'pg',        require: false
