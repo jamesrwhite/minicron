@@ -95,7 +95,7 @@ module Minicron::Hub
     def self.setup_db
       # Configure the database
       case Minicron.config['database']['type']
-      when /mysql|postgres/
+      when /mysql|postgresql/
         set :database,
             :adapter => Minicron.config['database']['type'],
             :host => Minicron.config['database']['host'],
