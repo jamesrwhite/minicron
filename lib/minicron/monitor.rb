@@ -17,10 +17,10 @@ module Minicron
     # Establishes a database connection
     def setup_db
       case Minicron.config['database']['type']
-      when 'mysql'
+      when /mysql|postgres/
         # Establish a database connection
         ActiveRecord::Base.establish_connection(
-          :adapter => 'mysql2',
+          :adapter => Minicron.config['database']['type'],
           :host => Minicron.config['database']['host'],
           :database => Minicron.config['database']['database'],
           :username => Minicron.config['database']['username'],

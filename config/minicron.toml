@@ -24,8 +24,8 @@ cron_file = "/etc/crontab"
 
 # Database options
 [database]
-type = "sqlite" # [mysql, sqlite]
-# The options below are for mysql only
+type = "sqlite" # [mysql2, postgresql, sqlite]
+# The options below are for mysql and postgresql only
 # host = "127.0.0.1"
 # database = "minicron"
 # username = "minicron"
