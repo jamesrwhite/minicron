@@ -19,7 +19,7 @@ module Minicron
       when /mysql|postgres/
         # Establish a database connection
         ActiveRecord::Base.establish_connection(
-          :adapter => Minicron.config['database']['type'],
+          :adapter => Minicron.get_db_adapter(Minicron.config['database']['type']),
           :host => Minicron.config['database']['host'],
           :database => Minicron.config['database']['database'],
           :username => Minicron.config['database']['username'],
@@ -33,7 +33,7 @@ module Minicron
         db_rel_path = db.relative_path_from(root)
 
        ActiveRecord::Base.establish_connection(
-          :adapter => 'sqlite3',
+          :adapter => Minicron.get_db_adapter(Minicron.config['database']['type']),
           :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
         )
       else

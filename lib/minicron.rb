@@ -207,4 +207,21 @@ module Minicron
   def self.get_user
     `whoami`.strip
   end
+
+  # Get the database adapter for the database type
+  #
+  # @param type [String] database type
+  # @return type [String] adapter
+  def self.get_db_adapter(type)
+    case type
+    when 'mysql'
+      'mysql2'
+    when 'postgresql'
+      'postgresql'
+    when 'sqlite'
+      'sqlite3'
+    else
+      raise Minicron::DatabaseError, "The database #{type} is not supported"
+    end
+  end
 end
