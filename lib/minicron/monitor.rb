@@ -127,7 +127,6 @@ module Minicron
             :schedule_id => schedule.id,
             :expected_at => expected_at,
             :job_id => schedule.job_id,
-            :expected_at => expected_at
           )
         end
       end
