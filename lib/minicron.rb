@@ -20,12 +20,18 @@ module Minicron
     'verbose' => false,
     'trace' => false,
     'client' => {
-      'scheme' => 'http',
-      'host' => '0.0.0.0',
-      'port' => 9292,
-      'path' => '/',
-      'connect_timeout' => 5,
-      'inactivity_timeout' => 5
+      'server' => {
+        'scheme' => 'http',
+        'host' => '0.0.0.0',
+        'port' => 9292,
+        'path' => '/',
+        'connect_timeout' => 5,
+        'inactivity_timeout' => 5,
+      },
+      'cli' => {
+        'mode' => 'line',
+        'dry_run' => false
+      },
     },
     'server' => {
       'host' => '0.0.0.0',
@@ -40,14 +46,10 @@ module Minicron
         'path' => '/',
         'ttl' => 86400,
         'secret' => 'change_me'
-      }
-    },
-    'database' => {
-      'type' => 'sqlite'
-    },
-    'cli' => {
-      'mode' => 'line',
-      'dry_run' => false
+      },
+      'database' => {
+        'type' => 'sqlite'
+      },
     },
     'alerts' => {
       'email' => {

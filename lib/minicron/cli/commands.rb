@@ -114,8 +114,8 @@ module Minicron
         cli.command :run do |c|
           c.syntax = "minicron run 'command -option value'"
           c.description = 'Runs the command passed as an argument.'
-          c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['cli']['mode']}"
-          c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['cli']['dry_run']}"
+          c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['client']['cli']['mode']}"
+          c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['client']['cli']['dry_run']}"
 
           c.action do |args, opts|
             # Check that exactly one argument has been passed
@@ -127,13 +127,13 @@ module Minicron
             Minicron::CLI.parse_config(opts)
 
             # Set up the job and get the job and execution ids
-            unless Minicron.config['cli']['dry_run']
+            unless Minicron.config['client']['cli']['dry_run']
               # Get a client instance so we can send data about the job
               client = Minicron::Transport::Client.new(
-                Minicron.config['client']['scheme'],
-                Minicron.config['client']['host'],
-                Minicron.config['client']['port'],
-                Minicron.config['client']['path']
+                Minicron.config['client']['server']['scheme'],
+                Minicron.config['client']['server']['host'],
+                Minicron.config['client']['server']['port'],
+                Minicron.config['client']['server']['path']
               )
 
               # Get the command to run
@@ -158,11 +158,11 @@ module Minicron
 
             begin
               # Execute the command and yield the output
-              Minicron::CLI.run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
+              Minicron::CLI.run_command(args.first, :mode => Minicron.config['client']['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
                 when :start, :finish, :exit
-                  unless Minicron.config['cli']['dry_run']
+                  unless Minicron.config['client']['cli']['dry_run']
                     client.status(
                       output[:type],
                       job[:job_id],
@@ -171,7 +171,7 @@ module Minicron
                     )
                   end
                 when :output
-                  unless Minicron.config['cli']['dry_run']
+                  unless Minicron.config['client']['cli']['dry_run']
                     client.output(
                       job[:job_id],
                       job[:execution_id],
@@ -185,7 +185,7 @@ module Minicron
               end
             rescue Exception => e
               # Send the exception message to the server and yield it
-              unless Minicron.config['cli']['dry_run']
+              unless Minicron.config['client']['cli']['dry_run']
                 client.output(
                   job[:job_id],
                   job[:execution_id],

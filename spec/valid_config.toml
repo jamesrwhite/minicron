@@ -6,12 +6,17 @@ trace = false
 
 # Client options
 [client]
-scheme = "http" # [http, https]
-host = "127.0.0.1"
-port = 9292
-path = "/"
-connect_timeout = 5
-inactivity_timeout = 5
+  [client.server]
+  scheme = "http" # [http, https]
+  host = "127.0.0.1"
+  port = 9292
+  path = "/"
+  connect_timeout = 5
+  inactivity_timeout = 5
+  # CLI options
+  [client.cli]
+  mode = "line" # [line, char]
+  dry_run = false
 
 # Server options
 [server]
@@ -27,20 +32,13 @@ cron_file = "/etc/crontab"
   path = "/"
   ttl = 86400
   secret = "change_me"
-
-# Database options
-[database]
-type = "sqlite" # [mysql, postgresql, sqlite]
-# The options below are for mysql and postgresql only
-# host = "127.0.0.1"
-# database = "minicron"
-# username = "minicron"
-# password = "password"
-
-# CLI options
-[cli]
-mode = "line" # [line, char]
-dry_run = false
+  [server.database]
+  type = "sqlite" # [mysql, postgresql, sqlite]
+  # The options below are for mysql and postgresql only
+  # host = "127.0.0.1"
+  # database = "minicron"
+  # username = "minicron"
+  # password = "password"
 
 # Alerting options
 [alerts]
