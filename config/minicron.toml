@@ -2,7 +2,7 @@
 
 # Global options
 verbose = false
-trace = false # Useful for debugging
+debug = false # Useful for debugging
 
 # Client options
 [client]

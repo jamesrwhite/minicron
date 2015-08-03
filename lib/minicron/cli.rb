@@ -26,7 +26,7 @@ module Minicron
       # Parse the cli options
       Minicron.parse_config_hash(
         'verbose' => opts.verbose,
-        'trace' => opts.trace,
+        'debug' => opts.debug,
         'cli' => {
           'mode' => opts.mode,
           'dry_run' => opts.dry_run
@@ -197,9 +197,9 @@ module Minicron
       # Set the default command to run
       @cli.default_command :help
 
-      # Check if --trace was pased or not
-      if @cli.instance_variable_get(:@args).include? '--trace'
-        Minicron.config['trace'] = true
+      # Check if --debug was pased or not
+      if @cli.instance_variable_get(:@args).include? '--debug'
+        Minicron.config['debug'] = true
       end
 
       # Add a global option for verbose mode

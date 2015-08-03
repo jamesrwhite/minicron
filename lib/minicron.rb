@@ -18,7 +18,7 @@ module Minicron
   # Default configuration, this can be overriden
   @config = {
     'verbose' => false,
-    'trace' => false,
+    'debug' => false,
     'client' => {
       'server' => {
         'scheme' => 'http',
