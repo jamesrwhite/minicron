@@ -49,6 +49,9 @@ module Minicron
       'database' => {
         'type' => 'sqlite'
       },
+      'ssh' => {
+        'connect_timeout' => 10,
+      },
     },
     'alerts' => {
       'email' => {
