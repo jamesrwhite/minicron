@@ -12,6 +12,9 @@ port = 9292
 path = "/"
 connect_timeout = 5
 inactivity_timeout = 5
+  [client.cli]
+  mode = "line" # [line, char] - line by line output or char by char
+  dry_run = false # When true the command is run but not sent to the server
 
 # Server options
 [server]
@@ -27,20 +30,13 @@ cron_file = "/etc/crontab"
   path = "/"
   ttl = 86400
   secret = "change_me"
-
-# Database options
-[database]
-type = "sqlite" # [mysql, postgresql, sqlite]
-# The options below are for mysql and postgresql only
-# host = "127.0.0.1"
-# database = "minicron"
-# username = "minicron"
-# password = "password"
-
-# CLI options
-[cli]
-mode = "line" # [line, char] - line by line output or char by char
-dry_run = false # When true the command is run but not sent to the server
+  [server.database]
+  type = "sqlite" # [mysql, postgresql, sqlite]
+  # The options below are for mysql and postgresql only
+  # host = "127.0.0.1"
+  # database = "minicron"
+  # username = "minicron"
+  # password = "password"
 
 # Alerting options
 [alerts]
@@ -75,4 +71,3 @@ dry_run = false # When true the command is run but not sent to the server
   # access_key_id = "YOUR_ACCESS_KEY_ID"
   # region = "AWS_REGION"
   # topic_arn = "YOUR_SNS_TOPIC_ARN"
-
