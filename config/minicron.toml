@@ -21,7 +21,6 @@ inactivity_timeout = 5
 host = "127.0.0.1"
 port = 9292
 path = "/"
-debug = false # When true the server will not run as a daemon
 pid_file = "/tmp/minicron.pid"
 cron_file = "/etc/crontab"
   [server.session]

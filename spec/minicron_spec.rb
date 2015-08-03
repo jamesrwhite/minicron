@@ -83,7 +83,6 @@ describe Minicron do
             'host' => '127.0.0.1',
             'port' => 9292,
             'path' => '/',
-            'debug' => false,
             'pid_file' => '/tmp/minicron.pid',
             'cron_file' => '/etc/crontab',
             'session' => {
