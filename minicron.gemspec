@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.requirements << 'libsqlite3-dev or sqlite-devel (sqlite3 dependencies for debian/ubuntu and redhat/centos/fedora respectively)'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
-  spec.add_runtime_dependency 'commander', '~> 4.2'
+  spec.add_runtime_dependency 'commander', '~> 4.3'
   spec.add_runtime_dependency 'thin', '~> 1.6', '>= 1.6.1'
   spec.add_runtime_dependency 'toml-rb', '~> 0.3', '>= 0.3.8'
   spec.add_runtime_dependency 'sinatra', '~> 1.4', '>= 1.4.4'
