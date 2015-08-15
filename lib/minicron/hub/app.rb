@@ -62,7 +62,6 @@ module Minicron::Hub
       js :app, '/js/all.js', [
         # Dependencies, the order of these is important
         '/js/jquery-2.1.0.min.js',
-        '/js/faye-browser-1.0.1.min.js',
         '/js/bootstrap-3.1.1.min.js',
         '/js/moment-2.5.1.min.js',
         '/js/perfect-scrollbar-0.4.10.with-mousewheel.min.js',
