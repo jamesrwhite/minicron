@@ -7,7 +7,7 @@ require 'minicron/hub/models/job'
 
 module Minicron
   # Allows the sending of alerts via multiple mediums
-  class Alert
+  module Alert
     # Send an alert using all enabled mediums
     #
     # @option options [String] kind 'fail' or 'miss'

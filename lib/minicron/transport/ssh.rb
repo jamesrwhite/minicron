@@ -30,7 +30,7 @@ module Minicron
           :keys => [@private_key],
           :auth_methods => @auth_methods,
           :host_key => @host_key,
-          :timeout => @timeout
+          :timeout => Minicron.config['server']['ssh']['connect_timeout']
         )
       end
 

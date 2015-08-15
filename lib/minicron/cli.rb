@@ -26,7 +26,7 @@ module Minicron
       # Parse the cli options
       Minicron.parse_config_hash(
         'verbose' => opts.verbose,
-        'trace' => opts.trace,
+        'debug' => opts.debug,
         'cli' => {
           'mode' => opts.mode,
           'dry_run' => opts.dry_run
@@ -35,7 +35,6 @@ module Minicron
           'host' => opts.host,
           'port' => opts.port,
           'path' => opts.path,
-          'debug' => opts.debug,
           'pid_file' => opts.pid_file,
           'cron_file' => opts.cron_file
         }
@@ -197,18 +196,17 @@ module Minicron
       # Set the default command to run
       @cli.default_command :help
 
-      # Check if --trace was pased or not
-      if @cli.instance_variable_get(:@args).include? '--trace'
-        Minicron.config['trace'] = true
-      end
-
       # Add a global option for verbose mode
-      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose'].to_s}" do
-        Minicron.config['verbose'] = true
-      end
+      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose'].to_s}"
+
+      # Add a global option for enabling debug mode
+      @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug'].to_s}"
 
       # Add a global option for passing the path to a config file
-      @cli.global_option '--config FILE', 'Set the config file to use'
+      @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"
+
+      # No tracing option, we're using --debug
+      @cli.never_trace!
     end
   end
 end

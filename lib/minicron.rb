@@ -18,20 +18,25 @@ module Minicron
   # Default configuration, this can be overriden
   @config = {
     'verbose' => false,
-    'trace' => false,
+    'debug' => false,
     'client' => {
-      'scheme' => 'http',
-      'host' => '0.0.0.0',
-      'port' => 9292,
-      'path' => '/',
-      'connect_timeout' => 5,
-      'inactivity_timeout' => 5
+      'server' => {
+        'scheme' => 'http',
+        'host' => '0.0.0.0',
+        'port' => 9292,
+        'path' => '/',
+        'connect_timeout' => 5,
+        'inactivity_timeout' => 5,
+      },
+      'cli' => {
+        'mode' => 'line',
+        'dry_run' => false
+      },
     },
     'server' => {
       'host' => '0.0.0.0',
       'port' => 9292,
       'path' => '/',
-      'debug' => false,
       'pid_file' => '/tmp/minicron.pid',
       'cron_file' => '/etc/crontab',
       'session' => {
@@ -40,14 +45,13 @@ module Minicron
         'path' => '/',
         'ttl' => 86400,
         'secret' => 'change_me'
-      }
-    },
-    'database' => {
-      'type' => 'sqlite'
-    },
-    'cli' => {
-      'mode' => 'line',
-      'dry_run' => false
+      },
+      'database' => {
+        'type' => 'sqlite'
+      },
+      'ssh' => {
+        'connect_timeout' => 10,
+      },
     },
     'alerts' => {
       'email' => {

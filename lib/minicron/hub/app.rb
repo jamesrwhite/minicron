@@ -105,14 +105,14 @@ module Minicron::Hub
     # Used to set up the database connection
     def self.setup_db
       # Configure the database
-      case Minicron.config['database']['type']
+      case Minicron.config['server']['database']['type']
       when /mysql|postgresql/
         set :database,
-            :adapter => Minicron.get_db_adapter(Minicron.config['database']['type']),
-            :host => Minicron.config['database']['host'],
-            :database => Minicron.config['database']['database'],
-            :username => Minicron.config['database']['username'],
-            :password => Minicron.config['database']['password']
+            :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
+            :host => Minicron.config['server']['database']['host'],
+            :database => Minicron.config['server']['database']['database'],
+            :username => Minicron.config['server']['database']['username'],
+            :password => Minicron.config['server']['database']['password']
       when 'sqlite'
         # Calculate the realtive path to the db because sqlite or activerecord is
         # weird and doesn't seem to handle abs paths correctly
@@ -121,11 +121,11 @@ module Minicron::Hub
         db_rel_path = db.relative_path_from(root)
 
         ActiveRecord::Base.establish_connection(
-          :adapter => Minicron.get_db_adapter(Minicron.config['database']['type']),
+          :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
           :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
         )
       else
-        raise Minicron::DatabaseError, "The database #{Minicron.config['database']['type']} is not supported"
+        raise Minicron::DatabaseError, "The database #{Minicron.config['server']['database']['type']} is not supported"
       end
 
       # Enable ActiveRecord logging if in verbose mode
