@@ -130,17 +130,14 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 You can also run minicron in a docker container, see below for instructions how:
 
-`git clone https://github.com/jamesrwhite/minicron.git`
-
-`cd minicron`
-
-`docker build -t minicron-0.7.4 .`
-
-`docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.7.4`
-
-`docker ps | grep minicron`
-
-`docker exec *container_hash* minicron server start`
+````bash
+git clone https://github.com/jamesrwhite/minicron.git
+cd minicron
+docker build -t minicron-0.7.4 .
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.7.4
+docker ps | grep minicron
+docker exec *container_hash* minicron server start
+````
 
 Do this all right and if you `curl localhost:9292/api/jobs` you should be greeted with some JSON!
 
