@@ -95,9 +95,6 @@ module Minicron
     #
     # @param schedule [Minicron::Hub::Schedule]
     def monitor(schedule)
-      # Get an instance of the alert class
-      alert = Minicron::Alert.new
-
       # Parse the cron expression
       cron = CronParser.new(schedule.formatted)
 
@@ -121,7 +118,7 @@ module Minicron
 
         # If the check failed
         unless check
-          alert.send_all(
+          Minicron::Alert.send_all(
             :kind => 'miss',
             :schedule_id => schedule.id,
             :expected_at => expected_at,

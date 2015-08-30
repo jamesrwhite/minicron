@@ -1,8 +1,9 @@
-<header>
-  <h2>Edit Job '<%= @job.name %>'</h2>
+<header class="clearfix">
+  <h2 class="pull-left">Edit Job '<%= @job.name %>'</h2>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}" %>" class="pull-right btn btn-info btn-sm">View</a>
 </header>
 <hr/>
-
 <% if @error %>
   <div class="alert alert-danger" role="alert"><%= @error %></div>
 <% end %>

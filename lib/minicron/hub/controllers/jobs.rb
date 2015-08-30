@@ -1,3 +1,6 @@
+require 'minicron/transport/ssh'
+require 'minicron/cron'
+
 class Minicron::Hub::App
   get '/jobs' do
     # Look up all the jobs
@@ -237,7 +240,7 @@ class Minicron::Hub::App
     end
   end
 
-  get '/job/:job_id/schedules/edit/:schedule_id' do
+  get '/job/:job_id/schedule/:schedule_id/edit' do
     # Look up the schedule
     @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
 
@@ -247,11 +250,15 @@ class Minicron::Hub::App
     erb :'jobs/schedules/edit', :layout => :'layouts/app'
   end
 
-  post '/job:job_id/schedules/edit/:schedule_id' do
+  post '/job/:job_id/schedule/:schedule_id/edit' do
     begin
+      # Look up the schedule and job
+      @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
+
+      # To keep the view similar to #new store the job here
+      @job = @schedule.job
+
       Minicron::Hub::Schedule.transaction do
-        # Find the schedule
-        @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:id])
         old_schedule = @schedule.formatted
 
         # Get an ssh instance
@@ -294,6 +301,48 @@ class Minicron::Hub::App
       @schedule.restore_attributes
       @error = e.message
       erb :'jobs/schedules/edit', :layout => :'layouts/app'
+    end
+  end
+
+  get '/job/:id/schedule/:schedule_id/delete' do
+    # Look up the schedule
+    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
+
+    erb :'jobs/schedules/delete', :layout => :'layouts/app'
+  end
+
+  post '/job/:id/schedule/:schedule_id/delete' do
+    begin
+      # Find the schedule
+      @schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:schedule_id])
+
+      Minicron::Hub::Schedule.transaction do
+        # Try and delete the schedule
+        Minicron::Hub::Schedule.destroy(params[:id])
+
+        # Get an ssh instance
+        ssh = Minicron::Transport::SSH.new(
+          :user => @schedule.job.host.user,
+          :host => @schedule.job.host.host,
+          :port => @schedule.job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@schedule.job.host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Delete the schedule from the crontab
+        cron.delete_schedule(@schedule.job, @schedule.formatted)
+
+        # Tidy up
+        ssh.close
+
+        redirect "#{route_prefix}/job/#{@schedule.job.id}"
+      end
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      @error = e.message
+      erb :'jobs/schedules/delete', :layout => :'layouts/app'
     end
   end
 end

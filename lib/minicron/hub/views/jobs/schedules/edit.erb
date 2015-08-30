@@ -1,5 +1,7 @@
-<header>
-  <h2>Edit Schedule for Job '<%= @job.name %>'</h2>
+<header class="clearfix">
+  <h2 class="pull-left">Edit Schedule for Job '<%= @job.name %>'</h2>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}" %>" class="pull-right btn btn-info btn-sm">View</a>
 </header>
 <hr/>
 
@@ -128,7 +130,7 @@
           <div class="tab-content">
             <div class="tab-pane active" id="every-hour">The job will run every hour</div>
             <div class="tab-pane" id="every-n-hours">
-              The job will run every <input disabled id="every-n-hours-value" type="number" min="1" max="23" value="5" class="every-n"></span> hours
+              The job will run every <input id="every-n-hours-value" type="number" min="1" max="23" value="5" class="every-n"></span> hours
             </div>
             <div class="tab-pane" id="each-selected-hour">
               <div class="btn-group clearfix" data-toggle="buttons">

@@ -1,106 +1,105 @@
-<section>
-  <header class="clearfix">
-    <h2 class="pull-left">Job '<%= @job.name %>'</h2>
-    <a href="<%= "#{route_prefix}/job/#{@job.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
-    <a href="<%= "#{route_prefix}/job/#{@job.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
-  </header>
-  <hr/>
+<header class="clearfix">
+  <h2 class="pull-left">Job '<%= @job.name %>'</h2>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
+</header>
+<hr/>
 
-  <form class="form-horizontal" role="form">
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Name</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @job.name %></div>
-      </div>
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @job.name %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">User</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @job.user %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">User</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @job.user %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Command</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @job.command %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Command</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @job.command %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Host</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @job.host.name %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Host</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @job.host.name %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Created At</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @job.created_at %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Created At</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @job.created_at %></div>
     </div>
-    <div class="form-group">
-      <label class="col-sm-2 control-label">Updated At</label>
-      <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @job.updated_at %></div>
-      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Updated At</label>
+    <div class="col-sm-10">
+      <div class="form-control form-control-view"><%= @job.updated_at %></div>
     </div>
-  </form>
+  </div>
+</form>
 </section>
 
 <section>
-  <header class="clearfix">
-    <h2 class="pull-left">Schedule</h2>
-    <a href="<%= "#{route_prefix}/job/#{@job.id}/schedules/new" %>" class="pull-right btn btn-success btn-sm">Add New Schedule</a>
-  </header>
+<header class="clearfix">
+  <h2 class="pull-left">Schedule</h2>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedules/new" %>" class="pull-right btn btn-success btn-sm">Add New Schedule</a>
+</header>
 
-  <table class="table table-striped table-hover">
-    <thead>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Schedule</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @job.schedules.each do |schedule| %>
       <tr>
-        <th>Schedule</th>
-        <th>Actions</th>
+        <td><%= schedule.formatted %></td>
+        <td>
+          <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{schedule.id}" %>" class="btn btn-info btn-xs">View</a>
+          <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{schedule.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
+          <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{schedule.id}/delete" %>" class="btn btn-danger btn-xs">Delete</a>
+        </td>
       </tr>
-    </thead>
-
-    <tbody>
-      <% @job.schedules.each do |schedule| %>
-        <tr>
-          <td><%= schedule.formatted %></td>
-          <td>
-            <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{schedule.id}" %>" class="btn btn-info btn-xs">View</a>
-            <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{schedule.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>
 </section>
 
 <section>
-  <header class="clearfix">
-    <h2>Executions</h2>
-  </header>
-  <hr/>
+<header class="clearfix">
+  <h2>Executions</h2>
+</header>
+<hr/>
 
-  <table class="table table-striped table-hover">
-    <thead>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Started At</th>
+      <th>Finished At</th>
+      <th>Exit Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @job.executions.each do |execution| %>
       <tr>
-        <th>#</th>
-        <th>Started At</th>
-        <th>Finished At</th>
-        <th>Exit Status</th>
-        <th>Actions</th>
+        <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>"><%= execution.number %></a></td>
+        <td><%= execution.started_at %></td>
+        <td><%= execution.finished_at %></td>
+        <td><%= execution.exit_status %></td>
+        <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="btn btn-info btn-xs">View</a></td>
       </tr>
-    </thead>
-
-    <tbody>
-      <% @job.executions.each do |execution| %>
-        <tr>
-          <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>"><%= execution.number %></a></td>
-          <td><%= execution.started_at %></td>
-          <td><%= execution.finished_at %></td>
-          <td><%= execution.exit_status %></td>
-          <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="btn btn-info btn-xs">View</a></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
+    <% end %>
+  </tbody>
+</table>

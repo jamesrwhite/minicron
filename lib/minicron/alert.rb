@@ -15,7 +15,7 @@ module Minicron
     # @option options [Integer, nil] execution_id only used by 'fail' alerts
     # @option options [Integer, nil] schedule_id only applies to 'miss' alerts
     # @option options [Time] expected_at only applies to 'miss' alerts
-    def send_all(options = {})
+    def self.send_all(options = {})
       Minicron.config['alerts'].each do |medium, value|
 
         # Add the alert medium into the options hash so that it can be passed to sent?
@@ -43,7 +43,7 @@ module Minicron
     # @option options [Integer, nil] schedule_id only applies to 'miss' alerts
     # @option options [Time] expected_at when the schedule was expected to execute
     # @option options [String] medium the medium to send the alert via
-    def send(options = {})
+    def self.send(options = {})
       # Look up the job for this schedule
       options[:job] = Minicron::Hub::Job.find(options[:job_id])
 
@@ -74,7 +74,7 @@ module Minicron
     end
 
     # Send an email alert, this has the same options as #send
-    def send_email(options = {})
+    def self.send_email(options = {})
       email = Minicron::Email.new
       email.send(
         Minicron.config['alerts']['email']['from'],
@@ -85,7 +85,7 @@ module Minicron
     end
 
     # Send an sms alert, this has the same options as #send
-    def send_sms(options = {})
+    def self.send_sms(options = {})
       sms = Minicron::SMS.new
       sms.send(
         Minicron.config['alerts']['sms']['from'],
@@ -95,7 +95,7 @@ module Minicron
     end
 
     # Send a pagerduty alert, this has the same options as #send
-    def send_pagerduty(options = {})
+    def self.send_pagerduty(options = {})
       pagerduty = Minicron::PagerDuty.new
       pagerduty.send(
         options[:kind] == 'fail' ? 'Job failed!' : 'Job missed!',
@@ -104,7 +104,7 @@ module Minicron
     end
 
     # Send an aws sns alert, this has the same options as #send
-    def send_aws_sns(options = {})
+    def self.send_aws_sns(options = {})
       sns = Minicron::AwsSns.new
       sns.send(
         "minicron alert for job '#{options[:job].name}'!",
@@ -120,7 +120,7 @@ module Minicron
     # @option options [Integer, nil] schedule_id only applies to 'miss' alerts
     # @option options [Time] expected_at when the schedule was expected to execute
     # @option options [String] medium the medium to send the alert via
-    def sent?(options = {})
+    def self.sent?(options = {})
       Minicron::Hub::Alert.exists?(
         :kind => options[:kind],
         :execution_id => options[:execution_id],

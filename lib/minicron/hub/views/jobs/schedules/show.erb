@@ -1,5 +1,7 @@
-<header>
-  <h2>View Schedule for Job '<%= @job.name %>'</h2>
+<header class="clearfix">
+  <h2 class="pull-left">View Schedule for Job '<%= @job.name %>'</h2>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
 </header>
 <hr/>
 

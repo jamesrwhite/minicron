@@ -1,8 +1,9 @@
 <header class="clearfix">
   <h2 class="pull-left">Test Host '<%= @host.name %>'</h2>
-  <a href="<%= "#{}/host/#{@host.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{route_prefix}/host/#{@host.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
   <a href="<%= "#{route_prefix}/host/#{@host.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
   <a href="<%= "#{route_prefix}/host/#{@host.id}/test" %>" class="pull-right btn btn-info btn-sm">Test Connection</a>
+  <a href="<%= "#{route_prefix}/host/#{@host.id}" %>" class="pull-right btn btn-info btn-sm">View</a>
 </header>
 <hr/>
 
