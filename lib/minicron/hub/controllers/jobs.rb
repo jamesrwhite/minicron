@@ -318,7 +318,7 @@ class Minicron::Hub::App
 
       Minicron::Hub::Schedule.transaction do
         # Try and delete the schedule
-        Minicron::Hub::Schedule.destroy(params[:id])
+        Minicron::Hub::Schedule.destroy(params[:schedule_id])
 
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
