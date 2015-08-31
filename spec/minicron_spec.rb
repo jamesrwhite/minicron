@@ -73,11 +73,11 @@ describe Minicron do
               'path' => '/',
               'connect_timeout' => 5,
               'inactivity_timeout' => 5,
-            }
+            },
             'cli' => {
               'mode' => 'line',
               'dry_run' => false
-            }
+            },
           },
           'server' => {
             'host' => '127.0.0.1',
@@ -105,7 +105,7 @@ describe Minicron do
               'smtp' => {
                 'address' => 'localhost',
                 'port' => 25
-              }
+              },
             },
             'sms' => {
               'enabled' => false
@@ -115,8 +115,8 @@ describe Minicron do
             },
             'aws_sns' => {
               'enabled' => false
-            }
-          }
+            },
+          },
         }
 
         parse_file_config = Minicron.parse_file_config('./spec/valid_config.toml')

@@ -27,9 +27,11 @@ module Minicron
       Minicron.parse_config_hash(
         'verbose' => opts.verbose,
         'debug' => opts.debug,
-        'cli' => {
-          'mode' => opts.mode,
-          'dry_run' => opts.dry_run
+        'client' => {
+          'cli' => {
+            'mode' => opts.mode,
+            'dry_run' => opts.dry_run
+          },
         },
         'server' => {
           'host' => opts.host,

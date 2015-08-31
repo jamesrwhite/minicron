@@ -75,7 +75,7 @@ module Minicron
 
     # Send an email alert, this has the same options as #send
     def self.send_email(options = {})
-      email = Minicron::Email.new
+      email = Minicron::Alert::Email.new
       email.send(
         Minicron.config['alerts']['email']['from'],
         Minicron.config['alerts']['email']['to'],
@@ -86,7 +86,7 @@ module Minicron
 
     # Send an sms alert, this has the same options as #send
     def self.send_sms(options = {})
-      sms = Minicron::SMS.new
+      sms = Minicron::Alert::SMS.new
       sms.send(
         Minicron.config['alerts']['sms']['from'],
         Minicron.config['alerts']['sms']['to'],
@@ -96,7 +96,7 @@ module Minicron
 
     # Send a pagerduty alert, this has the same options as #send
     def self.send_pagerduty(options = {})
-      pagerduty = Minicron::PagerDuty.new
+      pagerduty = Minicron::Alert::PagerDuty.new
       pagerduty.send(
         options[:kind] == 'fail' ? 'Job failed!' : 'Job missed!',
         pagerduty.get_message(options)
@@ -105,7 +105,7 @@ module Minicron
 
     # Send an aws sns alert, this has the same options as #send
     def self.send_aws_sns(options = {})
-      sns = Minicron::AwsSns.new
+      sns = Minicron::Alert::AwsSns.new
       sns.send(
         "minicron alert for job '#{options[:job].name}'!",
         sns.get_message(options)

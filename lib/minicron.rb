@@ -104,11 +104,18 @@ module Minicron
 
   # Parses the config options from the given hash that matches the expected
   # config format in Minicron.config
+  # TODO: refactor this mess
   def self.parse_config_hash(options = {})
     options.each do |key, value|
       if options[key].respond_to?(:each)
         options[key].each do |k, v|
-          if !v.nil?
+          if v.respond_to?(:each)
+            v.each do |k2, v2|
+              if !v2.nil?
+                @config[key][k][k2] = v2
+              end
+            end
+          elsif !v.nil?
             @config[key][k] = v
           end
         end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'minicron/alert/sms'
 
-describe Minicron::SMS do
+describe Minicron::Alert::SMS do
   before (:each) do
     Minicron.parse_config_hash({
       'alerts' => {
@@ -17,7 +17,7 @@ describe Minicron::SMS do
 
   describe '#intiailize' do
     it 'should create an instance of the Twilio gem' do
-      sms = Minicron::SMS.new
+      sms = Minicron::Alert::SMS.new
 
       expect(sms.instance_variable_get(:@client)).to be_a Twilio::REST::Client
     end
@@ -26,7 +26,7 @@ describe Minicron::SMS do
   describe '#get_message' do
     context 'when kind is miss' do
       it 'should return the correct message' do
-        sms = Minicron::SMS.new
+        sms = Minicron::Alert::SMS.new
         time = Time.now.utc
         options = {
           :job_id => 1,
@@ -42,7 +42,7 @@ describe Minicron::SMS do
 
     context 'when kind is fail' do
       it 'should return the correct message' do
-        sms = Minicron::SMS.new
+        sms = Minicron::Alert::SMS.new
         options = {
           :job_id => 1,
           :execution_id => 2,
@@ -56,7 +56,7 @@ describe Minicron::SMS do
 
     context 'when kind is not supported' do
       it 'should raise an Exception' do
-        sms = Minicron::SMS.new
+        sms = Minicron::Alert::SMS.new
         options = {
           :kind => 'derp'
         }
