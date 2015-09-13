@@ -64,7 +64,8 @@ module Minicron
           # Loop every schedule we know about
           schedules.each do |schedule|
             begin
-              monitor(schedule)
+              # TODO: is it possible to monitor on boot schedules some other way?
+              monitor(schedule) unless schedule.special == '@reboot'
             rescue Exception => e
               if Minicron.config['debug']
                 puts e.message
