@@ -1,0 +1,316 @@
+<div class="panel-group" id="schedule-editor">
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-type="minute" data-parent="#schedule-editor" href="#schedule-minute">
+      <div class="panel-heading">
+        <h4 class="panel-title">Minute</h4>
+      </div>
+    </a>
+    <div id="schedule-minute" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#every-minute" data-toggle="tab">every minute</a></li>
+          <li><a href="#every-n-minutes" data-toggle="tab">every n minutes</a></li>
+          <li><a href="#each-selected-minute" data-toggle="tab">each selected minute</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="every-minute">The job will run every minute</div>
+          <div class="tab-pane" id="every-n-minutes">
+            The job will run every <input id="every-n-minutes-value" type="number" min="1" max="59" value="5" class="every-n"></span> minutes
+          </div>
+          <div class="tab-pane" id="each-selected-minute">
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="0"/>00</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="1"/>01</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="2"/>02</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="3"/>03</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="4"/>04</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="5"/>05</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="6"/>06</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="7"/>07</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="8"/>08</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="9"/>09</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="10"/>10</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="11"/>11</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="12"/>12</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="13"/>13</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="14"/>14</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="15"/>15</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="16"/>16</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="17"/>17</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="18"/>18</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="19"/>19</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="20"/>20</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="21"/>21</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="22"/>22</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="23"/>23</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="24"/>24</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="25"/>25</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="26"/>26</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="27"/>27</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="28"/>28</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="29"/>29</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="30"/>30</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="31"/>31</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="32"/>32</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="33"/>33</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="34"/>34</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="35"/>35</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="36"/>36</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="37"/>37</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="38"/>38</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="39"/>39</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="40"/>40</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="41"/>41</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="42"/>42</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="43"/>43</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="44"/>44</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="45"/>45</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="46"/>46</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="47"/>47</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="48"/>48</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="49"/>49</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="50"/>50</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="51"/>51</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="52"/>52</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="53"/>53</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="54"/>54</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="55"/>55</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="56"/>56</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="57"/>57</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="58"/>58</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="59"/>59</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-type="hour" data-parent="#schedule-editor" href="#schedule-hour">
+      <div class="panel-heading">
+        <h4 class="panel-title">Hour</h4>
+      </div>
+    </a>
+    <div id="schedule-hour" class="panel-collapse collapse">
+      <div class="panel-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#every-hour" data-toggle="tab">every hour</a></li>
+          <li><a href="#every-n-hours" data-toggle="tab">every n hours</a></li>
+          <li><a href="#each-selected-hour" data-toggle="tab">each selected hour</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="every-hour">The job will run every hour</div>
+          <div class="tab-pane" id="every-n-hours">
+            The job will run every <input id="every-n-hours-value" type="number" min="1" max="23" value="5" class="every-n"></span> hours
+          </div>
+          <div class="tab-pane" id="each-selected-hour">
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="0"/>00</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="1"/>01</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="2"/>02</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="3"/>03</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="4"/>04</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="5"/>05</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="6"/>06</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="7"/>07</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="8"/>08</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="9"/>09</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="10"/>10</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="11"/>11</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="12"/>12</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="13"/>13</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="14"/>14</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="15"/>15</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="16"/>16</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="17"/>17</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="18"/>18</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="19"/>19</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="20"/>20</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="21"/>21</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="22"/>22</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="23"/>23</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-type="day_of_the_month" data-parent="#schedule-editor" href="#schedule-dotm">
+      <div class="panel-heading">
+        <h4 class="panel-title">Day of the month</h4>
+      </div>
+    </a>
+    <div id="schedule-dotm" class="panel-collapse collapse">
+      <div class="panel-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#every-day-of-the-month" data-toggle="tab">every day of the month</a></li>
+          <li><a href="#each-selected-day-of-the-month" data-toggle="tab">each selected day of the month</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="every-day-of-the-month">The job will run every day of the month</div>
+          <div class="tab-pane" id="each-selected-day-of-the-month">
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="1"/>01</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="2"/>02</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="3"/>03</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="4"/>04</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="5"/>05</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="6"/>06</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="7"/>07</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="8"/>08</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="9"/>09</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="10"/>10</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="11"/>11</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="12"/>12</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="13"/>13</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="14"/>14</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="15"/>15</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="16"/>16</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="17"/>17</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="18"/>18</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="19"/>19</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="20"/>20</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="21"/>21</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="22"/>22</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="23"/>23</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="24"/>24</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="25"/>25</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="26"/>26</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="27"/>27</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="28"/>28</label>
+            </div>
+
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="29"/>29</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="30"/>30</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="31"/>31</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-type="month" data-parent="#schedule-editor" href="#schedule-month">
+      <div class="panel-heading">
+        <h4 class="panel-title">Month</h4>
+      </div>
+    </a>
+    <div id="schedule-month" class="panel-collapse collapse">
+      <div class="panel-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#every-month" data-toggle="tab">every month</a></li>
+          <li><a href="#each-selected-month" data-toggle="tab">each selected month</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="every-month">The job will run every month</div>
+          <div class="tab-pane" id="each-selected-month">
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="1"/>Jan</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="2"/>Feb</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="3"/>Mar</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="4"/>Apr</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="5"/>May</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="6"/>Jun</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="7"/>Jul</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="8"/>Aug</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="9"/>Sep</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="10"/>Oct</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="11"/>Nov</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="12"/>Dec</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-type="day_of_the_week" data-parent="#schedule-editor" href="#schedule-dotw">
+      <div class="panel-heading">
+        <h4 class="panel-title">Day of week</h4>
+      </div>
+    </a>
+    <div id="schedule-dotw" class="panel-collapse collapse">
+      <div class="panel-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#every-day-of-the-week" data-toggle="tab">every day of the week</a></li>
+          <li><a href="#each-selected-day-of-the-week" data-toggle="tab">each selected day of the week</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="every-day-of-the-week">The job will run every day of the week</div>
+          <div class="tab-pane" id="each-selected-day-of-the-week">
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="checkbox" data-value="0"/>Sun</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="1"/>Mon</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="2"/>Tue</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="3"/>Wed</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="4"/>Thu</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="5"/>Fri</label>
+              <label class="btn btn-primary"><input type="checkbox" data-value="6"/>Sat</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-type="special" data-parent="#schedule-editor" href="#schedule-special">
+      <div class="panel-heading">
+        <h4 class="panel-title">Special</h4>
+      </div>
+    </a>
+    <div id="schedule-special" class="panel-collapse collapse">
+      <div class="panel-body">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#special" data-toggle="tab">special</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="special">
+            <div class="btn-group clearfix" data-toggle="buttons">
+              <label class="btn btn-primary"><input type="radio" data-value="@hourly"/>@hourly</label>
+              <label class="btn btn-primary"><input type="radio" data-value="@daily"/>@daily</label>
+              <label class="btn btn-primary"><input type="radio" data-value="@weekly"/>@weekly</label>
+              <label class="btn btn-primary"><input type="radio" data-value="@monthly"/>@monthly</label>
+              <label class="btn btn-primary"><input type="radio" data-value="@yearly"/>@yearly</label>
+              <label class="btn btn-primary"><input type="radio" data-value="@reboot"/>@reboot</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

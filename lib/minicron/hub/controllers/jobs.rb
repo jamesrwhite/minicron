@@ -198,12 +198,12 @@ class Minicron::Hub::App
       Minicron::Hub::Schedule.transaction do
         # Create the new schedule
         schedule = Minicron::Hub::Schedule.create(
-          :minute => params[:minute],
-          :hour => params[:hour],
-          :day_of_the_month => params[:day_of_the_month],
-          :month => params[:month],
-          :day_of_the_week => params[:day_of_the_week],
-          :special => params[:special],
+          :minute => params[:minute].empty? ? nil : params[:minute],
+          :hour => params[:hour].empty? ? nil : params[:hour],
+          :day_of_the_month => params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
+          :month => params[:month].empty? ? nil : params[:month],
+          :day_of_the_week => params[:day_of_the_week].empty? ? nil : params[:day_of_the_week],
+          :special => params[:special].empty? ? nil : params[:special],
           :job_id => params[:job_id]
         )
 
@@ -273,12 +273,12 @@ class Minicron::Hub::App
         cron = Minicron::Cron.new(ssh)
 
         # Update the instance of the new schedule
-        @schedule.minute = params[:minute]
-        @schedule.hour = params[:hour]
-        @schedule.day_of_the_month = params[:day_of_the_month]
-        @schedule.month = params[:month]
-        @schedule.day_of_the_week = params[:day_of_the_week]
-        @schedule.special = params[:special]
+        @schedule.minute = params[:minute].empty? ? nil : params[:minute]
+        @schedule.hour = params[:hour].empty? ? nil : params[:hour]
+        @schedule.day_of_the_month = params[:day_of_the_month].empty? ? nil : params[:day_of_the_month]
+        @schedule.month = params[:month].empty? ? nil : params[:month]
+        @schedule.day_of_the_week = params[:day_of_the_week].empty? ? nil : params[:day_of_the_week]
+        @schedule.special = params[:special].empty? ? nil : params[:special]
 
         # Update the schedule
         cron.update_schedule(
