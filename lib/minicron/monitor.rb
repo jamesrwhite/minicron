@@ -1,12 +1,10 @@
-autoload :ActiveRecord, 'sinatra/activerecord'
-autoload :CronParser,   'parse-cron'
-
+require 'sinatra/activerecord'
+require 'parse-cron'
 require 'minicron/hub/models/schedule'
 require 'minicron/hub/models/execution'
+require 'minicron/alert'
 
 module Minicron
-  autoload :Alert,      'minicron/alert'
-
   # Used to monitor the executions in the database and look for any failures
   # or missed executions based on the schedules minicron knows about
   class Monitor
@@ -16,15 +14,15 @@ module Minicron
 
     # Establishes a database connection
     def setup_db
-      case Minicron.config['database']['type']
+      case Minicron.config['server']['database']['type']
       when /mysql|postgres/
         # Establish a database connection
         ActiveRecord::Base.establish_connection(
-          :adapter => Minicron.config['database']['type'],
-          :host => Minicron.config['database']['host'],
-          :database => Minicron.config['database']['database'],
-          :username => Minicron.config['database']['username'],
-          :password => Minicron.config['database']['password']
+          :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
+          :host => Minicron.config['server']['database']['host'],
+          :database => Minicron.config['server']['database']['database'],
+          :username => Minicron.config['server']['database']['username'],
+          :password => Minicron.config['server']['database']['password']
         )
       when 'sqlite'
         # Calculate the realtive path to the db because sqlite or activerecord is
@@ -34,11 +32,11 @@ module Minicron
         db_rel_path = db.relative_path_from(root)
 
        ActiveRecord::Base.establish_connection(
-          :adapter => 'sqlite3',
+          :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
           :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
         )
       else
-        fail Exception, "The database #{Minicron.config['database']['type']} is not supported"
+        raise Minicron::DatabaseError, "The database #{Minicron.config['server']['database']['type']} is not supported"
       end
 
       # Enable ActiveRecord logging if in verbose mode
@@ -54,7 +52,7 @@ module Minicron
       setup_db
 
       # Set the start time of the monitir
-      @start_time = Time.now
+      @start_time = Time.now.utc
 
       # Start a thread for the monitor
       @thread = Thread.new do
@@ -68,7 +66,7 @@ module Minicron
             begin
               monitor(schedule)
             rescue Exception => e
-              if Minicron.config['trace']
+              if Minicron.config['debug']
                 puts e.message
                 puts e.backtrace
               end
@@ -97,23 +95,20 @@ module Minicron
     #
     # @param schedule [Minicron::Hub::Schedule]
     def monitor(schedule)
-      # Get an instance of the alert class
-      alert = Minicron::Alert.new
-
       # Parse the cron expression
       cron = CronParser.new(schedule.formatted)
 
       # Find the time the cron was last expected to run with a 30 second pre buffer
       # and a 30 second post buffer (in addition to the 60 already in place) incase
       # jobs run early/late to allow for clock sync differences between client/hub
-      expected_at = cron.last(Time.now) - 30
+      expected_at = cron.last(Time.now.utc) - 30
       expected_by = expected_at + 30 + 60 + 30 # pre buffer + minute wait + post buffer
 
       # We only need to check jobs that are expected to under the monitor start time
       # and jobs that have passed their expected by time and the time the schedule
       # was last updated isn't before when it was expected, i.e we aren't checking for something
       # that should have happened earlier in the day.
-      if expected_at > @start_time && Time.now > expected_by && expected_by > schedule.updated_at
+      if expected_at > @start_time && Time.now.utc > expected_by && expected_by > schedule.updated_at
         # Check if this execution was created inside a minute window
         # starting when it was expected to run
         check = Minicron::Hub::Execution.exists?(
@@ -123,12 +118,11 @@ module Minicron
 
         # If the check failed
         unless check
-          alert.send_all(
+          Minicron::Alert.send_all(
             :kind => 'miss',
             :schedule_id => schedule.id,
             :expected_at => expected_at,
             :job_id => schedule.job_id,
-            :expected_at => expected_at
           )
         end
       end

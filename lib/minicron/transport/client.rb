@@ -1,89 +1,151 @@
 require 'json'
+require 'net/http/persistent'
+require 'oj'
 
 module Minicron
   module Transport
-    autoload :FayeClient, 'minicron/transport/faye/client'
-
-    class Client < Minicron::Transport::FayeClient
+    class Client
       # Instantiate a new instance of the client
       #
       # @param host [String] The host to be communicated with
       def initialize(scheme, host, port, path)
         @scheme = scheme
         @host = host
-        @path = path == '/' ? '/faye' : "#{path}/faye"
+        @path = path == '/' ? '/api/v1' : "#{path}/api/v1"
         @port = port
         @seq = 1
-        super(@scheme, @host, @port, @path)
+        @client = Net::HTTP::Persistent.new('minicron')
       end
 
-      # Used to set up a job on the server
+      # Used to init a job
       #
-      # @option options [String] job_hash
-      # @option options [String] user
-      # @option options [Integer] command
-      # @option options [String] fqdn
-      # @option options [String] hostname
+      # @param [String] job_hash
+      # @param [String] user
+      # @param [Integer] command
+      # @param [String] fqdn
+      # @param [String] hostname
+      # @param [Integer] timestamp
       # @return [Hash]
-      def setup(options = {})
+      def init(job_hash, user, command, fqdn, hostname, timestamp)
         # Send a request to set up the job
-        publish("/job/#{options[:job_hash]}/status",
-          :action => 'SETUP',
-          :user => options[:user],
-          :command => options[:command],
-          :fqdn => options[:fqdn],
-          :hostname => options[:hostname]
-        )
+        response = send("/execution/init", {
+          :job_hash => job_hash,
+          :user => user,
+          :command => command,
+          :fqdn => fqdn,
+          :hostname => hostname,
+          :timestamp => timestamp
+        })
 
-        # Wait for the response..
-        ensure_delivery
-
-        # TODO: Handle errors here!
-        # Get the job and execution id from the response
-        begin
-          ids = JSON.parse(@responses.first[:body]).first['channel'].split('/')[3]
-        rescue Exception => e
-          raise Exception, "Unable to parse JSON response of: '#{@responses.first[:body]}', reason: #{e.message}"
-        end
-
-        # Split them up
-        ids = ids.split('-')
-
-        # Return them as a hash
         {
-          :job_id => ids[0],
-          :execution_id => ids[1],
-          :number => ids[2]
+          :execution_id => response['execution_id'],
         }
       end
 
-      # Helper that wraps the publish function making it quicker to use
+      # Mark a job as having started
       #
-      # @option options [String] job_id
-      # @option options [Integer] execution_id
-      # @option options [String, Symbol] type status or output
-      # @option options [String, Hash]
-      def send(options = {})
-        # Publish the message to the correct channel
-        publish("/job/#{options[:job_id]}/#{options[:execution_id]}/#{options[:type]}", options[:message])
+      # @param [Integer] execution_id
+      # @param [Integer] timestamp
+      # @return [Hash]
+      def start(execution_id, timestamp)
+        # Send a job execution status to the server
+        response = send("/execution/start", {
+          :execution_id => execution_id,
+          :timestamp => timestamp,
+        })
+
+        response
       end
 
-      # Publishes a message on the given channel to the server
+      # Mark a job as having finished
       #
-      # @param channel [String]
-      # @param message [String, Hash]
-      def publish(channel, message)
-        # Set up the data to send to faye
-        data = { :channel => channel, :data => {
-          :ts => Time.now.utc.strftime('%Y-%m-%d %H:%M:%S'),
-          :message => message,
-          :seq => @seq
-        } }
+      # @param [Integer] execution_id
+      # @param [Integer] timestamp
+      # @return [Hash]
+      def finish(execution_id, timestamp)
+        # Send a job execution status to the server
+        response = send("/execution/finish", {
+          :execution_id => execution_id,
+          :timestamp => timestamp,
+        })
+
+        response
+      end
+
+      # Set the exit status of a job once it has finished
+      #
+      # @param [Integer] execution_id
+      # @param [Integer] exit_status
+      # @return [Hash]
+      def exit(execution_id, exit_status)
+        # Send a job execution status to the server
+        response = send("/execution/exit", {
+          :execution_id => execution_id,
+          :exit_status => exit_status,
+        })
+
+        response
+      end
+
+      # Used to send output from the job execution
+      #
+      # @param [Integer] execution_id
+      # @param [String] output
+      # @return [Hash]
+      def output(execution_id, output)
+        # Send the job execution output to the server
+        response = send("/execution/output", {
+          :execution_id => execution_id,
+          :output => output,
+        })
+
+        response
+      end
+
+      # Send a message to the server
+      #
+      # @param path [String] api method to send to
+      # @param body [Hash] data to post to the server
+      def send(path, body)
+        # Set up the data to send to the server
+        body[:timestamp] = Time.now.utc.to_i if body[:timestamp].nil?
+        body[:seq] = @seq
 
         # Increment the sequence id
         @seq += 1
 
-        request(:message => data.to_json)
+        # Fetch the result
+        result = post(path, body)
+
+        # Did the request succeed?
+        if result.body
+          begin
+            # Get the response body and parse it
+            response = Oj.load(result.body)
+          rescue
+            raise Minicron::ClientError, "[General Error] Invalid JSON response \"#{result.body}\""
+          end
+
+          if response['error'].nil?
+            response
+          else
+            raise Minicron::ClientError, "[API Error] #{response['error']}"
+          end
+        else
+          raise Minicron::ClientError, '[General Error] No response body returned from API'
+        end
+      end
+
+      private
+
+      def post(method, data)
+        # Create a POST requests
+        uri = URI("#{@scheme}://#{@host}:#{@port}#{@path}#{method}")
+        post = Net::HTTP::Post.new(uri.path)
+        post.set_form_data(data)
+
+        # Execute the POST request, TODO: error handling
+        @client.request(uri, post)
       end
     end
   end

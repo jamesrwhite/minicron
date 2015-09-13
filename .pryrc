@@ -1,0 +1,1 @@
+Pry.config.editor = 'vim'

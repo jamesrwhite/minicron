@@ -1,38 +1,57 @@
 require 'minicron/constants'
+require 'toml'
+require 'sshkey'
+require 'stringio'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
-  # Define module autoloading
-  autoload :TOML,             'toml'
-  autoload :StringIO,         'stringio'
-  autoload :SSHKey,           'sshkey'
+  # Exception classes
+  class Error < StandardError; end
+  class ArgumentError < Error; end
+  class ConfigError < Error; end
+  class DatabaseError < Error; end
+  class CommandError < Error; end
+  class CronError < Error; end
+  class ValidationError < Error; end
+  class ClientError < Error; end
 
   # Default configuration, this can be overriden
   @config = {
     'verbose' => false,
-    'trace' => false,
+    'debug' => false,
     'client' => {
-      'scheme' => 'http',
-      'host' => '0.0.0.0',
-      'port' => 9292,
-      'path' => '/',
-      'connect_timeout' => 5,
-      'inactivity_timeout' => 5
+      'server' => {
+        'scheme' => 'http',
+        'host' => '0.0.0.0',
+        'port' => 9292,
+        'path' => '/',
+        'connect_timeout' => 5,
+        'inactivity_timeout' => 5,
+      },
+      'cli' => {
+        'mode' => 'line',
+        'dry_run' => false
+      },
     },
     'server' => {
       'host' => '0.0.0.0',
       'port' => 9292,
       'path' => '/',
-      'debug' => false,
       'pid_file' => '/tmp/minicron.pid',
       'cron_file' => '/etc/crontab',
-    },
-    'database' => {
-      'type' => 'sqlite'
-    },
-    'cli' => {
-      'mode' => 'line',
-      'dry_run' => false
+      'session' => {
+        'name' => 'minicron.session',
+        'domain' => '0.0.0.0',
+        'path' => '/',
+        'ttl' => 86400,
+        'secret' => 'change_me'
+      },
+      'database' => {
+        'type' => 'sqlite'
+      },
+      'ssh' => {
+        'connect_timeout' => 10,
+      },
     },
     'alerts' => {
       'email' => {
@@ -74,22 +93,29 @@ module Minicron
     rescue Errno::ENOENT
       # Fail if the file doesn't exist unless it's the default config file
       if file_path != DEFAULT_CONFIG_FILE
-        raise Exception, "Unable to the load the file '#{file_path}', are you sure it exists?"
+        raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
     rescue Errno::EACCES
-      fail Exception, "Unable to the read the file '#{file_path}', check it has the right permissions."
+      raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions."
     rescue TOML::ParseError
-      fail Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
+      raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
     end
   end
 
   # Parses the config options from the given hash that matches the expected
   # config format in Minicron.config
+  # TODO: refactor this mess
   def self.parse_config_hash(options = {})
     options.each do |key, value|
       if options[key].respond_to?(:each)
         options[key].each do |k, v|
-          if !v.nil?
+          if v.respond_to?(:each)
+            v.each do |k2, v2|
+              if !v2.nil?
+                @config[key][k][k2] = v2
+              end
+            end
+          elsif !v.nil?
             @config[key][k] = v
           end
         end
@@ -122,7 +148,7 @@ module Minicron
     when :both
       $stderr = $stdout = stdout = stderr = StringIO.new
     else
-      fail ArgumentError, 'The type must be one of [stdout, stderr, both]'
+      raise ArgumentError, 'The type must be one of [stdout, stderr, both]'
     end
 
     # Yield to the code block to do whatever it has to do
@@ -141,7 +167,10 @@ module Minicron
     when :stderr
       stderr
     else
-      { :stdout => stdout, :stderr => stderr }
+      {
+        :stdout => stdout,
+        :stderr => stderr
+      }
     end
   end
 
@@ -188,5 +217,22 @@ module Minicron
   # @return [String]
   def self.get_user
     `whoami`.strip
+  end
+
+  # Get the database adapter for the database type
+  #
+  # @param type [String] database type
+  # @return type [String] adapter
+  def self.get_db_adapter(type)
+    case type
+    when 'mysql'
+      'mysql2'
+    when 'postgresql'
+      'postgresql'
+    when 'sqlite'
+      'sqlite3'
+    else
+      raise Minicron::DatabaseError, "The database #{type} is not supported"
+    end
   end
 end

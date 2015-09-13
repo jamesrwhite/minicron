@@ -1,23 +1,18 @@
-autoload :PTY,        'pty'
-autoload :Minicron,   'minicron'
-
+require 'pty'
+require 'minicron'
 require 'English'
 require 'rainbow/ext/string'
 require 'commander'
 require 'minicron/constants'
 require 'minicron/cli/commands'
+require 'minicron/transport'
+require 'minicron/monitor'
+require 'minicron/transport/client'
+require 'minicron/transport/server'
 
 include Commander::UI
 
 module Minicron
-  autoload :Transport, 'minicron/transport'
-  autoload :Monitor,   'minicron/monitor'
-
-  module Transport
-    autoload :Client, 'minicron/transport/client'
-    autoload :Server, 'minicron/transport/server'
-  end
-
   # Handles the main CLI interaction of minicron
   # TODO: this class is probably too complicated and should be refactored a bit
   module CLI
@@ -31,16 +26,17 @@ module Minicron
       # Parse the cli options
       Minicron.parse_config_hash(
         'verbose' => opts.verbose,
-        'trace' => opts.trace,
-        'cli' => {
-          'mode' => opts.mode,
-          'dry_run' => opts.dry_run
+        'debug' => opts.debug,
+        'client' => {
+          'cli' => {
+            'mode' => opts.mode,
+            'dry_run' => opts.dry_run
+          },
         },
         'server' => {
           'host' => opts.host,
           'port' => opts.port,
           'path' => opts.path,
-          'debug' => opts.debug,
           'pid_file' => opts.pid_file,
           'cron_file' => opts.cron_file
         }
@@ -105,7 +101,7 @@ module Minicron
 
       # yield the start time
       subtract = Time.now.utc
-      yield structured :status, "START #{start.strftime("%Y-%m-%d %H:%M:%S")}"
+      yield structured :start, start.to_i
       subtract_total += Time.now.utc - subtract
 
       # Spawn a process to run the command
@@ -127,10 +123,10 @@ module Minicron
               output = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
 
               subtract = Time.now.utc
-              yield structured :command, output
+              yield structured :output, output
               subtract_total += Time.now.utc - subtract
             end
-          # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L519
+          # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L517
           rescue Errno::EIO
           ensure
             # Force waiting for the process to finish so we can get the exit status
@@ -138,15 +134,15 @@ module Minicron
           end
         end
       rescue Errno::ENOENT
-        raise Exception, "Running the command `#{command}` failed, are you sure it exists?"
+        raise Minicron::CommandError, "Running the command `#{command}` failed, are you sure it exists?"
       ensure
         # Record the time the command finished
         finish = Time.now.utc - subtract_total
         exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
 
         # yield the finish time and exit status
-        yield structured :status, "FINISH #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
-        yield structured :status, "EXIT #{exit_status}"
+        yield structured :finish, finish.to_i
+        yield structured :exit, exit_status
 
         # Output some debug info
         if options[:verbose]
@@ -202,18 +198,17 @@ module Minicron
       # Set the default command to run
       @cli.default_command :help
 
-      # Check if --trace was pased or not
-      if @cli.instance_variable_get(:@args).include? '--trace'
-        Minicron.config['trace'] = true
-      end
-
       # Add a global option for verbose mode
-      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose'].to_s}" do
-        Minicron.config['verbose'] = true
-      end
+      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose'].to_s}"
+
+      # Add a global option for enabling debug mode
+      @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug'].to_s}"
 
       # Add a global option for passing the path to a config file
-      @cli.global_option '--config FILE', 'Set the config file to use'
+      @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"
+
+      # No tracing option, we're using --debug
+      @cli.never_trace!
     end
   end
 end
