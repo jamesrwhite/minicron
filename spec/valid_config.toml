@@ -2,47 +2,52 @@
 
 # Global options
 verbose = true
-trace = false
+debug = false
 
 # Client options
 [client]
-scheme = "http" # [http, https]
-host = "127.0.0.1"
-port = 9292
-path = "/"
-connect_timeout = 5
-inactivity_timeout = 5
+  [client.server]
+  scheme = "http" # [http, https]
+  host = "127.0.0.1"
+  port = 9292
+  path = "/"
+  connect_timeout = 5
+  inactivity_timeout = 5
+  # CLI options
+  [client.cli]
+  mode = "line" # [line, char]
+  dry_run = false
 
 # Server options
 [server]
 host = "127.0.0.1"
 port = 9292
 path = "/"
-debug = false
 pid_file = "/tmp/minicron.pid"
 cron_file = "/etc/crontab"
-
-# Database options
-[database]
-type = "sqlite" # [mysql, postgresql, sqlite]
-# The options below are for mysql and postgresql only
-# host = "127.0.0.1"
-# database = "minicron"
-# username = "minicron"
-# password = "password"
-
-# CLI options
-[cli]
-mode = "line" # [line, char]
-dry_run = false
+  [server.session]
+  name = "minicron.session"
+  domain = "127.0.0.1"
+  path = "/"
+  ttl = 86400
+  secret = "change_me"
+  [server.database]
+  type = "sqlite" # [mysql, postgresql, sqlite]
+  # The options below are for mysql and postgresql only
+  # host = "127.0.0.1"
+  # database = "minicron"
+  # username = "minicron"
+  # password = "password"
+  [server.ssh]
+  connect_timeout = 10
 
 # Alerting options
 [alerts]
   [alerts.email]
   enabled = false
-    [alerts.email.smtp]
-    address = "localhost"
-    port = 25
+      [alerts.email.smtp]
+      address = "localhost"
+      port = 25
 
   [alerts.sms]
   enabled = false

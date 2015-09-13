@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'minicron/alert/aws_sns'
 
-describe Minicron::AwsSns do
+describe Minicron::Alert::AwsSns do
   before (:each) do
     Minicron.parse_config_hash({
       'alerts' => {
@@ -17,7 +17,7 @@ describe Minicron::AwsSns do
 
   describe '#intiailize' do
     it 'should create an instance of the SNS gem' do
-      sns = Minicron::AwsSns.new
+      sns = Minicron::Alert::AwsSns.new
 
       expect(sns.instance_variable_get(:@client)).to be_a Aws::SNS::Client
     end
@@ -26,7 +26,7 @@ describe Minicron::AwsSns do
   describe '#get_message' do
     context 'when kind is miss' do
       it 'should return the correct message' do
-        sns = Minicron::AwsSns.new
+        sns = Minicron::Alert::AwsSns.new
         time = Time.now.utc
         options = {
           :job_id => 1,
@@ -42,7 +42,7 @@ describe Minicron::AwsSns do
 
     context 'when kind is fail' do
       it 'should return the correct message' do
-        sns = Minicron::AwsSns.new
+        sns = Minicron::Alert::AwsSns.new
         options = {
           :job_id => 1,
           :execution_id => 2,
@@ -56,7 +56,7 @@ describe Minicron::AwsSns do
 
     context 'when kind is not supported' do
       it 'should raise an Exception' do
-        sns = Minicron::AwsSns.new
+        sns = Minicron::Alert::AwsSns.new
         options = {
           :kind => 'derp'
         }
@@ -70,7 +70,7 @@ describe Minicron::AwsSns do
 
   describe '#send' do
     it 'sends message to the topic_arn' do
-      sns = Minicron::AwsSns.new
+      sns = Minicron::Alert::AwsSns.new
       subject = 'subject'
       message = 'message'
       expect_any_instance_of(Aws::SNS::Client).to receive(:publish).with(

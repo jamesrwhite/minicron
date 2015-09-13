@@ -30,23 +30,27 @@ module Minicron
     # @param conn an instance of an open ssh connection
     # @return [Hash]
     def test_host_permissions(conn = nil)
-      # Open an SSH connection
-      conn ||= @ssh.open
+      begin
+        # Open an SSH connection
+        conn ||= @ssh.open
 
-      # Check if /etc is writeable
-      etc_write = conn.exec!("/bin/sh -c 'test -w /etc && echo \"y\" || echo \"n\"'").strip
+        # Check if /etc is writeable
+        etc_write = conn.exec!("/bin/sh -c 'test -w /etc && echo \"y\" || echo \"n\"'").strip
 
-      # Check if /etc is executable
-      etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
+        # Check if /etc is executable
+        etc_execute = conn.exec!("/bin/sh -c 'test -x /etc && echo \"y\" || echo \"n\"'").strip
 
-      # Check if the crontab is readable
-      crontab_read = conn.exec!("/bin/sh -c 'test -r #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
+        # Check if the crontab is readable
+        crontab_read = conn.exec!("/bin/sh -c 'test -r #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
 
-      # Check if the crontab is writeable
-      crontab_write = conn.exec!("/bin/sh -c 'test -w #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
+        # Check if the crontab is writeable
+        crontab_write = conn.exec!("/bin/sh -c 'test -w #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").strip
+      rescue
+        conn = etc_write = etc_execute = crontab_read = crontab_write = false
+      end
 
       {
-        :connect => true,
+        :connect => conn != false,
         :etc => {
           :write => etc_write == 'y',
           :execute => etc_execute == 'y'
@@ -69,23 +73,23 @@ module Minicron
         # Test the SSH connection first
         test = test_host_permissions(conn)
       rescue Exception => e
-        raise Exception, "Error connecting to host, reason: #{e.message}"
+        raise Minicron::CronError, "Error connecting to host, reason: #{e.message}"
       end
 
       # Check the connection worked
-      raise Exception, "Unable to connect to host, reason: unknown" if !test[:connect]
+      raise Minicron::CronError, "Unable to connect to host, reason: unknown" if !test[:connect]
 
       # Check the crontab is readable
-      raise Exception, "Insufficient permissions to read from the cron file" if !test[:crontab][:read]
+      raise Minicron::CronError, "Insufficient permissions to read from the cron file" if !test[:crontab][:read]
 
       # Check the crontab is writeable
-      raise Exception, "Insufficient permissions to write to the cron file" if !test[:crontab][:write]
+      raise Minicron::CronError, "Insufficient permissions to write to the cron file" if !test[:crontab][:write]
 
       # Check /etc is writeable
-      raise Exception, "/etc is not writeable by the current user" if !test[:etc][:write]
+      raise Minicron::CronError, "/etc is not writeable by the current user" if !test[:etc][:write]
 
       # Check /etc is executable
-      raise Exception, "/etc is not executable by the current user" if !test[:etc][:execute]
+      raise Minicron::CronError, "/etc is not executable by the current user" if !test[:etc][:execute]
 
       # Get the full crontab
       crontab = conn.exec!("cat #{Minicron.config['server']['cron_file']}").to_s.strip
@@ -94,7 +98,7 @@ module Minicron
       begin
         crontab[find] = replace
       rescue Exception => e
-        raise Exception, "Unable to replace '#{find}' with '#{replace}' in the cron file, reason: #{e}"
+        raise Minicron::CronError, "Unable to replace '#{find}' with '#{replace}' in the cron file, reason: #{e}"
       end
 
       # Echo the crontab back to the tmp crontab
@@ -107,7 +111,7 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          fail Exception, "Expected to find nothing when grepping the cron file but found #{grep}"
+          raise Minicron::CronError, "Expected to find nothing when grepping the cron file but found #{grep}"
         end
       else
         # Check the updated line is there
@@ -115,7 +119,7 @@ module Minicron
 
         # Throw an exception if we can't see our new line at the end of the file
         if grep != replace
-          fail Exception, "Expected to find '#{replace}' when grepping the cron file but found #{grep}"
+          raise Minicron::CronError, "Expected to find '#{replace}' when grepping the cron file but found #{grep}"
         end
       end
 
@@ -123,7 +127,7 @@ module Minicron
       move = conn.exec!("/bin/sh -c 'mv /tmp/minicron_crontab #{Minicron.config['server']['cron_file']} && echo \"y\" || echo \"n\"'").to_s.strip
 
       if move != 'y'
-        fail Exception, "Unable to move /tmp/minicron_crontab to #{Minicron.config['server']['cron_file']}, check the permissions?"
+        raise Minicron::CronError, "Unable to move /tmp/minicron_crontab to #{Minicron.config['server']['cron_file']}, check the permissions?"
       end
     end
 
@@ -149,7 +153,7 @@ module Minicron
 
       # Throw an exception if we can't see our new line at the end of the file
       if tail != line
-        fail Exception, "Expected to find '#{line}' at EOF but found '#{tail}'"
+        raise Minicron::CronError, "Expected to find '#{line}' at EOF but found '#{tail}'"
       end
     end
 

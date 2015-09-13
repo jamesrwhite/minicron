@@ -1,0 +1,13 @@
+<header>
+  <h2>Delete Host '<%= @host.name %>'?</h2>
+</header>
+<hr/>
+
+<% if @error %>
+  <div class="alert alert-danger" role="alert"><%= @error %></div>
+<% end %>
+
+<form class="form-horizontal" role="form" method="POST">
+  <input type="submit" class="btn btn-danger" value="Delete Host"/>
+  <a href="<%= "#{route_prefix}/host/#{@host.id}" %>" class="btn btn-info">Cancel</a>
+</form>

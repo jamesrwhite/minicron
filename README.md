@@ -62,7 +62,7 @@ Requirements
 -------------
 
 #### Ruby
-- **MRI**: 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
+- **MRI**: 2.0, 2.1, 2.2
 - <del>**Rubinius**: Travis builds are run on the latest release</del> See: [#76](https://github.com/jamesrwhite/minicron/issues/76)
 - <del>**JRuby:**: Travis builds are run on the latest release</del> &nbsp;&nbsp;&nbsp;See: [#77](https://github.com/jamesrwhite/minicron/issues/77)
 
@@ -107,7 +107,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
 
-3. To install the latest release (currently 0.7.9) you can ````gem install minicron````, depending on your ruby setup
+3. To install the latest release (currently 0.8.0) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
@@ -184,7 +184,7 @@ arguments ````--host```` ````--port```` and ````--path```` or in the config file
 By default the server will run as a daemon with its process id stored in ````/tmp/minicron.pid````
 you can also use the ````stop````, ````restart```` and ````status```` commands to control the server.
 
-To run the server in debug mode, i.e not as a daemon so you can see its output you can pass the ````--debug````
+To run the server in debug mode, so you can see its output and any errors you can pass the ````--debug````
 option.
 
 See [nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for an example of
