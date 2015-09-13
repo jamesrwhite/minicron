@@ -101,7 +101,7 @@ module Minicron
 
       # yield the start time
       subtract = Time.now.utc
-      yield structured :start, start.strftime("%Y-%m-%d %H:%M:%S")
+      yield structured :start, start.to_i
       subtract_total += Time.now.utc - subtract
 
       # Spawn a process to run the command
@@ -141,7 +141,7 @@ module Minicron
         exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
 
         # yield the finish time and exit status
-        yield structured :finish, finish.strftime("%Y-%m-%d %H:%M:%S")
+        yield structured :finish, finish.to_i
         yield structured :exit, exit_status
 
         # Output some debug info

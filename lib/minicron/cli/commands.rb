@@ -151,7 +151,8 @@ module Minicron
                 Minicron.get_user,
                 command,
                 fqdn,
-                Minicron.get_hostname
+                Minicron.get_hostname,
+                Time.now.utc.to_i
               )
             end
 
@@ -160,11 +161,23 @@ module Minicron
               Minicron::CLI.run_command(args.first, :mode => Minicron.config['client']['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
-                when :start, :finish, :exit
+                when :start
                   unless Minicron.config['client']['cli']['dry_run']
-                    client.status(
-                      output[:type],
-                      job[:job_id],
+                    client.start(
+                      job[:execution_id],
+                      output[:output]
+                    )
+                  end
+                when :finish
+                  unless Minicron.config['client']['cli']['dry_run']
+                    client.finish(
+                      job[:execution_id],
+                      output[:output]
+                    )
+                  end
+                when :exit
+                  unless Minicron.config['client']['cli']['dry_run']
+                    client.exit(
                       job[:execution_id],
                       output[:output]
                     )
@@ -172,7 +185,6 @@ module Minicron
                 when :output
                   unless Minicron.config['client']['cli']['dry_run']
                     client.output(
-                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -186,7 +198,6 @@ module Minicron
               # Send the exception message to the server and yield it
               unless Minicron.config['client']['cli']['dry_run']
                 client.output(
-                  job[:job_id],
                   job[:execution_id],
                   e.message
                 )

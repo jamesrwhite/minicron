@@ -24,38 +24,64 @@ module Minicron
       # @param [Integer] command
       # @param [String] fqdn
       # @param [String] hostname
+      # @param [Integer] timestamp
       # @return [Hash]
-      def init(job_hash, user, command, fqdn, hostname)
+      def init(job_hash, user, command, fqdn, hostname, timestamp)
         # Send a request to set up the job
-        response = send("/jobs/init", {
-          :hash => job_hash,
+        response = send("/execution/init", {
+          :job_hash => job_hash,
           :user => user,
           :command => command,
           :fqdn => fqdn,
           :hostname => hostname,
+          :timestamp => timestamp
         })
 
         {
-          :job_id => response['job_id'],
           :execution_id => response['execution_id'],
-          :execution_number => response['execution_number'],
         }
       end
 
-      # Used to update the status of a job
+      # Mark a job as having started
       #
-      # @param [String, Symbol] status
-      # @param [Integer] job_id
       # @param [Integer] execution_id
-      # @param [String, Integer] meta
+      # @param [Integer] timestamp
       # @return [Hash]
-      def status(status, job_id, execution_id, meta)
+      def start(execution_id, timestamp)
         # Send a job execution status to the server
-        response = send("/jobs/status", {
-          :status => status,
-          :job_id => job_id,
+        response = send("/execution/start", {
           :execution_id => execution_id,
-          :meta => meta,
+          :timestamp => timestamp,
+        })
+
+        response
+      end
+
+      # Mark a job as having finished
+      #
+      # @param [Integer] execution_id
+      # @param [Integer] timestamp
+      # @return [Hash]
+      def finish(execution_id, timestamp)
+        # Send a job execution status to the server
+        response = send("/execution/finish", {
+          :execution_id => execution_id,
+          :timestamp => timestamp,
+        })
+
+        response
+      end
+
+      # Set the exit status of a job once it has finished
+      #
+      # @param [Integer] execution_id
+      # @param [Integer] exit_status
+      # @return [Hash]
+      def exit(execution_id, exit_status)
+        # Send a job execution status to the server
+        response = send("/execution/exit", {
+          :execution_id => execution_id,
+          :exit_status => exit_status,
         })
 
         response
@@ -63,14 +89,12 @@ module Minicron
 
       # Used to send output from the job execution
       #
-      # @param [Integer] job_id
       # @param [Integer] execution_id
       # @param [String] output
       # @return [Hash]
-      def output(job_id, execution_id, output)
+      def output(execution_id, output)
         # Send the job execution output to the server
-        response = send("/jobs/output", {
-          :job_id => job_id,
+        response = send("/execution/output", {
           :execution_id => execution_id,
           :output => output,
         })
@@ -84,7 +108,7 @@ module Minicron
       # @param body [Hash] data to post to the server
       def send(path, body)
         # Set up the data to send to the server
-        body[:timestamp] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+        body[:timestamp] = Time.now.utc.to_i if body[:timestamp].nil?
         body[:seq] = @seq
 
         # Increment the sequence id

@@ -52,7 +52,7 @@ module Minicron
       setup_db
 
       # Set the start time of the monitir
-      @start_time = Time.now
+      @start_time = Time.now.utc
 
       # Start a thread for the monitor
       @thread = Thread.new do
@@ -101,14 +101,14 @@ module Minicron
       # Find the time the cron was last expected to run with a 30 second pre buffer
       # and a 30 second post buffer (in addition to the 60 already in place) incase
       # jobs run early/late to allow for clock sync differences between client/hub
-      expected_at = cron.last(Time.now) - 30
+      expected_at = cron.last(Time.now.utc) - 30
       expected_by = expected_at + 30 + 60 + 30 # pre buffer + minute wait + post buffer
 
       # We only need to check jobs that are expected to under the monitor start time
       # and jobs that have passed their expected by time and the time the schedule
       # was last updated isn't before when it was expected, i.e we aren't checking for something
       # that should have happened earlier in the day.
-      if expected_at > @start_time && Time.now > expected_by && expected_by > schedule.updated_at
+      if expected_at > @start_time && Time.now.utc > expected_by && expected_by > schedule.updated_at
         # Check if this execution was created inside a minute window
         # starting when it was expected to run
         check = Minicron::Hub::Execution.exists?(
