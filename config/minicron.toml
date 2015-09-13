@@ -2,42 +2,39 @@
 
 # Global options
 verbose = false
-debug = false # Useful for debugging
+trace = false # Useful for debugging
 
 # Client options
 [client]
 scheme = "http" # [http, https]
-host = "127.0.0.1"
+host = "0.0.0.0"
 port = 9292
 path = "/"
 connect_timeout = 5
 inactivity_timeout = 5
-  [client.cli]
-  mode = "line" # [line, char] - line by line output or char by char
-  dry_run = false # When true the command is run but not sent to the server
 
 # Server options
 [server]
-host = "127.0.0.1"
+host = "0.0.0.0"
 port = 9292
 path = "/"
+debug = false # When true the server will not run as a daemon
 pid_file = "/tmp/minicron.pid"
 cron_file = "/etc/crontab"
-  [server.session]
-  name = "minicron.session"
-  domain = "127.0.0.1"
-  path = "/"
-  ttl = 86400
-  secret = "change_me"
-  [server.database]
-  type = "sqlite" # [mysql, postgresql, sqlite]
-  # The options below are for mysql and postgresql only
-  # host = "127.0.0.1"
-  # database = "minicron"
-  # username = "minicron"
-  # password = "password"
-  [server.ssh]
-  connect_timeout = 10
+
+# Database options
+[database]
+type = "sqlite" # [mysql2, postgresql, sqlite]
+# The options below are for mysql and postgresql only
+# host = "127.0.0.1"
+# database = "minicron"
+# username = "minicron"
+# password = "password"
+
+# CLI options
+[cli]
+mode = "line" # [line, char] - line by line output or char by char
+dry_run = false # When true the command is run but not sent to the server
 
 # Alerting options
 [alerts]
@@ -72,3 +69,4 @@ cron_file = "/etc/crontab"
   # access_key_id = "YOUR_ACCESS_KEY_ID"
   # region = "AWS_REGION"
   # topic_arn = "YOUR_SNS_TOPIC_ARN"
+

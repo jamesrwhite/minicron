@@ -24,7 +24,7 @@ describe Minicron::CLI do
 
     context 'when in --dry-run mode' do
       it 'should run a simple command and print the output to stdout' do
-        Minicron::CLI.run(['run', 'echo hello', '--dry-run', '--debug']) do |output|
+        Minicron::CLI.run(['run', 'echo hello', '--dry-run', '--trace']) do |output|
           expect(output.clean).to eq 'hello'
         end
       end
@@ -32,7 +32,7 @@ describe Minicron::CLI do
       it 'should run a simple multi-line command and print the output to stdout' do
         command_output = ''
 
-        Minicron::CLI.run(['run', 'echo "hello\nworld"', '--dry-run', '--debug']) do |output|
+        Minicron::CLI.run(['run', 'echo "hello\nworld"', '--dry-run', '--trace']) do |output|
           command_output += output
         end
 
@@ -43,18 +43,18 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(%w(gfdjgfdlgj --debug))
+              Minicron::CLI.run(%w(gfdjgfdlgj --trace))
             end.to raise_error SystemExit
           end
         end
       end
 
       context 'when no argument is passed to the run action' do
-        it 'should raise SystemExit' do
+        it 'should raise ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(%w(run --dry-run --debug))
-            end.to raise_error SystemExit
+              Minicron::CLI.run(%w(run --dry-run --trace))
+            end.to raise_error ArgumentError
           end
         end
       end
@@ -62,7 +62,7 @@ describe Minicron::CLI do
 
     context 'when in --dry-run mode with a valid --config file passed' do
       it 'should run a simple command and print the output to stdout' do
-        Minicron::CLI.run(['run', 'echo hello', '--dry-run', '--debug', '--config', './config/minicron.toml']) do |output|
+        Minicron::CLI.run(['run', 'echo hello', '--dry-run', '--trace', '--config', './config/minicron.toml']) do |output|
           expect(output.clean).to eq 'hello'
         end
       end
@@ -70,7 +70,7 @@ describe Minicron::CLI do
       it 'should run a simple multi-line command and print the output to stdout' do
         command_output = ''
 
-        Minicron::CLI.run(['run', 'echo "hello\nworld"', '--dry-run', '--debug', '--config', './config/minicron.toml']) do |output|
+        Minicron::CLI.run(['run', 'echo "hello\nworld"', '--dry-run', '--trace', '--config', './config/minicron.toml']) do |output|
           command_output += output
         end
 
@@ -81,18 +81,18 @@ describe Minicron::CLI do
         it 'should return an error' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(['dfsfsdfsdfs', '--debug'])
+              Minicron::CLI.run(['dfsfsdfsdfs', '--trace'])
             end.to raise_error SystemExit
           end
         end
       end
 
       context 'when no argument is passed to the run action' do
-        it 'should raise SystemExit' do
+        it 'should raise ArgumentError' do
           Minicron.capture_output :type => :stderr do
             expect do
-              Minicron::CLI.run(['run', '--dry-run', '--debug', '--config', './config/minicron.toml'])
-            end.to raise_error SystemExit
+              Minicron::CLI.run(['run', '--dry-run', '--trace', '--config', './config/minicron.toml'])
+            end.to raise_error ArgumentError
           end
         end
       end
@@ -101,7 +101,7 @@ describe Minicron::CLI do
     context 'when run in --verbose mode' do
       it 'should set the verbose to true' do
         Minicron.capture_output :type => :stderr do
-          Minicron::CLI.run(['run', '--dry-run', '--debug', '--verbose', 'echo 1']) {}
+          Minicron::CLI.run(['run', '--dry-run', '--trace', '--verbose', 'echo 1']) {}
 
           expect(Minicron.config['verbose']).to eq true
         end
@@ -116,7 +116,7 @@ describe Minicron::CLI do
         output = ''
 
         Minicron::CLI.run_command('echo 1', :verbose => true) do |line|
-          output += "#{line[:output]}"
+          output += line[:output]
         end
 
         expect(output.clean.split("\n").length).to eq 7

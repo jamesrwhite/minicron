@@ -1,1 +1,0 @@
-Pry.config.editor = 'vim'

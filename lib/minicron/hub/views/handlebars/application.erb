@@ -1,0 +1,52 @@
+<script type="text/x-handlebars">
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="main-container">
+      <div class="navbar-header">
+        {{#link-to 'index' class="navbar-brand"}}minicron{{/link-to}}
+      </div>
+
+      <ul class="nav navbar-nav">
+        {{#link-to 'executions' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Executions</a>{{/link-to}}
+        {{#link-to 'jobs' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Jobs</a>{{/link-to}}
+        {{#link-to 'hosts' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Hosts</a>{{/link-to}}
+        {{#link-to 'alerts' tagName='li' href=false}}<a {{bind-attr href='view.href'}}>Alerts</a>{{/link-to}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="main-container clearfix">
+    <div class="sidebar">
+      <h2>Recent Job Executions</h2>
+      <div class="list-group">
+        {{#each controller.sortedExecutions}}
+          {{#link-to 'execution' id class="list-group-item clearfix"}}
+            <span class="pull-left">{{job.name}}</span>
+            {{#if exit_status}}
+              <span class="pull-right execution-status label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
+                <span class="glyphicon glyphicon-remove"></span>
+                </span>
+            {{else}}
+              {{#if finished_at}}
+                <span class="pull-right execution-status label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
+                  <span class="glyphicon glyphicon-ok"></span>
+                </span>
+              {{else}}
+                <span class="pull-right execution-status label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
+                  <span class="glyphicon glyphicon-flash"></span>
+                </span>
+              {{/if}}
+            {{/if}}
+            <div style="clear: left;"></div>
+            <span class="execution-info">{{time_ago created_at}} on {{job.host.name}}</span>
+          {{/link-to}}
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="main-panel">
+      <div class="inner">
+        {{outlet}}
+      </div>
+    </div>
+  </div>
+</script>
