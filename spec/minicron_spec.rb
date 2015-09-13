@@ -48,13 +48,13 @@ describe Minicron do
     end
 
     context 'when an invalid :type is used' do
-      it 'should raise an Minicron::ArgumentError' do
+      it 'should raise an ArgumentError' do
         expect do
           Minicron.capture_output(:type => :lol) do
             $stdout.write 'I like turtles!'
             $stderr.write 'Quit yo jibber jabber, fool!'
           end
-        end.to raise_error Minicron::ArgumentError
+        end.to raise_error ArgumentError
       end
     end
   end
@@ -64,40 +64,29 @@ describe Minicron do
       it 'should update the config class variable with the toml file config' do
         expected_valid_config = {
           'verbose' => true,
-          'debug' => false,
+          'trace' => false,
           'client' => {
-            'server' => {
-              'scheme' => 'http',
-              'host' => '127.0.0.1',
-              'port' => 9292,
-              'path' => '/',
-              'connect_timeout' => 5,
-              'inactivity_timeout' => 5,
-            },
-            'cli' => {
-              'mode' => 'line',
-              'dry_run' => false
-            },
+            'scheme' => 'http',
+            'host' => '127.0.0.1',
+            'port' => 9292,
+            'path' => '/',
+            'connect_timeout' => 5,
+            'inactivity_timeout' => 5
           },
           'server' => {
             'host' => '127.0.0.1',
             'port' => 9292,
             'path' => '/',
+            'debug' => false,
             'pid_file' => '/tmp/minicron.pid',
-            'cron_file' => '/etc/crontab',
-            'session' => {
-              'name' => 'minicron.session',
-              'domain' => '127.0.0.1',
-              'path' => '/',
-              'ttl' => 86400,
-              'secret' => 'change_me'
-            },
-            'database' => {
-              'type' => 'sqlite',
-            },
-            'ssh' => {
-              'connect_timeout' => 10,
-            },
+            'cron_file' => '/etc/crontab'
+          },
+          'database' => {
+            'type' => 'sqlite'
+          },
+          'cli' => {
+            'mode' => 'line',
+            'dry_run' => false
           },
           'alerts' => {
             'email' => {
@@ -105,7 +94,7 @@ describe Minicron do
               'smtp' => {
                 'address' => 'localhost',
                 'port' => 25
-              },
+              }
             },
             'sms' => {
               'enabled' => false
@@ -115,8 +104,8 @@ describe Minicron do
             },
             'aws_sns' => {
               'enabled' => false
-            },
-          },
+            }
+          }
         }
 
         parse_file_config = Minicron.parse_file_config('./spec/valid_config.toml')

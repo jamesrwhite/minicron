@@ -3,10 +3,13 @@ autoload :Rack, 'rack'
 
 module Minicron
   module Hub
-    autoload :App, 'minicron/hub/app'
+    autoload :App,                'minicron/hub/app'
+    autoload :ExceptionHandling,  'minicron/hub/app'
   end
 
   module Transport
+    autoload :FayeServer, 'minicron/transport/faye/server'
+
     # Used to mangage the web server minicron runs on
     class Server
       @server = nil
@@ -27,15 +30,19 @@ module Minicron
         @server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions
-          use Rack::Session::Cookie, :key => Minicron.config['server']['session']['name'],
-                                     :domain => Minicron.config['server']['session']['domain'],
-                                     :path => Minicron.config['server']['session']['path'],
-                                     :expire_after => Minicron.config['server']['session']['ttl'],
-                                     :secret => Minicron.config['server']['session']['secret']
 
           # The 'hub', aka our sinatra web interface
           map path do
+            use Minicron::Hub::ExceptionHandling
             run Minicron::Hub::App.new
+          end
+
+          # Set the path faye should start relative to
+          faye_path = path == '/' ? '/faye' : "#{path}/faye"
+
+          # The faye server the server and browser clients talk to
+          map faye_path do
+            run Minicron::Transport::FayeServer.new.server
           end
         end
 
@@ -58,11 +65,6 @@ module Minicron
         return false unless !@server.nil?
 
         @server.running?
-      end
-
-      # Save doing this logic in every controller redirect
-      def self.get_prefix
-        Minicron.config['server']['path'] == '/' ? nil : Minicron.config['server']['path']
       end
     end
   end
