@@ -81,10 +81,24 @@ These databases are also supported but you will need to manaually install the ge
 - PostgreSQL via pg (See [here](https://bitbucket.org/ged/ruby-pg/wiki/Home) for compatibility info)
 
 #### Web Server / Reverse Proxy
-
+#### Nginx
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
 nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
-It should also be possible to run it behind Apache I just haven't had time to add an example config for it yet.
+
+#### Apache2 
+If your using the apache2 as your reverse proxy start by having the following modules installed
+- ````libapache2-mod-proxy-html````
+- ````apache2-utils````
+
+Then run the following commands to make sure the modules are enabled
+- ````sudo a2enmod proxy proxy_html proxy_http xml2enc````
+- ````sudo service apache2 restart````
+
+Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following [example config](https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf), update the required parameters and save and exit. enable the virtual host file by running ````sudo a2ensite minicron.conf && sudo service apache2 reload````
+
+Last this left to do is create a htpasswd.users, use this command ````sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME```` replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password. 
+
+Test your URL and you should be prompted for authentication and then have access to your minicron site through apache
 
 #### Browser
 
