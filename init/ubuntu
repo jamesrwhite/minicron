@@ -44,7 +44,7 @@ DESC=MiniCron
 
 # Defaults
 # Minicron Folder & binary location
-MC_APPPATH=${MC_APP_PATH-/usr/local/bin/}
+MC_APP_PATH=${MC_APP_PATH-/usr/local/bin/}
 MC_DAEMON=${MC_DAEMON-minicron}
 
 # Minicron Run As user
