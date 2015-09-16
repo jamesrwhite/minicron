@@ -43,8 +43,9 @@ DESC=MiniCron
 ## Otherwise default configuration is used
 
 # Defaults
-# Minicron binary location
-MC_DAEMON=${MC_DAEMON-/usr/local/bin/minicron}
+# Minicron Folder & binary location
+MC_APPPATH=${MC_APP_PATH-/usr/local/bin/}
+MC_DAEMON=${MC_DAEMON-minicron}
 
 # Minicron Run As user
 MC_USER=${MC_USER-root}
@@ -59,53 +60,49 @@ MC_LOG=${MC_LOG-/var/log/minicron.log}
 # Minicron Config file location
 MC_CONF=${MC_CONF-/etc/minicron.toml}
 
-DAEMON_OPTS="server --config $MC_CONF"
+MC_DAEMON_OPTS="server --config $MC_CONF"
 
-test -x $MC_DAEMON || exit 0
+test -x $MC_APP_PATH/$MC_DAEMON || exit 0
 
 set -e
 
 # Create PID directory if not exist and ensure the minicron user can write to it
 if [ ! -d $MC_PIDPATH ]; then
-  mkdir -p $MC_PIDPATH
-  chown $MC_USER $MC_PIDPATH
+	mkdir -p $MC_PIDPATH
+	chown $MC_USER $MC_PIDPATH
 fi
 
 if [ -e $MC_PIDFILE ]; then
-  PID=`cat $MC_PIDFILE`
-  if ! kill -0 $PID > /dev/null 2>&1; then
-    echo "Removing Stale $MC_PIDFILE"
-    rm $MC_PIDFILE
-      fi
+	PID=`cat $MC_PIDFILE`
+	if ! kill -0 $PID > /dev/null 2>&1; then
+		echo "Removing Stale $MC_PIDFILE"
+		rm $MC_PIDFILE
+	    fi
 fi
 
 case "$1" in
-  start)
-    echo "Starting $DESC"
-    su $MC_USER -c "$MC_DAEMON $DAEMON_OPTS"
-    ;;
-  stop)
-    if [ ! -f $MC_PIDFILE ]  || ! kill -0 $(cat "$MC_PIDFILE"); then
-      echo "$DESC is not running" >&2
-      return 1
-    fi
-    echo "Stopping $DESC"
-    kill -15 $(cat "$MC_PIDFILE") && rm -f "$MC_PIDFILE"
-    echo "$DESC Stopped"
-    ;;
-  status)
-    status_of_proc -p $MC_PIDFILE "$MC_DAEMON" "$NAME"
-    ;;
-  restart)
-    echo "Stopping $DESC"
-    start-stop-daemon --stop --pidfile $MC_PIDFILE --retry 15
-    su $MC_USER -c $MC_DAEMON $DAEMON_OPTS
-    ;;
-  *)
-    N=/etc/init.d/$NAME
-    echo "Usage: $N {start|stop|restart|status}" >&2
-    exit 1
-    ;;
+	start)
+		echo "Starting $DESC"
+		start-stop-daemon -d $MC_APP_PATH -c $MC_USER --start --pidfile $MC_PIDFILE --exec $MC_DAEMON -- $MC_DAEMON_OPTS
+		;;
+	stop)
+		echo "Stopping $DESC"
+		start-stop-daemon --stop --pidfile $MC_PIDFILE --retry 6
+		rm $MC_PIDFILE
+		;;
+	status)
+		status_of_proc -p $MC_PIDFILE "$MC_DAEMON" "$NAME"
+		;;
+	restart|force-reload)
+		echo "Restart $DESC"
+		start-stop-daemon --stop --pidfile $MC_PIDFILE --retry 15
+		start-stop-daemon -d $MC_APP_PATH -c $MC_USER --start --pidfile $MC_PIDFILE --exec $MC_DAEMON -- $MC_DAEMON_OPTS
+		;;
+	*)
+		N=/etc/init.d/$NAME
+		echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+		exit 1
+		;;
 esac
 
 exit 0
