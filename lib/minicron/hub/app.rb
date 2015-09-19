@@ -3,9 +3,7 @@ require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sinatra/assetpack'
 require 'sinatra/json'
-require 'better_errors'
 require 'erubis'
-require 'oj'
 require 'pathname'
 require 'ansi-to-html'
 
@@ -16,12 +14,6 @@ module Minicron::Hub
 
     # Set the application root
     set :root, Minicron::HUB_PATH
-
-    # Development Sinatra configuration
-    configure :development do
-      use BetterErrors::Middleware
-      BetterErrors.application_root = __dir__
-    end
 
     # General Sinatra configuration
     configure do

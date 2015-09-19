@@ -1,11 +1,8 @@
-autoload :Thin, 'thin'
-autoload :Rack, 'rack'
+require 'thin'
+require 'rack'
+require 'minicron/hub/app'
 
 module Minicron
-  module Hub
-    autoload :App, 'minicron/hub/app'
-  end
-
   module Transport
     # Used to mangage the web server minicron runs on
     class Server
@@ -23,7 +20,6 @@ module Minicron
       def self.start!(host, port, path)
         return false if running?
 
-        # Start the faye or rails apps depending on the path
         @server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions

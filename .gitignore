@@ -40,3 +40,8 @@ newrelic.yml
 
 # My development config that I symlink to /etc/minicron.toml
 my.config.toml
+
+# Builds
+build/minicron-*
+build/packaging
+build/geminabox

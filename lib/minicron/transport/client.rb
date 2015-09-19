@@ -1,6 +1,5 @@
 require 'json'
 require 'net/http/persistent'
-require 'oj'
 
 module Minicron
   module Transport
@@ -121,7 +120,7 @@ module Minicron
         if result.body
           begin
             # Get the response body and parse it
-            response = Oj.load(result.body)
+            response = JSON.parse!(result.body)
           rescue
             raise Minicron::ClientError, "[General Error] Invalid JSON response \"#{result.body}\""
           end
