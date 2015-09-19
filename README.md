@@ -3,7 +3,6 @@ minicron
 
 [![Gem Version](http://img.shields.io/gem/v/minicron.svg)](https://rubygems.org/gems/minicron)
 [![Build Status](http://img.shields.io/travis/jamesrwhite/minicron.svg)](http://travis-ci.org/jamesrwhite/minicron)
-[![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.svg?branch=develop)](https://coveralls.io/r/jamesrwhite/minicron?branch=develop)
 [![Code Climate](http://img.shields.io/codeclimate/github/jamesrwhite/minicron.svg)](https://codeclimate.com/github/jamesrwhite/minicron)
 [![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
 [![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)
@@ -61,31 +60,27 @@ Lots more is planned for the future, see [open issues](https://github.com/jamesr
 Requirements
 -------------
 
-#### Ruby
-- **MRI**: 2.0, 2.1, 2.2
-- <del>**Rubinius**: Travis builds are run on the latest release</del> See: [#76](https://github.com/jamesrwhite/minicron/issues/76)
-- <del>**JRuby:**: Travis builds are run on the latest release</del> &nbsp;&nbsp;&nbsp;See: [#77](https://github.com/jamesrwhite/minicron/issues/77)
+#### OS
+
+*Should* run on OSX and any Linux/BSD based OS.
 
 #### Database
 
 **Default**
 
-- SQLite >= 3.6.16
-  (via the sqlite3 gem which may require libsqlite3-dev or sqlite-devel depending on your OS)
+- SQLite
 
 **Also Supported**
 
-These databases are also supported but you will need to manaually install the gems for them
-
-- MySQL via mysql2 (See [here](https://github.com/brianmario/mysql2#compatibility) for compatability info)
-- PostgreSQL via pg (See [here](https://bitbucket.org/ged/ruby-pg/wiki/Home) for compatibility info)
+- MySQL
+- PostgreSQL
 
 #### Web Server / Reverse Proxy
 #### Nginx
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
 nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
 
-#### Apache2 
+#### Apache2
 If your using the apache2 as your reverse proxy start by having the following modules installed
 - ````libapache2-mod-proxy-html````
 - ````apache2-utils````
@@ -96,18 +91,9 @@ Then run the following commands to make sure the modules are enabled
 
 Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following [example config](https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf), update the required parameters and save and exit. enable the virtual host file by running ````sudo a2ensite minicron.conf && sudo service apache2 reload````
 
-Last this left to do is create a htpasswd.users, use this command ````sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME```` replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password. 
+Last this left to do is create a htpasswd.users, use this command ````sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME```` replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.
 
 Test your URL and you should be prompted for authentication and then have access to your minicron site through apache
-
-#### Browser
-
-I have been testing the web interface in the latest versions of Chrome, Firefox and Safari.
-I'm currently unsure of how it functions in the various of Internet Explorer but in theory it should support IE9+
-
-#### OS
-
-Should run on OSX and any Linux/BSD based OS that the above ruby versions run on.
 
 Installation
 -------------
@@ -119,10 +105,11 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 1. First check you meet the [requirements](#requirements)
 
-2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.0) zip/tarball for your OS and install minicron manually or use the handy install script:
 
-3. To install the latest release (currently 0.8.0) you can ````gem install minicron````, depending on your ruby setup
-   you may need to run this with ````sudo````
+```
+sh -c "$(curl -fsSL https://install.mincron.com)"
+```
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
 
@@ -147,8 +134,8 @@ You can also run minicron in a docker container, see below for instructions how:
 ````bash
 git clone https://github.com/jamesrwhite/minicron.git
 cd minicron
-docker build -t minicron-0.7.4 .
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.7.4
+docker build -t minicron-0.8.0 .
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.0
 docker ps | grep minicron
 docker exec *container_hash* minicron server start
 ````
@@ -236,8 +223,7 @@ Security
 ---------
 
 As mentioned previously minicron is still under development and as such is missing some essential features as far as
-security is concerned. For example authentication still needs to be added to the Web UI, API and Faye (the websocket
-server that jobs use to communicate their status updates).
+security is concerned. For example authentication still needs to be added.
 
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
 
@@ -280,12 +266,9 @@ Roadmap
 
 I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..
 
-- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25) and
-  [#30](https://github.com/jamesrwhite/minicron/issues/30))
+- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25)
 - More robust handling of failure in various places/situations
 - Better test coverage for core features
-- Support for other Ruby runtimes
-- Make it as easy as possible to install/deploy minicron
 - More 3rd party alerting integrations
 - Finalise and document the REST API that the frontend uses
 - Revision control for changes and acitvity tracking
