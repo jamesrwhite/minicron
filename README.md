@@ -76,6 +76,7 @@ Requirements
 - PostgreSQL
 
 #### Web Server / Reverse Proxy
+
 #### Nginx
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
 nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
@@ -101,14 +102,16 @@ Installation
 minicron is currently under heavy development and as such I would not recommend that you use this in production yet
 but I encourage you to give it a try in a non critical environment and help me to improve it and work towards the first stable release (1.0).
 
-#### Manual
+minicron used to be available to install via [Ruby Gems](https://rubygems.org/gems/minicron), all future releases (>= 0.8) will no longer be published there and made available as [ZIP file releases](https://github.com/jamesrwhite/minicron/releases) instead.
+
+#### Recommended
 
 1. First check you meet the [requirements](#requirements)
 
 2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.0) zip/tarball for your OS and install minicron manually or use the handy install script:
 
 ```
-sh -c "$(curl -fsSL https://install.mincron.com)"
+sh -c "$(curl -fsSL https://install.minicron.com)"
 ```
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
