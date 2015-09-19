@@ -1,0 +1,188 @@
+# For Bundler.with_clean_env
+require 'bundler/setup'
+
+PACKAGE_NAME = "minicron"
+VERSION = "0.8"
+
+# http://traveling-ruby.s3-us-west-2.amazonaws.com/list.html
+TRAVELING_RUBY_VERSION = "20150715-2.2.2"
+
+# Native dependencies
+JSON_VERSION = "1.8.2"
+EVENTMACHINE_VERSION = "1.0.6"
+MYSQL2_VERSION = "0.3.18"
+PG_VERSION = "0.18.2"
+SQLITE3_VERSION = "1.3.9"
+THIN_VERSION = "1.6.3"
+UNF_EXT_VERSION = "0.0.6"
+NATIVE_GEMS = {
+  'json' => JSON_VERSION,
+  'eventmachine' => EVENTMACHINE_VERSION,
+  'mysql2' => MYSQL2_VERSION,
+  'pg' => PG_VERSION,
+  'sqlite3' => SQLITE3_VERSION,
+  'thin' => THIN_VERSION,
+  'unf_ext' => UNF_EXT_VERSION,
+}
+
+# Remove unused files to reduce package size
+GEMS_PATH = 'packaging/vendor/ruby/*/gems/*/'
+
+REMOVE_FILES = [
+  'test',
+  'tests',
+  'spec',
+  'README*',
+  'CHANGE*',
+  'Change*',
+  'COPYING*',
+  'LICENSE*',
+  'MIT-LICENSE*',
+  'doc',
+  'docs',
+  'examples',
+  'ext/*/Makefile',
+  '.gitignore',
+  '.travis.yml',
+]
+
+REMOVE_EXTENSIONS = [
+  '*.md',
+  '*.c',
+  '*.h',
+  '*.rl',
+  'extconf.rb',
+  '*.java',
+  '*.class',
+  '*.so',
+  '*.o',
+]
+
+desc "Package your app"
+task :package => ['package:linux:x86', 'package:linux:x86_64', 'package:osx']
+
+namespace :package do
+  namespace :linux do
+    desc "Package your app for Linux x86"
+    task :x86 => [:bundle_install,
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86-json-#{JSON_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86-eventmachine-#{EVENTMACHINE_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86-mysql2-#{MYSQL2_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86-pg-#{PG_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86-sqlite3-#{SQLITE3_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86-thin-#{THIN_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86-unf_ext-#{UNF_EXT_VERSION}.tar.gz"
+    ] do
+      create_package("linux-x86")
+    end
+
+    desc "Package your app for Linux x86_64"
+    task :x86_64 => [:bundle_install,
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64-json-#{JSON_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64-eventmachine-#{EVENTMACHINE_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64-mysql2-#{MYSQL2_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64-pg-#{PG_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64-sqlite3-#{SQLITE3_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64-thin-#{THIN_VERSION}.tar.gz",
+      "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-linux-x86_64-unf_ext-#{UNF_EXT_VERSION}.tar.gz"
+    ] do
+      create_package("linux-x86_64")
+     end
+  end
+
+  desc "Package your app for OS X"
+  task :osx => [:bundle_install,
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx.tar.gz",
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-json-#{JSON_VERSION}.tar.gz",
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-eventmachine-#{EVENTMACHINE_VERSION}.tar.gz",
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-mysql2-#{MYSQL2_VERSION}.tar.gz",
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-pg-#{PG_VERSION}.tar.gz",
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-sqlite3-#{SQLITE3_VERSION}.tar.gz",
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-thin-#{THIN_VERSION}.tar.gz",
+    "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-osx-unf_ext-#{UNF_EXT_VERSION}.tar.gz"
+  ] do
+    create_package("osx")
+  end
+
+  desc "Install gems to local directory"
+  task :bundle_install do
+    if RUBY_VERSION !~ /^2\.2\./
+      abort "You can only 'bundle install' using Ruby 2.2, because that's what Traveling Ruby uses."
+    end
+
+    sh "rm -rf packaging/tmp"
+    sh "mkdir -p packaging/tmp"
+    sh "cp Gemfile* packaging/tmp/"
+
+    sh "rm -rf packaging/vendor/ruby/2.2.0/bundler" # if multiple clones of same repo, may load in wrong one
+
+    Bundler.with_clean_env do
+      sh "cd packaging/tmp && env BUNDLE_IGNORE_CONFIG=1 bundle install --path ../vendor"
+    end
+
+    sh "rm -rf packaging/tmp"
+    sh "rm -rf packaging/vendor/*/*/cache/*"
+    sh "rm -rf packaging/vendor/ruby/*/extensions"
+
+    # Remove unused files to reduce package size
+    REMOVE_FILES.each do |path|
+      sh "rm -rf #{GEMS_PATH}#{path}"
+    end
+
+    # Remove unused file extensions to reduce package size
+    REMOVE_EXTENSIONS.each do |extension|
+      sh "find packaging/vendor/ruby -name '#{extension}' | xargs rm -f"
+    end
+  end
+
+  desc "Clean up created releases"
+  task :clean do
+    sh "rm -f #{PACKAGE_NAME}*.tar.gz"
+    sh "rm -rf packaging/vendor"
+    sh "rm -rf packaging/*.tar.gz"
+  end
+end
+
+%w[linux-x86 linux-x86_64 osx].each do |target|
+  file "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}.tar.gz" do
+    download_runtime(target)
+  end
+
+  NATIVE_GEMS.each do |gem, version|
+    file "packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}-#{gem}-#{version}.tar.gz" do
+      download_native_extension(target, "#{gem}-#{version}")
+    end
+  end
+end
+
+def create_package(target)
+  package_dir = "#{PACKAGE_NAME}-#{VERSION}-#{target}"
+  sh "rm -rf #{package_dir}"
+  sh "mkdir #{package_dir}"
+  sh "mkdir -p #{package_dir}/lib/app"
+  sh "mkdir #{package_dir}/lib/ruby"
+  sh "tar -xzf packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}.tar.gz -C #{package_dir}/lib/ruby"
+
+  sh "cp packaging/wrappers/#{PACKAGE_NAME}.sh #{package_dir}/#{PACKAGE_NAME}"
+  sh "chmod +x packaging/wrappers/#{PACKAGE_NAME}.sh #{package_dir}/#{PACKAGE_NAME}"
+
+  sh "cp -pR packaging/vendor #{package_dir}/lib/"
+
+  sh "cp Gemfile* #{package_dir}/lib/vendor/"
+  sh "mkdir #{package_dir}/lib/vendor/.bundle"
+  sh "cp packaging/bundler-config #{package_dir}/lib/vendor/.bundle/config"
+
+  NATIVE_GEMS.each do |gem, version|
+    sh "tar -xzf packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}-#{gem}-#{version}.tar.gz -C #{package_dir}/lib/vendor/ruby"
+  end
+end
+
+def download_runtime(target)
+  sh "cd packaging && curl -L -O --fail http://d6r77u77i8pq3.cloudfront.net/releases/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}.tar.gz"
+end
+
+def download_native_extension(target, gem_name_and_version)
+  sh "curl -L --fail -o packaging/traveling-ruby-#{TRAVELING_RUBY_VERSION}-#{target}-#{gem_name_and_version}.tar.gz http://d6r77u77i8pq3.cloudfront.net/releases/traveling-ruby-gems-#{TRAVELING_RUBY_VERSION}-#{target}/#{gem_name_and_version}.tar.gz"
+end
