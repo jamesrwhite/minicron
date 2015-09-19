@@ -107,7 +107,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
 
-3. To install the latest release (currently 0.7.9) you can ````gem install minicron````, depending on your ruby setup
+3. To install the latest release (currently 0.7.10) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
