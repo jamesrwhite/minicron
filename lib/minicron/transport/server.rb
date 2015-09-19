@@ -23,7 +23,6 @@ module Minicron
       def self.start!(host, port, path)
         return false if running?
 
-        # Start the faye or rails apps depending on the path
         @server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions

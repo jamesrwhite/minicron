@@ -1,6 +1,4 @@
 #!/usr/bin/env ruby
-# require 'pry'
-# require 'pry-byebug'
 require 'insidious'
 require 'minicron'
 require 'minicron/cli'
