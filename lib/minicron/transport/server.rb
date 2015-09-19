@@ -1,11 +1,8 @@
-autoload :Thin, 'thin'
-autoload :Rack, 'rack'
+require 'thin'
+require 'rack'
+require 'minicron/hub/app'
 
 module Minicron
-  module Hub
-    autoload :App, 'minicron/hub/app'
-  end
-
   module Transport
     # Used to mangage the web server minicron runs on
     class Server
