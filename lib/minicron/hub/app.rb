@@ -5,7 +5,6 @@ require 'sinatra/assetpack'
 require 'sinatra/json'
 require 'better_errors'
 require 'erubis'
-require 'oj'
 require 'pathname'
 require 'ansi-to-html'
 
