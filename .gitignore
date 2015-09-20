@@ -43,7 +43,8 @@ my.config.toml
 
 # Builds
 build/minicron-*
-build/packaging
+build/packaging/vendor
+build/packaging/traveling*
 build/geminabox
 
 # Vagrant
