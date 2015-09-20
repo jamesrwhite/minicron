@@ -17,6 +17,11 @@ debug = false
   [client.cli]
   mode = "line" # [line, char]
   dry_run = false
+  [client.pusher]
+  enabled = false
+  # app_id = "YOUR_PUSHER_APP_ID"
+  # key = "YOUR_PUSHER_KEY"
+  # secret = "YOUR_PUSHER_SECRET"
 
 # Server options
 [server]

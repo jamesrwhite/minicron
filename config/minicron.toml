@@ -15,6 +15,11 @@ inactivity_timeout = 5
   [client.cli]
   mode = "line" # [line, char] - line by line output or char by char
   dry_run = false # When true the command is run but not sent to the server
+  [client.pusher]
+  enabled = false
+  # app_id = "YOUR_PUSHER_APP_ID"
+  # key = "YOUR_PUSHER_KEY"
+  # secret = "YOUR_PUSHER_SECRET"
 
 # Server options
 [server]

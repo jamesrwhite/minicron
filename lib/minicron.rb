@@ -30,7 +30,10 @@ module Minicron
       },
       'cli' => {
         'mode' => 'line',
-        'dry_run' => false
+        'dry_run' => false,
+      },
+      'pusher' => {
+        'enabled' => false,
       },
     },
     'server' => {
@@ -44,10 +47,10 @@ module Minicron
         'domain' => '0.0.0.0',
         'path' => '/',
         'ttl' => 86400,
-        'secret' => 'change_me'
+        'secret' => 'change_me',
       },
       'database' => {
-        'type' => 'sqlite'
+        'type' => 'sqlite',
       },
       'ssh' => {
         'connect_timeout' => 10,
@@ -63,19 +66,19 @@ module Minicron
           'user_name' => nil,
           'password' => nil,
           'authentication' => nil,
-          'enable_starttls_auto' => true
+          'enable_starttls_auto' => true,
         }
       },
       'sms' => {
-        'enabled' => false
+        'enabled' => false,
       },
       'pagerduty' => {
-        'enabled' => false
+        'enabled' => false,
       },
       'aws_sns' => {
-        'enabled' => false
-      }
-    }
+        'enabled' => false,
+      },
+    },
   }
 
   class << self
