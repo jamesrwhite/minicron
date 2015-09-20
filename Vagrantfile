@@ -7,10 +7,11 @@ apt-get update
 apt-get install -y libsqlite3-dev wget unzip
 wget https://github.com/jamesrwhite/minicron/releases/download/v0.8.0/minicron-0.8-linux-x86_64.zip > minicron.zip
 unzip -o minicron-0.8-linux-x86_64.zip
+export PATH=~/minicron-0.8-linux-x86_64:$PATH
 ufw allow 2222
 ufw allow 9292
 ufw enable
-echo "minicron is installed, run `minicron-0.8-linux-x86_64/minicron server start` to start!"
+echo "minicron is installed, run `minicron server start` to start!"
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
