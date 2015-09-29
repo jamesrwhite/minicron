@@ -17,8 +17,7 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Security](#security)
-- [Documentation](#documentation)
+- [Security](#security))
 - [Versioning](#versioning)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -98,8 +97,7 @@ Test your URL and you should be prompted for authentication and then have access
 Installation
 -------------
 
-minicron is currently under heavy development and as such I would not recommend that you use this in production yet
-but I encourage you to give it a try in a non critical environment and help me to improve it and work towards the first stable release (1.0).
+minicron is currently under heavy development and I make no gurantees about stability while it remains pre 1.0, as such I would not recommend that you use this in production but I encourage you to give it a try in a non critical environment and help me to improve it and work towards the first stable release.
 
 minicron used to be available to install via [Ruby Gems](https://rubygems.org/gems/minicron), all future releases (>= 0.8) will no longer be published there and made available as [ZIP file releases](https://github.com/jamesrwhite/minicron/releases) instead.
 
@@ -107,7 +105,7 @@ minicron used to be available to install via [Ruby Gems](https://rubygems.org/ge
 
 1. First check you meet the [requirements](#requirements)
 
-2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.0) zip/tarball for your OS and install minicron manually or use the handy install script:
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.0) zip/tarball for your OS and install minicron manually or use the handy install script (still being worked on):
 
 ```
 sh -c "$(curl -fsSL https://install.minicron.com)"
@@ -141,8 +139,6 @@ docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.0
 docker ps | grep minicron
 docker exec *container_hash* minicron server start
 ````
-
-Do this all right and if you `curl localhost:9292/api/jobs` you should be greeted with some JSON!
 
 Usage
 -----
@@ -233,19 +229,6 @@ Obviously without authentication anyone who knew the address of your minicron ho
 a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
 firewall that only allows connections from an internal network and/or a VPN.
 
-Documentation
--------------
-
-minicron uses [Yard](http://yardoc.org/) for its code documentation (currently the only *usage* documentation is what you're reading right now), you can either generate it and view
-it locally using the following commands:
-
-````bash
-yard doc
-yard server
-````
-
-or view the most up to date version online at [RubyDoc.info](http://rdoc.info/github/jamesrwhite/minicron/master/frames).
-
 Versioning
 -----------
 
@@ -268,11 +251,11 @@ Roadmap
 
 I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..
 
-- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25)
+- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25))
 - More robust handling of failure in various places/situations
 - Better test coverage for core features
 - More 3rd party alerting integrations
-- Finalise and document the REST API that the frontend uses
+- REST API
 - Revision control for changes and acitvity tracking
 - Support for crontabs in differing locations
 - Better experience on mobile/tablet
@@ -316,8 +299,8 @@ Credit
 -------
 
 minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development. I started out trying to list all of them but it was taking way too much time so check out
-[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L25-L54) and
-[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L35-L65).
+[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L22-L55) and
+[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L47-L62).
 
 License
 --------
