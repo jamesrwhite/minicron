@@ -120,7 +120,9 @@ module Minicron
           end
         end
       else
-        @config[key] = value
+        if !value.nil?
+          @config[key] = value
+        end
       end
     end
   end
