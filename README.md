@@ -17,7 +17,7 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Security](#security))
+- [Security](#security)
 - [Versioning](#versioning)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -36,9 +36,10 @@ Screenshots
 Background
 -----------
 
-I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
-in particular my time spent working at [Miniclip](http://www.miniclip.com) (which is where the name comes from, miniclip.. minicron, get it?)
-where the management and monitoring of cron jobs at times proved to be tricky!
+I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes
+largely from my experience and frustrations using cron, in particular my time spent working at [Miniclip](http://www.miniclip.com)
+(which is where the name comes from, miniclip.. minicron, get it?) where the management and monitoring of cron jobs at times proved
+to be tricky!
 
 Features
 ---------
@@ -53,7 +54,8 @@ Features
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
-Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if you don't see the feature you want there add it!
+Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if
+you don't see the feature you want there add it!
 
 Requirements
 -------------
@@ -77,7 +79,8 @@ Requirements
 
 #### Nginx
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
+nginx for example supports web sockets from version 1.3.13 and up. I've included an
+[example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
 
 #### Apache2
 If your using the apache2 as your reverse proxy start by having the following modules installed
@@ -88,30 +91,40 @@ Then run the following commands to make sure the modules are enabled
 - ````sudo a2enmod proxy proxy_html proxy_http xml2enc````
 - ````sudo service apache2 restart````
 
-Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following [example config](https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf), update the required parameters and save and exit. enable the virtual host file by running ````sudo a2ensite minicron.conf && sudo service apache2 reload````
+Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following
+[example config](https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf), update the required
+parameters and save and exit. enable the virtual host file by running ````sudo a2ensite minicron.conf && sudo service apache2 reload````
 
-Last this left to do is create a htpasswd.users, use this command ````sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME```` replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.
+Last this left to do is create a htpasswd.users, use this command ````sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME````
+replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.
 
 Test your URL and you should be prompted for authentication and then have access to your minicron site through apache
 
 Installation
 -------------
 
-minicron is currently under heavy development and I make no gurantees about stability while it remains pre 1.0, as such I would not recommend that you use this in production but I encourage you to give it a try in a non critical environment and help me to improve it and work towards the first stable release.
+minicron is currently under heavy development and I make no gurantees about stability while it remains pre 1.0, as such
+I would not recommend that you use this in production but I encourage you to give it a try in a non critical environment
+and help me to improve it and work towards the first stable release.
 
-minicron used to be available to install via [Ruby Gems](https://rubygems.org/gems/minicron), all future releases (>= 0.8) will no longer be published there and made available as [ZIP file releases](https://github.com/jamesrwhite/minicron/releases) instead.
+minicron used to be available to install via [Ruby Gems](https://rubygems.org/gems/minicron), all future releases (>= 0.8)
+will no longer be published there and made available as [ZIP file releases](https://github.com/jamesrwhite/minicron/releases)
+instead.
 
 #### Recommended
 
 1. First check you meet the [requirements](#requirements)
 
-2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.0) zip/tarball for your OS and install minicron manually or use the handy install script (still being worked on):
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.0) zip/tarball for your OS and
+   install minicron manually or use the handy install script (still being worked on):
 
 ```
 sh -c "$(curl -fsSL https://install.minicron.com)"
 ```
 
-4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
+4. Set your database configuration options in ````/etc/minicron.toml````, you can use the
+   [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options
+   are configurable
 
 5. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
 
@@ -226,8 +239,9 @@ security is concerned. For example authentication still needs to be added.
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
 
 Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
-firewall that only allows connections from an internal network and/or a VPN.
+a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally
+I still would not recommend it, minicron is designed to be an internal tool and should be behind a firewall that only allows
+connections from an internal network and/or a VPN.
 
 Versioning
 -----------
@@ -249,7 +263,8 @@ Based on the following guidelines:
 Roadmap
 --------
 
-I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..
+I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus
+on this but until then some rough thoughts in no real order..
 
 - Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25))
 - More robust handling of failure in various places/situations
@@ -270,7 +285,8 @@ I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few
 Contributing
 ------------
 
-Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md) for more info.
+Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md)
+for more info.
 
 Areas that I would love some help with:
 
@@ -298,7 +314,8 @@ Or feel free to open an issue and I'll do my best to help.
 Credit
 -------
 
-minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development. I started out trying to list all of them but it was taking way too much time so check out
+minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development.
+I started out trying to list all of them but it was taking way too much time so check out
 [minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L22-L55) and
 [app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L47-L62).
 
