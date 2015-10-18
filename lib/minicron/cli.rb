@@ -206,9 +206,6 @@ module Minicron
 
       # Add a global option for passing the path to a config file
       @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"
-
-      # No tracing option, we're using --debug
-      @cli.never_trace!
     end
   end
 end
