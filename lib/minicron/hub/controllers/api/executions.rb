@@ -12,6 +12,7 @@ class Minicron::Hub::App
           host = Minicron::Hub::Host.create!(
             :name => params[:hostname],
             :fqdn => params[:fqdn],
+            :user => params[:user], # TODO: this probably wont be correct but needs some value set
             :host => request.ip, # TODO: ensure this is the correct header if behind a reverse proxy etc
             :port => 22
           )
