@@ -99,28 +99,30 @@ class Minicron::Hub::App
         # Try and delete the host
         Minicron::Hub::Host.destroy(params[:id])
 
-        # Get an ssh instance and open a connection
-        ssh = Minicron::Transport::SSH.new(
-          :user => @host.user,
-          :host => @host.host,
-          :port => @host.port,
-          :private_key => "~/.ssh/minicron_host_#{@host.id}_rsa"
-        )
+        unless params[:force]
+          # Get an ssh instance and open a connection
+          ssh = Minicron::Transport::SSH.new(
+            :user => @host.user,
+            :host => @host.host,
+            :port => @host.port,
+            :private_key => "~/.ssh/minicron_host_#{@host.id}_rsa"
+          )
 
-        # Get an instance of the cron class
-        cron = Minicron::Cron.new(ssh)
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
 
-        # Delete the host from the crontab
-        cron.delete_host(@host)
+          # Delete the host from the crontab
+          cron.delete_host(@host)
 
-        # Tidy up
-        ssh.close
+          # Tidy up
+          ssh.close
 
-        # Delete the pub/priv key pair
-        private_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa")
-        public_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa.pub")
-        File.delete(private_key_path)
-        File.delete(public_key_path)
+          # Delete the pub/priv key pair
+          private_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa")
+          public_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa.pub")
+          File.delete(private_key_path)
+          File.delete(public_key_path)
+        end
 
         redirect "#{route_prefix}/hosts"
       end

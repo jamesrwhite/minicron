@@ -129,22 +129,24 @@ class Minicron::Hub::App
         # Try and delete the job
         Minicron::Hub::Job.destroy(params[:id])
 
-        # Get an ssh instance
-        ssh = Minicron::Transport::SSH.new(
-          :user => @job.host.user,
-          :host => @job.host.host,
-          :port => @job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
-        )
+        unless params[:force]
+          # Get an ssh instance
+          ssh = Minicron::Transport::SSH.new(
+            :user => @job.host.user,
+            :host => @job.host.host,
+            :port => @job.host.port,
+            :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+          )
 
-        # Get an instance of the cron class
-        cron = Minicron::Cron.new(ssh)
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
 
-        # Delete the job from the crontab
-        cron.delete_job(@job)
+          # Delete the job from the crontab
+          cron.delete_job(@job)
 
-        # Tidy up
-        ssh.close
+          # Tidy up
+          ssh.close
+        end
 
         redirect "#{route_prefix}/jobs"
       end
@@ -320,22 +322,24 @@ class Minicron::Hub::App
         # Try and delete the schedule
         Minicron::Hub::Schedule.destroy(params[:schedule_id])
 
-        # Get an ssh instance
-        ssh = Minicron::Transport::SSH.new(
-          :user => @schedule.job.host.user,
-          :host => @schedule.job.host.host,
-          :port => @schedule.job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{@schedule.job.host.id}_rsa"
-        )
+        unless params[:force]
+          # Get an ssh instance
+          ssh = Minicron::Transport::SSH.new(
+            :user => @schedule.job.host.user,
+            :host => @schedule.job.host.host,
+            :port => @schedule.job.host.port,
+            :private_key => "~/.ssh/minicron_host_#{@schedule.job.host.id}_rsa"
+          )
 
-        # Get an instance of the cron class
-        cron = Minicron::Cron.new(ssh)
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
 
-        # Delete the schedule from the crontab
-        cron.delete_schedule(@schedule.job, @schedule.formatted)
+          # Delete the schedule from the crontab
+          cron.delete_schedule(@schedule.job, @schedule.formatted)
 
-        # Tidy up
-        ssh.close
+          # Tidy up
+          ssh.close
+        end
 
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end
