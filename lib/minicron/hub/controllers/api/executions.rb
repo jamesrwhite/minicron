@@ -136,9 +136,18 @@ class Minicron::Hub::App
           :exit_status => params[:exit_status]
         )
 
-        json({
-          :success => true
-        })
+       # If the exit status was above 0 we need to trigger a failure alert
+      if params[:exit_status].to_i > 0
+        Minicron::Alert.send_all(
+          :kind => 'fail',
+          :execution_id => params[:execution_id],
+          :job_id => params[:job_id]
+        )
+      end
+
+      json({
+        :success => true
+      })
     rescue Exception => e
       status 500
 

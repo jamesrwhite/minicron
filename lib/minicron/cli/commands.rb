@@ -167,6 +167,7 @@ module Minicron
                 when :start
                   unless Minicron.config['client']['cli']['dry_run']
                     client.start(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -174,6 +175,7 @@ module Minicron
                 when :finish
                   unless Minicron.config['client']['cli']['dry_run']
                     client.finish(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -181,6 +183,7 @@ module Minicron
                 when :exit
                   unless Minicron.config['client']['cli']['dry_run']
                     client.exit(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -188,6 +191,7 @@ module Minicron
                 when :output
                   unless Minicron.config['client']['cli']['dry_run']
                     client.output(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -201,6 +205,7 @@ module Minicron
               # Send the exception message to the server and yield it
               unless Minicron.config['client']['cli']['dry_run']
                 client.output(
+                  job[:job_id],
                   job[:execution_id],
                   e.message
                 )
