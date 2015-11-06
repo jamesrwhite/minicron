@@ -123,7 +123,7 @@ class Minicron::Hub::App
   post '/job/:id/delete' do
     begin
       # Look up the job
-      @job = Minicron::Hub::Job.find(params[:id])
+      @job = Minicron::Hub::Job.includes(:schedules).find(params[:id])
 
       Minicron::Hub::Job.transaction do
         # Try and delete the job
