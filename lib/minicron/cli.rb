@@ -138,7 +138,7 @@ module Minicron
       ensure
         # Record the time the command finished
         finish = Time.now.utc - subtract_total
-        exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
+        exit_status = !$CHILD_STATUS.nil? && $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
 
         # yield the finish time and exit status
         yield structured :finish, finish.to_i
@@ -205,7 +205,7 @@ module Minicron
       @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug'].to_s}"
 
       # Add a global option for passing the path to a config file
-      @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"
+      @cli.global_option '--config FILE', "Set the config file to use."
     end
   end
 end
