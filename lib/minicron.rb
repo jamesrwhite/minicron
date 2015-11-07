@@ -86,14 +86,18 @@ module Minicron
   #
   # @param file_path [String]
   def self.parse_file_config(file_path)
-    begin
-      @config = TOML.load_file(file_path)
-    rescue Errno::ENOENT
-      raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
-    rescue Errno::EACCES
-      raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions."
-    rescue TOML::ParseError
-      raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
+    if file_path
+      begin
+        @config = TOML.load_file(file_path)
+      rescue Errno::ENOENT
+        raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
+      rescue Errno::EACCES
+        raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions"
+      rescue TOML::ParseError
+        raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax"
+      end
+    else
+      raise Minicron::ConfigError, 'No file path specified'
     end
   end
 

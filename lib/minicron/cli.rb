@@ -21,7 +21,7 @@ module Minicron
     # @param opts [Hash] The Commander provided options hash
     def self.parse_config(opts)
       # Parse the --config file options if it was passed
-      Minicron.parse_file_config(opts.config)
+      Minicron.parse_file_config(opts.config) if opts.config
 
       # Parse the cli options
       Minicron.parse_config_hash(
