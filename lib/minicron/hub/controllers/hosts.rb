@@ -92,7 +92,7 @@ class Minicron::Hub::App
 
   post '/host/:id/delete' do
     # Look up the host
-    @host = Minicron::Hub::Host.find(params[:id])
+    @host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
 
     begin
       Minicron::Hub::Host.transaction do
