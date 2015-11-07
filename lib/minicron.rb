@@ -86,11 +86,16 @@ module Minicron
   #
   # @param file_path [String]
   def self.parse_file_config(file_path)
+    file_path ||= Minicron::DEFAULT_CONFIG_FILE
+
     if file_path
       begin
         @config = TOML.load_file(file_path)
       rescue Errno::ENOENT
-        raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
+        # Fail if the file doesn't exist unless it's the default config file
+        if file_path != DEFAULT_CONFIG_FILE
+          raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
+        end
       rescue Errno::EACCES
         raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions"
       rescue TOML::ParseError

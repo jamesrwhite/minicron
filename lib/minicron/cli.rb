@@ -205,7 +205,7 @@ module Minicron
       @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug'].to_s}"
 
       # Add a global option for passing the path to a config file
-      @cli.global_option '--config FILE', "Set the config file to use."
+      @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"
     end
   end
 end
