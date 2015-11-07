@@ -4,6 +4,6 @@ source 'https://rubygems.org'
 gemspec
 
 # gem 'coveralls', require: false
-gem 'sqlite3', require: false
-gem 'mysql2',  require: false
-gem 'pg',      require: false
+gem 'sqlite3', '1.3.9'
+gem 'mysql2', '0.3.19'
+gem 'pg', '~> 0.18'
