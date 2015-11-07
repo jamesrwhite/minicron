@@ -49,3 +49,5 @@ build/geminabox
 
 # Vagrant
 .vagrant
+
+builds
