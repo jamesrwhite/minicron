@@ -1,7 +1,7 @@
 # Test valid config file
 
 # Global options
-verbose = true
+verbose = false
 debug = false
 
 # Client options
