@@ -75,6 +75,8 @@ body {
 
   .form-control-view {
     background-color: #EEECF1;
+    overflow: scroll;
+    white-space: pre;
   }
 
   pre.form-control-view {
