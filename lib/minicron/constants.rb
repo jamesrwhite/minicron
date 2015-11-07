@@ -1,7 +1,7 @@
 # The minicron module
 module Minicron
   BINARY_NAME = 'minicron'
-  VERSION = '0.8.1'
+  VERSION = '0.8.2'
   DEFAULT_CONFIG_FILE = '/etc/minicron.toml'
   BASE_PATH = File.expand_path('../../../', __FILE__)
   LIB_PATH = File.expand_path('../../', __FILE__)
