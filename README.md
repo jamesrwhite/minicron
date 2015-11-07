@@ -122,11 +122,10 @@ instead.
 sh -c "$(curl -fsSL https://install.minicron.com)"
 ```
 
-4. Set your database configuration options in ````/etc/minicron.toml````, you can use the
-   [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options
-   are configurable
+4. Set your database configuration options in a config file, you can use the
+   [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
 
-5. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
+5. Make sure you have created an empty database with the name you set in your config file
 
   > **WARNING**
   >
@@ -226,8 +225,7 @@ or ````--version```` are passed to the CLI.
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
 to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
-[minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml)
-file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
+[minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) file. Options specified via
 the command line will take precedence over those taken from a config file.
 
 Security
