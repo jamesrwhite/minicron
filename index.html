@@ -40,7 +40,6 @@ a web interface to the data and makes it easy to manage your cron jobs.</p>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#security">Security</a></li>
-<li><a href="#documentation">Documentation</a></li>
 <li><a href="#versioning">Versioning</a></li>
 <li><a href="#roadmap">Roadmap</a></li>
 <li><a href="#contributing">Contributing</a></li>
@@ -60,9 +59,10 @@ a web interface to the data and makes it easy to manage your cron jobs.</p>
 <h2>
 <a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h2>
 
-<p>I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
-in particular my time spent working at <a href="http://www.miniclip.com">Miniclip</a> (which is where the name comes from, miniclip.. minicron, get it?)
-where the management and monitoring of cron jobs at times proved to be tricky!</p>
+<p>I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes
+largely from my experience and frustrations using cron, in particular my time spent working at <a href="http://www.miniclip.com">Miniclip</a>
+(which is where the name comes from, miniclip.. minicron, get it?) where the management and monitoring of cron jobs at times proved
+to be tricky!</p>
 
 <h2>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
@@ -88,7 +88,8 @@ where the management and monitoring of cron jobs at times proved to be tricky!</
 </li>
 </ul>
 
-<p>Lots more is planned for the future, see <a href="https://github.com/jamesrwhite/minicron/issues?state=open">open issues</a> or if you don't see the feature you want there add it!</p>
+<p>Lots more is planned for the future, see <a href="https://github.com/jamesrwhite/minicron/issues?state=open">open issues</a> or if
+you don't see the feature you want there add it!</p>
 
 <h2>
 <a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
@@ -121,7 +122,8 @@ where the management and monitoring of cron jobs at times proved to be tricky!</
 <a id="nginx" class="anchor" href="#nginx" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nginx</h4>
 
 <p>If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an <a href="https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf">example config</a> for nginx.</p>
+nginx for example supports web sockets from version 1.3.13 and up. I've included an
+<a href="https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf">example config</a> for nginx.</p>
 
 <h4>
 <a id="apache2" class="anchor" href="#apache2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Apache2</h4>
@@ -140,33 +142,42 @@ nginx for example supports web sockets from version 1.3.13 and up. I've included
 <li><code>sudo service apache2 restart</code></li>
 </ul>
 
-<p>Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following <a href="https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf">example config</a>, update the required parameters and save and exit. enable the virtual host file by running <code>sudo a2ensite minicron.conf &amp;&amp; sudo service apache2 reload</code></p>
+<p>Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following
+<a href="https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf">example config</a>, update the required
+parameters and save and exit. enable the virtual host file by running <code>sudo a2ensite minicron.conf &amp;&amp; sudo service apache2 reload</code></p>
 
-<p>Last this left to do is create a htpasswd.users, use this command <code>sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME</code> replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.</p>
+<p>Last this left to do is create a htpasswd.users, use this command <code>sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME</code>
+replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.</p>
 
 <p>Test your URL and you should be prompted for authentication and then have access to your minicron site through apache</p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>minicron is currently under heavy development and as such I would not recommend that you use this in production yet
-but I encourage you to give it a try in a non critical environment and help me to improve it and work towards the first stable release (1.0).</p>
+<p>minicron is currently under heavy development and I make no gurantees about stability while it remains pre 1.0, as such
+I would not recommend that you use this in production but I encourage you to give it a try in a non critical environment
+and help me to improve it and work towards the first stable release.</p>
 
-<p>minicron used to be available to install via <a href="https://rubygems.org/gems/minicron">Ruby Gems</a>, all future releases (&gt;= 0.8) will no longer be published there and made available as <a href="https://github.com/jamesrwhite/minicron/releases">ZIP file releases</a> instead.</p>
+<p>minicron used to be available to install via <a href="https://rubygems.org/gems/minicron">Ruby Gems</a>, all future releases (&gt;= 0.8)
+will no longer be published there and made available as <a href="https://github.com/jamesrwhite/minicron/releases">ZIP file releases</a>
+instead.</p>
 
 <h4>
 <a id="recommended" class="anchor" href="#recommended" aria-hidden="true"><span class="octicon octicon-link"></span></a>Recommended</h4>
 
 <ol>
 <li><p>First check you meet the <a href="#requirements">requirements</a></p></li>
-<li><p>Either <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.8.0">grab the latest</a> zip/tarball for your OS and install minicron manually or use the handy install script:</p></li>
+<li><p>Either <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.8.2">grab the latest</a> zip/tarball for your OS and
+install minicron manually or use the handy install script (still being worked on):</p></li>
 </ol>
 
 <pre><code>sh -c "$(curl -fsSL https://install.minicron.com)"
 </code></pre>
 
 <ol>
-<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the <a href="https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml">minicron.toml</a> as a guide on what options are configurable</p></li>
+<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the
+<a href="https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml">minicron.toml</a> as a guide on what options
+are configurable</p></li>
 <li>
 <p>Make sure you have created an empty database with the name you set in <code>/etc/minicron.toml</code></p>
 
@@ -190,12 +201,10 @@ the <a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hu
 
 <div class="highlight highlight-source-shell"><pre>git clone https://github.com/jamesrwhite/minicron.git
 <span class="pl-c1">cd</span> minicron
-docker build -t minicron-0.8.0 <span class="pl-c1">.</span>
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.0
+docker build -t minicron-0.8.2 <span class="pl-c1">.</span>
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.2
 docker ps <span class="pl-k">|</span> grep minicron
 docker <span class="pl-c1">exec</span> <span class="pl-k">*</span>container_hash<span class="pl-k">*</span> minicron server start</pre></div>
-
-<p>Do this all right and if you <code>curl localhost:9292/api/jobs</code> you should be greeted with some JSON!</p>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
@@ -283,19 +292,9 @@ security is concerned. For example authentication still needs to be added.</p>
 </blockquote>
 
 <p>Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
-firewall that only allows connections from an internal network and/or a VPN.</p>
-
-<h2>
-<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
-
-<p>minicron uses <a href="http://yardoc.org/">Yard</a> for its code documentation (currently the only <em>usage</em> documentation is what you're reading right now), you can either generate it and view
-it locally using the following commands:</p>
-
-<div class="highlight highlight-source-shell"><pre>yard doc
-yard server</pre></div>
-
-<p>or view the most up to date version online at <a href="http://rdoc.info/github/jamesrwhite/minicron/master/frames">RubyDoc.info</a>.</p>
+a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally
+I still would not recommend it, minicron is designed to be an internal tool and should be behind a firewall that only allows
+connections from an internal network and/or a VPN.</p>
 
 <h2>
 <a id="versioning" class="anchor" href="#versioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Versioning</h2>
@@ -319,15 +318,15 @@ on anything etc etc</p>
 <h2>
 <a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Roadmap</h2>
 
-<p>I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..</p>
+<p>I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus
+on this but until then some rough thoughts in no real order..</p>
 
 <ul>
-<li>Full cron syntax support (<a href="https://github.com/jamesrwhite/minicron/issues/25">#25</a>
-</li>
+<li>Full cron syntax support (<a href="https://github.com/jamesrwhite/minicron/issues/25">#25</a>)</li>
 <li>More robust handling of failure in various places/situations</li>
 <li>Better test coverage for core features</li>
 <li>More 3rd party alerting integrations</li>
-<li>Finalise and document the REST API that the frontend uses</li>
+<li>REST API</li>
 <li>Revision control for changes and acitvity tracking</li>
 <li>Support for crontabs in differing locations</li>
 <li>Better experience on mobile/tablet</li>
@@ -344,7 +343,8 @@ on anything etc etc</p>
 <h2>
 <a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-<p>Feedback and pull requests are welcome, please see <a href="https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for more info.</p>
+<p>Feedback and pull requests are welcome, please see <a href="https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>
+for more info.</p>
 
 <p>Areas that I would love some help with:</p>
 
@@ -378,9 +378,10 @@ or <a href="https://twitter.com/minicron_dev">@minicron_dev</a>
 <h2>
 <a id="credit" class="anchor" href="#credit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credit</h2>
 
-<p>minicron makes use of a <em>lot</em> of awesome open source projects that have saved me a lot of time in its development. I started out trying to list all of them but it was taking way too much time so check out
-<a href="https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L25-L54">minicron.gemspec</a> and
-<a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L35-L65">app.rb</a>.</p>
+<p>minicron makes use of a <em>lot</em> of awesome open source projects that have saved me a lot of time in its development.
+I started out trying to list all of them but it was taking way too much time so check out
+<a href="https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L22-L55">minicron.gemspec</a> and
+<a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L47-L62">app.rb</a>.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
