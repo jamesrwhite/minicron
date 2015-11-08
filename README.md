@@ -116,11 +116,8 @@ instead.
 1. First check you meet the [requirements](#requirements)
 
 2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.3) zip/tarball for your OS and
-   install minicron manually or use the handy install script (still being worked on):
-
-```
-sh -c "$(curl -fsSL https://install.minicron.com)"
-```
+   install minicron manually or [build it yourself](https://github.com/jamesrwhite/minicron-build/blob/master/README.md)
+   if you're feeling adventurous!
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the
    [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options
