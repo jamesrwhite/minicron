@@ -315,9 +315,9 @@ Credit
 -------
 
 minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development.
-I started out trying to list all of them but it was taking way too much time so check out
-[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L22-L55) and
-[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L47-L62).
+I started out trying to list all of them but it was taking way too much time so check out the dependencies in
+[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec) and
+[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb).
 
 License
 --------
