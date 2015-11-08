@@ -5,9 +5,9 @@ VAGRANTFILE_API_VERSION = "2"
 $script = <<SCRIPT
 apt-get update
 apt-get install -y libsqlite3-dev wget unzip
-wget https://github.com/jamesrwhite/minicron/releases/download/v0.8.2/minicron-0.8.2-linux-x86_64.zip > minicron.zip
-unzip -o minicron-0.8.2-linux-x86_64.zip
-export PATH=~/minicron-0.8.2-linux-x86_64:$PATH
+wget https://github.com/jamesrwhite/minicron/releases/download/v0.8.3/minicron-0.8.3-linux-x86_64.zip > minicron.zip
+unzip -o minicron-0.8.3-linux-x86_64.zip
+export PATH=~/minicron-0.8.3-linux-x86_64:$PATH
 ufw allow 2222
 ufw allow 9292
 ufw enable
