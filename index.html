@@ -167,7 +167,7 @@ instead.</p>
 
 <ol>
 <li><p>First check you meet the <a href="#requirements">requirements</a></p></li>
-<li><p>Either <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.8.2">grab the latest</a> zip/tarball for your OS and
+<li><p>Either <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.8.3">grab the latest</a> zip/tarball for your OS and
 install minicron manually or use the handy install script (still being worked on):</p></li>
 </ol>
 
@@ -201,8 +201,8 @@ the <a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hu
 
 <div class="highlight highlight-source-shell"><pre>git clone https://github.com/jamesrwhite/minicron.git
 <span class="pl-c1">cd</span> minicron
-docker build -t minicron-0.8.2 <span class="pl-c1">.</span>
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.2
+docker build -t minicron-0.8.3 <span class="pl-c1">.</span>
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.3
 docker ps <span class="pl-k">|</span> grep minicron
 docker <span class="pl-c1">exec</span> <span class="pl-k">*</span>container_hash<span class="pl-k">*</span> minicron server start</pre></div>
 
@@ -379,9 +379,9 @@ or <a href="https://twitter.com/minicron_dev">@minicron_dev</a>
 <a id="credit" class="anchor" href="#credit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credit</h2>
 
 <p>minicron makes use of a <em>lot</em> of awesome open source projects that have saved me a lot of time in its development.
-I started out trying to list all of them but it was taking way too much time so check out
-<a href="https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L22-L55">minicron.gemspec</a> and
-<a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L47-L62">app.rb</a>.</p>
+I started out trying to list all of them but it was taking way too much time so check out the dependencies in
+<a href="https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec">minicron.gemspec</a> and
+<a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb">app.rb</a>.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
