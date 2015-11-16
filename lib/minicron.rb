@@ -88,45 +88,29 @@ module Minicron
   def self.parse_file_config(file_path)
     file_path ||= Minicron::DEFAULT_CONFIG_FILE
 
-    if file_path
-      begin
-        @config = TOML.load_file(file_path)
-      rescue Errno::ENOENT
-        # Fail if the file doesn't exist unless it's the default config file
-        if file_path != DEFAULT_CONFIG_FILE
-          raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
-        end
-      rescue Errno::EACCES
-        raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions"
-      rescue TOML::ParseError
-        raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax"
+    begin
+      @config = TOML.load_file(file_path)
+    rescue Errno::ENOENT
+      # Fail if the file doesn't exist unless it's the default config file
+      if file_path != DEFAULT_CONFIG_FILE
+        raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
-    else
-      raise Minicron::ConfigError, 'No file path specified'
+    rescue Errno::EACCES
+      raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions"
+    rescue TOML::ParseError
+      raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax"
     end
   end
 
   # Parses the config options from the given hash that matches the expected
   # config format in Minicron.config
-  # TODO: refactor this mess
-  def self.parse_config_hash(options = {})
+  def self.parse_config_hash(options = {}, config = @config)
     options.each do |key, value|
-      if options[key].respond_to?(:each)
-        options[key].each do |k, v|
-          if v.respond_to?(:each)
-            v.each do |k2, v2|
-              if !v2.nil?
-                @config[key][k][k2] = v2
-              end
-            end
-          elsif !v.nil?
-            @config[key][k] = v
-          end
-        end
-      else
-        if !value.nil?
-          @config[key] = value
-        end
+      config[key] = {} if config[key].nil?
+      if value.respond_to?(:each)
+        self.parse_config_hash(value, config[key])
+      elsif !value.nil?
+        config[key] = value
       end
     end
   end
