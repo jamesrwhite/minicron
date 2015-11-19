@@ -1,6 +1,12 @@
 class Minicron::Hub::App
-  post '/api/v1/execution/init' do
+  # Get all job executions
+  get '/api/executions' do
     content_type :json
+<<<<<<< HEAD
+    executions = Minicron::Hub::Execution.all.order(:created_at => :desc, :started_at => :desc)
+                                         .includes(:job_execution_outputs, :job => :host)
+    Minicron::Hub::ExecutionSerializer.new(executions).serialize.to_json
+=======
 
     begin
       Minicron::Hub::Host.transaction do
@@ -12,6 +18,7 @@ class Minicron::Hub::App
           host = Minicron::Hub::Host.create!(
             :name => params[:hostname],
             :fqdn => params[:fqdn],
+            :user => params[:user], # TODO: this probably wont be correct but needs some value set
             :host => request.ip, # TODO: ensure this is the correct header if behind a reverse proxy etc
             :port => 22
           )
@@ -62,43 +69,32 @@ class Minicron::Hub::App
         :error => e.message
       })
     end
+>>>>>>> upstream/master
   end
 
-  post '/api/v1/execution/start' do
+  # Get a single job execution by its ID
+  get '/api/executions/:id' do
     content_type :json
-
-    begin
-        Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
-          :started_at => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
-        )
-
-        json({
-          :success => true
-        })
-    rescue Exception => e
-      status 500
-
-      json({
-        :error => e.message
-      })
-    end
+    execution = Minicron::Hub::Execution.includes(:job_execution_outputs, :job => :host)
+                                        .find(params[:id])
+    Minicron::Hub::ExecutionSerializer.new(execution).serialize.to_json
   end
 
-  post '/api/v1/execution/output' do
+  # Delete an existing execution
+  delete '/api/executions/:id' do
     content_type :json
-
     begin
-        Minicron::Hub::JobExecutionOutput.create!(
-          :execution_id => params[:execution_id],
-          :output => params[:output],
-          :timestamp => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S'),
-          :seq => params[:seq],
-        )
+      # Try and delete the execution
+      Minicron::Hub::Execution.destroy(params[:id])
 
-        json({
-          :success => true
-        })
+      # This is what ember expects as the response
+      status 204
+    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
+<<<<<<< HEAD
+      status 422
+      { :error => e.message }.to_json
+=======
       status 500
 
       json({
@@ -135,15 +131,25 @@ class Minicron::Hub::App
           :exit_status => params[:exit_status]
         )
 
-        json({
-          :success => true
-        })
+       # If the exit status was above 0 we need to trigger a failure alert
+      if params[:exit_status].to_i > 0
+        Minicron::Alert.send_all(
+          :kind => 'fail',
+          :execution_id => params[:execution_id],
+          :job_id => params[:job_id]
+        )
+      end
+
+      json({
+        :success => true
+      })
     rescue Exception => e
       status 500
 
       json({
         :error => e.message
       })
+>>>>>>> upstream/master
     end
   end
 end
