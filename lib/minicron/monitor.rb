@@ -66,7 +66,8 @@ module Minicron
           # Loop every schedule we know about
           schedules.each do |schedule|
             begin
-              monitor(schedule)
+              # TODO: is it possible to monitor on boot schedules some other way?
+              monitor(schedule) unless schedule.special == '@reboot'
             rescue Exception => e
               if Minicron.config['trace']
                 puts e.message
@@ -109,7 +110,7 @@ module Minicron
       expected_at = cron.last(Time.now) - 30
       expected_by = expected_at + 30 + 60 + 30 # pre buffer + minute wait + post buffer
 
-      # We only need to check jobs that are expected to under the monitor start time
+      # We only need to check jobs that are expected after the monitor start time
       # and jobs that have passed their expected by time and the time the schedule
       # was last updated isn't before when it was expected, i.e we aren't checking for something
       # that should have happened earlier in the day.

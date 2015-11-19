@@ -34,6 +34,7 @@ module Minicron
 
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
+            cli.always_trace! if Minicron.config['debug']
 
             # Setup the db
             Minicron::Hub::App.setup_db
@@ -65,6 +66,7 @@ module Minicron
           c.action do |args, opts|
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
+            cli.always_trace! if Minicron.config['debug']
 
             # If we get no arguments then default the action to start
             action = args.first.nil? ? 'start' : args.first
@@ -135,6 +137,7 @@ module Minicron
 
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
+            cli.always_trace! if Minicron.config['debug']
 
             begin
               # Set up the job and get the job and execution ids
@@ -165,6 +168,7 @@ module Minicron
               Minicron::CLI.run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
+<<<<<<< HEAD
                 when :status
                   unless Minicron.config['cli']['dry_run']
                     faye.send(
@@ -181,6 +185,38 @@ module Minicron
                       :execution_id => ids[:execution_id],
                       :type => :output,
                       :message => output[:output]
+=======
+                when :start
+                  unless Minicron.config['client']['cli']['dry_run']
+                    client.start(
+                      job[:job_id],
+                      job[:execution_id],
+                      output[:output]
+                    )
+                  end
+                when :finish
+                  unless Minicron.config['client']['cli']['dry_run']
+                    client.finish(
+                      job[:job_id],
+                      job[:execution_id],
+                      output[:output]
+                    )
+                  end
+                when :exit
+                  unless Minicron.config['client']['cli']['dry_run']
+                    client.exit(
+                      job[:job_id],
+                      job[:execution_id],
+                      output[:output]
+                    )
+                  end
+                when :output
+                  unless Minicron.config['client']['cli']['dry_run']
+                    client.output(
+                      job[:job_id],
+                      job[:execution_id],
+                      output[:output]
+>>>>>>> upstream/master
                     )
                   end
                 end
@@ -189,12 +225,20 @@ module Minicron
               end
             rescue Exception => e
               # Send the exception message to the server and yield it
+<<<<<<< HEAD
               unless Minicron.config['cli']['dry_run']
                 faye.send(
                   :job_id => ids[:job_id],
                   :execution_id => ids[:execution_id],
                   :type => :output,
                   :message => e.message
+=======
+              unless Minicron.config['client']['cli']['dry_run']
+                client.output(
+                  job[:job_id],
+                  job[:execution_id],
+                  e.message
+>>>>>>> upstream/master
                 )
               end
 

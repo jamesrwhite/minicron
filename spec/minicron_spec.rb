@@ -63,8 +63,13 @@ describe Minicron do
     context 'when a valid toml file is passed' do
       it 'should update the config class variable with the toml file config' do
         expected_valid_config = {
+<<<<<<< HEAD
           'verbose' => true,
           'trace' => false,
+=======
+          'verbose' => false,
+          'debug' => false,
+>>>>>>> upstream/master
           'client' => {
             'scheme' => 'http',
             'host' => '127.0.0.1',

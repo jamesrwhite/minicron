@@ -5,17 +5,6 @@ backend minicron {
   .port = "9292";
 }
 
-sub vcl_pipe {
-  if (req.http.upgrade) {
-    set bereq.http.upgrade = req.http.upgrade;
-  }
-}
-
 sub vcl_recv {
-  if (req.http.Upgrade ~ "(?i)websocket") {
     set req.backend_hint = minicron;
-    return (pipe);
-  } else {
-      set req.backend_hint = minicron;
-  }
 }

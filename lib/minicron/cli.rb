@@ -25,7 +25,7 @@ module Minicron
     #
     # @param opts [Hash] The Commander provided options hash
     def self.parse_config(opts)
-      # Parse the --config file options if it was passed
+      # Parse the file config
       Minicron.parse_file_config(opts.config)
 
       # Parse the cli options
@@ -142,7 +142,7 @@ module Minicron
       ensure
         # Record the time the command finished
         finish = Time.now.utc - subtract_total
-        exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
+        exit_status = !$CHILD_STATUS.nil? && $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
 
         # yield the finish time and exit status
         yield structured :status, "FINISH #{finish.strftime("%Y-%m-%d %H:%M:%S")}"
@@ -213,7 +213,11 @@ module Minicron
       end
 
       # Add a global option for passing the path to a config file
+<<<<<<< HEAD
       @cli.global_option '--config FILE', 'Set the config file to use'
+=======
+      @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"
+>>>>>>> upstream/master
     end
   end
 end

@@ -1,9 +1,7 @@
 minicron
 =======
 
-[![Gem Version](http://img.shields.io/gem/v/minicron.svg)](https://rubygems.org/gems/minicron)
 [![Build Status](http://img.shields.io/travis/jamesrwhite/minicron.svg)](http://travis-ci.org/jamesrwhite/minicron)
-[![Coverage Status](https://coveralls.io/repos/jamesrwhite/minicron/badge.svg?branch=develop)](https://coveralls.io/r/jamesrwhite/minicron?branch=develop)
 [![Code Climate](http://img.shields.io/codeclimate/github/jamesrwhite/minicron.svg)](https://codeclimate.com/github/jamesrwhite/minicron)
 [![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
 [![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)
@@ -20,7 +18,6 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Security](#security)
-- [Documentation](#documentation)
 - [Versioning](#versioning)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -39,9 +36,10 @@ Screenshots
 Background
 -----------
 
-I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes largely from my experience and frustrations using cron,
-in particular my time spent working at [Miniclip](http://www.miniclip.com) (which is where the name comes from, miniclip.. minicron, get it?)
-where the management and monitoring of cron jobs at times proved to be tricky!
+I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes
+largely from my experience and frustrations using cron, in particular my time spent working at [Miniclip](http://www.miniclip.com)
+(which is where the name comes from, miniclip.. minicron, get it?) where the management and monitoring of cron jobs at times proved
+to be tricky!
 
 Features
 ---------
@@ -56,61 +54,89 @@ Features
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
-Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if you don't see the feature you want there add it!
+Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if
+you don't see the feature you want there add it!
 
 Requirements
 -------------
 
+<<<<<<< HEAD
 #### Ruby
 - **MRI**: 1.9.3 and above (tested on 1.9.3, 2.0.0, 2.1.0)
 - <del>**Rubinius**: Travis builds are run on the latest release</del> See: [#76](https://github.com/jamesrwhite/minicron/issues/76)
 - <del>**JRuby:**: Travis builds are run on the latest release</del> &nbsp;&nbsp;&nbsp;See: [#77](https://github.com/jamesrwhite/minicron/issues/77)
+=======
+#### OS
+
+*Should* run on OSX and any Linux/BSD based OS.
+>>>>>>> upstream/master
 
 #### Database
 
 **Default**
 
-- SQLite >= 3.6.16
-  (via the sqlite3 gem which may require libsqlite3-dev or sqlite-devel depending on your OS)
+- SQLite
 
 **Also Supported**
 
-These databases are also supported but you will need to manaually install the gems for them
-
-- MySQL via mysql2 (See [here](https://github.com/brianmario/mysql2#compatibility) for compatability info)
-- PostgreSQL via pg (See [here](https://bitbucket.org/ged/ruby-pg/wiki/Home) for compatibility info)
+- MySQL
+- PostgreSQL
 
 #### Web Server / Reverse Proxy
 
+#### Nginx
 If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an [example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
-It should also be possible to run it behind Apache I just haven't had time to add an example config for it yet.
+nginx for example supports web sockets from version 1.3.13 and up. I've included an
+[example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
 
-#### Browser
+#### Apache2
+If your using the apache2 as your reverse proxy start by having the following modules installed
+- ````libapache2-mod-proxy-html````
+- ````apache2-utils````
 
-I have been testing the web interface in the latest versions of Chrome, Firefox and Safari.
-I'm currently unsure of how it functions in the various of Internet Explorer but in theory it should support IE9+
+Then run the following commands to make sure the modules are enabled
+- ````sudo a2enmod proxy proxy_html proxy_http xml2enc````
+- ````sudo service apache2 restart````
 
-#### OS
+Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following
+[example config](https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf), update the required
+parameters and save and exit. enable the virtual host file by running ````sudo a2ensite minicron.conf && sudo service apache2 reload````
 
-Should run on OSX and any Linux/BSD based OS that the above ruby versions run on.
+Last this left to do is create a htpasswd.users, use this command ````sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME````
+replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.
+
+Test your URL and you should be prompted for authentication and then have access to your minicron site through apache
 
 Installation
 -------------
 
-minicron is currently under heavy development and as such I would not recommend that you use this in production yet
-but I encourage you to give it a try in a non critical environment and help me to improve it and work towards the first stable release (1.0).
+minicron is currently under heavy development and I make no gurantees about stability while it remains pre 1.0, as such
+I would not recommend that you use this in production but I encourage you to give it a try in a non critical environment
+and help me to improve it and work towards the first stable release.
 
-#### Manual
+minicron used to be available to install via [Ruby Gems](https://rubygems.org/gems/minicron), all future releases (>= 0.8)
+will no longer be published there and made available as [ZIP file releases](https://github.com/jamesrwhite/minicron/releases)
+instead.
+
+#### Recommended
 
 1. First check you meet the [requirements](#requirements)
 
-2. On some distributions you may need to install the ````ruby-dev```` and ````build-essential```` packages
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.3) zip/tarball for your OS and
+   install minicron manually or use the handy install script (still being worked on):
 
+<<<<<<< HEAD
 3. To install the latest release (currently 0.7.9) you can ````gem install minicron````, depending on your ruby setup
    you may need to run this with ````sudo````
+=======
+```
+sh -c "$(curl -fsSL https://install.minicron.com)"
+```
+>>>>>>> upstream/master
 
-4. Set your database configuration options in ````/etc/minicron.toml````, you can use the [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options are configurable
+4. Set your database configuration options in ````/etc/minicron.toml````, you can use the
+   [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options
+   are configurable
 
 5. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
 
@@ -130,6 +156,7 @@ but I encourage you to give it a try in a non critical environment and help me t
 
 You can also run minicron in a docker container, see below for instructions how:
 
+<<<<<<< HEAD
 `git clone https://github.com/jamesrwhite/minicron.git`
 
 `cd minicron`
@@ -141,8 +168,16 @@ You can also run minicron in a docker container, see below for instructions how:
 `docker ps | grep minicron`
 
 `docker exec *container_hash* minicron server start`
-
-Do this all right and if you `curl localhost:9292/api/jobs` you should be greeted with some JSON!
+=======
+````bash
+git clone https://github.com/jamesrwhite/minicron.git
+cd minicron
+docker build -t minicron-0.8.3 .
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.3
+docker ps | grep minicron
+docker exec *container_hash* minicron server start
+````
+>>>>>>> upstream/master
 
 Usage
 -----
@@ -225,27 +260,14 @@ Security
 ---------
 
 As mentioned previously minicron is still under development and as such is missing some essential features as far as
-security is concerned. For example authentication still needs to be added to the Web UI, API and Faye (the websocket
-server that jobs use to communicate their status updates).
+security is concerned. For example authentication still needs to be added.
 
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
 
 Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally I still would not recommend it, minicron is designed to be an internal tool and should be behind a
-firewall that only allows connections from an internal network and/or a VPN.
-
-Documentation
--------------
-
-minicron uses [Yard](http://yardoc.org/) for its code documentation (currently the only *usage* documentation is what you're reading right now), you can either generate it and view
-it locally using the following commands:
-
-````bash
-yard doc
-yard server
-````
-
-or view the most up to date version online at [RubyDoc.info](http://rdoc.info/github/jamesrwhite/minicron/master/frames).
+a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally
+I still would not recommend it, minicron is designed to be an internal tool and should be behind a firewall that only allows
+connections from an internal network and/or a VPN.
 
 Versioning
 -----------
@@ -267,16 +289,14 @@ Based on the following guidelines:
 Roadmap
 --------
 
-I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus on this but until then some rough thoughts in no real order..
+I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus
+on this but until then some rough thoughts in no real order..
 
-- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25) and
-  [#30](https://github.com/jamesrwhite/minicron/issues/30))
+- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25))
 - More robust handling of failure in various places/situations
 - Better test coverage for core features
-- Support for other Ruby runtimes
-- Make it as easy as possible to install/deploy minicron
 - More 3rd party alerting integrations
-- Finalise and document the REST API that the frontend uses
+- REST API
 - Revision control for changes and acitvity tracking
 - Support for crontabs in differing locations
 - Better experience on mobile/tablet
@@ -291,7 +311,8 @@ I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few
 Contributing
 ------------
 
-Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md) for more info.
+Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md)
+for more info.
 
 Areas that I would love some help with:
 
@@ -319,9 +340,10 @@ Or feel free to open an issue and I'll do my best to help.
 Credit
 -------
 
-minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development. I started out trying to list all of them but it was taking way too much time so check out
-[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L25-L54) and
-[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L35-L65).
+minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development.
+I started out trying to list all of them but it was taking way too much time so check out
+[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L22-L55) and
+[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L47-L62).
 
 License
 --------

@@ -1,12 +1,16 @@
-autoload :Thin, 'thin'
-autoload :Rack, 'rack'
+require 'thin'
+require 'rack'
+require 'minicron/hub/app'
 
 module Minicron
+<<<<<<< HEAD
   module Hub
     autoload :App,                'minicron/hub/app'
     autoload :ExceptionHandling,  'minicron/hub/app'
   end
 
+=======
+>>>>>>> upstream/master
   module Transport
     autoload :FayeServer, 'minicron/transport/faye/server'
 
@@ -26,7 +30,6 @@ module Minicron
       def self.start!(host, port, path)
         return false if running?
 
-        # Start the faye or rails apps depending on the path
         @server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions

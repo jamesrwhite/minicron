@@ -69,6 +69,7 @@ module Minicron
   def self.parse_file_config(file_path)
     file_path ||= Minicron::DEFAULT_CONFIG_FILE
 
+<<<<<<< HEAD
     begin
       @config = TOML.load_file(file_path)
     rescue Errno::ENOENT
@@ -80,6 +81,23 @@ module Minicron
       fail Exception, "Unable to the read the file '#{file_path}', check it has the right permissions."
     rescue TOML::ParseError
       fail Exception, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
+=======
+    if file_path
+      begin
+        @config = TOML.load_file(file_path)
+      rescue Errno::ENOENT
+        # Fail if the file doesn't exist unless it's the default config file
+        if file_path != DEFAULT_CONFIG_FILE
+          raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
+        end
+      rescue Errno::EACCES
+        raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions"
+      rescue TOML::ParseError
+        raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax"
+      end
+    else
+      raise Minicron::ConfigError, 'No file path specified'
+>>>>>>> upstream/master
     end
   end
 
@@ -94,7 +112,9 @@ module Minicron
           end
         end
       else
-        @config[key] = value
+        if !value.nil?
+          @config[key] = value
+        end
       end
     end
   end

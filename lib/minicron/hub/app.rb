@@ -2,8 +2,11 @@ require 'minicron'
 require 'sinatra/base'
 require 'sinatra/activerecord'
 require 'sinatra/assetpack'
+<<<<<<< HEAD
+=======
+require 'sinatra/json'
+>>>>>>> upstream/master
 require 'erubis'
-require 'oj'
 require 'pathname'
 
 module Minicron::Hub
@@ -14,6 +17,10 @@ module Minicron::Hub
     # Set the application root
     set :root, Minicron::HUB_PATH
 
+<<<<<<< HEAD
+=======
+    # General Sinatra configuration
+>>>>>>> upstream/master
     configure do
       # Don't log them. We'll do that ourself
       set :dump_errors, false

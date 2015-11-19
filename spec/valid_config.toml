@@ -1,8 +1,13 @@
 # Test valid config file
 
 # Global options
+<<<<<<< HEAD
 verbose = true
 trace = false
+=======
+verbose = false
+debug = false
+>>>>>>> upstream/master
 
 # Client options
 [client]
