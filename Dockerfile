@@ -3,17 +3,16 @@ MAINTAINER James White <dev.jameswhite+minicron@gmail.com>
 
 # Install Ruby and minicron build dependencies
 RUN apt-get update && apt-get install -y \
-  ruby \
   libsqlite3-dev \
-  ruby-dev \
-  build-essential \
-  less
+  wget \
+  unzip
 
-# Install minicron
-RUN gem install --no-ri --no-rdoc minicron
+# Get the latest minicron release
+RUN wget https://github.com/jamesrwhite/minicron/releases/download/v0.8.3/minicron-0.8.3-linux-x86_64.zip
+RUN unzip -o minicron-0.8.3-linux-x86_64.zip
 
-# Set up the sqlite database
-RUN minicron db setup
+# Add minicron folder to $PATH
+ENV PATH=/minicron-0.8.3-linux-x86_64:$PATH
 
 # Expose minicron on port 9292
 EXPOSE 9292

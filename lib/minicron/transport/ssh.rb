@@ -30,7 +30,7 @@ module Minicron
           :keys => [@private_key],
           :auth_methods => @auth_methods,
           :host_key => @host_key,
-          :timeout => Minicron.config['server']['ssh']['connect_timeout']
+          :timeout => @timeout
         )
       end
 
@@ -43,7 +43,7 @@ module Minicron
 
       # Close the SSH connection
       def close
-        @ssh.close unless @ssh.nil?
+        @ssh.close
       end
     end
   end

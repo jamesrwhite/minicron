@@ -1,0 +1,7 @@
+# COPY THIS FILE TO /etc/default/minicron
+
+MC_DAEMON=/usr/local/bin/minicron
+MC_USER=root
+MC_PID=/var/run/minicron/server.pid
+MC_LOG=/var/log/minicron.log
+MC_CONF=/etc/minicron.toml

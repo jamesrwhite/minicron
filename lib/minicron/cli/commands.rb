@@ -1,13 +1,23 @@
-require 'minicron'
-require 'insidious'
-require 'rake'
-require 'sinatra/activerecord/rake'
-require 'minicron/transport'
-require 'minicron/transport/client'
-require 'minicron/transport/server'
-require 'minicron/hub/app'
+autoload :Minicron,            'minicron'
+autoload :Insidious,           'insidious'
+autoload :Rake,                'rake'
+
+module Sinatra
+  autoload :ActiveRecordTasks, 'sinatra/activerecord/rake'
+end
 
 module Minicron
+  autoload :Transport,         'minicron/transport'
+
+  module Transport
+    autoload :Client,          'minicron/transport/client'
+    autoload :Server,          'minicron/transport/server'
+  end
+
+  module Hub
+    autoload :App,             'minicron/hub/app'
+  end
+
   module CLI
     class Commands
       # Add the `minicron db` command
@@ -19,11 +29,12 @@ module Minicron
           c.action do |args, opts|
             # Check that exactly one argument has been passed
             if args.length != 1
-              raise Minicron::ArgumentError, 'A valid command to run is required! See `minicron help db`'
+              fail ArgumentError, 'A valid command to run is required! See `minicron help db`'
             end
 
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
+            cli.always_trace! if Minicron.config['debug']
 
             # Setup the db
             Minicron::Hub::App.setup_db
@@ -50,10 +61,12 @@ module Minicron
           c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
           c.option '--pid_file STRING', String, "The path for daemon's PID file. Default: #{Minicron.config['server']['pid_file']}"
           c.option '--cron_file STRING', String, "The path to the cron file. Default: #{Minicron.config['server']['cron_file']}"
+          c.option '--debug', "Enable debug mode. Default: #{Minicron.config['server']['debug']}"
 
           c.action do |args, opts|
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
+            cli.always_trace! if Minicron.config['debug']
 
             # If we get no arguments then default the action to start
             action = args.first.nil? ? 'start' : args.first
@@ -61,7 +74,7 @@ module Minicron
             # Get an instance of insidious and set the pid file
             insidious = Insidious.new(
               :pid_file => Minicron.config['server']['pid_file'],
-              :daemonize => Minicron.config['debug'] == false
+              :daemonize => Minicron.config['server']['debug'] == false
             )
 
             case action
@@ -100,7 +113,7 @@ module Minicron
                 puts 'minicron is not running'
               end
             else
-              raise Minicron::ArgumentError, 'Invalid action, expected [start|stop|status]. See `minicron help server`'
+              fail ArgumentError, 'Invalid action, expected [start|stop|status]. See `minicron help server`'
             end
           end
         end
@@ -113,57 +126,70 @@ module Minicron
         cli.command :run do |c|
           c.syntax = "minicron run 'command -option value'"
           c.description = 'Runs the command passed as an argument.'
-          c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['client']['cli']['mode']}"
-          c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['client']['cli']['dry_run']}"
+          c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['cli']['mode']}"
+          c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['cli']['dry_run']}"
 
           c.action do |args, opts|
             # Check that exactly one argument has been passed
             if args.length != 1
-              raise Minicron::ArgumentError, 'A valid command to run is required! See `minicron help run`'
+              fail ArgumentError, 'A valid command to run is required! See `minicron help run`'
             end
 
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
+            cli.always_trace! if Minicron.config['debug']
 
-            # Set up the job and get the job and execution ids
-            unless Minicron.config['client']['cli']['dry_run']
-              # Get a client instance so we can send data about the job
-              client = Minicron::Transport::Client.new(
-                Minicron.config['client']['server']['scheme'],
-                Minicron.config['client']['server']['host'],
-                Minicron.config['client']['server']['port'],
-                Minicron.config['client']['server']['path']
-              )
+            begin
+              # Set up the job and get the job and execution ids
+              unless Minicron.config['cli']['dry_run']
+                # Get a faye instance so we can send data about the job
+                faye = Minicron::Transport::Client.new(
+                  Minicron.config['client']['scheme'],
+                  Minicron.config['client']['host'],
+                  Minicron.config['client']['port'],
+                  Minicron.config['client']['path']
+                )
 
-              # Get the command to run
-              command = args.first
+                # Set up the job and get the execution and job ids back from the server
+                # The execution number is also returned but it's only used by the frontend
+                ids = setup_job(args.first, faye)
+              end
+            rescue Exception => e
+              raise Exception, "Unable to setup job, reason: #{e.message}"
 
-              # Get the fully qualified domain name of the current host
-              fqdn = Minicron.get_fqdn
-
-              # Get the md5 hash for the job
-              job_hash = Minicron::Transport.get_job_hash(command, fqdn)
-
-              # Initialise the job and get the execution and job ids back from the server
-              # The execution number is also returned but it's only used by the frontend
-              job = client.init(
-                job_hash,
-                Minicron.get_user,
-                command,
-                fqdn,
-                Minicron.get_hostname,
-                Time.now.utc.to_i
-              )
+              # Ensure that all messages are delivered and that we
+              unless Minicron.config['cli']['dry_run']
+                faye.tidy_up
+              end
             end
 
             begin
               # Execute the command and yield the output
-              Minicron::CLI.run_command(args.first, :mode => Minicron.config['client']['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
+              Minicron::CLI.run_command(args.first, :mode => Minicron.config['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
+<<<<<<< HEAD
+                when :status
+                  unless Minicron.config['cli']['dry_run']
+                    faye.send(
+                      :job_id => ids[:job_id],
+                      :execution_id => ids[:execution_id],
+                      :type => :status,
+                      :message => output[:output]
+                    )
+                  end
+                when :command
+                  unless Minicron.config['cli']['dry_run']
+                    faye.send(
+                      :job_id => ids[:job_id],
+                      :execution_id => ids[:execution_id],
+                      :type => :output,
+                      :message => output[:output]
+=======
                 when :start
                   unless Minicron.config['client']['cli']['dry_run']
                     client.start(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -171,6 +197,7 @@ module Minicron
                 when :finish
                   unless Minicron.config['client']['cli']['dry_run']
                     client.finish(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -178,6 +205,7 @@ module Minicron
                 when :exit
                   unless Minicron.config['client']['cli']['dry_run']
                     client.exit(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -185,28 +213,78 @@ module Minicron
                 when :output
                   unless Minicron.config['client']['cli']['dry_run']
                     client.output(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
+>>>>>>> upstream/master
                     )
                   end
                 end
 
-                # Yield the output unless it's a status message
-                yield output[:output] unless [:start, :finish, :exit].include?(output[:type])
+                yield output[:output] unless output[:type] == :status
               end
             rescue Exception => e
               # Send the exception message to the server and yield it
+<<<<<<< HEAD
+              unless Minicron.config['cli']['dry_run']
+                faye.send(
+                  :job_id => ids[:job_id],
+                  :execution_id => ids[:execution_id],
+                  :type => :output,
+                  :message => e.message
+=======
               unless Minicron.config['client']['cli']['dry_run']
                 client.output(
+                  job[:job_id],
                   job[:execution_id],
                   e.message
+>>>>>>> upstream/master
                 )
               end
 
-              raise Minicron::CommandError, e
+              raise Exception, e
+            ensure
+              # Ensure that all messages are delivered and that we
+              unless Minicron.config['cli']['dry_run']
+                faye.ensure_delivery
+                faye.tidy_up
+              end
             end
           end
         end
+      end
+
+      private
+
+      # Setup a job by sending the SETUP command to the server
+      #
+      # @param command [String] the job command
+      # @param faye a faye client instance
+      # @return [Hash] the job_id and execution_id
+      def self.setup_job(command, faye)
+        # Get the fully qualified domain name of the currnet host
+        fqdn = Minicron.get_fqdn
+
+        # Get the md5 hash for the job
+        job_hash = Minicron::Transport.get_job_hash(command, fqdn)
+
+        # Fire up eventmachine
+        faye.ensure_em_running
+
+        # Setup the job on the server
+        ids = faye.setup(
+          :job_hash => job_hash,
+          :user => Minicron.get_user,
+          :command => command,
+          :fqdn => fqdn,
+          :hostname => Minicron.get_hostname
+        )
+
+        # Wait until we get the execution id
+        faye.ensure_delivery
+
+        # Return the ids
+        ids
       end
     end
   end

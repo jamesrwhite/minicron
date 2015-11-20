@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+### BEGIN INIT INFO
+# Provides:          minicron
+# Required-Start:    $local_fs $remote_fs $apache2
+# Required-Stop:     $local_fs $remote_fs $apache2
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/Stop/Status minicron
+# Description:       Start/Stop/Status Minicron Server, Minicron is a centralised
+#                    Cron management server.
+### END INIT INFO
+
+# Author: Kyle Hartigan <kyle.hartigan@cybercrysis.net.au>
+
+# Check for existence of defaults file and utilize if available
+if [ -f /etc/default/minicron ]; then
+    . /etc/default/minicron
+else
+    echo "/etc/default/minicron not found please copy the default file, minicron defaults currently being used.";
+fi
+
+. /lib/lsb/init-functions
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+# Script Name
+NAME=minicron
+
+# App Name
+DESC=MiniCron
+
+## Don't Edit this file
+## Edit user configuration in the /etc/default/minicron to change
+##
+## MC_APP_PATH= # Location of the application
+## MC_USER= # User that minicron runs as, the default is root
+## MC_PID= # Location of PID File, the default is /tmp/minicron.pid
+## MC_LOG= # Location of Log file, the default is /var/log/minicron.log
+## MC_CONF= # Location of the minicron log file, the default is /etc/minicron.toml
+##
+## Example if you want to run minicron as a differnt user
+## Add/Modify MC_USER=username to the /etc/default/minicron
+## Otherwise default configuration is used
+
+# Defaults
+# Minicron Folder & binary location
+MC_APP_PATH=${MC_APP_PATH-/opt/minicron/}
+MC_DAEMON=minicron
+
+# Minicron Run As user
+MC_USER=${MC_USER-root}
+
+# Minicron PID Folder & File Location
+MC_PIDPATH=${MC_PIDPATH-/var/run/minicron}
+MC_PIDFILE=${MC_PIDFILE-/var/run/minicron/server.pid}
+
+# Minicron Log File Location
+MC_LOG=${MC_LOG-/var/log/minicron.log}
+
+# Minicron Config file location
+MC_CONF=${MC_CONF-/etc/minicron.toml}
+
+MC_DAEMON_OPTS="server --config $MC_CONF"
+
+test -x $MC_APP_PATH/$MC_DAEMON || exit 0
+
+set -e
+
+# Create PID directory if not exist and ensure the minicron user can write to it
+if [ ! -d $MC_PIDPATH ]; then
+	mkdir -p $MC_PIDPATH
+	chown $MC_USER $MC_PIDPATH
+fi
+
+if [ -e $MC_PIDFILE ]; then
+	PID=`cat $MC_PIDFILE`
+	if ! kill -0 $PID > /dev/null 2>&1; then
+		echo "Removing Stale $MC_PIDFILE"
+		rm $MC_PIDFILE
+	    fi
+fi
+
+case "$1" in
+	start)
+		echo "Starting $DESC"
+		start-stop-daemon -d $MC_APP_PATH -c $MC_USER --start --pidfile $MC_PIDFILE --exec $MC_DAEMON -- $MC_DAEMON_OPTS
+	;;
+	stop)
+		echo "Stopping $DESC"
+		start-stop-daemon --stop --pidfile $MC_PIDFILE --retry 6
+		rm $MC_PIDFILE
+	;;
+	status)
+		status_of_proc -p $MC_PIDFILE "$MC_DAEMON" "$NAME"
+	;;
+	restart|force-reload)
+		echo "Restart $DESC"
+		start-stop-daemon --stop --pidfile $MC_PIDFILE --retry 15
+		start-stop-daemon -d $MC_APP_PATH -c $MC_USER --start --pidfile $MC_PIDFILE --exec $MC_DAEMON -- $MC_DAEMON_OPTS
+		;;
+	*)
+		N=/etc/init.d/$NAME
+		echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+		exit 1
+	;;
+esac
+
+exit 0
