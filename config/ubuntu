@@ -1,4 +1,5 @@
-#! /bin/sh
+#!/usr/bin/env bash
+
 ### BEGIN INIT INFO
 # Provides:          minicron
 # Required-Start:    $local_fs $remote_fs $apache2
@@ -12,7 +13,7 @@
 
 # Author: Kyle Hartigan <kyle.hartigan@cybercrysis.net.au>
 
-# Check for existance of defaults file and utilze if available
+# Check for existence of defaults file and utilize if available
 if [ -f /etc/default/minicron ]; then
     . /etc/default/minicron
 else
@@ -20,7 +21,6 @@ else
 fi
 
 . /lib/lsb/init-functions
-
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
 
 # Script Name
@@ -32,7 +32,7 @@ DESC=MiniCron
 ## Don't Edit this file
 ## Edit user configuration in the /etc/default/minicron to change
 ##
-## MC_DAEMON= # Location of minicron binary, the Default is /usr/local/bin/minicron
+## MC_APP_PATH= # Location of the application
 ## MC_USER= # User that minicron runs as, the default is root
 ## MC_PID= # Location of PID File, the default is /tmp/minicron.pid
 ## MC_LOG= # Location of Log file, the default is /var/log/minicron.log
@@ -44,8 +44,8 @@ DESC=MiniCron
 
 # Defaults
 # Minicron Folder & binary location
-MC_APP_PATH=${MC_APP_PATH-/usr/local/bin/}
-MC_DAEMON=${MC_DAEMON-minicron}
+MC_APP_PATH=${MC_APP_PATH-/opt/minicron/}
+MC_DAEMON=minicron
 
 # Minicron Run As user
 MC_USER=${MC_USER-root}
@@ -84,15 +84,15 @@ case "$1" in
 	start)
 		echo "Starting $DESC"
 		start-stop-daemon -d $MC_APP_PATH -c $MC_USER --start --pidfile $MC_PIDFILE --exec $MC_DAEMON -- $MC_DAEMON_OPTS
-		;;
+	;;
 	stop)
 		echo "Stopping $DESC"
 		start-stop-daemon --stop --pidfile $MC_PIDFILE --retry 6
 		rm $MC_PIDFILE
-		;;
+	;;
 	status)
 		status_of_proc -p $MC_PIDFILE "$MC_DAEMON" "$NAME"
-		;;
+	;;
 	restart|force-reload)
 		echo "Restart $DESC"
 		start-stop-daemon --stop --pidfile $MC_PIDFILE --retry 15
@@ -102,7 +102,7 @@ case "$1" in
 		N=/etc/init.d/$NAME
 		echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
 		exit 1
-		;;
+	;;
 esac
 
 exit 0
