@@ -116,11 +116,8 @@ instead.
 1. First check you meet the [requirements](#requirements)
 
 2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.3) zip/tarball for your OS and
-   install minicron manually or use the handy install script (still being worked on):
-
-```
-sh -c "$(curl -fsSL https://install.minicron.com)"
-```
+   install minicron manually or [build it yourself](https://github.com/jamesrwhite/minicron-build/blob/master/README.md)
+   if you're feeling adventurous!
 
 4. Set your database configuration options in ````/etc/minicron.toml````, you can use the
    [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options
@@ -315,9 +312,9 @@ Credit
 -------
 
 minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development.
-I started out trying to list all of them but it was taking way too much time so check out
-[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec#L22-L55) and
-[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb#L47-L62).
+I started out trying to list all of them but it was taking way too much time so check out the dependencies in
+[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec) and
+[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb).
 
 License
 --------

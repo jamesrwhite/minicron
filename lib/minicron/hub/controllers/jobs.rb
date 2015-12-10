@@ -72,17 +72,21 @@ class Minicron::Hub::App
 
       Minicron::Hub::Job.transaction do
         # Find the job
-        @job = Minicron::Hub::Job.includes(:host).find(params[:id])
+        @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:id])
 
         # Store a copy of the current job user in case we need to change it
-        old_user = @job.user
+        old_job = @job.dup
 
         # Update the name and user
         @job.name = params[:name]
         @job.user = params[:user]
+        @job.command = params[:command]
 
-        # Only update the job user if it has changed
-        if old_user != @job.user
+        # Update the job on the remote if the user/command has changed
+        if old_job.user != @job.user || old_job.command != @job.command
+          # Rehash the job command
+          @job.job_hash = Minicron::Transport.get_job_hash(@job.command, @job.host.fqdn)
+
           ssh = Minicron::Transport::SSH.new(
             :user => @job.host.user,
             :host => @job.host.host,
@@ -94,7 +98,7 @@ class Minicron::Hub::App
           cron = Minicron::Cron.new(ssh)
 
           # Update the job schedules in the crontab
-          cron.update_user(@job, old_user, @job.user)
+          cron.update_job(old_job, @job)
 
           # Tidy up
           ssh.close

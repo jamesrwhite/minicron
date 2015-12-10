@@ -159,6 +159,60 @@ describe Minicron do
     end
   end
 
+  describe '.parse_config_hash' do
+
+    it 'should set a first-level config value' do
+      options = { 'test_key' => 'test_value' }
+
+      Minicron.parse_config_hash(options)
+
+      options.each do |key, value|
+        expect(Minicron.config[key]).to eq value
+      end
+    end
+
+    it 'should set a second-level config value' do
+      options = { 'client' => { 'test_key' => 'test_value' } }
+
+      Minicron.parse_config_hash(options)
+
+      options.each do |key1, value1|
+        value1.each do |key2, value2|
+          expect(Minicron.config[key1][key2]).to eq value2
+        end
+      end
+    end
+
+    it 'should set a third-level config value' do
+      options = { 'client' => { 'server' => { 'test_key' => 'test_value' } } }
+
+      Minicron.parse_config_hash(options)
+
+      options.each do |key1, value1|
+        value1.each do |key2, value2|
+          value2.each do |key3, value3|
+            expect(Minicron.config[key1][key2][key3]).to eq value3
+          end
+        end
+      end
+    end
+
+    it 'should create nested objects if necessary' do
+      options = { 'client' => { 'non_existent_key' => { 'test_key' => 'test_value' } } }
+
+      Minicron.parse_config_hash(options)
+
+      options.each do |key1, value1|
+        value1.each do |key2, value2|
+          value2.each do |key3, value3|
+            expect(Minicron.config[key1][key2][key3]).to eq value3
+          end
+        end
+      end
+    end
+
+  end
+
   describe '.generate_ssh_key' do
     it 'should generate an ssh key pub/priv pair' do
       Minicron.generate_ssh_key('rspec', 1337, 'rspec')
@@ -187,6 +241,26 @@ describe Minicron do
   describe '.get_user' do
     it 'should return the user as a string with no newline' do
       expect(Minicron.get_user).to eq `whoami`.strip
+    end
+  end
+
+  describe '.get_db_adapter' do
+    it 'should return the correct adapter name if mysql' do
+      expect(Minicron.get_db_adapter('mysql')).to eq 'mysql2'
+    end
+
+    it 'should return the correct adapter name if postgresql' do
+      expect(Minicron.get_db_adapter('postgresql')).to eq 'postgresql'
+    end
+
+    it 'should return the correct adapter name if sqlite' do
+      expect(Minicron.get_db_adapter('sqlite')).to eq 'sqlite3'
+    end
+
+    it 'should raise an Exception if undefined adapter is specified' do
+      expect do
+        Minicron.get_db_adapter('mongodb')
+      end.to raise_error Minicron::DatabaseError
     end
   end
 end
