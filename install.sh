@@ -32,7 +32,7 @@ echo "Removing $TMP_DIR_LOCATION"
 rm -rf $TMP_DIR_LOCATION
 
 echo "Removing $BIN_LOCATION and linking $BIN_LOCATION to $LIB_LOCATION/minicron (may require password)"
-sudo rm -f $BIN_LOCATION && ln -s $LIB_LOCATION/minicron $BIN_LOCATION
+sudo rm -f $BIN_LOCATION && sudo ln -s $LIB_LOCATION/minicron $BIN_LOCATION
 
 echo
 echo "done!"
