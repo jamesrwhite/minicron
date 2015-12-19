@@ -4,18 +4,7 @@ set -e
 VERSION="0.8.3"
 
 echo "Installing mincron v$VERSION"
-
-# Detect the OS type
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    OS="linux-$HOST_TYPE"
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    OS="osx"
-else
-	echo "$OSTYPE is not supported, sorry!"
-	exit 1
-fi
-
-echo "Detected OS as $OS"
+echo "OS input as $OS"
 
 DOWNLOAD_FILE="https://github.com/jamesrwhite/minicron/releases/download/v$VERSION/minicron-$VERSION-$OS.zip"
 # DOWNLOAD_FILE="http://localhost:8000/minicron-$VERSION-$OS.zip"
