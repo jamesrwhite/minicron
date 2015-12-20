@@ -78,27 +78,17 @@ Requirements
 #### Web Server / Reverse Proxy
 
 #### Nginx
-If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an
-[example config](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for nginx.
+A simple [example config](https://github.com/jamesrwhite/minicron/blob/develop/config/nginx.conf) for nginx is provided.
 
-#### Apache2
-If your using the apache2 as your reverse proxy start by having the following modules installed
-- ````libapache2-mod-proxy-html````
-- ````apache2-utils````
+#### Apache
+If you're using apache as your reverse proxy you need to ensure you have the following modules installed:
+- `libapache2-mod-proxy-html`
+- `apache2-utils`
 
-Then run the following commands to make sure the modules are enabled
-- ````sudo a2enmod proxy proxy_html proxy_http xml2enc````
-- ````sudo service apache2 restart````
+Run the following to enable them and then restart apache
+```a2enmod proxy proxy_html proxy_http xml2enc```
 
-Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following
-[example config](https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf), update the required
-parameters and save and exit. enable the virtual host file by running ````sudo a2ensite minicron.conf && sudo service apache2 reload````
-
-Last this left to do is create a htpasswd.users, use this command ````sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME````
-replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.
-
-Test your URL and you should be prompted for authentication and then have access to your minicron site through apache
+A simple [example config](https://github.com/jamesrwhite/minicron/blob/develop/config/apache.conf) for apache is provided.
 
 Installation
 -------------
@@ -121,11 +111,11 @@ instead.
    ```
    OS=linux-x86_64 bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
    ```
-   ..or [build it yourself](https://github.com/jamesrwhite/minicron-build/blob/master/README.md)
+   ..or [build it yourself](https://github.com/jamesrwhite/minicron-build/blob/develop/README.md)
    if you're feeling adventurous!
 
 3. Set your database configuration options in ````/etc/minicron.toml````, you can use the
-   [minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml) as a guide on what options
+   [minicron.toml](https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml) as a guide on what options
    are configurable
 
 4. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
@@ -138,7 +128,7 @@ instead.
   > ````
 
 6. You can then ````minicron db setup```` to create the database schema, alternatively you can use
-   the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql) (MySQL)
+   the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/develop/lib/minicron/hub/db/schema.sql) (MySQL)
 
 7. Done! See the usage section below for more details on how to use minicron now you have it installed
 
@@ -201,7 +191,7 @@ you can also use the ````stop````, ````restart```` and ````status```` commands t
 To run the server in debug mode, so you can see its output and any errors you can pass the ````--debug````
 option.
 
-See [nginx.conf](https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf) for an example of
+See [nginx.conf](https://github.com/jamesrwhite/minicron/blob/develop/config/nginx.conf) for an example of
 how to run minicron behind a reverse proxy.
 
 #### Connecting to a host via SSH
@@ -228,7 +218,7 @@ or ````--version```` are passed to the CLI.
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
 to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
-[minicron.toml](https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml)
+[minicron.toml](https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml)
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
 
@@ -287,7 +277,7 @@ on this but until then some rough thoughts in no real order..
 Contributing
 ------------
 
-Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md)
+Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/develop/CONTRIBUTING.md)
 for more info.
 
 Areas that I would love some help with:
@@ -318,10 +308,10 @@ Credit
 
 minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development.
 I started out trying to list all of them but it was taking way too much time so check out the dependencies in
-[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec) and
-[app.rb](https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb).
+[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/develop/minicron.gemspec) and
+[app.rb](https://github.com/jamesrwhite/minicron/blob/develop/lib/minicron/hub/app.rb).
 
 License
 --------
 
-minicron is licensed under the GPL v3, [see here for the full license](https://github.com/jamesrwhite/minicron/blob/master/LICENSE)
+minicron is licensed under the GPL v3, [see here for the full license](https://github.com/jamesrwhite/minicron/blob/develop/LICENSE)
