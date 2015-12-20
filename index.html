@@ -121,35 +121,22 @@ you don't see the feature you want there add it!</p>
 <h4>
 <a id="nginx" class="anchor" href="#nginx" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nginx</h4>
 
-<p>If you want to run minicron behind a web server or proxy it needs to support the web socket protocol.
-nginx for example supports web sockets from version 1.3.13 and up. I've included an
-<a href="https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf">example config</a> for nginx.</p>
+<p>A simple <a href="https://github.com/jamesrwhite/minicron/blob/develop/config/nginx.conf">example config</a> for nginx is provided.</p>
 
 <h4>
-<a id="apache2" class="anchor" href="#apache2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Apache2</h4>
+<a id="apache" class="anchor" href="#apache" aria-hidden="true"><span class="octicon octicon-link"></span></a>Apache</h4>
 
-<p>If your using the apache2 as your reverse proxy start by having the following modules installed</p>
+<p>If you're using apache as your reverse proxy you need to ensure you have the following modules installed:</p>
 
 <ul>
 <li><code>libapache2-mod-proxy-html</code></li>
 <li><code>apache2-utils</code></li>
 </ul>
 
-<p>Then run the following commands to make sure the modules are enabled</p>
+<p>Run the following to enable them and then restart apache
+<code>a2enmod proxy proxy_html proxy_http xml2enc</code></p>
 
-<ul>
-<li><code>sudo a2enmod proxy proxy_html proxy_http xml2enc</code></li>
-<li><code>sudo service apache2 restart</code></li>
-</ul>
-
-<p>Create a virtualhost file in your apache2/sites-avalible folder called minicron.conf and paste the following
-<a href="https://github.com/jamesrwhite/minicron/blob/master/config/apache.conf">example config</a>, update the required
-parameters and save and exit. enable the virtual host file by running <code>sudo a2ensite minicron.conf &amp;&amp; sudo service apache2 reload</code></p>
-
-<p>Last this left to do is create a htpasswd.users, use this command <code>sudo htpasswd -c /etc/apache2/htpasswd.users $USERNAME</code>
-replace $USERNAME with your desired username and press enter you will be prompted to enter and confirm a password.</p>
-
-<p>Test your URL and you should be prompted for authentication and then have access to your minicron site through apache</p>
+<p>A simple <a href="https://github.com/jamesrwhite/minicron/blob/develop/config/apache.conf">example config</a> for apache is provided.</p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -167,11 +154,19 @@ instead.</p>
 
 <ol>
 <li><p>First check you meet the <a href="#requirements">requirements</a></p></li>
-<li><p>Either <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.8.3">grab the latest</a> zip/tarball for your OS and
-install minicron manually or <a href="https://github.com/jamesrwhite/minicron-build/blob/master/README.md">build it yourself</a>
-if you're feeling adventurous!</p></li>
+<li>
+<p>Either <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.8.4">grab the latest</a> zip/tarball for your OS, use
+the handy <a href="https://github.com/jamesrwhite/minicron/blob/develop/install.sh">install script</a> (where <code>OS</code> is one of:
+osx, linux-x86, linux-x86_64)</p>
+
+<pre><code>OS=linux-x86_64 bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
+</code></pre>
+
+<p>..or <a href="https://github.com/jamesrwhite/minicron-build/blob/develop/README.md">build it yourself</a>
+if you're feeling adventurous!</p>
+</li>
 <li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the
-<a href="https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml">minicron.toml</a> as a guide on what options
+<a href="https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml">minicron.toml</a> as a guide on what options
 are configurable</p></li>
 <li>
 <p>Make sure you have created an empty database with the name you set in <code>/etc/minicron.toml</code></p>
@@ -185,7 +180,7 @@ are configurable</p></li>
 </blockquote>
 </li>
 <li><p>You can then <code>minicron db setup</code> to create the database schema, alternatively you can use
-the <a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/db/schema.sql">schema dump provided</a> (MySQL)</p></li>
+the <a href="https://github.com/jamesrwhite/minicron/blob/develop/lib/minicron/hub/db/schema.sql">schema dump provided</a> (MySQL)</p></li>
 <li><p>Done! See the usage section below for more details on how to use minicron now you have it installed</p></li>
 </ol>
 
@@ -196,8 +191,8 @@ the <a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hu
 
 <div class="highlight highlight-source-shell"><pre>git clone https://github.com/jamesrwhite/minicron.git
 <span class="pl-c1">cd</span> minicron
-docker build -t minicron-0.8.3 <span class="pl-c1">.</span>
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.3
+docker build -t minicron-0.8.4 <span class="pl-c1">.</span>
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.4
 docker ps <span class="pl-k">|</span> grep minicron
 docker <span class="pl-c1">exec</span> <span class="pl-k">*</span>container_hash<span class="pl-k">*</span> minicron server start</pre></div>
 
@@ -242,7 +237,7 @@ you can also use the <code>stop</code>, <code>restart</code> and <code>status</c
 <p>To run the server in debug mode, so you can see its output and any errors you can pass the <code>--debug</code>
 option.</p>
 
-<p>See <a href="https://github.com/jamesrwhite/minicron/blob/master/config/nginx.conf">nginx.conf</a> for an example of
+<p>See <a href="https://github.com/jamesrwhite/minicron/blob/develop/config/nginx.conf">nginx.conf</a> for an example of
 how to run minicron behind a reverse proxy.</p>
 
 <h4>
@@ -272,7 +267,7 @@ or <code>--version</code> are passed to the CLI.</p>
 <p>Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the <code>--config</code> global option. The file is expected
 to be in the <a href="https://github.com/mojombo/toml">toml</a> format. The default options are specified in the
-<a href="https://github.com/jamesrwhite/minicron/blob/master/config/minicron.toml">minicron.toml</a>
+<a href="https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml">minicron.toml</a>
 file and minicron will parse a config located in <code>/etc/minicron.toml</code> if it exists. Options specified via
 the command line will take precedence over those taken from a config file.</p>
 
@@ -338,7 +333,7 @@ on this but until then some rough thoughts in no real order..</p>
 <h2>
 <a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-<p>Feedback and pull requests are welcome, please see <a href="https://github.com/jamesrwhite/minicron/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>
+<p>Feedback and pull requests are welcome, please see <a href="https://github.com/jamesrwhite/minicron/blob/develop/CONTRIBUTING.md">CONTRIBUTING.md</a>
 for more info.</p>
 
 <p>Areas that I would love some help with:</p>
@@ -375,13 +370,13 @@ or <a href="https://twitter.com/minicron_dev">@minicron_dev</a>
 
 <p>minicron makes use of a <em>lot</em> of awesome open source projects that have saved me a lot of time in its development.
 I started out trying to list all of them but it was taking way too much time so check out the dependencies in
-<a href="https://github.com/jamesrwhite/minicron/blob/master/minicron.gemspec">minicron.gemspec</a> and
-<a href="https://github.com/jamesrwhite/minicron/blob/master/lib/minicron/hub/app.rb">app.rb</a>.</p>
+<a href="https://github.com/jamesrwhite/minicron/blob/develop/minicron.gemspec">minicron.gemspec</a> and
+<a href="https://github.com/jamesrwhite/minicron/blob/develop/lib/minicron/hub/app.rb">app.rb</a>.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>minicron is licensed under the GPL v3, <a href="https://github.com/jamesrwhite/minicron/blob/master/LICENSE">see here for the full license</a></p>
+<p>minicron is licensed under the GPL v3, <a href="https://github.com/jamesrwhite/minicron/blob/develop/LICENSE">see here for the full license</a></p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/jamesrwhite/minicron">minicron</a> is maintained by <a href="https://github.com/jamesrwhite">jamesrwhite</a>.</span>
