@@ -11,7 +11,9 @@ class Minicron::Hub::App
 
   get '/job/:id' do
     # Look up the job
-    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules).find(params[:id])
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
 
     erb :'jobs/show', :layout => :'layouts/app'
   end
