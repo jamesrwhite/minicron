@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-VERSION="0.8.4"
+VERSION="0.8.5"
 
 echo "Installing mincron v$VERSION"
 echo "OS input as $OS"
