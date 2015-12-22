@@ -2,7 +2,7 @@ class Minicron::Hub::App
   get '/execution/:id' do
     # Look up the job execution
     @execution = Minicron::Hub::Execution.includes(:job_execution_outputs, :job => :host)
-                                         .order(:created_at => :desc, :started_at => :desc)
+                                         .order('job_execution_outputs.seq')
                                          .find(params[:id])
 
     erb :'executions/show', :layout => :'layouts/app'
