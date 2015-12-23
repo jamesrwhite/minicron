@@ -20,7 +20,7 @@ else
 fi
 
 echo "Installing mincron v$VERSION"
-echo "OS input as $OS"
+echo "OS detected as $OS"
 
 DOWNLOAD_FILE="https://github.com/jamesrwhite/minicron/releases/download/v$VERSION/minicron-$VERSION-$OS.zip"
 # DOWNLOAD_FILE="http://localhost:8000/minicron-$VERSION-$OS.zip"
