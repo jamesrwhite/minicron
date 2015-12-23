@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-VERSION="0.8.4"
+VERSION="0.8.5"
+
 if [[ $(uname -s) == "Linux" ]]
 then
         if [[ $(uname -m) == "x86_64" ]]
