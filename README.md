@@ -106,10 +106,9 @@ instead.
 1. First check you meet the [requirements](#requirements)
 
 2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.5) zip/tarball for your OS, use
-   the handy [install script](https://github.com/jamesrwhite/minicron/blob/develop/install.sh) (where `OS` is one of:
-   osx, linux-x86, linux-x86_64)
+   the handy [install script](https://github.com/jamesrwhite/minicron/blob/develop/install.sh)
    ```
-   OS=linux-x86_64 bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
+   bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
    ```
    ..or [build it yourself](https://github.com/jamesrwhite/minicron-build/blob/develop/README.md)
    if you're feeling adventurous!
