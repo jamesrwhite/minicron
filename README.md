@@ -52,7 +52,7 @@ Features
 - Alerts when jobs executions are missed or fail via:
   - Email
   - SMS ([using Twilio](https://www.twilio.com))
-  - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
+  - [PagerDuty](https://www.pagerduty.com/) (SMS, Phone, Mobile Push Notifications and Email)
 
 Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if
 you don't see the feature you want there add it!
@@ -216,7 +216,7 @@ or ````--version```` are passed to the CLI.
 
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
-to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
+to be in the [toml](https://github.com/toml-lang/toml) format. The default options are specified in the
 [minicron.toml](https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml)
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
