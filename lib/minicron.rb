@@ -38,7 +38,6 @@ module Minicron
       'port' => 9292,
       'path' => '/',
       'pid_file' => '/tmp/minicron.pid',
-      'cron_file' => '/etc/crontab',
       'session' => {
         'name' => 'minicron.session',
         'domain' => '0.0.0.0',

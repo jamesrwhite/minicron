@@ -50,7 +50,6 @@ module Minicron
           c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
           c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
           c.option '--pid_file STRING', String, "The path for daemon's PID file. Default: #{Minicron.config['server']['pid_file']}"
-          c.option '--cron_file STRING', String, "The path to the cron file. Default: #{Minicron.config['server']['cron_file']}"
 
           c.action do |args, opts|
             # Parse the file and cli config options
