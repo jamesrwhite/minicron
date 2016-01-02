@@ -29,10 +29,10 @@ class Minicron::Hub::App
   end
 
   post '/jobs/new' do
-    begin
-      # All the hosts for the select dropdown
-      @hosts = Minicron::Hub::Host.all
+    # All the hosts for the select dropdown
+    @hosts = Minicron::Hub::Host.all
 
+    begin
       # First we need to look up the host
       host = Minicron::Hub::Host.find(params[:host])
 
@@ -68,10 +68,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/edit' do
-    begin
-      # All the hosts for the select dropdown
-      @hosts = Minicron::Hub::Host.all
+    # All the hosts for the select dropdown
+    @hosts = Minicron::Hub::Host.all
 
+    begin
       Minicron::Hub::Job.transaction do
         # Find the job
         @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:id])
@@ -99,8 +99,11 @@ class Minicron::Hub::App
           # Get an instance of the cron class
           cron = Minicron::Cron.new(ssh)
 
-          # Update the job schedules in the crontab
-          cron.update_job(old_job, @job)
+          # Look up the host and its jobs and job schedules
+          host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+          # Update the crontab
+          cron.update_crontab(host)
 
           # Tidy up
           ssh.close
@@ -127,10 +130,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/delete' do
-    begin
-      # Look up the job
-      @job = Minicron::Hub::Job.includes(:schedules).find(params[:id])
+    # Look up the job
+    @job = Minicron::Hub::Job.includes(:schedules).find(params[:id])
 
+    begin
       Minicron::Hub::Job.transaction do
         # Try and delete the job
         Minicron::Hub::Job.destroy(params[:id])
@@ -147,8 +150,11 @@ class Minicron::Hub::App
           # Get an instance of the cron class
           cron = Minicron::Cron.new(ssh)
 
-          # Delete the job from the crontab
-          cron.delete_job(@job)
+          # Look up the host and its jobs and job schedules
+          host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+          # Update the crontab
+          cron.update_crontab(host)
 
           # Tidy up
           ssh.close
@@ -184,10 +190,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:job_id/schedules/new' do
-    begin
-      # Look up the job
-      @job = Minicron::Hub::Job.find(params[:job_id])
+    # Look up the job
+    @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:job_id])
 
+    begin
       # First we need to check a schedule like this doesn't already exist
       exists = Minicron::Hub::Schedule.exists?(
         :minute => params[:minute].empty? ? nil : params[:minute],
@@ -215,22 +221,22 @@ class Minicron::Hub::App
           :job_id => params[:job_id]
         )
 
-        # Get the job and host for the schedule
-        job = Minicron::Hub::Job.includes(:host).find(schedule.job_id)
-
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
-          :user => job.host.user,
-          :host => job.host.host,
-          :port => job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
         )
 
         # Get an instance of the cron class
         cron = Minicron::Cron.new(ssh)
 
-        # Add the schedule to the crontab
-        cron.add_schedule(job, schedule.formatted)
+        # Look up the host
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
 
         # Tidy up
         ssh.close
@@ -259,10 +265,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:job_id/schedule/:schedule_id/edit' do
-    begin
-      # Look up the schedule and job
-      @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
+    # Look up the schedule and job
+    @schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:schedule_id])
 
+    begin
       # To keep the view similar to #new store the job here
       @job = @schedule.job
 
@@ -288,12 +294,11 @@ class Minicron::Hub::App
         @schedule.day_of_the_week = params[:day_of_the_week].empty? ? nil : params[:day_of_the_week]
         @schedule.special = params[:special].empty? ? nil : params[:special]
 
-        # Update the schedule
-        cron.update_schedule(
-          @schedule.job,
-          old_schedule,
-          @schedule.formatted
-        )
+        # Look up the host and its jobs and job schedules
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
 
         # Tidy up
         ssh.close
@@ -320,10 +325,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/schedule/:schedule_id/delete' do
-    begin
-      # Find the schedule
-      @schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:schedule_id])
+    # Find the schedule
+    @schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:schedule_id])
 
+    begin
       Minicron::Hub::Schedule.transaction do
         # Try and delete the schedule
         Minicron::Hub::Schedule.destroy(params[:schedule_id])
@@ -340,8 +345,11 @@ class Minicron::Hub::App
           # Get an instance of the cron class
           cron = Minicron::Cron.new(ssh)
 
-          # Delete the schedule from the crontab
-          cron.delete_schedule(@schedule.job, @schedule.formatted)
+          # Look up the host and its jobs and job schedules
+          host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@schedule.job.host.id)
+
+          # Update the crontab
+          cron.update_crontab(host)
 
           # Tidy up
           ssh.close

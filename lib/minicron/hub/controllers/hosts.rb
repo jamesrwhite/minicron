@@ -60,10 +60,10 @@ class Minicron::Hub::App
   end
 
   post '/host/:id/edit' do
-    begin
-      # Find the host
-      @host = Minicron::Hub::Host.find(params[:id])
+    # Find the host
+    @host = Minicron::Hub::Host.find(params[:id])
 
+    begin
       # Update its data
       @host.name = params[:name]
       @host.fqdn = params[:fqdn]
@@ -92,7 +92,7 @@ class Minicron::Hub::App
 
   post '/host/:id/delete' do
     # Look up the host
-    @host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
+    @host = Minicron::Hub::Host.includes(:jobs => :schedules).find(params[:id])
 
     begin
       Minicron::Hub::Host.transaction do
@@ -111,8 +111,8 @@ class Minicron::Hub::App
           # Get an instance of the cron class
           cron = Minicron::Cron.new(ssh)
 
-          # Delete the host from the crontab
-          cron.delete_host(@host)
+          # Update the crontab
+          cron.update_crontab(@host)
 
           # Tidy up
           ssh.close
@@ -134,10 +134,10 @@ class Minicron::Hub::App
   end
 
   get '/host/:id/test' do
-    begin
-      # Get the host
-      @host = Minicron::Hub::Host.find(params[:id])
+    # Get the host
+    @host = Minicron::Hub::Host.find(params[:id])
 
+    begin
       # Set up the ssh instance
       ssh = Minicron::Transport::SSH.new(
         :user => @host.user,
@@ -150,7 +150,7 @@ class Minicron::Hub::App
       cron = Minicron::Cron.new(ssh)
 
       # Test the SSH connection
-      @test = cron.test_host_permissions
+      @test = cron.get_host_permissions
 
       # Tidy up
       ssh.close
