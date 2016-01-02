@@ -1,3 +1,4 @@
+require 'better_errors'
 require 'minicron'
 require 'sinatra/base'
 require 'sinatra/activerecord'
@@ -14,6 +15,11 @@ module Minicron::Hub
 
     # Set the application root
     set :root, Minicron::HUB_PATH
+
+    configure :development do
+      use BetterErrors::Middleware
+      BetterErrors.application_root = __dir__
+    end
 
     # General Sinatra configuration
     configure do
