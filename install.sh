@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-VERSION="0.8.5"
+VERSION="0.9.0"
 
 if [[ $(uname -s) == "Linux" ]]
 then

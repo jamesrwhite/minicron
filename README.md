@@ -105,7 +105,7 @@ instead.
 
 1. First check you meet the [requirements](#requirements)
 
-2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.5) zip/tarball for your OS, use
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.0) zip/tarball for your OS, use
    the handy [install script](https://github.com/jamesrwhite/minicron/blob/develop/install.sh)
    ```
    bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
@@ -138,8 +138,8 @@ You can also run minicron in a docker container, see below for instructions how:
 ````bash
 git clone https://github.com/jamesrwhite/minicron.git
 cd minicron
-docker build -t minicron-0.8.5 .
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.5
+docker build -t minicron-0.9.0 .
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.9.0
 docker ps | grep minicron
 docker exec *container_hash* minicron server start
 ````

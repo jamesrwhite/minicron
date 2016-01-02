@@ -8,11 +8,11 @@ RUN apt-get update && apt-get install -y \
   unzip
 
 # Get the latest minicron release
-RUN wget https://github.com/jamesrwhite/minicron/releases/download/v0.8.5/minicron-0.8.5-linux-x86_64.zip
-RUN unzip -o minicron-0.8.5-linux-x86_64.zip
+RUN wget https://github.com/jamesrwhite/minicron/releases/download/v0.9.0/minicron-0.9.0-linux-x86_64.zip
+RUN unzip -o minicron-0.9.0-linux-x86_64.zip
 
 # Add minicron folder to $PATH
-ENV PATH=/minicron-0.8.5-linux-x86_64:$PATH
+ENV PATH=/minicron-0.9.0-linux-x86_64:$PATH
 
 # Expose minicron on port 9292
 EXPOSE 9292
