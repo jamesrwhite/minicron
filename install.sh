@@ -1,10 +1,26 @@
 #!/bin/bash
 set -e
 
-VERSION="0.8.4"
+VERSION="0.8.5"
+
+if [[ $(uname -s) == "Linux" ]]
+then
+    if [[ $(uname -m) == "x86_64" ]]
+    then
+        OS="linux-x86_64"
+    else
+        OS="linux-x86"
+    fi
+elif [[ $(uname -s) == "Darwin" ]]
+then
+    OS="osx"
+else
+        echo "Unknown OS"
+        exit 1
+fi
 
 echo "Installing mincron v$VERSION"
-echo "OS input as $OS"
+echo "OS detected as $OS"
 
 DOWNLOAD_FILE="https://github.com/jamesrwhite/minicron/releases/download/v$VERSION/minicron-$VERSION-$OS.zip"
 # DOWNLOAD_FILE="http://localhost:8000/minicron-$VERSION-$OS.zip"

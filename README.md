@@ -52,7 +52,7 @@ Features
 - Alerts when jobs executions are missed or fail via:
   - Email
   - SMS ([using Twilio](https://www.twilio.com))
-  - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
+  - [PagerDuty](https://www.pagerduty.com/) (SMS, Phone, Mobile Push Notifications and Email)
 
 Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if
 you don't see the feature you want there add it!
@@ -105,11 +105,10 @@ instead.
 
 1. First check you meet the [requirements](#requirements)
 
-2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.4) zip/tarball for your OS, use
-   the handy [install script](https://github.com/jamesrwhite/minicron/blob/develop/install.sh) (where `OS` is one of:
-   osx, linux-x86, linux-x86_64)
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.5) zip/tarball for your OS, use
+   the handy [install script](https://github.com/jamesrwhite/minicron/blob/develop/install.sh)
    ```
-   OS=linux-x86_64 bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
+   bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
    ```
    ..or [build it yourself](https://github.com/jamesrwhite/minicron-build/blob/develop/README.md)
    if you're feeling adventurous!
@@ -139,8 +138,8 @@ You can also run minicron in a docker container, see below for instructions how:
 ````bash
 git clone https://github.com/jamesrwhite/minicron.git
 cd minicron
-docker build -t minicron-0.8.4 .
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.4
+docker build -t minicron-0.8.5 .
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.5
 docker ps | grep minicron
 docker exec *container_hash* minicron server start
 ````
@@ -217,7 +216,7 @@ or ````--version```` are passed to the CLI.
 
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
-to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
+to be in the [toml](https://github.com/toml-lang/toml) format. The default options are specified in the
 [minicron.toml](https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml)
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
