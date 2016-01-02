@@ -190,13 +190,13 @@ class Minicron::Hub::App
 
       # First we need to check a schedule like this doesn't already exist
       exists = Minicron::Hub::Schedule.exists?(
-        :minute => params[:minute],
-        :hour => params[:hour],
-        :day_of_the_month => params[:day_of_the_month],
-        :month => params[:month],
-        :day_of_the_week => params[:day_of_the_week],
-        :special => params[:special],
-        :job_id => params[:job_id]
+        :minute => params[:minute].empty? ? nil : params[:minute],
+        :hour => params[:hour].empty? ? nil : params[:hour],
+        :day_of_the_month => params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
+        :month => params[:month].empty? ? nil : params[:month],
+        :day_of_the_week => params[:day_of_the_week].empty? ? nil : params[:day_of_the_week],
+        :special => params[:special].empty? ? nil : params[:special],
+        :job_id => params[:job_id].empty? ? nil : params[:job_id]
       )
 
       if exists
