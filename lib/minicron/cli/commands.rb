@@ -1,11 +1,12 @@
 require 'minicron'
 require 'insidious'
 require 'rake'
+require 'minicron/hub/app'
+require 'sinatra/activerecord'
 require 'sinatra/activerecord/rake'
 require 'minicron/transport'
 require 'minicron/transport/client'
 require 'minicron/transport/server'
-require 'minicron/hub/app'
 
 module Minicron
   module CLI
@@ -13,7 +14,7 @@ module Minicron
       # Add the `minicron db` command
       def self.add_db_cli_command(cli)
         cli.command :db do |c|
-          c.syntax = 'minicron db [setup]'
+          c.syntax = 'minicron db [create|setup|migrate]'
           c.description = 'Sets up the minicron database schema.'
 
           c.action do |args, opts|
@@ -31,11 +32,16 @@ module Minicron
             # Tell activerecord where the db folder is, it assumes it is in db/
             Sinatra::ActiveRecordTasks.db_dir = Minicron::HUB_PATH + '/db'
 
-            # Adjust the task name
-            task = args.first == 'setup' ? 'load' : args.first
+            # Adjust the task name for some more friendly tasks
+            case args.first
+            when 'setup'
+              task = 'schema:load'
+            else
+              task = args.first
+            end
 
             # Run the task
-            Rake.application['db:schema:' + task].invoke
+            Rake.application['db:' + task].invoke
           end
         end
       end
