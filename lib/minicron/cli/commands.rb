@@ -24,7 +24,6 @@ module Minicron
 
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
-            cli.always_trace! if Minicron.config['debug']
 
             # Setup the db
             Minicron::Hub::App.setup_db
@@ -54,7 +53,6 @@ module Minicron
           c.action do |args, opts|
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
-            cli.always_trace! if Minicron.config['debug']
 
             # If we get no arguments then default the action to start
             action = args.first.nil? ? 'start' : args.first
@@ -125,7 +123,6 @@ module Minicron
 
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
-            cli.always_trace! if Minicron.config['debug']
 
             # Set up the job and get the job and execution ids
             unless Minicron.config['client']['cli']['dry_run']

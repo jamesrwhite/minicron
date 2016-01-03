@@ -184,6 +184,9 @@ module Minicron
 
     # Sets the basic options for a commander cli instance
     def self.setup
+      # ABT, always be tracing
+      @cli.always_trace!
+
       # basic information for the help menu
       @cli.program :name, 'minicron'
       @cli.program :help, 'Author', 'James White <dev.jameswhite+minicron@gmail.com>'
