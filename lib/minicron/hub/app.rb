@@ -29,8 +29,7 @@ module Minicron::Hub
       # Don't capture any errors. Throw them up the stack
       set :raise_errors, true
 
-      # Disable internal middleware for presenting errors
-      # as useful HTML pages
+      # Disable internal middleware for presenting errors as HTML
       set :show_exceptions, false
 
       # Used to enable asset compression, currently nothing else
@@ -41,7 +40,7 @@ module Minicron::Hub
       Encoding.default_external = Encoding::UTF_8
     end
 
-    # Configure how we server assets
+    # Configure how we serve assets
     assets do
       serve '/css',   :from => 'assets/css'
       serve '/js',    :from => 'assets/js'
