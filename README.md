@@ -52,7 +52,7 @@ Features
 - Alerts when jobs executions are missed or fail via:
   - Email
   - SMS ([using Twilio](https://www.twilio.com))
-  - [PagerDuty](https://www.pagerduty.com/) (SMS, Phone, Mobile Push Notifications and Email)
+  - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
 
 Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if
 you don't see the feature you want there add it!
@@ -78,7 +78,7 @@ Requirements
 #### Web Server / Reverse Proxy
 
 #### Nginx
-A simple [example config](https://github.com/jamesrwhite/minicron/blob/develop/config/nginx.conf) for nginx is provided.
+A simple [example config](config/nginx.conf) for nginx is provided.
 
 #### Apache
 If you're using apache as your reverse proxy you need to ensure you have the following modules installed:
@@ -88,7 +88,7 @@ If you're using apache as your reverse proxy you need to ensure you have the fol
 Run the following to enable them and then restart apache
 ```a2enmod proxy proxy_html proxy_http xml2enc```
 
-A simple [example config](https://github.com/jamesrwhite/minicron/blob/develop/config/apache.conf) for apache is provided.
+A simple [example config](config/apache.conf) for apache is provided.
 
 Installation
 -------------
@@ -105,16 +105,17 @@ instead.
 
 1. First check you meet the [requirements](#requirements)
 
-2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.0) zip/tarball for your OS, use
-   the handy [install script](https://github.com/jamesrwhite/minicron/blob/develop/install.sh)
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.4) zip/tarball for your OS, use
+   the handy [install script](install.sh) (where `OS` is one of:
+   osx, linux-x86, linux-x86_64)
    ```
-   bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/develop/install.sh)"
+   OS=linux-x86_64 bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
    ```
-   ..or [build it yourself](https://github.com/jamesrwhite/minicron-build/blob/develop/README.md)
+   ..or [build it yourself](README.md)
    if you're feeling adventurous!
 
 3. Set your database configuration options in ````/etc/minicron.toml````, you can use the
-   [minicron.toml](https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml) as a guide on what options
+   [minicron.toml](config/minicron.toml) as a guide on what options
    are configurable
 
 4. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
@@ -127,7 +128,7 @@ instead.
   > ````
 
 6. You can then ````minicron db setup```` to create the database schema, alternatively you can use
-   the [schema dump provided](https://github.com/jamesrwhite/minicron/blob/develop/lib/minicron/hub/db/schema.sql) (MySQL)
+   the [schema dump provided](lib/minicron/hub/db/schema.sql) (MySQL)
 
 7. Done! See the usage section below for more details on how to use minicron now you have it installed
 
@@ -138,8 +139,8 @@ You can also run minicron in a docker container, see below for instructions how:
 ````bash
 git clone https://github.com/jamesrwhite/minicron.git
 cd minicron
-docker build -t minicron-0.9.0 .
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.9.0
+docker build -t minicron-0.8.4 .
+docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.4
 docker ps | grep minicron
 docker exec *container_hash* minicron server start
 ````
@@ -190,7 +191,7 @@ you can also use the ````stop````, ````restart```` and ````status```` commands t
 To run the server in debug mode, so you can see its output and any errors you can pass the ````--debug````
 option.
 
-See [nginx.conf](https://github.com/jamesrwhite/minicron/blob/develop/config/nginx.conf) for an example of
+See [nginx.conf](config/nginx.conf) for an example of
 how to run minicron behind a reverse proxy.
 
 #### Connecting to a host via SSH
@@ -216,8 +217,8 @@ or ````--version```` are passed to the CLI.
 
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
-to be in the [toml](https://github.com/toml-lang/toml) format. The default options are specified in the
-[minicron.toml](https://github.com/jamesrwhite/minicron/blob/develop/config/minicron.toml)
+to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
+[minicron.toml](config/minicron.toml)
 file and minicron will parse a config located in ````/etc/minicron.toml```` if it exists. Options specified via
 the command line will take precedence over those taken from a config file.
 
@@ -276,7 +277,7 @@ on this but until then some rough thoughts in no real order..
 Contributing
 ------------
 
-Feedback and pull requests are welcome, please see [CONTRIBUTING.md](https://github.com/jamesrwhite/minicron/blob/develop/CONTRIBUTING.md)
+Feedback and pull requests are welcome, please see [CONTRIBUTING.md](CONTRIBUTING.md)
 for more info.
 
 Areas that I would love some help with:
@@ -307,10 +308,10 @@ Credit
 
 minicron makes use of a *lot* of awesome open source projects that have saved me a lot of time in its development.
 I started out trying to list all of them but it was taking way too much time so check out the dependencies in
-[minicron.gemspec](https://github.com/jamesrwhite/minicron/blob/develop/minicron.gemspec) and
-[app.rb](https://github.com/jamesrwhite/minicron/blob/develop/lib/minicron/hub/app.rb).
+[minicron.gemspec](minicron.gemspec) and
+[app.rb](lib/minicron/hub/app.rb).
 
 License
 --------
 
-minicron is licensed under the GPL v3, [see here for the full license](https://github.com/jamesrwhite/minicron/blob/develop/LICENSE)
+minicron is licensed under the GPL v3, [see here for the full license](LICENSE)
