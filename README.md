@@ -258,13 +258,11 @@ Roadmap
 I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus
 on this but until then some rough thoughts in no real order..
 
-- Full cron syntax support ([#25](https://github.com/jamesrwhite/minicron/issues/25))
 - More robust handling of failure in various places/situations
 - Better test coverage for core features
 - More 3rd party alerting integrations
 - REST API
 - Revision control for changes and acitvity tracking
-- Support for crontabs in differing locations
 - Better experience on mobile/tablet
 - Improved security through authentication and permissions
 - Better configuration management
