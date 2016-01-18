@@ -13,7 +13,7 @@ TMP_DIR_LOCATION="/tmp/minicron-$VERSION-$OS"
 LIB_LOCATION="/opt/minicron"
 BIN_LOCATION="/usr/local/bin/minicron"
 
-echo "Downloding minicron to $TMP_ZIP_LOCATION"
+echo "Downloading minicron to $TMP_ZIP_LOCATION"
 (cd /tmp; curl -sL $DOWNLOAD_FILE -o $TMP_ZIP_LOCATION)
 
 echo "Removing $TMP_DIR_LOCATION and extracting minicron from $TMP_ZIP_LOCATION to $TMP_DIR_LOCATION"
