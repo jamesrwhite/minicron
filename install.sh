@@ -4,15 +4,21 @@ set -e
 VERSION="0.8.4"
 
 echo "Installing mincron v$VERSION"
-echo "OS input as $OS"
+echo "OS input as '$OS'"
 
-echo "Checking user authorization"
+if [ "$OS" != "osx" ] && [ "$OS" != "linux-x86" ] && [ "$OS" != "linux-x86_64" ]
+then
+    echo "The OS '$OS' is not supported"
+    exit
+fi
+
+echo "Checking user authorisation"
 SUDO="sudo"
 if [[ "$EUID" -eq "0" ]]; then #is root
-	SUDO=""
+	  SUDO=""
 elif ! hash sudo 2>/dev/null; then # no sudo
-	echo "This script needs to be run as root user or sudo to be installed. Aborting ..."
-	exit
+	  echo "The install script either needs to be run as root or have permission to use sudo"
+	  exit
 fi
 
 DOWNLOAD_FILE="https://github.com/jamesrwhite/minicron/releases/download/v$VERSION/minicron-$VERSION-$OS.zip"
