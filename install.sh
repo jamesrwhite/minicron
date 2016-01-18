@@ -3,6 +3,8 @@ set -e
 
 VERSION="0.9.0"
 
+echo "Installing mincron v$VERSION"
+
 if [[ $(uname -s) == "Linux" ]]
 then
     if [[ $(uname -m) == "x86_64" ]]
@@ -15,12 +17,20 @@ elif [[ $(uname -s) == "Darwin" ]]
 then
     OS="osx"
 else
-        echo "Unknown OS"
-        exit 1
+    echo "Unknown OS"
+    exit
 fi
 
-echo "Installing mincron v$VERSION"
-echo "OS detected as $OS"
+echo "OS input as '$OS'"
+
+echo "Checking user authorisation"
+SUDO="sudo"
+if [[ "$EUID" -eq "0" ]]; then #is root
+    SUDO=""
+elif ! hash sudo 2>/dev/null; then # no sudo
+    echo "The install script either needs to be run as root or have permission to use sudo"
+    exit
+fi
 
 DOWNLOAD_FILE="https://github.com/jamesrwhite/minicron/releases/download/v$VERSION/minicron-$VERSION-$OS.zip"
 # DOWNLOAD_FILE="http://localhost:8000/minicron-$VERSION-$OS.zip"
@@ -29,7 +39,7 @@ TMP_DIR_LOCATION="/tmp/minicron-$VERSION-$OS"
 LIB_LOCATION="/opt/minicron"
 BIN_LOCATION="/usr/local/bin/minicron"
 
-echo "Downloding minicron to $TMP_ZIP_LOCATION"
+echo "Downloading minicron to $TMP_ZIP_LOCATION"
 (cd /tmp; curl -sL $DOWNLOAD_FILE -o $TMP_ZIP_LOCATION)
 
 echo "Removing $TMP_DIR_LOCATION and extracting minicron from $TMP_ZIP_LOCATION to $TMP_DIR_LOCATION"
@@ -39,16 +49,16 @@ echo "Removing archive $TMP_ZIP_LOCATION"
 rm $TMP_ZIP_LOCATION
 
 echo "Removing $LIB_LOCATION and creating $LIB_LOCATION (may require password)"
-sudo rm -rf $LIB_LOCATION && sudo mkdir -p /opt/minicron
+$SUDO rm -rf $LIB_LOCATION && $SUDO mkdir -p /opt/minicron
 
 echo "Moving $TMP_DIR_LOCATION to $LIB_LOCATION (may require password)"
-sudo mv $TMP_DIR_LOCATION/* $LIB_LOCATION
+$SUDO mv $TMP_DIR_LOCATION/* $LIB_LOCATION
 
 echo "Removing $TMP_DIR_LOCATION"
 rm -rf $TMP_DIR_LOCATION
 
 echo "Removing $BIN_LOCATION and linking $BIN_LOCATION to $LIB_LOCATION/minicron (may require password)"
-sudo rm -f $BIN_LOCATION && sudo ln -s $LIB_LOCATION/minicron $BIN_LOCATION
+$SUDO rm -f $BIN_LOCATION && $SUDO ln -s $LIB_LOCATION/minicron $BIN_LOCATION
 
 echo
 echo "done!"
