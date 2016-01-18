@@ -21,7 +21,7 @@ else
     exit
 fi
 
-echo "OS input as '$OS'"
+echo "OS detected as '$OS'"
 
 echo "Checking user authorisation"
 SUDO="sudo"
