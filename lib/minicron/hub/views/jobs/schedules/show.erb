@@ -1,0 +1,34 @@
+<header class="clearfix">
+  <h2 class="pull-left">View Schedule for Job '<%= @job.name %>'</h2>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
+</header>
+<hr/>
+
+<% if @error %>
+  <div class="alert alert-danger" role="alert"><%= @error %></div>
+<% end %>
+
+<form data-view-only class="form-horizontal" role="form" method="POST">
+  <%= erb :'partials/schedules/panels' %>
+
+  <div class="form-group">
+    <hr/>
+    <label class="col-sm-2 control-label">Schedule</label>
+    <div class="col-sm-10">
+      <input name="job_id" value="<%= @job.id %>" type="hidden"/>
+
+      <div id="hidden-schedule-inputs">
+        <input name="minute" value="<%= @schedule.minute %>" type="hidden"/>
+        <input name="hour" value="<%= @schedule.hour %>" type="hidden"/>
+        <input name="day_of_the_month" value="<%= @schedule.day_of_the_month %>" type="hidden"/>
+        <input name="month" value="<%= @schedule.month %>" type="hidden"/>
+        <input name="day_of_the_week" value="<%= @schedule.day_of_the_week %>" type="hidden"/>
+        <input name="special" value="<%= @schedule.special %>" type="hidden"/>
+      </div>
+
+      <span id="schedule-input">
+        <input value="<%= @schedule.formatted %>" disabled type="text" class="form-control"/>
+    </div>
+  </div>
+</form>

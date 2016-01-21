@@ -1,0 +1,20 @@
+<header>
+  <h2>Delete Job '<%= @job.name %>'?</h2>
+</header>
+<hr/>
+
+<% if @error %>
+  <div class="alert alert-danger" role="alert">
+    <h4>Error</h4>
+    <p>"<%= @error %>"</p>
+    <p>You can force delete the job without connecting to the host</p>
+  </div>
+<% end %>
+
+<form class="form-horizontal" role="form" method="POST">
+  <input type="submit" class="btn btn-danger" value="Delete Job"/>
+  <% if @error %>
+    <input name="force" type="submit" class="btn btn-danger" value="Force Delete Job"/>
+  <% end %>
+  <a href="<%= "#{route_prefix}/job/#{@job.id}" %>" class="btn btn-info">Cancel</a>
+</form>

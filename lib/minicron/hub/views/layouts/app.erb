@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <%= css :app, :media => 'screen' %>
+  <title>minicron</title>
+</head>
+<body>
+  <%= erb :'partials/header' %>
+
+  <div class="main-container clearfix">
+    <%= erb :'partials/sidebar' %>
+
+    <div class="main-panel">
+      <div class="inner">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+
+  <%= js :app, :media => 'screen' %>
+  <script>
+    window.Minicron.config = {
+      path: '<%= Minicron.config['server']['path'] %>'
+    };
+  </script>
+</body>
+</html>
