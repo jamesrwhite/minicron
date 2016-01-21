@@ -3,7 +3,7 @@ start-gem-server:
 
 build:
 	rm -f *.gem
-	rm Gemfile.lock
+	rm -f Gemfile.lock
 	bundle
 	gem build minicron.gemspec
 	gem push minicron-*.gem --host http://127.0.0.1:9999
