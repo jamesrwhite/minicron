@@ -1,4 +1,10 @@
-require 'better_errors'
+# Apparently this is the only way to conditionally load this, eww
+begin
+
+  require 'better_errors'
+rescue LoadError
+end
+
 require 'sinatra/activerecord'
 require 'sinatra/assetpack'
 require 'minicron'
@@ -17,8 +23,10 @@ module Minicron::Hub
     set :root, Minicron::HUB_PATH
 
     configure :development do
-      use BetterErrors::Middleware
-      BetterErrors.application_root = __dir__
+      if defined?(BetterErrors)
+        use BetterErrors::Middleware
+        BetterErrors.application_root = __dir__
+      end
     end
 
     # General Sinatra configuration
