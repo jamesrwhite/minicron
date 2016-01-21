@@ -2,7 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-VERSION = '0.9.0'
+VERSION = "0.9.0.#{Time.now.to_i}"
 
 Gem::Specification.new do |spec|
   spec.name                  = 'minicron'
