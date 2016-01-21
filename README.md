@@ -105,7 +105,7 @@ instead.
 
 1. First check you meet the [requirements](#requirements)
 
-2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.8.4) zip/tarball for your OS, use
+2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.0) zip/tarball for your OS, use
    the handy [install script](install.sh) (where `OS` is one of:
    osx, linux-x86, linux-x86_64)
    ```
@@ -137,8 +137,8 @@ instead.
 You can also run minicron in a docker container, see below for instructions how:
 
 ````bash
-docker pull jamesrwhite/minicron:0.8.4
-minicron_container_id=$(docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.8.4)
+docker pull jamesrwhite/minicron:0.9.0
+minicron_container_id=$(docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.0)
 docker exec $minicron_container_id minicron db setup
 docker exec $minicron_container_id minicron server start
 ````
