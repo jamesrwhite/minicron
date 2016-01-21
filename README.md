@@ -137,12 +137,10 @@ instead.
 You can also run minicron in a docker container, see below for instructions how:
 
 ````bash
-git clone https://github.com/jamesrwhite/minicron.git
-cd minicron
-docker build -t minicron-0.8.4 .
-docker run -d -p 127.0.0.1:9292:9292 -i -t minicron-0.8.4
-docker ps | grep minicron
-docker exec *container_hash* minicron server start
+docker pull jamesrwhite/minicron:0.8.4
+minicron_container_id=$(docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.8.4)
+docker exec $minicron_container_id minicron db setup
+docker exec $minicron_container_id minicron server start
 ````
 
 Usage
