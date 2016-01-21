@@ -17,11 +17,11 @@ elif [[ $(uname -s) == "Darwin" ]]
 then
     OS="osx"
 else
-    echo "Unknown OS"
-    exit
+  echo "Unknown OS"
+  exit 1
 fi
 
-echo "OS detected as '$OS'"
+echo "OS detected as $OS"
 
 echo "Checking user authorisation"
 SUDO="sudo"
@@ -32,24 +32,30 @@ elif ! hash sudo 2>/dev/null; then # no sudo
     exit
 fi
 
-DOWNLOAD_FILE="https://github.com/jamesrwhite/minicron/releases/download/v$VERSION/minicron-$VERSION-$OS.zip"
-# DOWNLOAD_FILE="http://localhost:8000/minicron-$VERSION-$OS.zip"
-TMP_ZIP_LOCATION="/tmp/minicron-$VERSION-$OS.zip"
+DOWNLOAD_FILE="https://github.com/jamesrwhite/minicron/releases/download/v$VERSION/minicron-$VERSION-$OS.tar.gz"
+# DOWNLOAD_FILE="http://localhost:8000/minicron-$VERSION-$OS.tar.gz"
+TMP_TAR_LOCATION="/tmp/minicron-$VERSION-$OS.tar.gz"
 TMP_DIR_LOCATION="/tmp/minicron-$VERSION-$OS"
 LIB_LOCATION="/opt/minicron"
 BIN_LOCATION="/usr/local/bin/minicron"
 
-echo "Downloading minicron to $TMP_ZIP_LOCATION"
-(cd /tmp; curl -sL $DOWNLOAD_FILE -o $TMP_ZIP_LOCATION)
+if [ "$USE_LOCAL_TAR" == "1" ]; then
+  echo "Using local archive at ./minicron-$VERSION-$OS.tar.gz and moving to $TMP_TAR_LOCATION"
+  ls -lah minicron-$VERSION-$OS.tar.gz
+  mv -f minicron-$VERSION-$OS.tar.gz $TMP_TAR_LOCATION
+else
+  echo "Downloding minicron from $DOWNLOAD_FILE to $TMP_TAR_LOCATION"
+  (cd /tmp; curl -sL $DOWNLOAD_FILE -o $TMP_TAR_LOCATION)
+fi
 
-echo "Removing $TMP_DIR_LOCATION and extracting minicron from $TMP_ZIP_LOCATION to $TMP_DIR_LOCATION"
-(cd /tmp; rm -rf $TMP_DIR_LOCATION; unzip -q $TMP_ZIP_LOCATION)
+echo "Removing $TMP_DIR_LOCATION and extracting minicron from $TMP_TAR_LOCATION to $TMP_DIR_LOCATION"
+(cd /tmp; rm -rf $TMP_DIR_LOCATION; tar xf $TMP_TAR_LOCATION)
 
-echo "Removing archive $TMP_ZIP_LOCATION"
-rm $TMP_ZIP_LOCATION
+echo "Removing archive $TMP_TAR_LOCATION"
+rm $TMP_TAR_LOCATION
 
 echo "Removing $LIB_LOCATION and creating $LIB_LOCATION (may require password)"
-$SUDO rm -rf $LIB_LOCATION && $SUDO mkdir -p /opt/minicron
+$SUDO rm -rf $LIB_LOCATION && $SUDO mkdir -p $LIB_LOCATION
 
 echo "Moving $TMP_DIR_LOCATION to $LIB_LOCATION (may require password)"
 $SUDO mv $TMP_DIR_LOCATION/* $LIB_LOCATION
