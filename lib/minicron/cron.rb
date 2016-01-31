@@ -70,11 +70,18 @@ module Minicron
 
       # Add an entry to the crontab for each job schedule
       host.jobs.each do |job|
-        crontab += "# Job ##{job.id} - #{job.name}\n"
+        crontab += "# ID:   #{job.id}\n"
+        crontab += "# Name: #{job.name}\n"
 
-        job.schedules.each do |schedule|
-          crontab += "#{build_minicron_command(schedule.formatted, job.command)}\n"
+        if job.schedules.length > 0
+          job.schedules.each do |schedule|
+            crontab += "\t#{build_minicron_command(schedule.formatted, job.command)}\n"
+          end
+        else
+          crontab += "\t# No schedules exist for this job\n"
         end
+
+        crontab += "\n"
       end
 
       crontab
