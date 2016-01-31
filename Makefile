@@ -2,6 +2,7 @@ start-gem-server:
 	(cd ../minicron-build/gem-server && rm -rf data && rackup)
 
 build:
+	rm -rf pkg
 	rm -f *.gem
 	rm -f Gemfile.lock
 	bundle
