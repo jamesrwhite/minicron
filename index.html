@@ -155,21 +155,19 @@ instead.</p>
 <ol>
 <li><p>First check you meet the <a href="#requirements">requirements</a></p></li>
 <li>
-<p>Either <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.9.0">grab the latest</a> zip/tarball for your OS, use
-the handy <a href="install.sh">install script</a> (where <code>OS</code> is one of:
-osx, linux-x86, linux-x86_64)</p>
+<p>Use the handy <a href="install.sh">install script</a> or <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.9.2">grab the latest</a> zip/tarball
+for your OS and install manually.</p>
 
-<pre><code>OS=linux-x86_64 bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
+<pre><code>bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
 </code></pre>
 
 <p>..or <a href="README.md">build it yourself</a>
 if you're feeling adventurous!</p>
 </li>
-<li><p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the
-<a href="config/minicron.toml">minicron.toml</a> as a guide on what options
-are configurable</p></li>
 <li>
-<p>Make sure you have created an empty database with the name you set in <code>/etc/minicron.toml</code></p>
+<p>Set your database configuration options in <code>/etc/minicron.toml</code>, you can use the
+<a href="config/minicron.toml">minicron.toml</a> as a guide on what options
+are configurable</p>
 
 <blockquote>
 <p><strong>WARNING</strong></p>
@@ -179,8 +177,7 @@ are configurable</p></li>
 <div class="highlight highlight-source-sql"><pre><span class="pl-k">DROP</span> <span class="pl-k">TABLE</span> IF EXISTS jobs; CREATE TABLE jobs ..</pre></div>
 </blockquote>
 </li>
-<li><p>You can then <code>minicron db setup</code> to create the database schema, alternatively you can use
-the <a href="lib/minicron/hub/db/schema.sql">schema dump provided</a> (MySQL)</p></li>
+<li><p>You can then <code>minicron db setup</code> to create the database schema and run any pending migrations.</p></li>
 <li><p>Done! See the usage section below for more details on how to use minicron now you have it installed</p></li>
 </ol>
 
@@ -189,8 +186,8 @@ the <a href="lib/minicron/hub/db/schema.sql">schema dump provided</a> (MySQL)</p
 
 <p>You can also run minicron in a docker container, see below for instructions how:</p>
 
-<div class="highlight highlight-source-shell"><pre>docker pull jamesrwhite/minicron:0.9.0
-minicron_container_id=<span class="pl-s"><span class="pl-pds">$(</span>docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.0<span class="pl-pds">)</span></span>
+<div class="highlight highlight-source-shell"><pre>docker pull jamesrwhite/minicron:0.9.2
+minicron_container_id=<span class="pl-s"><span class="pl-pds">$(</span>docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.2<span class="pl-pds">)</span></span>
 docker <span class="pl-c1">exec</span> <span class="pl-smi">$minicron_container_id</span> minicron db setup
 docker <span class="pl-c1">exec</span> <span class="pl-smi">$minicron_container_id</span> minicron server start</pre></div>
 
@@ -244,14 +241,7 @@ how to run minicron behind a reverse proxy.</p>
 <p>To be able to perform CRUD operations on the crontab minicron needs to connect via SSH to the host.
 When you set up a host minicron automatically creates a public/private key pair for you and stores it
 in <code>~/.ssh</code> on the host the minicron server is being run on using the naming schema <code>minicron_host_*HOST_ID*_rsa(.pub)</code>.
-To be able edit the crontab on a host minicron needs to have permission to edit <code>/etc/crontab</code> and write and
-execute permissions on the <code>/etc</code> directory so it can move files there (the crontab). This will most
-likely mean allowing minicron to connect to the host as the root user although you could alter your permissions
-to allow for this not to be the case.</p>
-
-<p>As an example, to setup minicron SSH for the root user on a host copy the public key to the hosts
-authorized_keys file e.g <code>/root/.ssh/authorized_keys</code> on
-most linux distributions or <code>/var/root/.ssh/authorized_keys</code> on OSX.</p>
+You will then to add the public key into the remote hosts authorized_keys file.</p>
 
 <h4>
 <a id="version" class="anchor" href="#version" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Version</h4>
