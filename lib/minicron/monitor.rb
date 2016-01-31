@@ -1,4 +1,4 @@
-require 'sinatra/activerecord'
+require 'active_record'
 require 'parse-cron'
 require 'minicron/hub/models/schedule'
 require 'minicron/hub/models/execution'
@@ -12,44 +12,16 @@ module Minicron
       @active = false
     end
 
-    # Establishes a database connection
-    def setup_db
-      case Minicron.config['server']['database']['type']
-      when /mysql|postgres/
-        # Establish a database connection
-        ActiveRecord::Base.establish_connection(
-          :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
-          :host => Minicron.config['server']['database']['host'],
-          :database => Minicron.config['server']['database']['database'],
-          :username => Minicron.config['server']['database']['username'],
-          :password => Minicron.config['server']['database']['password']
-        )
-      when 'sqlite'
-        # Calculate the realtive path to the db because sqlite or activerecord is
-        # weird and doesn't seem to handle abs paths correctly
-        root = Pathname.new(Dir.pwd)
-        db = Pathname.new(Minicron::HUB_PATH + '/db')
-        db_rel_path = db.relative_path_from(root)
-
-       ActiveRecord::Base.establish_connection(
-          :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
-          :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
-        )
-      else
-        raise Minicron::DatabaseError, "The database #{Minicron.config['server']['database']['type']} is not supported"
-      end
-
-      # Enable ActiveRecord logging if in verbose mode
-      ActiveRecord::Base.logger = Minicron.config['verbose'] ? Logger.new(STDOUT) : nil
-    end
-
     # Starts the execution monitor in a new thread
     def start!
       # Activate the monitor
       @active = true
 
-      # Establish a database connection
-      setup_db
+      # Connect to the database
+      Minicron.establish_db_connection(
+        Minicron.config['server']['database'],
+        Minicron.config['verbose']
+      )
 
       # Set the start time of the monitir
       @start_time = Time.now.utc

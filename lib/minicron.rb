@@ -1,4 +1,5 @@
 require 'minicron/constants'
+require 'active_record'
 require 'toml'
 require 'sshkey'
 require 'stringio'
@@ -223,5 +224,49 @@ module Minicron
     else
       raise Minicron::DatabaseError, "The database #{type} is not supported"
     end
+  end
+
+  # Get the activerecord config hash for the databaes
+  #
+  # @param type [Hash] database config
+  # @return type [String] activerecord database config
+  def self.get_activerecord_db_config(config)
+    case config['type']
+    when /mysql|postgresql/
+      return {
+        :adapter => Minicron.get_db_adapter(config['type']),
+        :host => config['host'],
+        :database => config['database'],
+        :username => config['username'],
+        :password => config['password']
+      }
+    when 'sqlite'
+      # Calculate the realtive path to the db because sqlite or activerecord is
+      # weird and doesn't seem to handle abs paths correctly
+      root = Pathname.new(Dir.pwd)
+      db = Pathname.new(Minicron::BASE_PATH + '/db')
+      db_rel_path = db.relative_path_from(root)
+
+      return {
+        :adapter => Minicron.get_db_adapter(config['type']),
+        :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
+      }
+    else
+      raise Minicron::DatabaseError, "The database #{config['type']} is not supported"
+    end
+  end
+
+  # Get the activerecord config hash for the databaes
+  #
+  # @param type [Hash] database config
+  def self.establish_db_connection(config, verbose = false)
+    # Get the activerecord formatted config
+    ar_config = self.get_activerecord_db_config(config)
+
+    # Connect to the database
+    ActiveRecord::Base.establish_connection(ar_config)
+
+    # Enable ActiveRecord logging if in verbose mode
+    ActiveRecord::Base.logger = verbose ? Logger.new(STDOUT) : nil
   end
 end

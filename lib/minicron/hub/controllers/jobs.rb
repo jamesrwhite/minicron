@@ -45,7 +45,27 @@ class Minicron::Hub::App
         :host_id => host.id
       )
 
+      ssh = Minicron::Transport::SSH.new(
+        :user => job.host.user,
+        :host => job.host.host,
+        :port => job.host.port,
+        :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+      )
+
+      # Get an instance of the cron class
+      cron = Minicron::Cron.new(ssh)
+
+      # Save the job before we look up the hosts jobs so it's changes are there
       job.save!
+
+      # Look up the host and its jobs and job schedules
+      host = Minicron::Hub::Host.includes(:jobs => :schedules).find(job.host.id)
+
+      # Update the crontab
+      cron.update_crontab(host)
+
+      # Tidy up
+      ssh.close
 
       # Redirect to the new job
       redirect "#{route_prefix}/job/#{job.id}"
@@ -76,40 +96,36 @@ class Minicron::Hub::App
         # Find the job
         @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:id])
 
-        # Store a copy of the current job user in case we need to change it
-        old_job = @job.dup
-
         # Update the name and user
         @job.name = params[:name]
         @job.user = params[:user]
         @job.command = params[:command]
 
         # Update the job on the remote if the user/command has changed
-        if old_job.user != @job.user || old_job.command != @job.command
-          # Rehash the job command
-          @job.job_hash = Minicron::Transport.get_job_hash(@job.command, @job.host.fqdn)
+        # Rehash the job command
+        @job.job_hash = Minicron::Transport.get_job_hash(@job.command, @job.host.fqdn)
 
-          ssh = Minicron::Transport::SSH.new(
-            :user => @job.host.user,
-            :host => @job.host.host,
-            :port => @job.host.port,
-            :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
-          )
+        ssh = Minicron::Transport::SSH.new(
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+        )
 
-          # Get an instance of the cron class
-          cron = Minicron::Cron.new(ssh)
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
 
-          # Look up the host and its jobs and job schedules
-          host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
-
-          # Update the crontab
-          cron.update_crontab(host)
-
-          # Tidy up
-          ssh.close
-        end
-
+        # Save the job before we look up the hosts jobs so it's changes are there
         @job.save!
+
+        # Look up the host and its jobs and job schedules
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
+
+        # Tidy up
+        ssh.close
 
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
@@ -232,6 +248,9 @@ class Minicron::Hub::App
         # Get an instance of the cron class
         cron = Minicron::Cron.new(ssh)
 
+        # Save the schedule before looking up the hosts jobs => schedules so the change is there
+        schedule.save!
+
         # Look up the host
         host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
 
@@ -240,9 +259,6 @@ class Minicron::Hub::App
 
         # Tidy up
         ssh.close
-
-        # And finally save it
-        schedule.save!
 
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
@@ -294,6 +310,9 @@ class Minicron::Hub::App
         @schedule.day_of_the_week = params[:day_of_the_week].empty? ? nil : params[:day_of_the_week]
         @schedule.special = params[:special].empty? ? nil : params[:special]
 
+        # Save the schedule before looking up the hosts jobs => schedule so the change is there
+        @schedule.save!
+
         # Look up the host and its jobs and job schedules
         host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
 
@@ -302,9 +321,6 @@ class Minicron::Hub::App
 
         # Tidy up
         ssh.close
-
-        # And finally save it
-        @schedule.save!
 
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@schedule.job.id}"

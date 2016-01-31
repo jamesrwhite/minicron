@@ -105,11 +105,10 @@ instead.
 
 1. First check you meet the [requirements](#requirements)
 
-2. Either [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.0) zip/tarball for your OS, use
-   the handy [install script](install.sh) (where `OS` is one of:
-   osx, linux-x86, linux-x86_64)
+2. Use the handy [install script](install.sh) or [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.1) zip/tarball
+   for your OS and install manually.
    ```
-   OS=linux-x86_64 bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
+   bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
    ```
    ..or [build it yourself](README.md)
    if you're feeling adventurous!
@@ -118,8 +117,6 @@ instead.
    [minicron.toml](config/minicron.toml) as a guide on what options
    are configurable
 
-4. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
-
   > **WARNING**
   >
   > the step below will drop any existing tables in the configured database and create new ones i.e:
@@ -127,18 +124,17 @@ instead.
   > DROP TABLE IF EXISTS jobs; CREATE TABLE jobs ..
   > ````
 
-6. You can then ````minicron db setup```` to create the database schema, alternatively you can use
-   the [schema dump provided](lib/minicron/hub/db/schema.sql) (MySQL)
+4. You can then ````minicron db setup```` to create the database schema and run any pending migrations.
 
-7. Done! See the usage section below for more details on how to use minicron now you have it installed
+5. Done! See the usage section below for more details on how to use minicron now you have it installed
 
 #### Docker
 
 You can also run minicron in a docker container, see below for instructions how:
 
 ````bash
-docker pull jamesrwhite/minicron:0.9.0
-minicron_container_id=$(docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.0)
+docker pull jamesrwhite/minicron:0.9.1
+minicron_container_id=$(docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.1)
 docker exec $minicron_container_id minicron db setup
 docker exec $minicron_container_id minicron server start
 ````
@@ -197,14 +193,7 @@ how to run minicron behind a reverse proxy.
 To be able to perform CRUD operations on the crontab minicron needs to connect via SSH to the host.
 When you set up a host minicron automatically creates a public/private key pair for you and stores it
 in ````~/.ssh```` on the host the minicron server is being run on using the naming schema ````minicron_host_*HOST_ID*_rsa(.pub)````.
-To be able edit the crontab on a host minicron needs to have permission to edit ````/etc/crontab```` and write and
-execute permissions on the ````/etc```` directory so it can move files there (the crontab). This will most
-likely mean allowing minicron to connect to the host as the root user although you could alter your permissions
-to allow for this not to be the case.
-
-As an example, to setup minicron SSH for the root user on a host copy the public key to the hosts
-authorized_keys file e.g ````/root/.ssh/authorized_keys```` on
-most linux distributions or ````/var/root/.ssh/authorized_keys```` on OSX.
+You will then to add the public key into the remote hosts authorized_keys file.
 
 #### Version
 
