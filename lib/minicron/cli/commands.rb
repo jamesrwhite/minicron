@@ -32,7 +32,6 @@ module Minicron
             case args.first
             when 'setup'
               # Remove the database name from the config in case it doesn't exist yet
-              # Open a new connection to our shiny new database now we know it's there for sure
               Minicron.establish_db_connection(
                 Minicron.config['server']['database'].merge('database' => nil),
                 Minicron.config['verbose']
