@@ -31,20 +31,23 @@ module Minicron
             # Adjust the task name for some more friendly tasks
             case args.first
             when 'setup'
-              # Remove the database name from the config in case it doesn't exist yet
-              Minicron.establish_db_connection(
-                Minicron.config['server']['database'].merge('database' => nil),
-                Minicron.config['verbose']
-              )
+              # You can't "create" a database in sqlite ¯\_(ツ)_/¯
+              unless Minicron.config['server']['database']['type'] == 'sqlite'
+                # Remove the database name from the config in case it doesn't exist yet
+                Minicron.establish_db_connection(
+                  Minicron.config['server']['database'].merge('database' => nil),
+                  Minicron.config['verbose']
+                )
 
-              # Create the database
-              ActiveRecord::Base.connection.create_database(
-                Minicron.config['server']['database']['database'],
-                {
-                  :charset => 'utf8',
-                  :collation => 'utf8_unicode_ci'
-                }
-              )
+                # Create the database
+                ActiveRecord::Base.connection.create_database(
+                  Minicron.config['server']['database']['database'],
+                  {
+                    :charset => 'utf8',
+                    :collation => 'utf8_unicode_ci'
+                  }
+                )
+              end
 
               # Then create the initial schema based on schema.rb
               ActiveRecord::Tasks::DatabaseTasks.load_schema_for(

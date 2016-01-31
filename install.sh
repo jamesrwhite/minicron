@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-VERSION="0.9.1"
+VERSION="0.9.2"
 
 echo "Installing mincron v$VERSION"
 
