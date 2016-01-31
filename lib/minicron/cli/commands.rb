@@ -2,8 +2,7 @@ require 'minicron'
 require 'insidious'
 require 'rake'
 require 'minicron/hub/app'
-require 'sinatra/activerecord'
-require 'sinatra/activerecord/rake'
+require 'active_record'
 require 'minicron/transport'
 require 'minicron/transport/client'
 require 'minicron/transport/server'
@@ -14,7 +13,7 @@ module Minicron
       # Add the `minicron db` command
       def self.add_db_cli_command(cli)
         cli.command :db do |c|
-          c.syntax = 'minicron db [create|setup|migrate]'
+          c.syntax = 'minicron db [setup|migrate|version]'
           c.description = 'Sets up the minicron database schema.'
 
           c.action do |args, opts|
@@ -26,22 +25,64 @@ module Minicron
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
 
-            # Setup the db
-            Minicron::Hub::App.setup_db
-
-            # Tell activerecord where the db folder is, it assumes it is in db/
-            Sinatra::ActiveRecordTasks.db_dir = Minicron::HUB_PATH + '/db'
+            # Display all the infos please
+            ActiveRecord::Migration.verbose = true
 
             # Adjust the task name for some more friendly tasks
             case args.first
             when 'setup'
-              task = 'schema:load'
-            else
-              task = args.first
-            end
+              # Remove the database name from the config in case it doesn't exist yet
+              # Open a new connection to our shiny new database now we know it's there for sure
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'].merge('database' => nil),
+                Minicron.config['verbose']
+              )
 
-            # Run the task
-            Rake.application['db:' + task].invoke
+              # Create the database
+              ActiveRecord::Base.connection.create_database(
+                Minicron.config['server']['database']['database'],
+                {
+                  :charset => 'utf8',
+                  :collation => 'utf8_unicode_ci'
+                }
+              )
+
+              # Then create the initial schema based on schema.rb
+              ActiveRecord::Tasks::DatabaseTasks.load_schema_for(
+                Minicron.get_activerecord_db_config(Minicron.config['server']['database']),
+                ActiveRecord::Base.schema_format,
+                "#{Minicron::DB_PATH}/schema.rb"
+              )
+
+              # Open a new connection to our shiny new database now we know it's there for sure
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'],
+                Minicron.config['verbose']
+              )
+
+              # Then run any migrations
+              ActiveRecord::Migrator.migrate(Minicron::MIGRATIONS_PATH)
+            when 'migrate'
+              # Connect to the database
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'],
+                Minicron.config['verbose']
+              )
+
+              # Run any pending migrations
+              ActiveRecord::Migrator.migrate(Minicron::MIGRATIONS_PATH)
+            when 'version'
+              # Connect to the database
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'],
+                Minicron.config['verbose']
+              )
+
+              # Print our the schema version
+              puts ActiveRecord::Migrator.current_version
+            else
+              raise Minicron::ArgumentError, "Unknown argument #{args.first}. See `minicron help db`"
+            end
           end
         end
       end

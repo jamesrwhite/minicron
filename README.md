@@ -118,8 +118,6 @@ instead.
    [minicron.toml](config/minicron.toml) as a guide on what options
    are configurable
 
-4. Make sure you have created an empty database with the name you set in ````/etc/minicron.toml````
-
   > **WARNING**
   >
   > the step below will drop any existing tables in the configured database and create new ones i.e:
@@ -127,10 +125,9 @@ instead.
   > DROP TABLE IF EXISTS jobs; CREATE TABLE jobs ..
   > ````
 
-6. You can then ````minicron db setup```` to create the database schema, alternatively you can use
-   the [schema dump provided](lib/minicron/hub/db/schema.sql) (MySQL)
+4. You can then ````minicron db setup```` to create the database schema and run any pending migrations.
 
-7. Done! See the usage section below for more details on how to use minicron now you have it installed
+5. Done! See the usage section below for more details on how to use minicron now you have it installed
 
 #### Docker
 

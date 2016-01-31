@@ -1,11 +1,10 @@
 # Apparently this is the only way to conditionally load this, eww
 begin
-
   require 'better_errors'
 rescue LoadError
 end
 
-require 'sinatra/activerecord'
+require 'active_record'
 require 'sinatra/assetpack'
 require 'minicron'
 require 'sinatra/base'
@@ -16,7 +15,6 @@ require 'ansi-to-html'
 
 module Minicron::Hub
   class App < Sinatra::Base
-    register Sinatra::ActiveRecordExtension
     register Sinatra::AssetPack
 
     # Set the application root
@@ -92,8 +90,11 @@ module Minicron::Hub
     def initialize
       super
 
-      # Initialize the db
-      Minicron::Hub::App.setup_db
+      # Connect to the database
+      Minicron.establish_db_connection(
+        Minicron.config['server']['database'],
+        Minicron.config['verbose']
+      )
 
       # Load all our models
       Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
@@ -104,36 +105,6 @@ module Minicron::Hub
       Dir[File.dirname(__FILE__) + '/controllers/**/*.rb'].each do |controller|
         require controller
       end
-    end
-
-    # Used to set up the database connection
-    def self.setup_db
-      # Configure the database
-      case Minicron.config['server']['database']['type']
-      when /mysql|postgresql/
-        set :database,
-            :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
-            :host => Minicron.config['server']['database']['host'],
-            :database => Minicron.config['server']['database']['database'],
-            :username => Minicron.config['server']['database']['username'],
-            :password => Minicron.config['server']['database']['password']
-      when 'sqlite'
-        # Calculate the realtive path to the db because sqlite or activerecord is
-        # weird and doesn't seem to handle abs paths correctly
-        root = Pathname.new(Dir.pwd)
-        db = Pathname.new(Minicron::HUB_PATH + '/db')
-        db_rel_path = db.relative_path_from(root)
-
-        ActiveRecord::Base.establish_connection(
-          :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
-          :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
-        )
-      else
-        raise Minicron::DatabaseError, "The database #{Minicron.config['server']['database']['type']} is not supported"
-      end
-
-      # Enable ActiveRecord logging if in verbose mode
-      ActiveRecord::Base.logger = Minicron.config['verbose'] ? Logger.new(STDOUT) : nil
     end
   end
 end
