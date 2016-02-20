@@ -34,6 +34,11 @@ class Minicron::Hub::App
           j.host_id = host.id
         end
 
+        # Check if the job is enabled
+        unless job.enabled
+          raise Minicron::ClientError, "Refusing to execute disabled job with id: #{job.id} and name: #{job.name}"
+        end
+
         # Get the latest execution number
         latest_execution = Minicron::Hub::Execution.where(:job_id => job.id)
                                                    .order(:id => :desc)
