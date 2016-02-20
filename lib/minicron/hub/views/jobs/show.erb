@@ -101,8 +101,8 @@
     <% @job.executions.each do |execution| %>
       <tr>
         <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>"><%= execution.number %></a></td>
-        <td><%= execution.started_at %></td>
-        <td><%= execution.finished_at %></td>
+        <td><%= Minicron.time(execution.started_at) %></td>
+        <td><%= Minicron.time(execution.finished_at) %></td>
         <td><%= execution.exit_status %></td>
         <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="btn btn-info btn-xs">View</a></td>
       </tr>
