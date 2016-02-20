@@ -13,6 +13,7 @@ require 'erubis'
 require 'pathname'
 require 'ansi-to-html'
 require 'sinatra/flash'
+require 'cron2english'
 
 module Minicron::Hub
   class App < Sinatra::Base
@@ -44,7 +45,7 @@ module Minicron::Hub
 
       # Used to enable asset compression, currently nothing else
       # relies on this
-      set :environment, :production
+      set :environment, :production if ENV['MINICRON_IS_PACKAGED']
 
       # Force the encoding to be UTF-8 to prevent assetpack encoding issues
       Encoding.default_external = Encoding::UTF_8
