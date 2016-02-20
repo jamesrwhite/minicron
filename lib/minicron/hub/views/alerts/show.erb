@@ -35,7 +35,7 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Sent</label>
       <div class="col-sm-10">
-        <div class="form-control form-control-view"><%= @alert.sent_at %></div>
+        <div class="form-control form-control-view"><%= Minicron.time(@alert.sent_at) %></div>
       </div>
     </div>
   </form>

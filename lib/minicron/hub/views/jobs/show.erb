@@ -39,13 +39,13 @@
   <div class="form-group">
     <label class="col-sm-2 control-label">Created At</label>
     <div class="col-sm-10">
-      <div class="form-control form-control-view"><%= @job.created_at %></div>
+      <div class="form-control form-control-view"><%= Minicron.time(@job.created_at) %></div>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label">Updated At</label>
     <div class="col-sm-10">
-      <div class="form-control form-control-view"><%= @job.updated_at %></div>
+      <div class="form-control form-control-view"><%= Minicron.time(@job.updated_at) %></div>
     </div>
   </div>
 </form>
@@ -101,8 +101,8 @@
     <% @job.executions.each do |execution| %>
       <tr>
         <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>"><%= execution.number %></a></td>
-        <td><%= execution.started_at %></td>
-        <td><%= execution.finished_at %></td>
+        <td><%= Minicron.time(execution.started_at) %></td>
+        <td><%= Minicron.time(execution.finished_at) %></td>
         <td><%= execution.exit_status %></td>
         <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="btn btn-info btn-xs">View</a></td>
       </tr>
