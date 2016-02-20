@@ -66,27 +66,29 @@ module Minicron
 
       # Set the path to something sensible by default, eventually this should be configurable
       crontab += "# ENV variables\n"
-      crontab += "PATH=/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
+      crontab += "PATH=/Users/james/.rvm/gems/ruby-2.2.1/bin:/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
       crontab += "MAILTO=\"\"\n"
       crontab += "\n"
 
       # Add an entry to the crontab for each job schedule
-      host.jobs.each do |job|
-        crontab += "# ID:   #{job.id}\n"
-        crontab += "# Name: #{job.name}\n"
-        crontab += "# Status: #{job.status}\n"
+      if host != nil
+        host.jobs.each do |job|
+          crontab += "# ID:   #{job.id}\n"
+          crontab += "# Name: #{job.name}\n"
+          crontab += "# Status: #{job.status}\n"
 
-        if job.schedules.length > 0
-          job.schedules.each do |schedule|
-            crontab += "\t"
-            crontab += "# " unless job.enabled # comment out schedule if job isn't enabled
-            crontab += "#{build_minicron_command(schedule.formatted, job.command)}\n"
+          if job.schedules.length > 0
+            job.schedules.each do |schedule|
+              crontab += "\t"
+              crontab += "# " unless job.enabled # comment out schedule if job isn't enabled
+              crontab += "#{build_minicron_command(schedule.formatted, job.command)}\n"
+            end
+          else
+            crontab += "\t# No schedules exist for this job\n"
           end
-        else
-          crontab += "\t# No schedules exist for this job\n"
-        end
 
-        crontab += "\n"
+          crontab += "\n"
+        end
       end
 
       crontab

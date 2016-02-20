@@ -112,7 +112,7 @@ class Minicron::Hub::App
           cron = Minicron::Cron.new(ssh)
 
           # Update the crontab
-          cron.update_crontab(@host)
+          cron.update_crontab(nil)
 
           # Tidy up
           ssh.close
