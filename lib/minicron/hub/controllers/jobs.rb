@@ -40,7 +40,6 @@ class Minicron::Hub::App
       job = Minicron::Hub::Job.create!(
         :job_hash => Minicron::Transport.get_job_hash(params[:command], host.fqdn),
         :name => params[:name],
-        :user => params[:user],
         :command => params[:command],
         :host_id => host.id
       )
@@ -96,9 +95,8 @@ class Minicron::Hub::App
         # Find the job
         @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:id])
 
-        # Update the name and user
+        # Update the name and command
         @job.name = params[:name]
-        @job.user = params[:user]
         @job.command = params[:command]
 
         # Update the job on the remote if the user/command has changed

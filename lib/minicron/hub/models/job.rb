@@ -8,7 +8,6 @@ module Minicron
       has_many :schedules, :dependent => :destroy
 
       validates :name,    :presence => true, :uniqueness => true
-      validates :user,    :presence => true
       validates :command, :presence => true
       validates :host,    :presence => true
       validates :enabled, :inclusion => { :in => [true, false] }
