@@ -85,6 +85,10 @@ module Minicron::Hub
         Minicron::Transport::Server.get_prefix
       end
 
+      def cron2english(schedule)
+        Cron2English.parse(schedule).join(' ')
+      end
+
       def nav_page
         # Strip the server prefix off the request path
         prefix = Minicron::Transport::Server.get_prefix.to_s

@@ -23,8 +23,11 @@
         <input name="special" value="<%= @schedule.special %>" type="hidden"/>
       </div>
 
-      <span id="schedule-input">
+      <div id="schedule-input">
         <input value="<%= @schedule.formatted %>" disabled type="text" class="form-control"/>
+      </div>
+
+      <input value="<%= cron2english(@schedule.formatted) %>" disabled type="text" class="form-control"/>
     </div>
   </div>
 </form>
