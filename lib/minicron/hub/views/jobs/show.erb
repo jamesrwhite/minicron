@@ -1,9 +1,15 @@
 <header class="clearfix">
   <h2 class="pull-left">Job '<%= @job.name %>'</h2>
   <a href="<%= "#{route_prefix}/job/#{@job.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
+  <form class="pull-right" action="<%= "#{route_prefix}/job/#{@job.id}" %>/status/<%= @job.enabled ? 'disable' : 'enable' %>" method="POST">
+    <input type="submit" class="btn btn-<%= @job.enabled ? 'danger' : 'success' %> btn-sm" value="<%= @job.enabled ? 'Disable' : 'Enable' %>">
+  </form>
   <a href="<%= "#{route_prefix}/job/#{@job.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
 </header>
 <hr/>
+<% if @error %>
+  <div class="alert alert-danger" role="alert"><%= @error %></div>
+<% end %>
 
 <form class="form-horizontal" role="form">
   <div class="form-group">

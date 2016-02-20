@@ -138,6 +138,59 @@ class Minicron::Hub::App
     end
   end
 
+  post '/job/:id/status/:status' do
+    # Find the job
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
+
+    begin
+      Minicron::Hub::Job.transaction do
+        # Set if the job is enabled or not
+        if params[:status] == 'enable'
+          enabled = true
+        elsif params[:status] == 'disable'
+          enabled = false
+        else
+          enabled = params[:status] # this will get caught by the AR validation
+        end
+
+        # Update the name and user
+        @job.enabled = enabled
+
+        ssh = Minicron::Transport::SSH.new(
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Save the job before we look up the hosts jobs so it's changes are there
+        @job.save!
+
+        # Look up the host and its jobs and job schedules
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
+
+        # Tidy up
+        ssh.close
+
+        # Redirect to the updated job
+        redirect "#{route_prefix}/job/#{@job.id}"
+      end
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      @job.restore_attributes
+      @error = e.message
+      erb :'jobs/show', :layout => :'layouts/app'
+    end
+  end
+
   get '/job/:id/delete' do
     # Look up the job
     @job = Minicron::Hub::Job.find(params[:id])
