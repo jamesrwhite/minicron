@@ -66,7 +66,7 @@ module Minicron
 
       # Set the path to something sensible by default, eventually this should be configurable
       crontab += "# ENV variables\n"
-      crontab += "PATH=/Users/james/.rvm/gems/ruby-2.2.1/bin:/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
+      crontab += "PATH=/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
       crontab += "MAILTO=\"\"\n"
       crontab += "\n"
 
