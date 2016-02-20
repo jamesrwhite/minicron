@@ -74,10 +74,13 @@ module Minicron
       host.jobs.each do |job|
         crontab += "# ID:   #{job.id}\n"
         crontab += "# Name: #{job.name}\n"
+        crontab += "# Status: #{job.status}\n"
 
         if job.schedules.length > 0
           job.schedules.each do |schedule|
-            crontab += "\t#{build_minicron_command(schedule.formatted, job.command)}\n"
+            crontab += "\t"
+            crontab += "# " unless job.enabled # comment out schedule if job isn't enabled
+            crontab += "#{build_minicron_command(schedule.formatted, job.command)}\n"
           end
         else
           crontab += "\t# No schedules exist for this job\n"
