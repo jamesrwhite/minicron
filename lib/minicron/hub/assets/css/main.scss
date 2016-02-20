@@ -12,6 +12,11 @@ body {
   cursor: pointer;
 }
 
+// Add an active menu colour
+.navbar-default .navbar-nav > li > a.active {
+  color: #FFA300;
+}
+
 // Line up the navbar logo
 .navbar-brand {
   padding-left: 15px;

@@ -80,6 +80,24 @@ module Minicron::Hub
         Minicron::Transport::Server.get_prefix
       end
 
+      def nav_page
+        # Strip the server prefix off the request path
+        prefix = Minicron::Transport::Server.get_prefix.to_s
+        path = request.fullpath[prefix.length..-1]
+
+        if request.fullpath[0..9] == '/execution'
+          :execution
+        elsif request.fullpath[0..3] == '/job'
+          :job
+        elsif request.fullpath[0..4] == '/host'
+          :host
+        elsif request.fullpath[0..5] == '/alert'
+          :alert
+        else
+          :unknown
+        end
+      end
+
       def ansi_to_html(output)
         Ansi::To::Html.new(output).to_html(:solarized)
       end

@@ -5,10 +5,10 @@
     </div>
 
     <ul class="nav navbar-nav">
-      <li><a href="<%= Minicron.config['server']['path'] %>">Executions</a></li>
-      <li><a href="<%= "#{route_prefix}/jobs" %>">Jobs</a></li>
-      <li><a href="<%= "#{route_prefix}/hosts" %>">Hosts</a></li>
-      <li><a href="<%= "#{route_prefix}/alerts" %>">Alerts</a></li>
+      <li><a class="<%= 'active' if nav_page == :execution %>" href="<%= Minicron.config['server']['path'] %>">Executions</a></li>
+      <li><a class="<%= 'active' if nav_page == :job %>" href="<%= "#{route_prefix}/jobs" %>">Jobs</a></li>
+      <li><a class="<%= 'active' if nav_page == :host %>" href="<%= "#{route_prefix}/hosts" %>">Hosts</a></li>
+      <li><a class="<%= 'active' if nav_page == :alert %>" href="<%= "#{route_prefix}/alerts" %>">Alerts</a></li>
     </ul>
   </div>
 </div>
