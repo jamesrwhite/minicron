@@ -20,7 +20,7 @@
         <td><%= job.executions.count %></td>
         <td><a href="<%= "#{route_prefix}/host/#{job.host.id}" %>"><%= job.host.name %></a></td>
         <td>
-          <form class="pull-left" action="<%= "#{route_prefix}/job/#{job.id}/run" %>" method="POST">
+          <form style="margin-top: -1px" class="pull-left" action="<%= "#{route_prefix}/job/#{job.id}/run" %>" method="POST">
             <input type="submit" class="btn btn-success btn-xs" value="Run"/>
           </form>
           <a href="<%= "#{route_prefix}/job/#{job.id}" %>" class="pull-left btn btn-info btn-xs">View</a>

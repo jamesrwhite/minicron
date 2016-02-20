@@ -5,6 +5,8 @@ require 'securerandom'
 module Minicron
   # Used to interact with the crontab on hosts over an ssh connection
   class Cron
+    PATH = '/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin'
+
     # Initialise the cron class
     #
     # @param ssh [Minicron::Transport::SSH] instance
@@ -66,7 +68,7 @@ module Minicron
 
       # Set the path to something sensible by default, eventually this should be configurable
       crontab += "# ENV variables\n"
-      crontab += "PATH=/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
+      crontab += "PATH=#{PATH}\n"
       crontab += "MAILTO=\"\"\n"
       crontab += "\n"
 
@@ -133,6 +135,23 @@ module Minicron
 
       # ..and finally, remove the temp crontab
       conn.exec!("rm #{tmp_crontab_name}").to_s.strip
+    end
+
+    # Run a job to run manually
+    #
+    # @param job [Minicron::Hub::Job]
+    # @param conn an instance of an open ssh connection
+    def run(job, conn = nil)
+      # Open an SSH connection
+      conn ||= @ssh.open
+
+      # Build the command
+      command =  "PATH=#{PATH} "
+      command += "#{Escape.shell_command(['minicron', 'run', job.command])}"
+      command += " >/dev/null 2>&1 </dev/null &"
+
+      # Exececute the job
+      conn.exec!(command)
     end
   end
 end

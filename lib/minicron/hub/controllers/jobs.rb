@@ -189,6 +189,38 @@ class Minicron::Hub::App
     end
   end
 
+  post '/job/:id/run' do
+    # Find the job
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
+
+    begin
+      ssh = Minicron::Transport::SSH.new(
+        :user => @job.host.user,
+        :host => @job.host.host,
+        :port => @job.host.port,
+        :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+      )
+
+      # Get an instance of the cron class
+      cron = Minicron::Cron.new(ssh)
+
+      # Run the job manaully
+      cron.run(@job)
+
+      # Tidy up
+      ssh.close
+
+      # Redirect to the updated job
+      redirect "#{route_prefix}/job/#{@job.id}"
+    # TODO: nicer error handling here with proper validation before hand
+    rescue Exception => e
+      @error = e.message
+      erb :'jobs/show', :layout => :'layouts/app'
+    end
+  end
+
   get '/job/:id/delete' do
     # Look up the job
     @job = Minicron::Hub::Job.find(params[:id])
