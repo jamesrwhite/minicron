@@ -84,6 +84,7 @@ describe Minicron do
             'port' => 9292,
             'path' => '/',
             'pid_file' => '/tmp/minicron.pid',
+            'timezone' => 'UTC',
             'session' => {
               'name' => 'minicron.session',
               'domain' => '127.0.0.1',

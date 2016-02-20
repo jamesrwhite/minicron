@@ -3,6 +3,7 @@ require 'active_record'
 require 'toml'
 require 'sshkey'
 require 'stringio'
+require 'active_support/core_ext/time'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
@@ -39,6 +40,7 @@ module Minicron
       'port' => 9292,
       'path' => '/',
       'pid_file' => '/tmp/minicron.pid',
+      'timezone' => 'UTC',
       'session' => {
         'name' => 'minicron.session',
         'domain' => '0.0.0.0',
@@ -268,5 +270,13 @@ module Minicron
 
     # Enable ActiveRecord logging if in verbose mode
     ActiveRecord::Base.logger = verbose ? Logger.new(STDOUT) : nil
+  end
+
+  # Returns a time in the configured server display timezone
+  #
+  # @param type [Time]
+  # @return type [Time]
+  def self.time(time)
+    time.in_time_zone(Minicron.config['server']['timezone'])
   end
 end
