@@ -38,6 +38,12 @@ body {
   margin: auto;
 }
 
+// Flash alerts
+.alert.flash {
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
 // So we can have two equal width scrollable columns
 .main-panel, .sidebar {
   float: left;

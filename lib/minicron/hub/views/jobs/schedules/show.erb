@@ -5,10 +5,6 @@
 </header>
 <hr/>
 
-<% if @error %>
-  <div class="alert alert-danger" role="alert"><%= @error %></div>
-<% end %>
-
 <form data-view-only class="form-horizontal" role="form" method="POST">
   <%= erb :'partials/schedules/panels' %>
 

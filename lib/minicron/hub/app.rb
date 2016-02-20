@@ -12,9 +12,13 @@ require 'sinatra/json'
 require 'erubis'
 require 'pathname'
 require 'ansi-to-html'
+require 'sinatra/flash'
 
 module Minicron::Hub
   class App < Sinatra::Base
+    enable :sessions
+
+    register Sinatra::Flash
     register Sinatra::AssetPack
 
     # Set the application root

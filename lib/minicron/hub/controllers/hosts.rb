@@ -43,10 +43,9 @@ class Minicron::Hub::App
 
       # Redirect to the new host
       redirect "#{route_prefix}/host/#{host.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @previous = params
-      @error = e.message
+      flash.now[:error] = e.message
     end
 
     erb :'hosts/new', :layout => :'layouts/app'
@@ -75,10 +74,9 @@ class Minicron::Hub::App
 
       # Redirect to the updated host
       redirect "#{route_prefix}/host/#{@host.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @host.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'hosts/edit', :layout => :'layouts/app'
     end
   end
@@ -126,9 +124,10 @@ class Minicron::Hub::App
 
         redirect "#{route_prefix}/hosts"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the host without connecting to the host</p>"
       erb :'hosts/delete', :layout => :'layouts/app'
     end
   end
@@ -155,7 +154,7 @@ class Minicron::Hub::App
       # Tidy up
       ssh.close
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] = e.message
     end
 
     erb :'hosts/test', :layout => :'layouts/app'

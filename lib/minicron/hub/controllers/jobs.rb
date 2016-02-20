@@ -68,10 +68,9 @@ class Minicron::Hub::App
 
       # Redirect to the new job
       redirect "#{route_prefix}/job/#{job.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @previous = params
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/new', :layout => :'layouts/app'
     end
   end
@@ -128,10 +127,9 @@ class Minicron::Hub::App
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @job.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/edit', :layout => :'layouts/app'
     end
   end
@@ -181,10 +179,9 @@ class Minicron::Hub::App
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @job.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/show', :layout => :'layouts/app'
     end
   end
@@ -213,10 +210,10 @@ class Minicron::Hub::App
       ssh.close
 
       # Redirect to the updated job
+      flash[:success] = "Job ##{@job.id} run triggered"
       redirect "#{route_prefix}/job/#{@job.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/show', :layout => :'layouts/app'
     end
   end
@@ -261,9 +258,10 @@ class Minicron::Hub::App
 
         redirect "#{route_prefix}/jobs"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the job without connecting to the host</p>"
       erb :'jobs/delete', :layout => :'layouts/app'
     end
   end
@@ -346,9 +344,8 @@ class Minicron::Hub::App
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/schedules/new', :layout => :'layouts/app'
     end
   end
@@ -408,10 +405,9 @@ class Minicron::Hub::App
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @schedule.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/schedules/edit', :layout => :'layouts/app'
     end
   end
@@ -456,9 +452,10 @@ class Minicron::Hub::App
 
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the schedule without connecting to the host</p>"
       erb :'jobs/schedules/delete', :layout => :'layouts/app'
     end
   end
