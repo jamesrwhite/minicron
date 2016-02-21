@@ -17,6 +17,7 @@ debug = false # Useful for debugging
   [client.cli]
   mode = "line" # [line, char]
   dry_run = false
+  pid_wait_timeout = 5
   [client.pusher]
   enabled = false
   # app_id = "YOUR_PUSHER_APP_ID"

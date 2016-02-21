@@ -77,6 +77,7 @@ describe Minicron do
             'cli' => {
               'mode' => 'line',
               'dry_run' => false,
+              'pid_wait_timeout' => 5,
             },
             'pusher' => {
               'enabled' => false,
