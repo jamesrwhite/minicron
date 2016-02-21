@@ -12,6 +12,11 @@ body {
   cursor: pointer;
 }
 
+// Add an active menu colour
+.navbar-default .navbar-nav > li > a.active {
+  color: #FFA300;
+}
+
 // Line up the navbar logo
 .navbar-brand {
   padding-left: 15px;
@@ -33,6 +38,12 @@ body {
   margin: auto;
 }
 
+// Flash alerts
+.alert.flash {
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
 // So we can have two equal width scrollable columns
 .main-panel, .sidebar {
   float: left;
@@ -47,18 +58,18 @@ body {
   background-color: #FFF;
 
   header {
-    h2, a {
+    h2, a, form {
       margin: 10px 0;
     }
 
-    a {
+    a, form {
       margin-top: 12px;
       margin-left: 15px;
     }
   }
 
   table {
-    a {
+    a, form {
       text-decoration: none;
       margin-right: 5px;
       height: auto;
@@ -75,6 +86,8 @@ body {
 
   .form-control-view {
     background-color: #EEECF1;
+    height: auto;
+    min-height: 43px;
   }
 
   pre.form-control-view {
@@ -189,6 +202,10 @@ a.list-group-item:hover {
       box-shadow: 0;
     }
   }
+}
+
+#schedule-input {
+  margin-bottom: 15px;
 }
 // End Schedule editor
 

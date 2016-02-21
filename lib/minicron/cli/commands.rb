@@ -1,11 +1,11 @@
 require 'minicron'
 require 'insidious'
 require 'rake'
-require 'sinatra/activerecord/rake'
+require 'minicron/hub/app'
+require 'active_record'
 require 'minicron/transport'
 require 'minicron/transport/client'
 require 'minicron/transport/server'
-require 'minicron/hub/app'
 
 module Minicron
   module CLI
@@ -13,7 +13,7 @@ module Minicron
       # Add the `minicron db` command
       def self.add_db_cli_command(cli)
         cli.command :db do |c|
-          c.syntax = 'minicron db [setup]'
+          c.syntax = 'minicron db [setup|migrate|version]'
           c.description = 'Sets up the minicron database schema.'
 
           c.action do |args, opts|
@@ -25,17 +25,66 @@ module Minicron
             # Parse the file and cli config options
             Minicron::CLI.parse_config(opts)
 
-            # Setup the db
-            Minicron::Hub::App.setup_db
+            # Display all the infos please
+            ActiveRecord::Migration.verbose = true
 
-            # Tell activerecord where the db folder is, it assumes it is in db/
-            Sinatra::ActiveRecordTasks.db_dir = Minicron::HUB_PATH + '/db'
+            # Adjust the task name for some more friendly tasks
+            case args.first
+            when 'setup'
+              # You can't "create" a database in sqlite ¯\_(ツ)_/¯
+              unless Minicron.config['server']['database']['type'] == 'sqlite'
+                # Remove the database name from the config in case it doesn't exist yet
+                Minicron.establish_db_connection(
+                  Minicron.config['server']['database'].merge('database' => nil),
+                  Minicron.config['verbose']
+                )
 
-            # Adjust the task name
-            task = args.first == 'setup' ? 'load' : args.first
+                # Create the database
+                ActiveRecord::Base.connection.create_database(
+                  Minicron.config['server']['database']['database'],
+                  {
+                    :charset => 'utf8',
+                    :collation => 'utf8_unicode_ci'
+                  }
+                )
+              end
 
-            # Run the task
-            Rake.application['db:schema:' + task].invoke
+              # Then create the initial schema based on schema.rb
+              ActiveRecord::Tasks::DatabaseTasks.load_schema_for(
+                Minicron.get_activerecord_db_config(Minicron.config['server']['database']),
+                ActiveRecord::Base.schema_format,
+                "#{Minicron::DB_PATH}/schema.rb"
+              )
+
+              # Open a new connection to our shiny new database now we know it's there for sure
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'],
+                Minicron.config['verbose']
+              )
+
+              # Then run any migrations
+              ActiveRecord::Migrator.migrate(Minicron::MIGRATIONS_PATH)
+            when 'migrate'
+              # Connect to the database
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'],
+                Minicron.config['verbose']
+              )
+
+              # Run any pending migrations
+              ActiveRecord::Migrator.migrate(Minicron::MIGRATIONS_PATH)
+            when 'version'
+              # Connect to the database
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'],
+                Minicron.config['verbose']
+              )
+
+              # Print our the schema version
+              puts ActiveRecord::Migrator.current_version
+            else
+              raise Minicron::ArgumentError, "Unknown argument #{args.first}. See `minicron help db`"
+            end
           end
         end
       end
@@ -49,7 +98,6 @@ module Minicron
           c.option '--port STRING', Integer, "How port for the server to listed on. Default: #{Minicron.config['server']['port']}"
           c.option '--path STRING', String, "The path on the host. Default: #{Minicron.config['server']['path']}"
           c.option '--pid_file STRING', String, "The path for daemon's PID file. Default: #{Minicron.config['server']['pid_file']}"
-          c.option '--cron_file STRING', String, "The path to the cron file. Default: #{Minicron.config['server']['cron_file']}"
 
           c.action do |args, opts|
             # Parse the file and cli config options
@@ -164,6 +212,7 @@ module Minicron
                 when :start
                   unless Minicron.config['client']['cli']['dry_run']
                     client.start(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -171,6 +220,7 @@ module Minicron
                 when :finish
                   unless Minicron.config['client']['cli']['dry_run']
                     client.finish(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -178,6 +228,7 @@ module Minicron
                 when :exit
                   unless Minicron.config['client']['cli']['dry_run']
                     client.exit(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -185,6 +236,7 @@ module Minicron
                 when :output
                   unless Minicron.config['client']['cli']['dry_run']
                     client.output(
+                      job[:job_id],
                       job[:execution_id],
                       output[:output]
                     )
@@ -198,6 +250,7 @@ module Minicron
               # Send the exception message to the server and yield it
               unless Minicron.config['client']['cli']['dry_run']
                 client.output(
+                  job[:job_id],
                   job[:execution_id],
                   e.message
                 )

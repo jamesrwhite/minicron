@@ -43,10 +43,9 @@ class Minicron::Hub::App
 
       # Redirect to the new host
       redirect "#{route_prefix}/host/#{host.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @previous = params
-      @error = e.message
+      flash.now[:error] = e.message
     end
 
     erb :'hosts/new', :layout => :'layouts/app'
@@ -60,10 +59,10 @@ class Minicron::Hub::App
   end
 
   post '/host/:id/edit' do
-    begin
-      # Find the host
-      @host = Minicron::Hub::Host.find(params[:id])
+    # Find the host
+    @host = Minicron::Hub::Host.find(params[:id])
 
+    begin
       # Update its data
       @host.name = params[:name]
       @host.fqdn = params[:fqdn]
@@ -75,10 +74,9 @@ class Minicron::Hub::App
 
       # Redirect to the updated host
       redirect "#{route_prefix}/host/#{@host.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @host.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'hosts/edit', :layout => :'layouts/app'
     end
   end
@@ -92,50 +90,53 @@ class Minicron::Hub::App
 
   post '/host/:id/delete' do
     # Look up the host
-    @host = Minicron::Hub::Host.find(params[:id])
+    @host = Minicron::Hub::Host.includes(:jobs => :schedules).find(params[:id])
 
     begin
       Minicron::Hub::Host.transaction do
         # Try and delete the host
         Minicron::Hub::Host.destroy(params[:id])
 
-        # Get an ssh instance and open a connection
-        ssh = Minicron::Transport::SSH.new(
-          :user => @host.user,
-          :host => @host.host,
-          :port => @host.port,
-          :private_key => "~/.ssh/minicron_host_#{@host.id}_rsa"
-        )
+        unless params[:force]
+          # Get an ssh instance and open a connection
+          ssh = Minicron::Transport::SSH.new(
+            :user => @host.user,
+            :host => @host.host,
+            :port => @host.port,
+            :private_key => "~/.ssh/minicron_host_#{@host.id}_rsa"
+          )
 
-        # Get an instance of the cron class
-        cron = Minicron::Cron.new(ssh)
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
 
-        # Delete the host from the crontab
-        cron.delete_host(@host)
+          # Update the crontab
+          cron.update_crontab(nil)
 
-        # Tidy up
-        ssh.close
+          # Tidy up
+          ssh.close
 
-        # Delete the pub/priv key pair
-        private_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa")
-        public_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa.pub")
-        File.delete(private_key_path)
-        File.delete(public_key_path)
+          # Delete the pub/priv key pair
+          private_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa")
+          public_key_path = File.expand_path("~/.ssh/minicron_host_#{@host.id}_rsa.pub")
+          File.delete(private_key_path)
+          File.delete(public_key_path)
+        end
 
         redirect "#{route_prefix}/hosts"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the host without connecting to the host</p>"
       erb :'hosts/delete', :layout => :'layouts/app'
     end
   end
 
   get '/host/:id/test' do
-    begin
-      # Get the host
-      @host = Minicron::Hub::Host.find(params[:id])
+    # Get the host
+    @host = Minicron::Hub::Host.find(params[:id])
 
+    begin
       # Set up the ssh instance
       ssh = Minicron::Transport::SSH.new(
         :user => @host.user,
@@ -148,12 +149,12 @@ class Minicron::Hub::App
       cron = Minicron::Cron.new(ssh)
 
       # Test the SSH connection
-      @test = cron.test_host_permissions
+      @test = cron.get_host_permissions
 
       # Tidy up
       ssh.close
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] = e.message
     end
 
     erb :'hosts/test', :layout => :'layouts/app'

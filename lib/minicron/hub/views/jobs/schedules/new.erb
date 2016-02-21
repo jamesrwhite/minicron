@@ -3,10 +3,6 @@
 </header>
 <hr/>
 
-<% if @error %>
-  <div class="alert alert-danger" role="alert"><%= @error %></div>
-<% end %>
-
 <form class="form-horizontal" role="form" method="POST">
   <%= erb :'partials/schedules/panels' %>
 
@@ -25,8 +21,9 @@
         <input name="special" value="" type="hidden"/>
       </div>
 
-      <span id="schedule-input">
+      <div id="schedule-input">
         <input value="* * * * *" disabled type="text" class="form-control"/>
+      </div>
     </div>
   </div>
 

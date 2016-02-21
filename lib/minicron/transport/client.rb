@@ -37,16 +37,18 @@ module Minicron
         })
 
         {
+          :job_id => response['job_id'],
           :execution_id => response['execution_id'],
         }
       end
 
       # Mark a job as having started
       #
+      # @param [Integer] job_id
       # @param [Integer] execution_id
       # @param [Integer] timestamp
       # @return [Hash]
-      def start(execution_id, timestamp)
+      def start(job_id, execution_id, timestamp)
         # Send a job execution status to the server
         response = send("/execution/start", {
           :execution_id => execution_id,
@@ -58,10 +60,11 @@ module Minicron
 
       # Mark a job as having finished
       #
+      # @param [Integer] job_id
       # @param [Integer] execution_id
       # @param [Integer] timestamp
       # @return [Hash]
-      def finish(execution_id, timestamp)
+      def finish(job_id, execution_id, timestamp)
         # Send a job execution status to the server
         response = send("/execution/finish", {
           :execution_id => execution_id,
@@ -73,12 +76,14 @@ module Minicron
 
       # Set the exit status of a job once it has finished
       #
+      # @param [Integer] job_id
       # @param [Integer] execution_id
       # @param [Integer] exit_status
       # @return [Hash]
-      def exit(execution_id, exit_status)
+      def exit(job_id, execution_id, exit_status)
         # Send a job execution status to the server
         response = send("/execution/exit", {
+          :job_id => job_id,
           :execution_id => execution_id,
           :exit_status => exit_status,
         })
@@ -88,12 +93,14 @@ module Minicron
 
       # Used to send output from the job execution
       #
+      # @param [Integer] job_id
       # @param [Integer] execution_id
       # @param [String] output
       # @return [Hash]
-      def output(execution_id, output)
+      def output(job_id, execution_id, output)
         # Send the job execution output to the server
         response = send("/execution/output", {
+          :job_id => job_id,
           :execution_id => execution_id,
           :output => output,
         })

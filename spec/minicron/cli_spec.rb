@@ -54,7 +54,7 @@ describe Minicron::CLI do
           Minicron.capture_output :type => :stderr do
             expect do
               Minicron::CLI.run(%w(run --dry-run --debug))
-            end.to raise_error SystemExit
+            end.to raise_error Minicron::ArgumentError
           end
         end
       end
@@ -92,7 +92,7 @@ describe Minicron::CLI do
           Minicron.capture_output :type => :stderr do
             expect do
               Minicron::CLI.run(['run', '--dry-run', '--debug', '--config', './config/minicron.toml'])
-            end.to raise_error SystemExit
+            end.to raise_error Minicron::ArgumentError
           end
         end
       end

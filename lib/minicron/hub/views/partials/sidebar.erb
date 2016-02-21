@@ -11,7 +11,7 @@
     <% recent_executions.each do |execution| %>
       <a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="list-group-item clearfix<%= if defined?(@execution) and @execution.id == execution.id then ' active' else nil end %>">
           <span class="pull-left"><%= execution.job.name %></span>
-          <% if execution.exit_status != 0 %>
+          <% if !execution.exit_status.nil? && execution.exit_status > 0 %>
             <span class="pull-right execution-status label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
               <span class="glyphicon glyphicon-remove"></span>
               </span>
@@ -27,7 +27,7 @@
             <% end %>
           <% end %>
           <div style="clear: left;"></div>
-          <span class="execution-info"><%= execution.created_at %> on <%= execution.job.host.name %></span>
+          <span class="execution-info"><%= Minicron.time(execution.created_at) %> on <%= execution.job.host.name %></span>
         </a>
     <% end %>
   </div>

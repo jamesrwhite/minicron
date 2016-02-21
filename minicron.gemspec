@@ -2,7 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-VERSION = '0.8.0'
+VERSION = "0.9.2.#{Time.now.to_i}"
 
 Gem::Specification.new do |spec|
   spec.name                  = 'minicron'
@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.post_install_message  = 'Thanks for installing minicron!'
 
   spec.require_paths = ['lib']
-  spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,spec}/**/*']
+  spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,db,spec}/**/*']
   spec.test_files    = Dir['{spec}/**/*']
   spec.executables  << 'minicron'
 
@@ -26,8 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra', '~> 1.4', '>= 1.4.4'
   spec.add_runtime_dependency 'erubis', '~> 2.7'
   spec.add_runtime_dependency 'activerecord', '~> 4.0', '>= 4.0.3'
-  spec.add_runtime_dependency 'sinatra-activerecord', '~> 1.7'
-  spec.add_runtime_dependency 'sinatra-assetpack', '~> 0.3', '>= 0.3.2'
+  spec.add_runtime_dependency 'sinatra-assetpack', '0.3.3' # TODO: replace this with something else
   spec.add_runtime_dependency 'sass', '~> 3.2', '>= 3.2.14'
   spec.add_runtime_dependency 'sshkey', '~> 1.6', '>= 1.6.1'
   spec.add_runtime_dependency 'net-ssh', '~> 2.8'
@@ -42,8 +41,11 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'net-http-persistent', '~> 2.9'
   spec.add_runtime_dependency 'sinatra-contrib', '~> 1.4'
   spec.add_runtime_dependency 'ansi-to-html', '0.0.3'
-  spec.add_runtime_dependency 'mysql2','~> 0.3'
-  spec.add_runtime_dependency 'pg', '~> 0.18'
+  spec.add_runtime_dependency 'mysql2','0.3.18'
+  spec.add_runtime_dependency 'pg', '0.18.2'
+  spec.add_runtime_dependency 'activesupport', '~> 4.0'
+  spec.add_runtime_dependency 'sinatra-flash', '0.3.0'
+  spec.add_runtime_dependency 'cron2english', '~> 0.1'
   spec.add_runtime_dependency 'pusher', '~> 0.14'
 
   spec.add_development_dependency 'bundler', '~> 1.5'

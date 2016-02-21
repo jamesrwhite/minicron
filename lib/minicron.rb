@@ -1,7 +1,9 @@
 require 'minicron/constants'
+require 'active_record'
 require 'toml'
 require 'sshkey'
 require 'stringio'
+require 'active_support/core_ext/time'
 
 # @author James White <dev.jameswhite+minicron@gmail.com>
 module Minicron
@@ -41,7 +43,7 @@ module Minicron
       'port' => 9292,
       'path' => '/',
       'pid_file' => '/tmp/minicron.pid',
-      'cron_file' => '/etc/crontab',
+      'timezone' => 'UTC',
       'session' => {
         'name' => 'minicron.session',
         'domain' => '0.0.0.0',
@@ -99,31 +101,21 @@ module Minicron
         raise Minicron::ConfigError, "Unable to the load the file '#{file_path}', are you sure it exists?"
       end
     rescue Errno::EACCES
-      raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions."
+      raise Minicron::ConfigError, "Unable to the read the file '#{file_path}', check it has the right permissions"
     rescue TOML::ParseError
-      raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax."
+      raise Minicron::ConfigError, "An error occured parsing the config file '#{file_path}', please check it uses valid TOML syntax"
     end
   end
 
   # Parses the config options from the given hash that matches the expected
   # config format in Minicron.config
-  # TODO: refactor this mess
-  def self.parse_config_hash(options = {})
+  def self.parse_config_hash(options = {}, config = @config)
     options.each do |key, value|
-      if options[key].respond_to?(:each)
-        options[key].each do |k, v|
-          if v.respond_to?(:each)
-            v.each do |k2, v2|
-              if !v2.nil?
-                @config[key][k][k2] = v2
-              end
-            end
-          elsif !v.nil?
-            @config[key][k] = v
-          end
-        end
-      else
-        @config[key] = value
+      config[key] = {} if config[key].nil?
+      if value.respond_to?(:each)
+        self.parse_config_hash(value, config[key])
+      elsif !value.nil?
+        config[key] = value
       end
     end
   end
@@ -237,5 +229,57 @@ module Minicron
     else
       raise Minicron::DatabaseError, "The database #{type} is not supported"
     end
+  end
+
+  # Get the activerecord config hash for the databaes
+  #
+  # @param type [Hash] database config
+  # @return type [String] activerecord database config
+  def self.get_activerecord_db_config(config)
+    case config['type']
+    when /mysql|postgresql/
+      return {
+        :adapter => Minicron.get_db_adapter(config['type']),
+        :host => config['host'],
+        :database => config['database'],
+        :username => config['username'],
+        :password => config['password']
+      }
+    when 'sqlite'
+      # Calculate the realtive path to the db because sqlite or activerecord is
+      # weird and doesn't seem to handle abs paths correctly
+      root = Pathname.new(Dir.pwd)
+      db = Pathname.new(Minicron::BASE_PATH + '/db')
+      db_rel_path = db.relative_path_from(root)
+
+      return {
+        :adapter => Minicron.get_db_adapter(config['type']),
+        :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
+      }
+    else
+      raise Minicron::DatabaseError, "The database #{config['type']} is not supported"
+    end
+  end
+
+  # Get the activerecord config hash for the databaes
+  #
+  # @param type [Hash] database config
+  def self.establish_db_connection(config, verbose = false)
+    # Get the activerecord formatted config
+    ar_config = self.get_activerecord_db_config(config)
+
+    # Connect to the database
+    ActiveRecord::Base.establish_connection(ar_config)
+
+    # Enable ActiveRecord logging if in verbose mode
+    ActiveRecord::Base.logger = verbose ? Logger.new(STDOUT) : nil
+  end
+
+  # Returns a time in the configured server display timezone
+  #
+  # @param type [Time]
+  # @return type [Time]
+  def self.time(time)
+    time.in_time_zone(Minicron.config['server']['timezone'])
   end
 end

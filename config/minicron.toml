@@ -6,15 +6,17 @@ debug = false # Useful for debugging
 
 # Client options
 [client]
-scheme = "http" # [http, https]
-host = "127.0.0.1"
-port = 9292
-path = "/"
-connect_timeout = 5
-inactivity_timeout = 5
+  [client.server]
+  scheme = "http" # [http, https]
+  host = "127.0.0.1"
+  port = 9292
+  path = "/"
+  connect_timeout = 5
+  inactivity_timeout = 5
+  # CLI options
   [client.cli]
-  mode = "line" # [line, char] - line by line output or char by char
-  dry_run = false # When true the command is run but not sent to the server
+  mode = "line" # [line, char]
+  dry_run = false
   [client.pusher]
   enabled = false
   # app_id = "YOUR_PUSHER_APP_ID"
@@ -27,7 +29,7 @@ host = "127.0.0.1"
 port = 9292
 path = "/"
 pid_file = "/tmp/minicron.pid"
-cron_file = "/etc/crontab"
+timezone = "UTC"
   [server.session]
   name = "minicron.session"
   domain = "127.0.0.1"

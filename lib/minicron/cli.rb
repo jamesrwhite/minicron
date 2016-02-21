@@ -20,7 +20,7 @@ module Minicron
     #
     # @param opts [Hash] The Commander provided options hash
     def self.parse_config(opts)
-      # Parse the --config file options if it was passed
+      # Parse the file config
       Minicron.parse_file_config(opts.config)
 
       # Parse the cli options
@@ -38,7 +38,6 @@ module Minicron
           'port' => opts.port,
           'path' => opts.path,
           'pid_file' => opts.pid_file,
-          'cron_file' => opts.cron_file
         }
       )
     end
@@ -138,7 +137,7 @@ module Minicron
       ensure
         # Record the time the command finished
         finish = Time.now.utc - subtract_total
-        exit_status = $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
+        exit_status = !$CHILD_STATUS.nil? && $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
 
         # yield the finish time and exit status
         yield structured :finish, finish.to_i
@@ -185,6 +184,9 @@ module Minicron
 
     # Sets the basic options for a commander cli instance
     def self.setup
+      # ABT, always be tracing
+      @cli.always_trace!
+
       # basic information for the help menu
       @cli.program :name, 'minicron'
       @cli.program :help, 'Author', 'James White <dev.jameswhite+minicron@gmail.com>'
@@ -206,9 +208,6 @@ module Minicron
 
       # Add a global option for passing the path to a config file
       @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"
-
-      # No tracing option, we're using --debug
-      @cli.never_trace!
     end
   end
 end

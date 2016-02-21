@@ -1,19 +1,36 @@
+# Apparently this is the only way to conditionally load this, eww
+begin
+  require 'better_errors'
+rescue LoadError
+end
+
+require 'active_record'
+require 'sinatra/assetpack'
 require 'minicron'
 require 'sinatra/base'
-require 'sinatra/activerecord'
-require 'sinatra/assetpack'
 require 'sinatra/json'
 require 'erubis'
 require 'pathname'
 require 'ansi-to-html'
+require 'sinatra/flash'
+require 'cron2english'
 
 module Minicron::Hub
   class App < Sinatra::Base
-    register Sinatra::ActiveRecordExtension
+    enable :sessions
+
+    register Sinatra::Flash
     register Sinatra::AssetPack
 
     # Set the application root
     set :root, Minicron::HUB_PATH
+
+    configure :development do
+      if defined?(BetterErrors)
+        use BetterErrors::Middleware
+        BetterErrors.application_root = __dir__
+      end
+    end
 
     # General Sinatra configuration
     configure do
@@ -23,19 +40,18 @@ module Minicron::Hub
       # Don't capture any errors. Throw them up the stack
       set :raise_errors, true
 
-      # Disable internal middleware for presenting errors
-      # as useful HTML pages
+      # Disable internal middleware for presenting errors as HTML
       set :show_exceptions, false
 
       # Used to enable asset compression, currently nothing else
       # relies on this
-      set :environment, :production
+      set :environment, :production if ENV['MINICRON_IS_PACKAGED']
 
       # Force the encoding to be UTF-8 to prevent assetpack encoding issues
       Encoding.default_external = Encoding::UTF_8
     end
 
-    # Configure how we server assets
+    # Configure how we serve assets
     assets do
       serve '/css',   :from => 'assets/css'
       serve '/js',    :from => 'assets/js'
@@ -69,6 +85,28 @@ module Minicron::Hub
         Minicron::Transport::Server.get_prefix
       end
 
+      def cron2english(schedule)
+        Cron2English.parse(schedule).join(' ')
+      end
+
+      def nav_page
+        # Strip the server prefix off the request path
+        prefix = Minicron::Transport::Server.get_prefix.to_s
+        path = request.fullpath[prefix.length..-1]
+
+        if request.fullpath[0..9] == '/execution'
+          :execution
+        elsif request.fullpath[0..3] == '/job'
+          :job
+        elsif request.fullpath[0..4] == '/host'
+          :host
+        elsif request.fullpath[0..5] == '/alert'
+          :alert
+        else
+          :unknown
+        end
+      end
+
       def ansi_to_html(output)
         Ansi::To::Html.new(output).to_html(:solarized)
       end
@@ -79,8 +117,11 @@ module Minicron::Hub
     def initialize
       super
 
-      # Initialize the db
-      Minicron::Hub::App.setup_db
+      # Connect to the database
+      Minicron.establish_db_connection(
+        Minicron.config['server']['database'],
+        Minicron.config['verbose']
+      )
 
       # Load all our models
       Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
@@ -91,36 +132,6 @@ module Minicron::Hub
       Dir[File.dirname(__FILE__) + '/controllers/**/*.rb'].each do |controller|
         require controller
       end
-    end
-
-    # Used to set up the database connection
-    def self.setup_db
-      # Configure the database
-      case Minicron.config['server']['database']['type']
-      when /mysql|postgresql/
-        set :database,
-            :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
-            :host => Minicron.config['server']['database']['host'],
-            :database => Minicron.config['server']['database']['database'],
-            :username => Minicron.config['server']['database']['username'],
-            :password => Minicron.config['server']['database']['password']
-      when 'sqlite'
-        # Calculate the realtive path to the db because sqlite or activerecord is
-        # weird and doesn't seem to handle abs paths correctly
-        root = Pathname.new(Dir.pwd)
-        db = Pathname.new(Minicron::HUB_PATH + '/db')
-        db_rel_path = db.relative_path_from(root)
-
-        ActiveRecord::Base.establish_connection(
-          :adapter => Minicron.get_db_adapter(Minicron.config['server']['database']['type']),
-          :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
-        )
-      else
-        raise Minicron::DatabaseError, "The database #{Minicron.config['server']['database']['type']} is not supported"
-      end
-
-      # Enable ActiveRecord logging if in verbose mode
-      ActiveRecord::Base.logger = Minicron.config['verbose'] ? Logger.new(STDOUT) : nil
     end
   end
 end

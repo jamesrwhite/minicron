@@ -12,6 +12,7 @@ class Minicron::Hub::App
           host = Minicron::Hub::Host.create!(
             :name => params[:hostname],
             :fqdn => params[:fqdn],
+            :user => params[:user],
             :host => request.ip, # TODO: ensure this is the correct header if behind a reverse proxy etc
             :port => 22
           )
@@ -28,9 +29,13 @@ class Minicron::Hub::App
         # Validate or create the job
         job = Minicron::Hub::Job.where(:job_hash => params[:job_hash]).first_or_create! do |j|
           j.job_hash = params[:job_hash]
-          j.user = params[:user]
           j.command = params[:command]
           j.host_id = host.id
+        end
+
+        # Check if the job is enabled
+        unless job.enabled
+          raise Minicron::ClientError, "Refusing to execute disabled job with id: #{job.id} and name: #{job.name}"
         end
 
         # Get the latest execution number
@@ -135,9 +140,18 @@ class Minicron::Hub::App
           :exit_status => params[:exit_status]
         )
 
-        json({
-          :success => true
-        })
+       # If the exit status was above 0 we need to trigger a failure alert
+      if params[:exit_status].to_i > 0
+        Minicron::Alert.send_all(
+          :kind => 'fail',
+          :execution_id => params[:execution_id],
+          :job_id => params[:job_id]
+        )
+      end
+
+      json({
+        :success => true
+      })
     rescue Exception => e
       status 500
 

@@ -11,7 +11,9 @@ class Minicron::Hub::App
 
   get '/job/:id' do
     # Look up the job
-    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules).find(params[:id])
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
 
     erb :'jobs/show', :layout => :'layouts/app'
   end
@@ -27,10 +29,10 @@ class Minicron::Hub::App
   end
 
   post '/jobs/new' do
-    begin
-      # All the hosts for the select dropdown
-      @hosts = Minicron::Hub::Host.all
+    # All the hosts for the select dropdown
+    @hosts = Minicron::Hub::Host.all
 
+    begin
       # First we need to look up the host
       host = Minicron::Hub::Host.find(params[:host])
 
@@ -38,19 +40,37 @@ class Minicron::Hub::App
       job = Minicron::Hub::Job.create!(
         :job_hash => Minicron::Transport.get_job_hash(params[:command], host.fqdn),
         :name => params[:name],
-        :user => params[:user],
         :command => params[:command],
         :host_id => host.id
       )
 
+      ssh = Minicron::Transport::SSH.new(
+        :user => job.host.user,
+        :host => job.host.host,
+        :port => job.host.port,
+        :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+      )
+
+      # Get an instance of the cron class
+      cron = Minicron::Cron.new(ssh)
+
+      # Save the job before we look up the hosts jobs so it's changes are there
       job.save!
+
+      # Look up the host and its jobs and job schedules
+      host = Minicron::Hub::Host.includes(:jobs => :schedules).find(job.host.id)
+
+      # Update the crontab
+      cron.update_crontab(host)
+
+      # Tidy up
+      ssh.close
 
       # Redirect to the new job
       redirect "#{route_prefix}/job/#{job.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @previous = params
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/new', :layout => :'layouts/app'
     end
   end
@@ -66,50 +86,135 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/edit' do
-    begin
-      # All the hosts for the select dropdown
-      @hosts = Minicron::Hub::Host.all
+    # All the hosts for the select dropdown
+    @hosts = Minicron::Hub::Host.all
 
+    begin
       Minicron::Hub::Job.transaction do
         # Find the job
-        @job = Minicron::Hub::Job.includes(:host).find(params[:id])
+        @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:id])
 
-        # Store a copy of the current job user in case we need to change it
-        old_user = @job.user
-
-        # Update the name and user
+        # Update the name and command
         @job.name = params[:name]
-        @job.user = params[:user]
+        @job.command = params[:command]
 
-        # Only update the job user if it has changed
-        if old_user != @job.user
-          ssh = Minicron::Transport::SSH.new(
-            :user => @job.host.user,
-            :host => @job.host.host,
-            :port => @job.host.port,
-            :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
-          )
+        # Update the job on the remote if the user/command has changed
+        # Rehash the job command
+        @job.job_hash = Minicron::Transport.get_job_hash(@job.command, @job.host.fqdn)
 
-          # Get an instance of the cron class
-          cron = Minicron::Cron.new(ssh)
+        ssh = Minicron::Transport::SSH.new(
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+        )
 
-          # Update the job schedules in the crontab
-          cron.update_user(@job, old_user, @job.user)
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
 
-          # Tidy up
-          ssh.close
-        end
-
+        # Save the job before we look up the hosts jobs so it's changes are there
         @job.save!
+
+        # Look up the host and its jobs and job schedules
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
+
+        # Tidy up
+        ssh.close
 
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @job.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/edit', :layout => :'layouts/app'
+    end
+  end
+
+  post '/job/:id/status/:status' do
+    # Find the job
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
+
+    begin
+      Minicron::Hub::Job.transaction do
+        # Set if the job is enabled or not
+        if params[:status] == 'enable'
+          enabled = true
+        elsif params[:status] == 'disable'
+          enabled = false
+        else
+          enabled = params[:status] # this will get caught by the AR validation
+        end
+
+        # Update the name and user
+        @job.enabled = enabled
+
+        ssh = Minicron::Transport::SSH.new(
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Save the job before we look up the hosts jobs so it's changes are there
+        @job.save!
+
+        # Look up the host and its jobs and job schedules
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
+
+        # Tidy up
+        ssh.close
+
+        # Redirect to the updated job
+        redirect "#{route_prefix}/job/#{@job.id}"
+      end
+    rescue Exception => e
+      @job.restore_attributes
+      flash.now[:error] = e.message
+      erb :'jobs/show', :layout => :'layouts/app'
+    end
+  end
+
+  post '/job/:id/run' do
+    # Find the job
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
+
+    begin
+      ssh = Minicron::Transport::SSH.new(
+        :user => @job.host.user,
+        :host => @job.host.host,
+        :port => @job.host.port,
+        :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+      )
+
+      # Get an instance of the cron class
+      cron = Minicron::Cron.new(ssh)
+
+      # Run the job manaully
+      cron.run(@job)
+
+      # Tidy up
+      ssh.close
+
+      # Redirect to the updated job
+      flash[:success] = "Job ##{@job.id} run triggered"
+      redirect "#{route_prefix}/job/#{@job.id}"
+    rescue Exception => e
+      flash.now[:error] = e.message
+      erb :'jobs/show', :layout => :'layouts/app'
     end
   end
 
@@ -121,36 +226,42 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/delete' do
-    begin
-      # Look up the job
-      @job = Minicron::Hub::Job.find(params[:id])
+    # Look up the job
+    @job = Minicron::Hub::Job.includes(:schedules).find(params[:id])
 
+    begin
       Minicron::Hub::Job.transaction do
         # Try and delete the job
         Minicron::Hub::Job.destroy(params[:id])
 
-        # Get an ssh instance
-        ssh = Minicron::Transport::SSH.new(
-          :user => @job.host.user,
-          :host => @job.host.host,
-          :port => @job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
-        )
+        unless params[:force]
+          # Get an ssh instance
+          ssh = Minicron::Transport::SSH.new(
+            :user => @job.host.user,
+            :host => @job.host.host,
+            :port => @job.host.port,
+            :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+          )
 
-        # Get an instance of the cron class
-        cron = Minicron::Cron.new(ssh)
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
 
-        # Delete the job from the crontab
-        cron.delete_job(@job)
+          # Look up the host and its jobs and job schedules
+          host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
 
-        # Tidy up
-        ssh.close
+          # Update the crontab
+          cron.update_crontab(host)
+
+          # Tidy up
+          ssh.close
+        end
 
         redirect "#{route_prefix}/jobs"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the job without connecting to the host</p>"
       erb :'jobs/delete', :layout => :'layouts/app'
     end
   end
@@ -176,19 +287,19 @@ class Minicron::Hub::App
   end
 
   post '/job/:job_id/schedules/new' do
-    begin
-      # Look up the job
-      @job = Minicron::Hub::Job.find(params[:job_id])
+    # Look up the job
+    @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:job_id])
 
+    begin
       # First we need to check a schedule like this doesn't already exist
       exists = Minicron::Hub::Schedule.exists?(
-        :minute => params[:minute],
-        :hour => params[:hour],
-        :day_of_the_month => params[:day_of_the_month],
-        :month => params[:month],
-        :day_of_the_week => params[:day_of_the_week],
-        :special => params[:special],
-        :job_id => params[:job_id]
+        :minute => params[:minute].empty? ? nil : params[:minute],
+        :hour => params[:hour].empty? ? nil : params[:hour],
+        :day_of_the_month => params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
+        :month => params[:month].empty? ? nil : params[:month],
+        :day_of_the_week => params[:day_of_the_week].empty? ? nil : params[:day_of_the_week],
+        :special => params[:special].empty? ? nil : params[:special],
+        :job_id => params[:job_id].empty? ? nil : params[:job_id]
       )
 
       if exists
@@ -207,35 +318,34 @@ class Minicron::Hub::App
           :job_id => params[:job_id]
         )
 
-        # Get the job and host for the schedule
-        job = Minicron::Hub::Job.includes(:host).find(schedule.job_id)
-
         # Get an ssh instance
         ssh = Minicron::Transport::SSH.new(
-          :user => job.host.user,
-          :host => job.host.host,
-          :port => job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{job.host.id}_rsa"
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
         )
 
         # Get an instance of the cron class
         cron = Minicron::Cron.new(ssh)
 
-        # Add the schedule to the crontab
-        cron.add_schedule(job, schedule.formatted)
+        # Save the schedule before looking up the hosts jobs => schedules so the change is there
+        schedule.save!
+
+        # Look up the host
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
 
         # Tidy up
         ssh.close
 
-        # And finally save it
-        schedule.save!
-
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/schedules/new', :layout => :'layouts/app'
     end
   end
@@ -251,10 +361,10 @@ class Minicron::Hub::App
   end
 
   post '/job/:job_id/schedule/:schedule_id/edit' do
-    begin
-      # Look up the schedule and job
-      @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
+    # Look up the schedule and job
+    @schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:schedule_id])
 
+    begin
       # To keep the view similar to #new store the job here
       @job = @schedule.job
 
@@ -280,26 +390,24 @@ class Minicron::Hub::App
         @schedule.day_of_the_week = params[:day_of_the_week].empty? ? nil : params[:day_of_the_week]
         @schedule.special = params[:special].empty? ? nil : params[:special]
 
-        # Update the schedule
-        cron.update_schedule(
-          @schedule.job,
-          old_schedule,
-          @schedule.formatted
-        )
+        # Save the schedule before looking up the hosts jobs => schedule so the change is there
+        @schedule.save!
+
+        # Look up the host and its jobs and job schedules
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
 
         # Tidy up
         ssh.close
 
-        # And finally save it
-        @schedule.save!
-
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @schedule.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/schedules/edit', :layout => :'layouts/app'
     end
   end
@@ -312,36 +420,42 @@ class Minicron::Hub::App
   end
 
   post '/job/:id/schedule/:schedule_id/delete' do
-    begin
-      # Find the schedule
-      @schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:schedule_id])
+    # Find the schedule
+    @schedule = Minicron::Hub::Schedule.includes(:job => :host).find(params[:schedule_id])
 
+    begin
       Minicron::Hub::Schedule.transaction do
         # Try and delete the schedule
         Minicron::Hub::Schedule.destroy(params[:schedule_id])
 
-        # Get an ssh instance
-        ssh = Minicron::Transport::SSH.new(
-          :user => @schedule.job.host.user,
-          :host => @schedule.job.host.host,
-          :port => @schedule.job.host.port,
-          :private_key => "~/.ssh/minicron_host_#{@schedule.job.host.id}_rsa"
-        )
+        unless params[:force]
+          # Get an ssh instance
+          ssh = Minicron::Transport::SSH.new(
+            :user => @schedule.job.host.user,
+            :host => @schedule.job.host.host,
+            :port => @schedule.job.host.port,
+            :private_key => "~/.ssh/minicron_host_#{@schedule.job.host.id}_rsa"
+          )
 
-        # Get an instance of the cron class
-        cron = Minicron::Cron.new(ssh)
+          # Get an instance of the cron class
+          cron = Minicron::Cron.new(ssh)
 
-        # Delete the schedule from the crontab
-        cron.delete_schedule(@schedule.job, @schedule.formatted)
+          # Look up the host and its jobs and job schedules
+          host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@schedule.job.host.id)
 
-        # Tidy up
-        ssh.close
+          # Update the crontab
+          cron.update_crontab(host)
+
+          # Tidy up
+          ssh.close
+        end
 
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the schedule without connecting to the host</p>"
       erb :'jobs/schedules/delete', :layout => :'layouts/app'
     end
   end

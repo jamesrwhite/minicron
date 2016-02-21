@@ -1,13 +1,7 @@
 <header class="clearfix">
   <h2 class="pull-left">Edit Schedule for Job '<%= @job.name %>'</h2>
-  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}/delete" %>" class="pull-right btn btn-danger btn-sm">Delete</a>
-  <a href="<%= "#{route_prefix}/job/#{@job.id}/schedule/#{@schedule.id}" %>" class="pull-right btn btn-info btn-sm">View</a>
 </header>
 <hr/>
-
-<% if @error %>
-  <div class="alert alert-danger" role="alert"><%= @error %></div>
-<% end %>
 
 <form class="form-horizontal" role="form" method="POST">
   <%= erb :'partials/schedules/panels' %>
@@ -27,8 +21,9 @@
         <input name="special" value="<%= @schedule.special %>" type="hidden"/>
       </div>
 
-      <span id="schedule-input">
+      <div id="schedule-input">
         <input value="<%= @schedule.formatted %>" disabled type="text" class="form-control"/>
+      </div>
     </div>
   </div>
 

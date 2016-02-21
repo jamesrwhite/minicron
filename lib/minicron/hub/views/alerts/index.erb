@@ -22,7 +22,7 @@
         <td><a href="<%= "#{route_prefix}/job/#{alert.job.id}" %>"><%= alert.job.name %></a></td>
         <td><%= alert.kind %></td>
         <td><%= alert.medium %></td>
-        <td><%= alert.sent_at %></td>
+        <td><%= Minicron.time(alert.sent_at) %></td>
         <td>
           <a href="<%= "#{route_prefix}/alert/#{alert.id}" %>" class="btn btn-xs btn-info">View</a>
         </td>

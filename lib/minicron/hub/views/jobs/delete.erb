@@ -3,11 +3,10 @@
 </header>
 <hr/>
 
-<% if @error %>
-  <div class="alert alert-danger" role="alert"><%= @error %></div>
-<% end %>
-
 <form class="form-horizontal" role="form" method="POST">
   <input type="submit" class="btn btn-danger" value="Delete Job"/>
+  <% if flash[:error] %>
+    <input name="force" type="submit" class="btn btn-danger" value="Force Delete Job"/>
+  <% end %>
   <a href="<%= "#{route_prefix}/job/#{@job.id}" %>" class="btn btn-info">Cancel</a>
 </form>
