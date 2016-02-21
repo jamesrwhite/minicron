@@ -37,6 +37,7 @@ module Minicron
       },
       'pusher' => {
         'enabled' => false,
+        'encrypted' => false,
       },
     },
     'server' => {

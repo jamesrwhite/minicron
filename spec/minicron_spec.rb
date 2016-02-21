@@ -81,6 +81,7 @@ describe Minicron do
             },
             'pusher' => {
               'enabled' => false,
+              'encrypted' => false,
             },
           },
           'server' => {

@@ -73,6 +73,7 @@ module Minicron::Hub
         '/js/bootstrap-3.1.1.min.js',
         '/js/moment-2.5.1.min.js',
         '/js/perfect-scrollbar-0.4.10.with-mousewheel.min.js',
+        '/js/pusher-3.0.min.js',
 
         '/js/application.js',
         '/js/schedules.js'
