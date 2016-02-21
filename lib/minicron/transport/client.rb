@@ -46,7 +46,7 @@ module Minicron
         })
 
         # Publish an event to pusher to say the execution has been initialised
-        pusher_post(:init, response)
+        pusher_post(:init, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -66,7 +66,7 @@ module Minicron
         })
 
         # Publish an event to pusher to say the execution has been started
-        pusher_post(:start, response)
+        pusher_post(:start, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -86,7 +86,7 @@ module Minicron
         })
 
         # Publish an event to pusher to say the execution has finished
-        pusher_post(:start, response)
+        pusher_post(:finish, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -106,7 +106,7 @@ module Minicron
         })
 
         # Publish an event to pusher to say the execution has finished and has an exit code
-        pusher_post(:exit, response)
+        pusher_post(:exit, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -126,7 +126,7 @@ module Minicron
         })
 
         # Publish an event to pusher to say the execution has some output
-        pusher_post(:output, response)
+        pusher_post(:output, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end

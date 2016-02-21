@@ -80,12 +80,11 @@ class Minicron::Hub::App
 
       # Look up the job and it's host and the execution and its output
       job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
-      execution = Minicron::Hub::Execution.includes(:job_execution_outputs).find(params[:execution_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
 
       json({
         :job => job,
         :execution => execution,
-        :output => execution.job_execution_outputs,
         :host => job.host,
       })
     rescue Exception => e
@@ -102,7 +101,7 @@ class Minicron::Hub::App
 
     begin
       # Append to the job executiob output
-      Minicron::Hub::JobExecutionOutput.create!(
+      output = Minicron::Hub::JobExecutionOutput.create!(
         :execution_id => params[:execution_id],
         :output => params[:output],
         :timestamp => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S'),
@@ -111,12 +110,12 @@ class Minicron::Hub::App
 
       # Look up the job and it's host and the execution and its output
       job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
-      execution = Minicron::Hub::Execution.includes(:job_execution_outputs).find(params[:execution_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
 
       json({
         :job => job,
         :execution => execution,
-        :output => execution.job_execution_outputs,
+        :output => output,
         :host => job.host,
       })
     rescue Exception => e
@@ -139,12 +138,11 @@ class Minicron::Hub::App
 
       # Look up the job and it's host and the execution and its output
       job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
-      execution = Minicron::Hub::Execution.includes(:job_execution_outputs).find(params[:execution_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
 
       json({
         :job => job,
         :execution => execution,
-        :output => execution.job_execution_outputs,
         :host => job.host,
       })
     rescue Exception => e
@@ -176,12 +174,11 @@ class Minicron::Hub::App
 
       # Look up the job and it's host and the execution and its output
       job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
-      execution = Minicron::Hub::Execution.includes(:job_execution_outputs).find(params[:execution_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
 
       json({
         :job => job,
         :execution => execution,
-        :output => execution.job_execution_outputs,
         :host => job.host,
       })
     rescue Exception => e
