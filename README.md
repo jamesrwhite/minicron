@@ -110,7 +110,7 @@ instead.
    ```
    bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
    ```
-   ..or [build it yourself](README.md)
+   ..or [build it yourself](https://github.com/jamesrwhite/minicron-build)
    if you're feeling adventurous!
 
 3. Set your database configuration options in ````/etc/minicron.toml````, you can use the
