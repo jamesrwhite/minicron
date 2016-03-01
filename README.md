@@ -53,6 +53,8 @@ Features
   - Email
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
+  - [Amazon Simple Notification Service](https://aws.amazon.com/sns)
+  - [Slack](https://slack.com)
 
 Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if
 you don't see the feature you want there add it!

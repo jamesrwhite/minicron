@@ -73,3 +73,8 @@ pid_file = "/tmp/minicron.pid"
   # access_key_id = "YOUR_ACCESS_KEY_ID"
   # region = "AWS_REGION"
   # topic_arn = "YOUR_SNS_TOPIC_ARN"
+
+  [alerts.slack]
+  enabled = false
+  #webhook_url = "https://hooks.slack.com/services/ttter33ty5/DSADSAD/D324erwrwr"
+  #channel = "#general"

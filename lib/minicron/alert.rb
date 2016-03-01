@@ -2,6 +2,7 @@ require 'minicron/alert/email'
 require 'minicron/alert/sms'
 require 'minicron/alert/pagerduty'
 require 'minicron/alert/aws_sns'
+require 'minicron/alert/slack'
 require 'minicron/hub/models/alert'
 require 'minicron/hub/models/job'
 
@@ -57,6 +58,8 @@ module Minicron
         send_pagerduty(options)
       when 'aws_sns'
         send_aws_sns(options)
+      when 'slack'
+        send_slack(options)
       else
         raise Minicron::ArgumentError, "The medium '#{options[:medium]}' is not supported!"
       end
@@ -111,7 +114,14 @@ module Minicron
         sns.get_message(options)
       )
     end
-
+    # Send a slack alert, this has the same options as #send
+    def self.send_slack(options = {})
+      slack = Minicron::Alert::Slack.new
+      slack.send(
+        slack.get_message(options)
+      )
+    end
+    
     # Queries the database to determine if an alert for this kind has already
     # been sent
     #
