@@ -66,7 +66,9 @@ module Minicron
 
       # Set the path to something sensible by default, eventually this should be configurable
       crontab += "# ENV variables\n"
-      crontab += "PATH=/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n\n"
+      crontab += "PATH=/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
+      crontab += "MAILTO=\"\"\n"
+      crontab += "\n"
 
       # Add an entry to the crontab for each job schedule
       host.jobs.each do |job|
