@@ -97,7 +97,12 @@ module Minicron
       crontab
     end
 
+    # Parse command and schedule from a crontab job
+    #
+    # @param  job the job as parsed from crontab (includes schedule and command)
+    # @return [Hash]
     def parse_job(job)
+      # Parse and save each schedule time and the command in a hash
       parsed_job = job.split(" ")
 
       parsed = {
@@ -114,23 +119,33 @@ module Minicron
       parsed
     end
 
+    # Read the jobs from the crontab of a given host
+    #
+    # @param  host the name of the host
+    # @param  conn an instance of an open ssh connection
+    # @return [Array]
     def crontab_jobs(host, conn = nil)
       conn ||= @ssh.open
 
       test_host_permissions(conn)
 
+      # Read all the file
       crontab = conn.exec!("crontab -l")
 
+      # Parse the content
       crontab_jobs = []
       crontab.to_s.split("\n").each do |line|
         line.strip
+
+        # We only want lines starting with a number or '*' (ignoring spaces)
         next if line.empty? or line !~ /^\s*[0-9*]/
 
+        # Parse and save the jobs
         job = parse_job(line)
         next if job.nil?
 
         crontab_jobs << {
-          :name     => generate_job_name(host.name, line),
+          :name     => generate_job_name(host, line),
           :command  => job[:command].nil?  ? nil : job[:command].join(" "),
           :schedule => job[:schedule].nil? ? nil : job[:schedule]
         }
@@ -139,6 +154,11 @@ module Minicron
       crontab_jobs
     end
 
+    # Generate a name with the maximum of 20 characters
+    #
+    # @param  host the name of the host
+    # @param  job  the job as parsed from crontab (includes schedule and command)
+    # @return [String]
     def generate_job_name(host, job)
       "#{host[0..10]}_#{Digest::SHA1.hexdigest(job)[0..10]}"
     end
