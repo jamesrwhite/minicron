@@ -1,6 +1,7 @@
 require 'shellwords'
 require 'escape'
 require 'securerandom'
+require 'digest/sha1'
 
 module Minicron
   # Used to interact with the crontab on hosts over an ssh connection
@@ -94,6 +95,52 @@ module Minicron
       end
 
       crontab
+    end
+
+    def parse_job(job)
+      parsed_job = job.split(" ")
+
+      parsed = {
+        :schedule => {
+          :minute           => parsed_job[0],
+          :hour             => parsed_job[1],
+          :day_of_the_month => parsed_job[2],
+          :month            => parsed_job[3],
+          :day_of_the_week  => parsed_job[4]
+        },
+        :command => parsed_job[5, parsed_job.length - 1]
+      }
+
+      parsed
+    end
+
+    def crontab_jobs(host, conn = nil)
+      conn ||= @ssh.open
+
+      test_host_permissions(conn)
+
+      crontab = conn.exec!("crontab -l")
+
+      crontab_jobs = []
+      crontab.to_s.split("\n").each do |line|
+        line.strip
+        next if line.empty? or line !~ /^\s*[0-9*]/
+
+        job = parse_job(line)
+        next if job.nil?
+
+        crontab_jobs << {
+          :name     => generate_job_name(host.name, line),
+          :command  => job[:command].nil?  ? nil : job[:command].join(" "),
+          :schedule => job[:schedule].nil? ? nil : job[:schedule]
+        }
+      end
+
+      crontab_jobs
+    end
+
+    def generate_job_name(host, job)
+      "#{host[0..10]}_#{Digest::SHA1.hexdigest(job)[0..10]}"
     end
 
     # Update the crontab on the given host
