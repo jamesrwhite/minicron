@@ -144,9 +144,12 @@ module Minicron
         job = parse_job(line)
         next if job.nil?
 
+        job[:command] = job[:command].join(" ")
+        job[:command] = job[:command].gsub(/minicron run '(.+)'/, '\1')
+
         crontab_jobs << {
           :name     => generate_job_name(host, line),
-          :command  => job[:command].nil?  ? nil : job[:command].join(" "),
+          :command  => job[:command].nil?  ? nil : job[:command],
           :schedule => job[:schedule].nil? ? nil : job[:schedule]
         }
       end
