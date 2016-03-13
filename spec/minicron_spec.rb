@@ -116,6 +116,9 @@ describe Minicron do
             'aws_sns' => {
               'enabled' => false
             },
+            'slack' => {
+              'enabled' => false
+            },
           },
         }
 

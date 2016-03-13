@@ -6,8 +6,8 @@ describe Minicron::Alert::Slack do
     Minicron.parse_config_hash({
       'alerts' => {
         'slack' => {
-          'webhook_url' => 'https://hooks.slack.com/services/OIREKDULG/JIDISA',
-          'channel' => '#general'
+          'webhook_url' => 'https://hooks.slack.com/services/abc/123',
+          'channel' => '#blah'
         }
       }
     })

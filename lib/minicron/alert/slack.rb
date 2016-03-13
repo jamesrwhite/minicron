@@ -8,9 +8,10 @@ module Minicron
       def initialize
         # Get an instance of the slack client
         @client = ::Slack::Notifier.new(
-            Minicron.config['alerts']['slack']['webhook_url'],
-            channel: Minicron.config['alerts']['slack']['channel'],
-            username: 'minicron')
+          Minicron.config['alerts']['slack']['webhook_url'],
+          :channel => Minicron.config['alerts']['slack']['channel'],
+          :username => 'minicron'
+        )
       end
 
       # Return the message for an alert
