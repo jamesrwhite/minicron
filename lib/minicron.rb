@@ -76,6 +76,9 @@ module Minicron
       },
       'aws_sns' => {
         'enabled' => false
+      },
+      'slack' => {
+        'enabled' => false
       }
     }
   }
