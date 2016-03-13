@@ -62,7 +62,7 @@
   <h2 class="pull-left">Jobs</h2>
   <a href="<%= "#{route_prefix}/jobs/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
   <% if @host.jobs.empty? %>
-    <a href="<%= "#{route_prefix}/jobs/import/#{@host.id}" %>" class="pull-right btn btn-success btn-sm">Import Jobs</a>
+    <a href="<%= "#{route_prefix}/host/#{@host.id}/import" %>" class="pull-right btn btn-success btn-sm">Import Jobs</a>
   <% end %>
 </header>
 <hr/>

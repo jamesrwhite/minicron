@@ -105,16 +105,25 @@ module Minicron
       # Parse and save each schedule time and the command in a hash
       parsed_job = job.split(" ")
 
-      parsed = {
-        :schedule => {
-          :minute           => parsed_job[0],
-          :hour             => parsed_job[1],
-          :day_of_the_month => parsed_job[2],
-          :month            => parsed_job[3],
-          :day_of_the_week  => parsed_job[4]
-        },
-        :command => parsed_job[5, parsed_job.length - 1]
-      }
+      if parsed_job[0] =~ /^@([a-z]+)/
+        parsed = {
+          :schedule => {
+            :special => parsed_job[0]
+          },
+          :command => parsed_job[1, parsed_job.length - 1]
+        }
+      else
+        parsed = {
+          :schedule => {
+            :minute           => parsed_job[0],
+            :hour             => parsed_job[1],
+            :day_of_the_month => parsed_job[2],
+            :month            => parsed_job[3],
+            :day_of_the_week  => parsed_job[4]
+          },
+          :command => parsed_job[5, parsed_job.length - 1]
+        }
+      end
 
       parsed
     end
@@ -137,8 +146,9 @@ module Minicron
       crontab.to_s.split("\n").each do |line|
         line.strip
 
-        # We only want lines starting with a number or '*' (ignoring spaces)
-        next if line.empty? or line !~ /^\s*[0-9*]/
+        # We only want lines starting with a number or '*'
+        # or one of the special strings (ignoring spaces)
+        next if line.empty? or line !~ /^\s*[0-9*@]/
 
         # Parse and save the jobs
         job = parse_job(line)
