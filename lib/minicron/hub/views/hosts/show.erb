@@ -79,7 +79,7 @@
   <tbody>
     <% @host.jobs.each do |job| %>
       <tr>
-        <td><%= job.name %></td>
+        <td><%= job.safe_name %></td>
         <td><a href><%= job.host.name %></a></td>
         <td>
           <a href="<%= "#{route_prefix}/job/#{job.id}" %>" class="btn btn-info btn-xs">View</a>

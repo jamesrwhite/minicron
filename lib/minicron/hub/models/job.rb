@@ -21,6 +21,10 @@ module Minicron
         end
       end
 
+      def safe_name
+        CGI.escapeHTML(name)
+      end
+
       def status
         read_attribute(:enabled) == true ? 'enabled' : 'disabled'
       end

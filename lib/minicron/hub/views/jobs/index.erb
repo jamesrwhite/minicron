@@ -16,7 +16,7 @@
   <tbody>
     <% @jobs.each do |job| %>
       <tr>
-        <td><%= job.name %></td>
+        <td><%= job.safe_name %></td>
         <td><%= job.executions.count %></td>
         <td><a href="<%= "#{route_prefix}/host/#{job.host.id}" %>"><%= job.host.name %></a></td>
         <td>
