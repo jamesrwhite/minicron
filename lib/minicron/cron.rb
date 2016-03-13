@@ -1,4 +1,3 @@
-require 'shellwords'
 require 'escape'
 require 'securerandom'
 require 'digest/sha1'
@@ -103,7 +102,7 @@ module Minicron
     # @return [Hash]
     def parse_job(job)
       # Parse and save each schedule time and the command in a hash
-      parsed_job = job.split(" ")
+      parsed_job = job.split(' ')
 
       if parsed_job[0] =~ /^@([a-z]+)/
         parsed = {
@@ -125,6 +124,9 @@ module Minicron
         }
       end
 
+      # Remove the leading minicron run
+      parsed[:command] = parsed[:command].join(" ").gsub('minicron run', '').strip
+
       parsed
     end
 
@@ -139,7 +141,7 @@ module Minicron
       test_host_permissions(conn)
 
       # Read all the file
-      crontab = conn.exec!("crontab -l")
+      crontab = conn.exec!('crontab -l')
 
       # Parse the content
       crontab_jobs = []
@@ -154,26 +156,14 @@ module Minicron
         job = parse_job(line)
         next if job.nil?
 
-        job[:command] = job[:command].join(" ")
-        job[:command] = job[:command].gsub(/minicron run '(.+)'/, '\1')
-
         crontab_jobs << {
-          :name     => generate_job_name(host, line),
-          :command  => job[:command].nil?  ? nil : job[:command],
-          :schedule => job[:schedule].nil? ? nil : job[:schedule]
+          :name     => job[:command],
+          :command  => job[:command],
+          :schedule => job[:schedule]
         }
       end
 
       crontab_jobs
-    end
-
-    # Generate a name with the maximum of 20 characters
-    #
-    # @param  host the name of the host
-    # @param  job  the job as parsed from crontab (includes schedule and command)
-    # @return [String]
-    def generate_job_name(host, job)
-      "#{host[0..10]}_#{Digest::SHA1.hexdigest(job)[0..10]}"
     end
 
     # Update the crontab on the given host
