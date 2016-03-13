@@ -1,6 +1,5 @@
 require 'escape'
 require 'securerandom'
-require 'digest/sha1'
 
 module Minicron
   # Used to interact with the crontab on hosts over an ssh connection
