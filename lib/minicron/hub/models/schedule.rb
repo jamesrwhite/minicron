@@ -4,7 +4,7 @@ module Minicron
   module Hub
     class Schedule < ActiveRecord::Base
       belongs_to :job
-      has_many :alerts, :dependent => :destroy
+      has_many :alerts, :dependent => :delete_all
 
       validates :job_id, :presence => true, :numericality => { :only_integer => true }
 
