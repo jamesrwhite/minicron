@@ -243,7 +243,8 @@ module Minicron
         :host => config['host'],
         :database => config['database'],
         :username => config['username'],
-        :password => config['password']
+        :password => config['password'],
+        :reconnect => true
       }
     when 'sqlite'
       # Calculate the realtive path to the db because sqlite or activerecord is
