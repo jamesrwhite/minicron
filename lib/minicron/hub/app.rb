@@ -12,9 +12,14 @@ require 'sinatra/json'
 require 'erubis'
 require 'pathname'
 require 'ansi-to-html'
+require 'sinatra/flash'
+require 'cron2english'
 
 module Minicron::Hub
   class App < Sinatra::Base
+    enable :sessions
+
+    register Sinatra::Flash
     register Sinatra::AssetPack
 
     # Set the application root
@@ -40,7 +45,7 @@ module Minicron::Hub
 
       # Used to enable asset compression, currently nothing else
       # relies on this
-      set :environment, :production
+      set :environment, :production if ENV['MINICRON_IS_PACKAGED']
 
       # Force the encoding to be UTF-8 to prevent assetpack encoding issues
       Encoding.default_external = Encoding::UTF_8
@@ -78,6 +83,28 @@ module Minicron::Hub
     helpers do
       def route_prefix
         Minicron::Transport::Server.get_prefix
+      end
+
+      def cron2english(schedule)
+        Cron2English.parse(schedule).join(' ')
+      end
+
+      def nav_page
+        # Strip the server prefix off the request path
+        prefix = Minicron::Transport::Server.get_prefix.to_s
+        path = request.fullpath[prefix.length..-1]
+
+        if request.fullpath[0..9] == '/execution'
+          :execution
+        elsif request.fullpath[0..3] == '/job'
+          :job
+        elsif request.fullpath[0..4] == '/host'
+          :host
+        elsif request.fullpath[0..5] == '/alert'
+          :alert
+        else
+          :unknown
+        end
       end
 
       def ansi_to_html(output)

@@ -40,7 +40,6 @@ class Minicron::Hub::App
       job = Minicron::Hub::Job.create!(
         :job_hash => Minicron::Transport.get_job_hash(params[:command], host.fqdn),
         :name => params[:name],
-        :user => params[:user],
         :command => params[:command],
         :host_id => host.id
       )
@@ -69,10 +68,9 @@ class Minicron::Hub::App
 
       # Redirect to the new job
       redirect "#{route_prefix}/job/#{job.id}"
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @previous = params
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/new', :layout => :'layouts/app'
     end
   end
@@ -96,9 +94,8 @@ class Minicron::Hub::App
         # Find the job
         @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:id])
 
-        # Update the name and user
+        # Update the name and command
         @job.name = params[:name]
-        @job.user = params[:user]
         @job.command = params[:command]
 
         # Update the job on the remote if the user/command has changed
@@ -130,11 +127,94 @@ class Minicron::Hub::App
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @job.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/edit', :layout => :'layouts/app'
+    end
+  end
+
+  post '/job/:id/status/:status' do
+    # Find the job
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
+
+    begin
+      Minicron::Hub::Job.transaction do
+        # Set if the job is enabled or not
+        if params[:status] == 'enable'
+          enabled = true
+        elsif params[:status] == 'disable'
+          enabled = false
+        else
+          enabled = params[:status] # this will get caught by the AR validation
+        end
+
+        # Update the name and user
+        @job.enabled = enabled
+
+        ssh = Minicron::Transport::SSH.new(
+          :user => @job.host.user,
+          :host => @job.host.host,
+          :port => @job.host.port,
+          :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+        )
+
+        # Get an instance of the cron class
+        cron = Minicron::Cron.new(ssh)
+
+        # Save the job before we look up the hosts jobs so it's changes are there
+        @job.save!
+
+        # Look up the host and its jobs and job schedules
+        host = Minicron::Hub::Host.includes(:jobs => :schedules).find(@job.host.id)
+
+        # Update the crontab
+        cron.update_crontab(host)
+
+        # Tidy up
+        ssh.close
+
+        # Redirect to the updated job
+        redirect "#{route_prefix}/job/#{@job.id}"
+      end
+    rescue Exception => e
+      @job.restore_attributes
+      flash.now[:error] = e.message
+      erb :'jobs/show', :layout => :'layouts/app'
+    end
+  end
+
+  post '/job/:id/run' do
+    # Find the job
+    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
+                             .order('executions.number DESC')
+                             .find(params[:id])
+
+    begin
+      ssh = Minicron::Transport::SSH.new(
+        :user => @job.host.user,
+        :host => @job.host.host,
+        :port => @job.host.port,
+        :private_key => "~/.ssh/minicron_host_#{@job.host.id}_rsa"
+      )
+
+      # Get an instance of the cron class
+      cron = Minicron::Cron.new(ssh)
+
+      # Run the job manaully
+      cron.run(@job)
+
+      # Tidy up
+      ssh.close
+
+      # Redirect to the updated job
+      flash[:success] = "Job ##{@job.id} run triggered"
+      redirect "#{route_prefix}/job/#{@job.id}"
+    rescue Exception => e
+      flash.now[:error] = e.message
+      erb :'jobs/show', :layout => :'layouts/app'
     end
   end
 
@@ -178,9 +258,10 @@ class Minicron::Hub::App
 
         redirect "#{route_prefix}/jobs"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the job without connecting to the host</p>"
       erb :'jobs/delete', :layout => :'layouts/app'
     end
   end
@@ -263,9 +344,8 @@ class Minicron::Hub::App
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/schedules/new', :layout => :'layouts/app'
     end
   end
@@ -325,10 +405,9 @@ class Minicron::Hub::App
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
       @schedule.restore_attributes
-      @error = e.message
+      flash.now[:error] = e.message
       erb :'jobs/schedules/edit', :layout => :'layouts/app'
     end
   end
@@ -373,9 +452,10 @@ class Minicron::Hub::App
 
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end
-    # TODO: nicer error handling here with proper validation before hand
     rescue Exception => e
-      @error = e.message
+      flash.now[:error] =  "<h4>Error</h4>
+                            <p>#{e.message}</p>
+                            <p>You can force delete the schedule without connecting to the host</p>"
       erb :'jobs/schedules/delete', :layout => :'layouts/app'
     end
   end

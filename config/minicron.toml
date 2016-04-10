@@ -24,6 +24,7 @@ host = "127.0.0.1"
 port = 9292
 path = "/"
 pid_file = "/tmp/minicron.pid"
+timezone = "UTC"
   [server.session]
   name = "minicron.session"
   domain = "127.0.0.1"
@@ -73,3 +74,8 @@ pid_file = "/tmp/minicron.pid"
   # access_key_id = "YOUR_ACCESS_KEY_ID"
   # region = "AWS_REGION"
   # topic_arn = "YOUR_SNS_TOPIC_ARN"
+
+  [alerts.slack]
+  enabled = false
+  #webhook_url = "YOUR_SLACK_WEBHOOK_URL"
+  #channel = "#YOUR_SLACK_CHANNEL"

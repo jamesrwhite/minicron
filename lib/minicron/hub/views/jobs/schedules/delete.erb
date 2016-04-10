@@ -1,19 +1,11 @@
 <header>
-  <h2>Delete Schedule for Job '<%= @schedule.job.name %>'?</h2>
+  <h2>Delete Schedule for Job '<%= @schedule.job.safe_name %>'?</h2>
 </header>
 <hr/>
 
-<% if @error %>
-  <div class="alert alert-danger" role="alert">
-    <h4>Error</h4>
-    <p>"<%= @error %>"</p>
-    <p>You can force delete the schedule without connecting to the host</p>
-  </div>
-<% end %>
-
 <form class="form-horizontal" role="form" method="POST">
   <input type="submit" class="btn btn-danger" value="Delete Schedule"/>
-  <% if @error %>
+  <% if flash[:error] %>
     <input name="force" type="submit" class="btn btn-danger" value="Force Delete Schedule"/>
   <% end %>
   <a href="<%= "#{route_prefix}/job/#{@schedule.job.id}/schedule/#{@schedule.id}" %>" class="btn btn-info">Cancel</a>
