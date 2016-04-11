@@ -157,7 +157,7 @@ instead.</p>
 <ol>
 <li><p>First check you meet the <a href="#requirements">requirements</a></p></li>
 <li>
-<p>Use the handy <a href="install.sh">install script</a> or <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.9.3">grab the latest</a> zip/tarball
+<p>Use the handy <a href="install.sh">install script</a> or <a href="https://github.com/jamesrwhite/minicron/releases/tag/v0.9.4">grab the latest</a> zip/tarball
 for your OS and install manually.</p>
 
 <pre><code>bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
@@ -188,8 +188,8 @@ are configurable</p>
 
 <p>You can also run minicron in a docker container, see below for instructions how:</p>
 
-<div class="highlight highlight-source-shell"><pre>docker pull jamesrwhite/minicron:0.9.3
-minicron_container_id=<span class="pl-s"><span class="pl-pds">$(</span>docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.3<span class="pl-pds">)</span></span>
+<div class="highlight highlight-source-shell"><pre>docker pull jamesrwhite/minicron:0.9.4
+minicron_container_id=<span class="pl-s"><span class="pl-pds">$(</span>docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.4<span class="pl-pds">)</span></span>
 docker <span class="pl-c1">exec</span> <span class="pl-smi">$minicron_container_id</span> minicron db setup
 docker <span class="pl-c1">exec</span> <span class="pl-smi">$minicron_container_id</span> minicron server start</pre></div>
 
