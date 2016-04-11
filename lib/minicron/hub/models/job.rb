@@ -4,8 +4,8 @@ module Minicron
   module Hub
     class Job < ActiveRecord::Base
       belongs_to :host
-      has_many :executions, :dependent => :destroy
-      has_many :schedules, :dependent => :destroy
+      has_many :executions, :dependent => :delete_all
+      has_many :schedules, :dependent => :delete_all
 
       validates :name,    :presence => true, :uniqueness => true
       validates :command, :presence => true
