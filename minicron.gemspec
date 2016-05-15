@@ -2,7 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-VERSION = "0.9.2.#{Time.now.to_i}"
+VERSION = "0.9.5.#{Time.now.to_i}"
 
 Gem::Specification.new do |spec|
   spec.name                  = 'minicron'
@@ -47,6 +47,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra-flash', '0.3.0'
   spec.add_runtime_dependency 'cron2english', '~> 0.1'
   spec.add_runtime_dependency 'pusher', '~> 0.14'
+  spec.add_runtime_dependency 'slack-notifier', '~> 1.5.1'
 
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.1'

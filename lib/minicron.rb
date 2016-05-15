@@ -51,10 +51,10 @@ module Minicron
         'domain' => '0.0.0.0',
         'path' => '/',
         'ttl' => 86400,
-        'secret' => 'change_me',
+        'secret' => 'change_me'
       },
       'database' => {
-        'type' => 'sqlite',
+        'type' => 'sqlite'
       },
       'ssh' => {
         'connect_timeout' => 10,
@@ -70,19 +70,22 @@ module Minicron
           'user_name' => nil,
           'password' => nil,
           'authentication' => nil,
-          'enable_starttls_auto' => true,
+          'enable_starttls_auto' => true
         }
       },
       'sms' => {
-        'enabled' => false,
+        'enabled' => false
       },
       'pagerduty' => {
-        'enabled' => false,
+        'enabled' => false
       },
       'aws_sns' => {
-        'enabled' => false,
+        'enabled' => false
       },
-    },
+      'slack' => {
+        'enabled' => false
+      }
+    }
   }
 
   class << self
@@ -245,7 +248,8 @@ module Minicron
         :host => config['host'],
         :database => config['database'],
         :username => config['username'],
-        :password => config['password']
+        :password => config['password'],
+        :reconnect => true
       }
     when 'sqlite'
       # Calculate the realtive path to the db because sqlite or activerecord is
@@ -285,5 +289,7 @@ module Minicron
     if !time.nil?
       time.in_time_zone(Minicron.config['server']['timezone'])
     end
+
+    time
   end
 end

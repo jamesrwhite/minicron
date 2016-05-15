@@ -64,3 +64,6 @@ timezone = "UTC"
 
   [alerts.aws_sns]
   enabled = false
+
+  [alerts.slack]
+  enabled = false

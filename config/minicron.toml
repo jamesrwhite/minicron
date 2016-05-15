@@ -81,3 +81,8 @@ timezone = "UTC"
   # access_key_id = "YOUR_ACCESS_KEY_ID"
   # region = "AWS_REGION"
   # topic_arn = "YOUR_SNS_TOPIC_ARN"
+
+  [alerts.slack]
+  enabled = false
+  #webhook_url = "YOUR_SLACK_WEBHOOK_URL"
+  #channel = "#YOUR_SLACK_CHANNEL"

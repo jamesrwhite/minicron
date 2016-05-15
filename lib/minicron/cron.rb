@@ -1,4 +1,3 @@
-require 'shellwords'
 require 'escape'
 require 'securerandom'
 
@@ -94,6 +93,76 @@ module Minicron
       end
 
       crontab
+    end
+
+    # Parse command and schedule from a crontab job
+    #
+    # @param  job the job as parsed from crontab (includes schedule and command)
+    # @return [Hash]
+    def parse_job(job)
+      # Parse and save each schedule time and the command in a hash
+      parsed_job = job.split(' ')
+
+      if parsed_job[0] =~ /^@([a-z]+)/
+        parsed = {
+          :schedule => {
+            :special => parsed_job[0]
+          },
+          :command => parsed_job[1, parsed_job.length - 1]
+        }
+      else
+        parsed = {
+          :schedule => {
+            :minute           => parsed_job[0],
+            :hour             => parsed_job[1],
+            :day_of_the_month => parsed_job[2],
+            :month            => parsed_job[3],
+            :day_of_the_week  => parsed_job[4]
+          },
+          :command => parsed_job[5, parsed_job.length - 1]
+        }
+      end
+
+      # Remove the leading minicron run
+      parsed[:command] = parsed[:command].join(" ").gsub('minicron run', '').strip
+
+      parsed
+    end
+
+    # Read the jobs from the crontab of a given host
+    #
+    # @param  host the name of the host
+    # @param  conn an instance of an open ssh connection
+    # @return [Array]
+    def crontab_jobs(host, conn = nil)
+      conn ||= @ssh.open
+
+      test_host_permissions(conn)
+
+      # Read all the file
+      crontab = conn.exec!('crontab -l')
+
+      # Parse the content
+      crontab_jobs = []
+      crontab.to_s.split("\n").each do |line|
+        line.strip
+
+        # We only want lines starting with a number or '*'
+        # or one of the special strings (ignoring spaces)
+        next if line.empty? or line !~ /^\s*[0-9*@]/
+
+        # Parse and save the jobs
+        job = parse_job(line)
+        next if job.nil?
+
+        crontab_jobs << {
+          :name     => job[:command],
+          :command  => job[:command],
+          :schedule => job[:schedule]
+        }
+      end
+
+      crontab_jobs
     end
 
     # Update the crontab on the given host

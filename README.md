@@ -53,6 +53,8 @@ Features
   - Email
   - SMS ([using Twilio](https://www.twilio.com))
   - [PagerDuty](http://www.pagerduty.com) (SMS, Phone, Mobile Push Notifications and Email)
+  - [Amazon Simple Notification Service](https://aws.amazon.com/sns)
+  - [Slack](https://slack.com)
 
 Lots more is planned for the future, see [open issues](https://github.com/jamesrwhite/minicron/issues?state=open) or if
 you don't see the feature you want there add it!
@@ -105,12 +107,12 @@ instead.
 
 1. First check you meet the [requirements](#requirements)
 
-2. Use the handy [install script](install.sh) or [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.2) zip/tarball
+2. Use the handy [install script](install.sh) or [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.5) zip/tarball
    for your OS and install manually.
    ```
    bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
    ```
-   ..or [build it yourself](README.md)
+   ..or [build it yourself](https://github.com/jamesrwhite/minicron-build)
    if you're feeling adventurous!
 
 3. Set your database configuration options in ````/etc/minicron.toml````, you can use the
@@ -133,8 +135,8 @@ instead.
 You can also run minicron in a docker container, see below for instructions how:
 
 ````bash
-docker pull jamesrwhite/minicron:0.9.2
-minicron_container_id=$(docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:0.9.2)
+docker pull jamesrwhite/minicron:v0.9.5
+minicron_container_id=$(docker run -d -p 127.0.0.1:9292:9292 -i -t jamesrwhite/minicron:v0.9.5)
 docker exec $minicron_container_id minicron db setup
 docker exec $minicron_container_id minicron server start
 ````

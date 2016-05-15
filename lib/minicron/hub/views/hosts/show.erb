@@ -61,6 +61,9 @@
 <header class="clearfix">
   <h2 class="pull-left">Jobs</h2>
   <a href="<%= "#{route_prefix}/jobs/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
+  <% if @host.jobs.empty? %>
+    <a href="<%= "#{route_prefix}/host/#{@host.id}/import" %>" class="pull-right btn btn-success btn-sm">Import Existing Jobs</a>
+  <% end %>
 </header>
 <hr/>
 
@@ -76,7 +79,7 @@
   <tbody>
     <% @host.jobs.each do |job| %>
       <tr>
-        <td><%= job.name %></td>
+        <td><%= job.safe_name %></td>
         <td><a href><%= job.host.name %></a></td>
         <td>
           <a href="<%= "#{route_prefix}/job/#{job.id}" %>" class="btn btn-info btn-xs">View</a>
