@@ -43,8 +43,7 @@ module Minicron
                 ActiveRecord::Base.connection.create_database(
                   Minicron.config['server']['database']['database'],
                   {
-                    :charset => 'utf8',
-                    :collation => 'utf8_unicode_ci'
+                    :charset => 'utf8'
                   }
                 )
               end
