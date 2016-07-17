@@ -287,7 +287,7 @@ module Minicron
   # @return type [Time]
   def self.time(time)
     if !time.nil?
-      time.in_time_zone(Minicron.config['server']['timezone'])
+      return time.in_time_zone(Minicron.config['server']['timezone'])
     end
 
     time
