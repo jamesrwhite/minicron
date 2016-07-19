@@ -178,6 +178,8 @@ module Minicron
               client = Minicron::Transport::Client.new(
                 Minicron.config['client']['server']['scheme'],
                 Minicron.config['client']['server']['host'],
+                Minicron.config['client']['server']['username'],
+                Minicron.config['client']['server']['password'],
                 Minicron.config['client']['server']['port'],
                 Minicron.config['client']['server']['path']
               )

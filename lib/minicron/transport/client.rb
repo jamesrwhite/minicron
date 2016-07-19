@@ -7,9 +7,11 @@ module Minicron
       # Instantiate a new instance of the client
       #
       # @param host [String] The host to be communicated with
-      def initialize(scheme, host, port, path)
+      def initialize(scheme, host, username, password, port, path)
         @scheme = scheme
         @host = host
+        @username = username
+        @password = password
         @path = path == '/' ? '/api/v1' : "#{path}/api/v1"
         @port = port
         @seq = 1
@@ -148,6 +150,7 @@ module Minicron
         # Create a POST requests
         uri = URI("#{@scheme}://#{@host}:#{@port}#{@path}#{method}")
         post = Net::HTTP::Post.new(uri.path)
+        post.basic_auth @username, @password if @username || @password
         post.set_form_data(data)
 
         # Execute the POST request, TODO: error handling
