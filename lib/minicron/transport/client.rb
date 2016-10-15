@@ -6,7 +6,12 @@ module Minicron
     class Client
       # Instantiate a new instance of the client
       #
-      # @param host [String] The host to be communicated with
+      # @param scheme [String] The protocol to use e.g http/https
+      # @param host [String] The host to be communicated with e.g test.com or 127.0.0.1
+      # @param username [String] The http basic auth username
+      # @param password [String] The http basic auth password
+      # @param port [Integer]
+      # @param path [String] Path to the minicron server e.g /minicron
       def initialize(scheme, host, username, password, port, path)
         @scheme = scheme
         @host = host
