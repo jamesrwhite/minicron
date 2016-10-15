@@ -9,8 +9,8 @@ debug = false # Useful for debugging
   [client.server]
   scheme = "http" # [http, https]
   host = "127.0.0.1"
-  username = "user" # optional for basic auth
-  password = "p@ssw0rd" # optional for basic auth
+  # username = "username" # optional for basic auth
+  # password = "password" # optional for basic auth
   port = 9292
   path = "/"
   connect_timeout = 5
