@@ -194,8 +194,7 @@ module Minicron
               job_hash = Minicron::Transport.get_job_hash(command, fqdn)
 
               # Initialise the job and get the execution and job ids back from the server
-              # The execution number is also returned but it's only used by the frontend
-              job = client.init(
+              init = client.init(
                 job_hash,
                 Minicron.get_user,
                 command,
@@ -213,32 +212,32 @@ module Minicron
                 when :start
                   unless Minicron.config['client']['cli']['dry_run']
                     client.start(
-                      job[:job_id],
-                      job[:execution_id],
+                      init['job']['id'],
+                      init['execution']['id'],
                       output[:output]
                     )
                   end
                 when :finish
                   unless Minicron.config['client']['cli']['dry_run']
                     client.finish(
-                      job[:job_id],
-                      job[:execution_id],
+                      init['job']['id'],
+                      init['execution']['id'],
                       output[:output]
                     )
                   end
                 when :exit
                   unless Minicron.config['client']['cli']['dry_run']
                     client.exit(
-                      job[:job_id],
-                      job[:execution_id],
+                      init['job']['id'],
+                      init['execution']['id'],
                       output[:output]
                     )
                   end
                 when :output
                   unless Minicron.config['client']['cli']['dry_run']
                     client.output(
-                      job[:job_id],
-                      job[:execution_id],
+                      init['job']['id'],
+                      init['execution']['id'],
                       output[:output]
                     )
                   end
@@ -251,8 +250,8 @@ module Minicron
               # Send the exception message to the server and yield it
               unless Minicron.config['client']['cli']['dry_run']
                 client.output(
-                  job[:job_id],
-                  job[:execution_id],
+                  init['job']['id'],
+                  init['execution']['id'],
                   e.message
                 )
               end

@@ -1,5 +1,6 @@
 require 'json'
 require 'net/http/persistent'
+require 'pusher'
 
 module Minicron
   module Transport
@@ -21,6 +22,14 @@ module Minicron
         @port = port
         @seq = 1
         @client = Net::HTTP::Persistent.new('minicron')
+
+        if Minicron.config['client']['pusher']['enabled']
+          @pusher = Pusher::Client.new({
+            :app_id => Minicron.config['client']['pusher']['app_id'],
+            :key => Minicron.config['client']['pusher']['key'],
+            :secret => Minicron.config['client']['pusher']['secret']
+          })
+        end
       end
 
       # Used to init a job
@@ -34,7 +43,7 @@ module Minicron
       # @return [Hash]
       def init(job_hash, user, command, fqdn, hostname, timestamp)
         # Send a request to set up the job
-        response = send("/execution/init", {
+        response = server_post("/execution/init", {
           :job_hash => job_hash,
           :user => user,
           :command => command,
@@ -43,10 +52,10 @@ module Minicron
           :timestamp => timestamp
         })
 
-        {
-          :job_id => response['job_id'],
-          :execution_id => response['execution_id'],
-        }
+        # Publish an event to pusher to say the execution has been initialised
+        pusher_post(:init, response) if Minicron.config['client']['pusher']['enabled']
+
+        response
       end
 
       # Mark a job as having started
@@ -57,10 +66,14 @@ module Minicron
       # @return [Hash]
       def start(job_id, execution_id, timestamp)
         # Send a job execution status to the server
-        response = send("/execution/start", {
+        response = server_post("/execution/start", {
+          :job_id => job_id,
           :execution_id => execution_id,
           :timestamp => timestamp,
         })
+
+        # Publish an event to pusher to say the execution has been started
+        pusher_post(:start, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -73,10 +86,14 @@ module Minicron
       # @return [Hash]
       def finish(job_id, execution_id, timestamp)
         # Send a job execution status to the server
-        response = send("/execution/finish", {
+        response = server_post("/execution/finish", {
+          :job_id => job_id,
           :execution_id => execution_id,
           :timestamp => timestamp,
         })
+
+        # Publish an event to pusher to say the execution has finished
+        pusher_post(:finish, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -89,11 +106,14 @@ module Minicron
       # @return [Hash]
       def exit(job_id, execution_id, exit_status)
         # Send a job execution status to the server
-        response = send("/execution/exit", {
+        response = server_post("/execution/exit", {
           :job_id => job_id,
           :execution_id => execution_id,
           :exit_status => exit_status,
         })
+
+        # Publish an event to pusher to say the execution has finished and has an exit code
+        pusher_post(:exit, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -106,11 +126,14 @@ module Minicron
       # @return [Hash]
       def output(job_id, execution_id, output)
         # Send the job execution output to the server
-        response = send("/execution/output", {
+        response = server_post("/execution/output", {
           :job_id => job_id,
           :execution_id => execution_id,
           :output => output,
         })
+
+        # Publish an event to pusher to say the execution has some output
+        pusher_post(:output, response) if Minicron.config['client']['pusher']['enabled']
 
         response
       end
@@ -119,7 +142,7 @@ module Minicron
       #
       # @param path [String] api method to send to
       # @param body [Hash] data to post to the server
-      def send(path, body)
+      def server_post(path, body)
         # Set up the data to send to the server
         body[:timestamp] = Time.now.utc.to_i if body[:timestamp].nil?
         body[:seq] = @seq
@@ -152,7 +175,7 @@ module Minicron
       private
 
       def post(method, data)
-        # Create a POST requests
+        # Create a POST request
         uri = URI("#{@scheme}://#{@host}:#{@port}#{@path}#{method}")
         post = Net::HTTP::Post.new(uri.path)
         post.basic_auth @username, @password if @username || @password
@@ -160,6 +183,18 @@ module Minicron
 
         # Execute the POST request, TODO: error handling
         @client.request(uri, post)
+      end
+
+      def pusher_post(event, data)
+        begin
+          @pusher.trigger(
+            'executions',
+            event,
+            data
+          )
+        rescue => e
+          raise Minicron::ClientError, "[Pusher Error] #{e.message}"
+        end
       end
     end
   end

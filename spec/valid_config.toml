@@ -19,6 +19,13 @@ debug = false
   [client.cli]
   mode = "line" # [line, char]
   dry_run = false
+  pid_wait_timeout = 5
+  [client.pusher]
+  enabled = false
+  encrypted = false # See: https://pusher.com/docs/client_api_guide/client_connect#encrypting-connections
+  # app_id = "YOUR_PUSHER_APP_ID"
+  # key = "YOUR_PUSHER_KEY"
+  # secret = "YOUR_PUSHER_SECRET"
 
 # Server options
 [server]

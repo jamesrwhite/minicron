@@ -9,6 +9,7 @@ require 'minicron/transport'
 require 'minicron/monitor'
 require 'minicron/transport/client'
 require 'minicron/transport/server'
+require 'timeout'
 
 include Commander::UI
 
@@ -129,7 +130,9 @@ module Minicron
           rescue Errno::EIO
           ensure
             # Force waiting for the process to finish so we can get the exit status
-            Process.wait pid
+            Timeout::timeout(Minicron.config['client']['cli']['pid_wait_timeout']) do
+              Process.wait(pid)
+            end
           end
         end
       rescue Errno::ENOENT

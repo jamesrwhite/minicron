@@ -76,7 +76,12 @@ describe Minicron do
             },
             'cli' => {
               'mode' => 'line',
-              'dry_run' => false
+              'dry_run' => false,
+              'pid_wait_timeout' => 5,
+            },
+            'pusher' => {
+              'enabled' => false,
+              'encrypted' => false,
             },
           },
           'server' => {
@@ -90,7 +95,7 @@ describe Minicron do
               'domain' => '127.0.0.1',
               'path' => '/',
               'ttl' => 86400,
-              'secret' => 'change_me'
+              'secret' => 'change_me',
             },
             'database' => {
               'type' => 'sqlite',
@@ -104,17 +109,17 @@ describe Minicron do
               'enabled' => false,
               'smtp' => {
                 'address' => 'localhost',
-                'port' => 25
+                'port' => 25,
               },
             },
             'sms' => {
-              'enabled' => false
+              'enabled' => false,
             },
             'pagerduty' => {
-              'enabled' => false
+              'enabled' => false,
             },
             'aws_sns' => {
-              'enabled' => false
+              'enabled' => false,
             },
             'slack' => {
               'enabled' => false

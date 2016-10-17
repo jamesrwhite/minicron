@@ -34,7 +34,12 @@ module Minicron
       },
       'cli' => {
         'mode' => 'line',
-        'dry_run' => false
+        'dry_run' => false,
+        'pid_wait_timeout' => 5,
+      },
+      'pusher' => {
+        'enabled' => false,
+        'encrypted' => false,
       },
     },
     'server' => {

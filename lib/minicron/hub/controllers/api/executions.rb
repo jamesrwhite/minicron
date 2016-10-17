@@ -55,9 +55,9 @@ class Minicron::Hub::App
         )
 
         json({
-          :job_id => job.id,
-          :execution_id => execution.id,
-          :execution_number => execution_number,
+          :job => job,
+          :execution => execution,
+          :host => host,
         })
       end
     rescue Exception => e
@@ -73,13 +73,20 @@ class Minicron::Hub::App
     content_type :json
 
     begin
-        Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
-          :started_at => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
-        )
+      # Add the execution start time
+      Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
+        :started_at => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
+      )
 
-        json({
-          :success => true
-        })
+      # Look up the job and it's host and the execution and its output
+      job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
+
+      json({
+        :job => job,
+        :execution => execution,
+        :host => job.host,
+      })
     rescue Exception => e
       status 500
 
@@ -93,16 +100,24 @@ class Minicron::Hub::App
     content_type :json
 
     begin
-        Minicron::Hub::JobExecutionOutput.create!(
-          :execution_id => params[:execution_id],
-          :output => params[:output],
-          :timestamp => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S'),
-          :seq => params[:seq],
-        )
+      # Append to the job executiob output
+      output = Minicron::Hub::JobExecutionOutput.create!(
+        :execution_id => params[:execution_id],
+        :output => params[:output],
+        :timestamp => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S'),
+        :seq => params[:seq],
+      )
 
-        json({
-          :success => true
-        })
+      # Look up the job and it's host and the execution and its output
+      job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
+
+      json({
+        :job => job,
+        :execution => execution,
+        :output => output,
+        :host => job.host,
+      })
     rescue Exception => e
       status 500
 
@@ -116,13 +131,20 @@ class Minicron::Hub::App
     content_type :json
 
     begin
-        Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
-          :finished_at => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
-        )
+      # Update the status of the job to finished
+      Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
+        :finished_at => Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
+      )
 
-        json({
-          :success => true
-        })
+      # Look up the job and it's host and the execution and its output
+      job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
+
+      json({
+        :job => job,
+        :execution => execution,
+        :host => job.host,
+      })
     rescue Exception => e
       status 500
 
@@ -136,11 +158,12 @@ class Minicron::Hub::App
     content_type :json
 
     begin
-        Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
-          :exit_status => params[:exit_status]
-        )
+      # Set the jobs exit status code
+      Minicron::Hub::Execution.where(:id => params[:execution_id]).update_all(
+        :exit_status => params[:exit_status]
+      )
 
-       # If the exit status was above 0 we need to trigger a failure alert
+      # If the exit status was above 0 we need to trigger a failure alert
       if params[:exit_status].to_i > 0
         Minicron::Alert.send_all(
           :kind => 'fail',
@@ -149,8 +172,14 @@ class Minicron::Hub::App
         )
       end
 
+      # Look up the job and it's host and the execution and its output
+      job = Minicron::Hub::Job.includes(:host).find(params[:job_id])
+      execution = Minicron::Hub::Execution.find(params[:execution_id])
+
       json({
-        :success => true
+        :job => job,
+        :execution => execution,
+        :host => job.host,
       })
     rescue Exception => e
       status 500
