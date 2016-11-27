@@ -288,12 +288,9 @@ Areas that I would love some help with:
 Support
 --------
 
-Where possible I will try and provide support for minicron, you can get in touch with me via:
+Where possible I will try and provide support for minicron but I offer no gurantees etc.
 
-- Twitter: [@jamesrwhite](https://twitter.com/jamesrwhite)
-- Email: [dev.jameswhite+minicron@gmail.com](mailto:dev.jameswhite+minicron@gmail.com)
-
-Or feel free to open an issue and I'll do my best to help.
+Feel free to open an issue and I'll do my best to help.
 
 Credit
 -------
