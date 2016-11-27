@@ -25,6 +25,8 @@ module Minicron
       'server' => {
         'scheme' => 'http',
         'host' => '0.0.0.0',
+        'username' => nil,
+        'password' => nil,
         'port' => 9292,
         'path' => '/',
         'connect_timeout' => 5,

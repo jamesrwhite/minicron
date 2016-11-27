@@ -3,7 +3,7 @@ require 'active_record'
 module Minicron
   module Hub
     class Host < ActiveRecord::Base
-      has_many :jobs, :dependent => :delete_all
+      has_many :jobs, :dependent => :destroy
 
       validates :name, :presence => true
       validates :fqdn, :presence => true, :uniqueness => true
