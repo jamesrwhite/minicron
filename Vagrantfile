@@ -4,14 +4,13 @@ VAGRANTFILE_API_VERSION = "2"
 # Provisioning commands
 $script = <<SCRIPT
 apt-get update
-apt-get install -y libsqlite3-dev wget unzip
-wget https://github.com/jamesrwhite/minicron/releases/download/v0.9.7/minicron-0.9.7-linux-x86_64.zip > minicron.zip
-unzip -o minicron-0.9.7-linux-x86_64.zip
-export PATH=~/minicron-0.9.7-linux-x86_64:$PATH
+apt-get install -y libsqlite3-dev wget unzip curl
 ufw allow 2222
 ufw allow 9292
 ufw enable
-echo "minicron is installed, run `minicron server start` to start!"
+bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
+minicron db setup
+minicron server start
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
