@@ -85,17 +85,17 @@ module Minicron
         # Check if this execution was created inside a minute window
         # starting when it was expected to run
         check = Minicron::Hub::Execution.exists?(
-          :created_at => expected_at..expected_by,
-          :job_id => schedule.job_id
+          created_at: expected_at..expected_by,
+          job_id: schedule.job_id
         )
 
         # If the check failed
         unless check
           Minicron::Alert.send_all(
-            :kind => 'miss',
-            :schedule_id => schedule.id,
-            :expected_at => expected_at,
-            :job_id => schedule.job_id,
+            kind: 'miss',
+            schedule_id: schedule.id,
+            expected_at: expected_at,
+            job_id: schedule.job_id
           )
         end
       end

@@ -2,7 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-VERSION = "0.9.7.#{Time.now.to_i}"
+VERSION = "0.9.7.#{Time.now.to_i}".freeze
 
 Gem::Specification.new do |spec|
   spec.name                  = 'minicron'
@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,db,spec}/**/*']
   spec.test_files    = Dir['{spec}/**/*']
-  spec.executables  << 'minicron'
+  spec.executables << 'minicron'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.0'
   spec.add_runtime_dependency 'commander', '~> 4.3'
@@ -41,7 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'net-http-persistent', '~> 2.9'
   spec.add_runtime_dependency 'sinatra-contrib', '~> 1.4'
   spec.add_runtime_dependency 'ansi-to-html', '0.0.3'
-  spec.add_runtime_dependency 'mysql2','0.3.18'
+  spec.add_runtime_dependency 'mysql2', '0.3.18'
   spec.add_runtime_dependency 'pg', '0.18.2'
   spec.add_runtime_dependency 'activesupport', '~> 4.0'
   spec.add_runtime_dependency 'sinatra-flash', '0.3.0'

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-source "http://localhost:9999" do
+source 'http://localhost:9999' do
   gem 'minicron'
 end
 

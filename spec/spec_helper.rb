@@ -9,7 +9,7 @@ require 'minicron/cli'
 
 RSpec.configure do |config|
   config.color = true
-  config.formatter     = 'documentation'
+  config.formatter = 'documentation'
 
   # Taken from commander gem
   # prevent paging from actually occurring in test environment

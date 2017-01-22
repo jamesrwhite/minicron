@@ -18,7 +18,7 @@ describe Minicron::Transport::Server do
     context 'when the server is not running' do
       it 'should return true' do
         expect(server).to receive(:running?).and_return false
-      	expect(thin_server).to receive(:new).and_return thin_server
+        expect(thin_server).to receive(:new).and_return thin_server
         allow(thin_server).to receive(:start)
 
         expect(server.start!('127.0.0.1', 1337, '/lol')).to eq true

@@ -42,9 +42,7 @@ module Minicron
                 # Create the database
                 ActiveRecord::Base.connection.create_database(
                   Minicron.config['server']['database']['database'],
-                  {
-                    :charset => 'utf8'
-                  }
+                  charset: 'utf8'
                 )
               end
 
@@ -107,8 +105,8 @@ module Minicron
 
             # Get an instance of insidious and set the pid file
             insidious = Insidious.new(
-              :pid_file => Minicron.config['server']['pid_file'],
-              :daemonize => Minicron.config['debug'] == false
+              pid_file: Minicron.config['server']['pid_file'],
+              daemonize: Minicron.config['debug'] == false
             )
 
             case action
@@ -122,7 +120,7 @@ module Minicron
                 Minicron::Transport::Server.start!(
                   Minicron.config['server']['host'],
                   Minicron.config['server']['port'],
-                  Minicron.config['server']['path'],
+                  Minicron.config['server']['path']
                 )
               end
             when 'stop'
@@ -207,7 +205,7 @@ module Minicron
 
             begin
               # Execute the command and yield the output
-              Minicron::CLI.run_command(args.first, :mode => Minicron.config['client']['cli']['mode'], :verbose => Minicron.config['verbose']) do |output|
+              Minicron::CLI.run_command(args.first, mode: Minicron.config['client']['cli']['mode'], verbose: Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
                 when :start

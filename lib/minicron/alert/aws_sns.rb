@@ -2,16 +2,14 @@ require 'aws-sdk-core'
 
 module Minicron
   module Alert
-     # Allows the sending of AWS SNS alerts
+    # Allows the sending of AWS SNS alerts
     class AwsSns
       # Used to set up on the AWS::SNS::Topic
       def initialize
         # Get an instance of the sns client
-        @client = Aws::SNS::Client.new({
-          :access_key_id =>  Minicron.config['alerts']['aws_sns']['access_key_id'],
-          :secret_access_key =>  Minicron.config['alerts']['aws_sns']['secret_access_key'],
-          :region => Minicron.config['alerts']['aws_sns']['region']
-        })
+        @client = Aws::SNS::Client.new(access_key_id: Minicron.config['alerts']['aws_sns']['access_key_id'],
+                                       secret_access_key: Minicron.config['alerts']['aws_sns']['secret_access_key'],
+                                       region: Minicron.config['alerts']['aws_sns']['region'])
       end
 
       # Return the message for an alert
@@ -41,9 +39,9 @@ module Minicron
       # @param message [String]
       def send(subject, message)
         @client.publish(
-          :topic_arn => Minicron.config['alerts']['aws_sns']['topic_arn'],
-          :subject => subject,
-          :message => message
+          topic_arn: Minicron.config['alerts']['aws_sns']['topic_arn'],
+          subject: subject,
+          message: message
         )
       end
     end
