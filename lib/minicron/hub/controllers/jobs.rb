@@ -189,33 +189,35 @@ class Minicron::Hub::App
     @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:job_id])
 
     begin
-      # First we need to check a schedule like this doesn't already exist
-      exists = Minicron::Hub::Schedule.exists?(
-        minute: params[:minute].empty? ? nil : params[:minute],
-        hour: params[:hour].empty? ? nil : params[:hour],
-        day_of_the_month: params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
-        month: params[:month].empty? ? nil : params[:month],
-        day_of_the_week: params[:day_of_the_week].empty? ? nil : params[:day_of_the_week],
-        special: params[:special].empty? ? nil : params[:special],
-        job_id: params[:job_id].empty? ? nil : params[:job_id]
-      )
+      ActiveRecord::Base.transaction do
+        # First we need to check a schedule like this doesn't already exist
+        exists = Minicron::Hub::Schedule.exists?(
+          minute: params[:minute].empty? ? nil : params[:minute],
+          hour: params[:hour].empty? ? nil : params[:hour],
+          day_of_the_month: params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
+          month: params[:month].empty? ? nil : params[:month],
+          day_of_the_week: params[:day_of_the_week].empty? ? nil : params[:day_of_the_week],
+          special: params[:special].empty? ? nil : params[:special],
+          job_id: params[:job_id].empty? ? nil : params[:job_id]
+        )
 
-      if exists
-        raise Minicron::ValidationError, 'That schedule already exists for this job'
+        if exists
+          raise Minicron::ValidationError, 'That schedule already exists for this job'
+        end
+
+        # Create the new schedule
+        schedule = Minicron::Hub::Schedule.create(
+          minute: params[:minute].empty? ? nil : params[:minute],
+          hour: params[:hour].empty? ? nil : params[:hour],
+          day_of_the_month: params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
+          month: params[:month].empty? ? nil : params[:month],
+          day_of_the_week: params[:day_of_the_week].empty? ? nil : params[:day_of_the_week],
+          special: params[:special].empty? ? nil : params[:special],
+          job_id: params[:job_id]
+        )
+
+        schedule.save!
       end
-
-      # Create the new schedule
-      schedule = Minicron::Hub::Schedule.create(
-        minute: params[:minute].empty? ? nil : params[:minute],
-        hour: params[:hour].empty? ? nil : params[:hour],
-        day_of_the_month: params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
-        month: params[:month].empty? ? nil : params[:month],
-        day_of_the_week: params[:day_of_the_week].empty? ? nil : params[:day_of_the_week],
-        special: params[:special].empty? ? nil : params[:special],
-        job_id: params[:job_id]
-      )
-
-      schedule.save!
 
       # Look up the host
       host = Minicron::Hub::Host.includes(jobs: :schedules).find(@job.host.id)
