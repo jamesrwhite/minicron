@@ -4,7 +4,7 @@ describe Minicron do
   describe '.capture_output' do
     context 'when :stdout is passed as an option' do
       it 'should return a StringIO instance' do
-        output = Minicron.capture_output(:type => :stdout) do
+        output = Minicron.capture_output(type: :stdout) do
           $stdout.write 'I like turtles!'
         end
 
@@ -14,7 +14,7 @@ describe Minicron do
 
     context 'when :stderr is passed as an option' do
       it 'should return a StringIO instance' do
-        output = Minicron.capture_output(:type => :stderr) do
+        output = Minicron.capture_output(type: :stderr) do
           $stderr.write 'Quit yo jibber jabber, fool!'
         end
 
@@ -24,7 +24,7 @@ describe Minicron do
 
     context 'when :both is passed as an option' do
       it 'should return a Hash' do
-        output = Minicron.capture_output(:type => :both) do
+        output = Minicron.capture_output(type: :both) do
           $stdout.write 'I like turtles!'
           $stderr.write 'Quit yo jibber jabber, fool!'
         end
@@ -35,7 +35,7 @@ describe Minicron do
 
     context 'when :both is passed as an option' do
       it 'should return a Hash containing :stdout and :stderr with two StringIO instances' do
-        output = Minicron.capture_output(:type => :both) do
+        output = Minicron.capture_output(type: :both) do
           $stdout.write 'I like turtles!'
           $stderr.write 'Quit yo jibber jabber, fool!'
         end
@@ -50,7 +50,7 @@ describe Minicron do
     context 'when an invalid :type is used' do
       it 'should raise an Minicron::ArgumentError' do
         expect do
-          Minicron.capture_output(:type => :lol) do
+          Minicron.capture_output(type: :lol) do
             $stdout.write 'I like turtles!'
             $stderr.write 'Quit yo jibber jabber, fool!'
           end
@@ -72,12 +72,12 @@ describe Minicron do
               'port' => 9292,
               'path' => '/',
               'connect_timeout' => 5,
-              'inactivity_timeout' => 5,
+              'inactivity_timeout' => 5
             },
             'cli' => {
               'mode' => 'line',
               'dry_run' => false
-            },
+            }
           },
           'server' => {
             'host' => '127.0.0.1',
@@ -89,15 +89,15 @@ describe Minicron do
               'name' => 'minicron.session',
               'domain' => '127.0.0.1',
               'path' => '/',
-              'ttl' => 86400,
+              'ttl' => 86_400,
               'secret' => 'change_me'
             },
             'database' => {
-              'type' => 'sqlite',
+              'type' => 'sqlite'
             },
             'ssh' => {
-              'connect_timeout' => 10,
-            },
+              'connect_timeout' => 10
+            }
           },
           'alerts' => {
             'email' => {
@@ -105,7 +105,7 @@ describe Minicron do
               'smtp' => {
                 'address' => 'localhost',
                 'port' => 25
-              },
+              }
             },
             'sms' => {
               'enabled' => false
@@ -118,8 +118,8 @@ describe Minicron do
             },
             'slack' => {
               'enabled' => false
-            },
-          },
+            }
+          }
         }
 
         parse_file_config = Minicron.parse_file_config('./spec/valid_config.toml')
@@ -147,7 +147,7 @@ describe Minicron do
     context 'when a file without read permissions is passed' do
       before (:each) do
         File.write('/tmp/minicron_toml_test', 'hey')
-        File.chmod(0200, '/tmp/minicron_toml_test')
+        File.chmod(0o200, '/tmp/minicron_toml_test')
       end
 
       it 'should raise an Exception' do
@@ -163,7 +163,6 @@ describe Minicron do
   end
 
   describe '.parse_config_hash' do
-
     it 'should set a first-level config value' do
       options = { 'test_key' => 'test_value' }
 
@@ -212,20 +211,6 @@ describe Minicron do
           end
         end
       end
-    end
-
-  end
-
-  describe '.generate_ssh_key' do
-    it 'should generate an ssh key pub/priv pair' do
-      Minicron.generate_ssh_key('rspec', 1337, 'rspec')
-
-      expect(File.exists?(File.expand_path('~/.ssh/minicron_rspec_1337_rsa'))).to eq true
-      expect(File.exists?(File.expand_path('~/.ssh/minicron_rspec_1337_rsa.pub'))).to eq true
-    end
-
-    after (:each) do
-      `rm ~/.ssh/minicron_rspec_1337_rsa*`
     end
   end
 

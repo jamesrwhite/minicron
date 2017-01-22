@@ -17,24 +17,6 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label">User</label>
-    <div class="col-sm-10">
-      <input name="user" type="text" value="<%= @previous[:user] %>"class="form-control" placeholder="The user to connect to the host as"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Host</label>
-    <div class="col-sm-10">
-      <input name="host" type="text" value="<%= @previous[:host] %>"class="form-control" placeholder="The machine host, this could be an IP address or FQDN"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Port</label>
-    <div class="col-sm-10">
-      <input name="port" type="text" value="<%= @previous[:port] %>"class="form-control" placeholder="The port to connect on e.g 22"/>
-    </div>
-  </div>
-  <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <input type="submit" class="btn btn-success" value="Save"/>
       <a href="<%= "#{route_prefix}/hosts" %>" class="btn btn-danger">Cancel</a>

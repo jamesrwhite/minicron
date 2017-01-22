@@ -5,9 +5,9 @@ module Minicron
     class JobExecutionOutput < ActiveRecord::Base
       belongs_to :execution
 
-      validates :execution_id, :presence => true, :numericality => { :only_integer => true }
-      validates :seq, :presence => true, :numericality => { :only_integer => true }
-      validates :timestamp, :presence => true
+      validates :execution_id, presence: true, numericality: { only_integer: true }
+      validates :seq, presence: true, numericality: { only_integer: true }
+      validates :timestamp, presence: true
 
       def safe_output
         CGI.escapeHTML(read_attribute(:output))

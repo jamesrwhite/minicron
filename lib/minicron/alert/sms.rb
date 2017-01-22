@@ -40,9 +40,9 @@ module Minicron
       # @param message [String]
       def send(from, to, message)
         @client.account.messages.create(
-          :from => from,
-          :to => to,
-          :body => message
+          from: from,
+          to: to,
+          body: message
         )
       end
     end

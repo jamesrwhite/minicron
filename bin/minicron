@@ -9,7 +9,7 @@ $PROGRAM_NAME = "minicron #{ARGV.join(' ')}"
 
 begin
   # Capture any output from STDERR so we can handle it how we want to
-  Minicron.capture_output(:type => :stderr) do
+  Minicron.capture_output(type: :stderr) do
     # Run the CLI and pass it all arguments passed to us
     Minicron::CLI.run(ARGV) do |output|
       print output
@@ -21,11 +21,9 @@ rescue Interrupt, SignalException
   puts "\n[CONTROL] Exiting.."
 
   # Stop the daemon if it's running i.e tidy up the pid file
-  insidious = Insidious.new(:pid_file => Minicron.config['server']['pid_file'] || '/tmp/minicron.pid')
+  insidious = Insidious.new(pid_file: Minicron.config['server']['pid_file'] || '/tmp/minicron.pid')
 
-  if insidious.running?
-    insidious.stop!
-  end
+  insidious.stop! if insidious.running?
 # Accept failure
 rescue Exception => e
   $stderr.write("#{e.message}\n")
