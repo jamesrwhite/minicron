@@ -7,9 +7,7 @@
 
 minicron makes it simple to monitor your cron jobs and ensure they are running both correctly and on schedule.
 
-minicron runs your jobs via it's easy to install "agent" that lives on your and relays the job data back to the
-"hub" (web ui) where you can view it and set up alerts to ensure the job is running correctly.
-
+- [Overview](#overview)
 - [Background](#background)
 - [Features](#features)
 - [Requirements](#requirements)
@@ -29,6 +27,11 @@ minicron runs your jobs via it's easy to install "agent" that lives on your and 
 <img src="http://f.cl.ly/items/0c27341m2l1E230B0q1l/Image%202014-04-15%20at%2012.40.42%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/0Y2O0P0j012s3C3t3a3E/Image%202014-04-15%20at%2012.39.19%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/2R1f2m350W46423c220D/Image%202014-04-15%20at%2012.32.41%20am.png" height="175"/>
+
+## Overview
+
+minicron runs your jobs via it's easy to install "agent" that lives on your and relays the job data back to the
+"hub" (web ui) where you can view it and set up alerts to ensure the job is running correctly.
 
 ## Background
 
