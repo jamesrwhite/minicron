@@ -214,19 +214,6 @@ describe Minicron do
     end
   end
 
-  describe '.generate_ssh_key' do
-    it 'should generate an ssh key pub/priv pair' do
-      Minicron.generate_ssh_key('rspec', 1337, 'rspec')
-
-      expect(File.exist?(File.expand_path('~/.ssh/minicron_rspec_1337_rsa'))).to eq true
-      expect(File.exist?(File.expand_path('~/.ssh/minicron_rspec_1337_rsa.pub'))).to eq true
-    end
-
-    after (:each) do
-      `rm ~/.ssh/minicron_rspec_1337_rsa*`
-    end
-  end
-
   describe '.get_fqdn' do
     it 'should return the fqdn as a string with no newline' do
       expect(Minicron.get_fqdn).to eq `hostname -f`.strip
