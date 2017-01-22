@@ -18,21 +18,19 @@ module Minicron
     # @option options [Time] expected_at only applies to 'miss' alerts
     def self.send_all(options = {})
       Minicron.config['alerts'].each do |medium, value|
-
         # Add the alert medium into the options hash so that it can be passed to sent?
         options[:medium] = medium
 
         # Check if the medium is enabled and alert hasn't already been sent
-        if value['enabled'] && !sent?(options)
-          send(
-            :kind => options[:kind],
-            :schedule_id => options[:schedule_id],
-            :execution_id => options[:execution_id],
-            :job_id => options[:job_id],
-            :expected_at => options[:expected_at],
-            :medium => options[:medium]
-          )
-        end
+        next unless value['enabled'] && !sent?(options)
+        send(
+          kind: options[:kind],
+          schedule_id: options[:schedule_id],
+          execution_id: options[:execution_id],
+          job_id: options[:job_id],
+          expected_at: options[:expected_at],
+          medium: options[:medium]
+        )
       end
     end
 
@@ -66,13 +64,13 @@ module Minicron
 
       # Store that we sent the alert
       Minicron::Hub::Alert.create(
-        :job_id => options[:job_id],
-        :execution_id => options[:execution_id],
-        :schedule_id => options[:schedule_id],
-        :kind => options[:kind],
-        :expected_at => options[:expected_at],
-        :medium => options[:medium],
-        :sent_at => Time.now.utc
+        job_id: options[:job_id],
+        execution_id: options[:execution_id],
+        schedule_id: options[:schedule_id],
+        kind: options[:kind],
+        expected_at: options[:expected_at],
+        medium: options[:medium],
+        sent_at: Time.now.utc
       )
     end
 
@@ -114,6 +112,7 @@ module Minicron
         sns.get_message(options)
       )
     end
+
     # Send a slack alert, this has the same options as #send
     def self.send_slack(options = {})
       slack = Minicron::Alert::Slack.new
@@ -121,7 +120,7 @@ module Minicron
         slack.get_message(options)
       )
     end
-    
+
     # Queries the database to determine if an alert for this kind has already
     # been sent
     #
@@ -132,12 +131,12 @@ module Minicron
     # @option options [String] medium the medium to send the alert via
     def self.sent?(options = {})
       Minicron::Hub::Alert.exists?(
-        :kind => options[:kind],
-        :execution_id => options[:execution_id],
-        :schedule_id => options[:schedule_id],
-        :job_id => options[:job_id],
-        :expected_at => options[:expected_at],
-        :medium => options[:medium]
+        kind: options[:kind],
+        execution_id: options[:execution_id],
+        schedule_id: options[:schedule_id],
+        job_id: options[:job_id],
+        expected_at: options[:expected_at],
+        medium: options[:medium]
       )
     end
   end

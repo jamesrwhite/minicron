@@ -9,15 +9,16 @@ module Minicron
         Mail.defaults do
           delivery_method(
             :smtp,
-            :address => Minicron.config['alerts']['email']['smtp']['address'],
-            :port => Minicron.config['alerts']['email']['smtp']['port'],
-            :domain => Minicron.config['alerts']['email']['smtp']['domain'],
-            :user_name => Minicron.config['alerts']['email']['smtp']['user_name'],
-            :password => Minicron.config['alerts']['email']['smtp']['password'],
-            :enable_starttls_auto => Minicron.config['alerts']['email']['smtp']['enable_starttls_auto']
+            address: Minicron.config['alerts']['email']['smtp']['address'],
+            port: Minicron.config['alerts']['email']['smtp']['port'],
+            domain: Minicron.config['alerts']['email']['smtp']['domain'],
+            user_name: Minicron.config['alerts']['email']['smtp']['user_name'],
+            password: Minicron.config['alerts']['email']['smtp']['password'],
+            enable_starttls_auto: Minicron.config['alerts']['email']['smtp']['enable_starttls_auto']
           )
         end
       end
+
       # Return the message for an alert
       #
       # @option options [Minicron::Hub::Job] job a job instance

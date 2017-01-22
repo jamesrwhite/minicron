@@ -31,13 +31,13 @@ module Minicron
           'cli' => {
             'mode' => opts.mode,
             'dry_run' => opts.dry_run
-          },
+          }
         },
         'server' => {
           'host' => opts.host,
           'port' => opts.port,
           'path' => opts.path,
-          'pid_file' => opts.pid_file,
+          'pid_file' => opts.pid_file
         }
       )
     end
@@ -48,7 +48,7 @@ module Minicron
     # @param output [String]
     # @return [Hash]
     def self.structured(type, output)
-      { :type => type, :output => output }
+      { type: type, output: output }
     end
 
     # Sets up an instance of commander and runs it based on the argv param
@@ -105,8 +105,7 @@ module Minicron
 
       # Spawn a process to run the command
       begin
-        PTY.spawn(command) do |stdout, stdin, pid|
-
+        PTY.spawn(command) do |stdout, _stdin, pid|
           # Output some debug info
           if options[:verbose]
             subtract = Time.now.utc
@@ -201,10 +200,10 @@ module Minicron
       @cli.default_command :help
 
       # Add a global option for verbose mode
-      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose'].to_s}"
+      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose']}"
 
       # Add a global option for enabling debug mode
-      @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug'].to_s}"
+      @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug']}"
 
       # Add a global option for passing the path to a config file
       @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"

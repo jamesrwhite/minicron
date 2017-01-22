@@ -53,9 +53,9 @@ module Minicron::Hub
 
     # Configure how we serve assets
     assets do
-      serve '/css',   :from => 'assets/css'
-      serve '/js',    :from => 'assets/js'
-      serve '/fonts', :from => 'assets/fonts'
+      serve '/css',   from: 'assets/css'
+      serve '/js',    from: 'assets/js'
+      serve '/fonts', from: 'assets/fonts'
 
       js_compression :simple
 

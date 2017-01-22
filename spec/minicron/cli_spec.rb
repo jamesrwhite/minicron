@@ -7,13 +7,13 @@ describe Minicron::CLI do
 
   describe '#server' do
     it 'should start the minicron server' # do
-      # server.should_receive(:start!)
-      # server.should_receive(:running?)
-      # server.should_receive(:server)
-      # thin_server.should_receive(:new).and_return Thin::Server
-      # Thin::Server.stub(:start)
+    # server.should_receive(:start!)
+    # server.should_receive(:running?)
+    # server.should_receive(:server)
+    # thin_server.should_receive(:new).and_return Thin::Server
+    # Thin::Server.stub(:start)
 
-      # Minicron::CLI.new.run(['server'])
+    # Minicron::CLI.new.run(['server'])
     # end
   end
 
@@ -41,7 +41,7 @@ describe Minicron::CLI do
 
       context 'when a non-existent command is run' do
         it 'should return an error' do
-          Minicron.capture_output :type => :stderr do
+          Minicron.capture_output type: :stderr do
             expect do
               Minicron::CLI.run(%w(gfdjgfdlgj --debug))
             end.to raise_error SystemExit
@@ -51,7 +51,7 @@ describe Minicron::CLI do
 
       context 'when no argument is passed to the run action' do
         it 'should raise SystemExit' do
-          Minicron.capture_output :type => :stderr do
+          Minicron.capture_output type: :stderr do
             expect do
               Minicron::CLI.run(%w(run --dry-run --debug))
             end.to raise_error Minicron::ArgumentError
@@ -79,7 +79,7 @@ describe Minicron::CLI do
 
       context 'when a non-existent command is run' do
         it 'should return an error' do
-          Minicron.capture_output :type => :stderr do
+          Minicron.capture_output type: :stderr do
             expect do
               Minicron::CLI.run(['dfsfsdfsdfs', '--debug'])
             end.to raise_error SystemExit
@@ -89,7 +89,7 @@ describe Minicron::CLI do
 
       context 'when no argument is passed to the run action' do
         it 'should raise SystemExit' do
-          Minicron.capture_output :type => :stderr do
+          Minicron.capture_output type: :stderr do
             expect do
               Minicron::CLI.run(['run', '--dry-run', '--debug', '--config', './config/minicron.toml'])
             end.to raise_error Minicron::ArgumentError
@@ -100,7 +100,7 @@ describe Minicron::CLI do
 
     context 'when run in --verbose mode' do
       it 'should set the verbose to true' do
-        Minicron.capture_output :type => :stderr do
+        Minicron.capture_output type: :stderr do
           Minicron::CLI.run(['run', '--dry-run', '--debug', '--verbose', 'echo 1']) {}
 
           expect(Minicron.config['verbose']).to eq true
@@ -115,8 +115,8 @@ describe Minicron::CLI do
         Minicron::CLI.disable_coloured_output!
         output = ''
 
-        Minicron::CLI.run_command('echo 1', :verbose => true) do |line|
-          output += "#{line[:output]}"
+        Minicron::CLI.run_command('echo 1', verbose: true) do |line|
+          output += (line[:output]).to_s
         end
 
         expect(output.clean.split("\n").length).to eq 7

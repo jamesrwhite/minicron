@@ -23,11 +23,11 @@ module Minicron
         @server = Thin::Server.new(host, port) do
           use Rack::CommonLogger
           use Rack::ShowExceptions
-          use Rack::Session::Cookie, :key => Minicron.config['server']['session']['name'],
-                                     :domain => Minicron.config['server']['session']['domain'],
-                                     :path => Minicron.config['server']['session']['path'],
-                                     :expire_after => Minicron.config['server']['session']['ttl'],
-                                     :secret => Minicron.config['server']['session']['secret']
+          use Rack::Session::Cookie, key: Minicron.config['server']['session']['name'],
+                                     domain: Minicron.config['server']['session']['domain'],
+                                     path: Minicron.config['server']['session']['path'],
+                                     expire_after: Minicron.config['server']['session']['ttl'],
+                                     secret: Minicron.config['server']['session']['secret']
 
           # The 'hub', aka our sinatra web interface
           map path do
@@ -51,7 +51,7 @@ module Minicron
       # Returns a bool based on whether
       # @return [Boolean]
       def self.running?
-        return false unless !@server.nil?
+        return false if @server.nil?
 
         @server.running?
       end

@@ -3,16 +3,14 @@ require 'minicron/alert/aws_sns'
 
 describe Minicron::Alert::AwsSns do
   before (:each) do
-    Minicron.parse_config_hash({
-      'alerts' => {
-        'aws_sns' => {
-          'secret_access_key' => 'fd;sflksk;lfsdlfksdfsd',
-          'access_key_id' => 'fdsfsdfsdfsd',
-          'region' => 'us-west-2',
-          'topic_arn' => 'arn:aws:sns:us-west-2:2342423423:yo'
-        }
-      }
-    })
+    Minicron.parse_config_hash('alerts' => {
+                                 'aws_sns' => {
+                                   'secret_access_key' => 'fd;sflksk;lfsdlfksdfsd',
+                                   'access_key_id' => 'fdsfsdfsdfsd',
+                                   'region' => 'us-west-2',
+                                   'topic_arn' => 'arn:aws:sns:us-west-2:2342423423:yo'
+                                 }
+                               })
   end
 
   describe '#intiailize' do
@@ -29,10 +27,10 @@ describe Minicron::Alert::AwsSns do
         sns = Minicron::Alert::AwsSns.new
         time = Time.now.utc
         options = {
-          :job_id => 1,
-          :expected_at => time,
-          :execution_id => 2,
-          :kind => 'miss'
+          job_id: 1,
+          expected_at: time,
+          execution_id: 2,
+          kind: 'miss'
         }
         message = "minicron alert - job missed!\nJob #1 failed to execute at its expected time: #{time}"
 
@@ -44,9 +42,9 @@ describe Minicron::Alert::AwsSns do
       it 'should return the correct message' do
         sns = Minicron::Alert::AwsSns.new
         options = {
-          :job_id => 1,
-          :execution_id => 2,
-          :kind => 'fail'
+          job_id: 1,
+          execution_id: 2,
+          kind: 'fail'
         }
         message = "minicron alert - job failed!\nExecution #2 of Job #1 failed"
 
@@ -58,7 +56,7 @@ describe Minicron::Alert::AwsSns do
       it 'should raise an Exception' do
         sns = Minicron::Alert::AwsSns.new
         options = {
-          :kind => 'derp'
+          kind: 'derp'
         }
 
         expect do

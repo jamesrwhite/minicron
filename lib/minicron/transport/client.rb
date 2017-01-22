@@ -34,18 +34,16 @@ module Minicron
       # @return [Hash]
       def init(job_hash, user, command, fqdn, hostname, timestamp)
         # Send a request to set up the job
-        response = send("/execution/init", {
-          :job_hash => job_hash,
-          :user => user,
-          :command => command,
-          :fqdn => fqdn,
-          :hostname => hostname,
-          :timestamp => timestamp
-        })
+        response = send('/execution/init', job_hash: job_hash,
+                                           user: user,
+                                           command: command,
+                                           fqdn: fqdn,
+                                           hostname: hostname,
+                                           timestamp: timestamp)
 
         {
-          :job_id => response['job_id'],
-          :execution_id => response['execution_id'],
+          job_id: response['job_id'],
+          execution_id: response['execution_id']
         }
       end
 
@@ -55,12 +53,10 @@ module Minicron
       # @param [Integer] execution_id
       # @param [Integer] timestamp
       # @return [Hash]
-      def start(job_id, execution_id, timestamp)
+      def start(_job_id, execution_id, timestamp)
         # Send a job execution status to the server
-        response = send("/execution/start", {
-          :execution_id => execution_id,
-          :timestamp => timestamp,
-        })
+        response = send('/execution/start', execution_id: execution_id,
+                                            timestamp: timestamp)
 
         response
       end
@@ -71,12 +67,10 @@ module Minicron
       # @param [Integer] execution_id
       # @param [Integer] timestamp
       # @return [Hash]
-      def finish(job_id, execution_id, timestamp)
+      def finish(_job_id, execution_id, timestamp)
         # Send a job execution status to the server
-        response = send("/execution/finish", {
-          :execution_id => execution_id,
-          :timestamp => timestamp,
-        })
+        response = send('/execution/finish', execution_id: execution_id,
+                                             timestamp: timestamp)
 
         response
       end
@@ -89,11 +83,9 @@ module Minicron
       # @return [Hash]
       def exit(job_id, execution_id, exit_status)
         # Send a job execution status to the server
-        response = send("/execution/exit", {
-          :job_id => job_id,
-          :execution_id => execution_id,
-          :exit_status => exit_status,
-        })
+        response = send('/execution/exit', job_id: job_id,
+                                           execution_id: execution_id,
+                                           exit_status: exit_status)
 
         response
       end
@@ -106,11 +98,9 @@ module Minicron
       # @return [Hash]
       def output(job_id, execution_id, output)
         # Send the job execution output to the server
-        response = send("/execution/output", {
-          :job_id => job_id,
-          :execution_id => execution_id,
-          :output => output,
-        })
+        response = send('/execution/output', job_id: job_id,
+                                             execution_id: execution_id,
+                                             output: output)
 
         response
       end
