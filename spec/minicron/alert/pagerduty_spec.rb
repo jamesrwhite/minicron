@@ -16,10 +16,10 @@ describe Minicron::Alert::PagerDuty do
         pagerduty = Minicron::Alert::PagerDuty.new
         time = Time.now.utc
         options = {
-          :job_id => 1,
-          :expected_at => time,
-          :execution_id => 2,
-          :kind => 'miss'
+          job_id: 1,
+          expected_at: time,
+          execution_id: 2,
+          kind: 'miss'
         }
         message = "Job #1 failed to execute at its expected time - #{time}"
 
@@ -31,11 +31,11 @@ describe Minicron::Alert::PagerDuty do
       it 'should return the correct message' do
         pagerduty = Minicron::Alert::PagerDuty.new
         options = {
-          :job_id => 1,
-          :execution_id => 2,
-          :kind => 'fail'
+          job_id: 1,
+          execution_id: 2,
+          kind: 'fail'
         }
-        message = "Execution #2 of Job #1 failed"
+        message = 'Execution #2 of Job #1 failed'
 
         expect(pagerduty.get_message(options)).to eq message
       end
@@ -45,7 +45,7 @@ describe Minicron::Alert::PagerDuty do
       it 'should raise an Exception' do
         pagerduty = Minicron::Alert::PagerDuty.new
         options = {
-          :kind => 'derp'
+          kind: 'derp'
         }
 
         expect do
@@ -59,7 +59,7 @@ describe Minicron::Alert::PagerDuty do
     it 'should trigger an alert on the pagerduty client' do
       pagerduty = Minicron::Alert::PagerDuty.new
 
-      expect(pagerduty.instance_variable_get(:@client)).to receive(:trigger).with('title', :message => 'yo')
+      expect(pagerduty.instance_variable_get(:@client)).to receive(:trigger).with('title', message: 'yo')
 
       pagerduty.send('title', 'yo')
     end
