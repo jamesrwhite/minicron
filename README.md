@@ -1,23 +1,13 @@
-minicron
-=======
+# minicron
 
 [![Build Status](http://img.shields.io/travis/jamesrwhite/minicron.svg)](http://travis-ci.org/jamesrwhite/minicron)
 [![Code Climate](http://img.shields.io/codeclimate/github/jamesrwhite/minicron.svg)](https://codeclimate.com/github/jamesrwhite/minicron)
 [![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
 [![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)
 
->
-> ### Looking for an additional maintainer!
-> Contact me via [email](mailto:dev.jameswhite+minicron@gmail.com) or [twitter](https://twitter.com/jamesrwhite)
-> if interested.
->
+minicron makes it simple to monitor your cron jobs and ensure they are running both correctly and on schedule.
 
-minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be
-thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your
-server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point
-where data from one or many instances of the CLI is received and stored in a database. The Hub also provides
-a web interface to the data and makes it easy to manage your cron jobs.
-
+- [Overview](#overview)
 - [Background](#background)
 - [Features](#features)
 - [Requirements](#requirements)
@@ -31,27 +21,26 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Credit](#credit)
 - [License](#license)
 
-Screenshots
-------------
+## Screenshots
 
 <img src="http://f.cl.ly/items/1k1h3n2A3Z3P3v2o0733/Image%202014-04-15%20at%2012.50.56%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/0c27341m2l1E230B0q1l/Image%202014-04-15%20at%2012.40.42%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/0Y2O0P0j012s3C3t3a3E/Image%202014-04-15%20at%2012.39.19%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/2R1f2m350W46423c220D/Image%202014-04-15%20at%2012.32.41%20am.png" height="175"/>
 
-Background
------------
+## Overview
 
-I initially developed minicron as part of my dissertation at university. The inspiration for developing minicron comes
-largely from my experience and frustrations using cron, in particular my time spent working at [Miniclip](http://www.miniclip.com)
-(which is where the name comes from, miniclip.. minicron, get it?) where the management and monitoring of cron jobs at times proved
-to be tricky!
+minicron runs your jobs via it's easy to install "agent" that lives on your and relays the job data back to the
+"hub" (web ui) where you can view it and set up alerts to ensure the job is running correctly.
 
-Features
----------
+## Background
+
+I initially developed minicron as part of my dissertation at university in 2014. The motivation for developing minicron comes
+largely from my experience and frustrations using cron both in a personal and professional capacity.
+
+## Features
 
 - Web UI
-  - CRUD for cron jobs using ssh
   - GUI for cron schedule create/read/update
   - View realtime output/status as jobs run
   - Historical data for all job executions
@@ -195,13 +184,6 @@ option.
 See [nginx.conf](config/nginx.conf) for an example of
 how to run minicron behind a reverse proxy.
 
-#### Connecting to a host via SSH
-
-To be able to perform CRUD operations on the crontab minicron needs to connect via SSH to the host.
-When you set up a host minicron automatically creates a public/private key pair for you and stores it
-in ````~/.ssh```` on the host the minicron server is being run on using the naming schema ````minicron_host_*HOST_ID*_rsa(.pub)````.
-You will then to add the public key into the remote hosts authorized_keys file.
-
 #### Version
 
 Like many command line programs minicron will show its version number when the global options ````-v````
@@ -223,11 +205,6 @@ As mentioned previously minicron is still under development and as such is missi
 security is concerned. For example authentication still needs to be added.
 
   > **It is not recommended that you allow your minicron host to be accessible via the public internet!**
-
-Obviously without authentication anyone who knew the address of your minicron host would be able to set up
-a potentially malicious job on one of your servers! Future versions may be secure enough to expose publicly but personally
-I still would not recommend it, minicron is designed to be an internal tool and should be behind a firewall that only allows
-connections from an internal network and/or a VPN.
 
 Versioning
 -----------
@@ -256,7 +233,6 @@ on this but until then some rough thoughts in no real order..
 - Better test coverage for core features
 - More 3rd party alerting integrations
 - REST API
-- Revision control for changes and acitvity tracking
 - Better experience on mobile/tablet
 - Improved security through authentication and permissions
 - Better configuration management

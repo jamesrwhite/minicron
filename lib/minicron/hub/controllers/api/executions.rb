@@ -12,17 +12,6 @@ class Minicron::Hub::App
           host = Minicron::Hub::Host.create!(
             name: params[:hostname],
             fqdn: params[:fqdn],
-            user: params[:user],
-            host: request.ip, # TODO: ensure this is the correct header if behind a reverse proxy etc
-            port: 22
-          )
-
-          # Generate a new SSH key - TODO: add passphrase
-          key = Minicron.generate_ssh_key('host', host.id, host.fqdn)
-
-          # And finally we store the public key in te db with the host for convenience
-          Minicron::Hub::Host.where(id: host.id).update_all(
-            public_key: key.ssh_public_key
           )
         end
 
