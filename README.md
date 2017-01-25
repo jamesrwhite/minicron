@@ -250,22 +250,9 @@ Based on the following guidelines:
 Roadmap
 --------
 
-I'm going to work out a proper roadmap for the epic journey towards 1.0 in a few weeks when I have more time to focus
-on this but until then some rough thoughts in no real order..
-
-- More robust handling of failure in various places/situations
-- Better test coverage for core features
-- More 3rd party alerting integrations
-- REST API
-- Revision control for changes and acitvity tracking
-- Better experience on mobile/tablet
-- Improved security through authentication and permissions
-- Better configuration management
-- Per job configs? Not sure exactly how this would work but it would be handy
-  [#82](https://github.com/jamesrwhite/minicron/issues/82)
-- Better performance when lots of data exists in the system (pagination, lazy loading etc)
-- UI improvements, it's just tweaked bootstrap 3 at the moment
-- Various other improvements that hopefully already have issues assigned for them..
+After thinking a lot about the future of minicron and it's eventual 1.0 release I've decided to focus it solely on
+monitoring  cron jobs and doing that really well and leave the management side to other tools. All development on this
+effort will be happening in the develop branch. I'll be putting together a 1.0 milestone soon.
 
 Contributing
 ------------
