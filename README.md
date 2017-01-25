@@ -6,12 +6,6 @@ minicron
 [![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
 [![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)
 
->
-> ### Looking for an additional maintainer!
-> Contact me via [email](mailto:dev.jameswhite+minicron@gmail.com) or [twitter](https://twitter.com/jamesrwhite)
-> if interested.
->
-
 minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be
 thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your
 server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point
@@ -252,7 +246,8 @@ Roadmap
 
 After thinking a lot about the future of minicron and it's eventual 1.0 release I've decided to focus it solely on
 monitoring  cron jobs and doing that really well and leave the management side to other tools. All development on this
-effort will be happening in the develop branch. I'll be putting together a 1.0 milestone soon.
+effort will be happening in the [develop](https://github.com/jamesrwhite/minicron/tree/develop) branch. I'll be
+putting together a 1.0 milestone soon.
 
 Contributing
 ------------
