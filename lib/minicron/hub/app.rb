@@ -45,7 +45,7 @@ module Minicron::Hub
 
       # Used to enable asset compression, currently nothing else
       # relies on this
-      set :environment, :production if ENV['MINICRON_IS_PACKAGED']
+      set :environment, :production
 
       # Force the encoding to be UTF-8 to prevent assetpack encoding issues
       Encoding.default_external = Encoding::UTF_8
