@@ -1,0 +1,28 @@
+<header class="clearfix">
+  <h2>Sign In</h2>
+</header>
+<hr/>
+
+<form class="form-horizontal" role="form" method="POST">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Email</label>
+
+    <div class="col-sm-10">
+      <input name="email" class="form-control" type="email" required maxlength="255" value="<%= @previous[:email] %>" placeholder="Your email address"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Password</label>
+
+    <div class="col-sm-10">
+      <input name="password" class="form-control" type="password" required placeholder="Your password"/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-success" value="Sign In"/>
+    </div>
+  </div>
+</form>
