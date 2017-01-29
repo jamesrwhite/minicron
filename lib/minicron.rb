@@ -15,6 +15,7 @@ module Minicron
   class CronError < Error; end
   class ValidationError < Error; end
   class ClientError < Error; end
+  class AuthError < Error; end
 
   # Default configuration, this can be overriden
   @config = {
