@@ -1,7 +1,6 @@
 require 'minicron/constants'
 require 'active_record'
 require 'toml'
-require 'sshkey'
 require 'stringio'
 require 'active_support/core_ext/time'
 
@@ -52,9 +51,6 @@ module Minicron
       },
       'database' => {
         'type' => 'sqlite'
-      },
-      'ssh' => {
-        'connect_timeout' => 10
       }
     },
     'alerts' => {

@@ -40,8 +40,6 @@ timezone = "UTC"
   # database = "minicron"
   # username = "minicron"
   # password = "password"
-  [server.ssh]
-  connect_timeout = 10
 
 # Alerting options
 [alerts]
