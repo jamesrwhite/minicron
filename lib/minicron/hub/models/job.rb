@@ -3,9 +3,10 @@ require 'active_record'
 module Minicron
   module Hub
     class Job < ActiveRecord::Base
-      belongs_to :host
+      belongs_to :host, counter_cache: true
       has_many :executions, dependent: :destroy
       has_many :schedules, dependent: :destroy
+      has_many :alerts, dependent: :destroy
 
       validates :name,    presence: true, uniqueness: true
       validates :command, presence: true
