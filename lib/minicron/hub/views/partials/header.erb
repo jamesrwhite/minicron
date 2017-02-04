@@ -12,12 +12,17 @@
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
-      <li>
+      <li class="dropdown">
         <% if signed_in? %>
-          <div class="nav-user">
-            <img width="40" height="40" src="<%= current_user.avatar %>?s=40"/>
+          <a href="#" class="dropdown-toggle nav-user" data-toggle="dropdown">
+            <!-- <img width="40" height="40" src="<%= current_user.avatar %>?s=40"/> -->
             <span><%= current_user.name %></span>
-          </div>
+          </a>
+          <ul class="dropdown-menu">
+            <form action="<%= "#{route_prefix}/auth/sign-out" %>" method="POST">
+              <input type="submit" value="Sign Out"/>
+            </form>
+          </ul>
         <% else %>
           <a href="<%= "#{route_prefix}/auth/sign-in" %>" title="Sign In">Sign In</a>
         <% end %>

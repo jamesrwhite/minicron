@@ -6,7 +6,7 @@
       recent_executions = Minicron::Hub::Execution.all
                                                   .order(:created_at => :desc, :started_at => :desc)
                                                   .includes(:job => :host)
-                                                  .limit(10)
+                                                  .limit(15)
     %>
     <% recent_executions.each do |execution| %>
       <a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="list-group-item clearfix<%= if defined?(@execution) and @execution.id == execution.id then ' active' else nil end %>">

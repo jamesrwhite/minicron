@@ -2,9 +2,6 @@ module Minicron
   module Hub
     module Middleware
       class Auth
-        # Routes we don't need to enforce auth on
-        public_routes = ["/auth", "/css", "/js", "/fonts", "/__better_errors"]
-
         def initialize(app, options={})
           @app = app
           @options = options
@@ -16,16 +13,18 @@ module Minicron
 
           # Authenticate the user if the route is protected
           if protected?(req.fullpath)
-            # If we have a user and password in a POST request try and auth
-            if req.post? && req.params["email"] && req.params["password"]
-              # Authenticate the user
-              user = Minicron::Hub::User.auth(req.params["email"], req.params["password"])
+            # Check this user exists in the db
+            valid = req.session[:user_id] != nil && Minicron::Hub::User.exists?(req.session[:user_id])
 
-              # Write their user id into the session if it existed
-              if user
-                req.session[:user_id] = user.id
-              end
-            end
+            # If the user has bad data in their session for some reason, remove it
+            req.session.delete(:user_id) unless valid
+
+            # If not redirect to the home page
+            return [
+              301,
+              {'Location' => "#{Minicron::Transport::Server.get_prefix}/auth/sign-in"},
+              []
+            ] unless valid
           end
 
           # Call the next middleware in the chain
@@ -37,7 +36,10 @@ module Minicron
         private
 
         def protected?(path)
-          !path.start_with?(*@public_routes)
+          # Routes we don't need to enforce auth on
+          public_routes = ["/auth", "/api", "/assets", "/favicon.ico", "/__better_errors"]
+
+          !path.start_with?(*public_routes)
         end
       end
     end
