@@ -3,13 +3,13 @@
 deps:
 	gem install bundler
 
-build: deps
+build:
 	bundle
 	rake build
 	rake clean
 
-install: deps build
+install:
 	rake install
 
-test: deps
+test:
 	bundle exec rspec
