@@ -246,8 +246,7 @@ Roadmap
 
 After thinking a lot about the future of minicron and it's eventual 1.0 release I've decided to focus it solely on
 monitoring  cron jobs and doing that really well and leave the management side to other tools. All development on this
-effort will be happening in the [develop](https://github.com/jamesrwhite/minicron/tree/develop) branch. I'll be
-putting together a 1.0 milestone soon.
+effort will be happening in the [1.0-dev](https://github.com/jamesrwhite/minicron/tree/1.0-dev) branch.
 
 Contributing
 ------------
