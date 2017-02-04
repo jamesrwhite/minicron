@@ -1,7 +1,6 @@
 require 'minicron'
 require 'insidious'
 require 'rake'
-require 'minicron/hub/app'
 require 'active_record'
 require 'minicron/transport'
 require 'minicron/transport/client'
