@@ -3,7 +3,7 @@ require 'active_record'
 module Minicron
   module Hub
     class Execution < ActiveRecord::Base
-      belongs_to :job
+      belongs_to :job, counter_cache: true
       has_many :job_execution_outputs, dependent: :destroy
       has_many :alerts, dependent: :destroy
 
