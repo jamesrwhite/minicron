@@ -29,8 +29,4 @@ builds/*.tar.gz
 my.config.toml
 
 # Builds
-build/minicron-*
-build/packaging/traveling*
-build/geminabox
-build/gem-server/data
-build/gem-server/server.pid
+pkg/

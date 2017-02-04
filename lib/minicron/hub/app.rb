@@ -14,23 +14,51 @@ require 'pathname'
 require 'ansi-to-html'
 require 'sinatra/flash'
 require 'cron2english'
+require 'better_errors'
 
 module Minicron::Hub
   class App < Sinatra::Base
-    enable :sessions
+    # Connect to the database
+    Minicron.establish_db_connection(
+      Minicron.config['server']['database'],
+      Minicron.config['verbose']
+    )
 
+    # Load all our models
+    Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
+      require model
+    end
+
+    # Load all our controllers
+    Dir[File.dirname(__FILE__) + '/controllers/**/*.rb'].each do |controller|
+      require controller
+    end
+
+    # Load all our middlewares
+    Dir[File.dirname(__FILE__) + '/middleware/**/*.rb'].each do |middleware|
+      require middleware
+    end
+
+    # Middleware
+    use Rack::CommonLogger
+    use Rack::ShowExceptions
+    use BetterErrors::Middleware
+    BetterErrors.application_root = __dir__
+    use Rack::Session::Cookie, key: Minicron.config['server']['session']['name'],
+                               domain: Minicron.config['server']['session']['domain'],
+                               path: Minicron.config['server']['session']['path'],
+                               expire_after: Minicron.config['server']['session']['ttl'],
+                               secret: Minicron.config['server']['session']['secret']
+
+    # Extensions
     register Sinatra::Flash
     register Sinatra::AssetPack
 
+    # Auth middleware
+    use Minicron::Hub::Middleware::Auth
+
     # Set the application root
     set :root, Minicron::HUB_PATH
-
-    configure :development do
-      if defined?(BetterErrors)
-        use BetterErrors::Middleware
-        BetterErrors.application_root = __dir__
-      end
-    end
 
     # General Sinatra configuration
     configure do
@@ -81,6 +109,16 @@ module Minicron::Hub
 
     # Register our helpers
     helpers do
+      def signed_in?
+        session[:user_id] != nil
+      end
+
+      def current_user
+        nil if !signed_in?
+
+        Minicron::Hub::User.find(session[:user_id])
+      end
+
       def route_prefix
         Minicron::Transport::Server.get_prefix
       end
@@ -112,26 +150,8 @@ module Minicron::Hub
       end
     end
 
-    # Called on class initilisation, sets up the database and requires all
-    # the application files
     def initialize
       super
-
-      # Connect to the database
-      Minicron.establish_db_connection(
-        Minicron.config['server']['database'],
-        Minicron.config['verbose']
-      )
-
-      # Load all our models
-      Dir[File.dirname(__FILE__) + '/models/*.rb'].each do |model|
-        require model
-      end
-
-      # Load all our controllers
-      Dir[File.dirname(__FILE__) + '/controllers/**/*.rb'].each do |controller|
-        require controller
-      end
     end
   end
 end

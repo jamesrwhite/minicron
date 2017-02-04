@@ -21,24 +21,27 @@ module Minicron
     # @param opts [Hash] The Commander provided options hash
     def self.parse_config(opts)
       # Parse the file config
-      Minicron.parse_file_config(opts.config)
+      config = Minicron.parse_file_config(opts.config)
 
       # Parse the cli options
       Minicron.parse_config_hash(
-        'verbose' => opts.verbose,
-        'debug' => opts.debug,
-        'client' => {
-          'cli' => {
-            'mode' => opts.mode,
-            'dry_run' => opts.dry_run
+        {
+          'verbose' => opts.verbose,
+          'debug' => opts.debug,
+          'client' => {
+            'cli' => {
+              'mode' => opts.mode,
+              'dry_run' => opts.dry_run
+            }
+          },
+          'server' => {
+            'host' => opts.host,
+            'port' => opts.port,
+            'path' => opts.path,
+            'pid_file' => opts.pid_file
           }
         },
-        'server' => {
-          'host' => opts.host,
-          'port' => opts.port,
-          'path' => opts.path,
-          'pid_file' => opts.pid_file
-        }
+        config
       )
     end
 

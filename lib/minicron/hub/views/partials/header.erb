@@ -10,5 +10,18 @@
       <li><a class="<%= 'active' if nav_page == :host %>" href="<%= "#{route_prefix}/hosts" %>">Hosts</a></li>
       <li><a class="<%= 'active' if nav_page == :alert %>" href="<%= "#{route_prefix}/alerts" %>">Alerts</a></li>
     </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <% if signed_in? %>
+          <div class="nav-user">
+            <img width="40" height="40" src="<%= current_user.avatar %>?s=40"/>
+            <span><%= current_user.name %></span>
+          </div>
+        <% else %>
+          <a href="<%= "#{route_prefix}/auth/sign-in" %>" title="Sign In">Sign In</a>
+        <% end %>
+      </li>
+    </ul>
   </div>
 </div>

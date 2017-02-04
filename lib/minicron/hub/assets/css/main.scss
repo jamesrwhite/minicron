@@ -27,6 +27,29 @@ body {
   margin-bottom: 0;
 }
 
+// Remove padding on the auth box link
+.nav-user {
+  padding-top: 12px;
+  color: white;
+  margin-right: 0;
+
+  img {
+    border-radius: 40px;
+  }
+
+  span {
+    color: white;
+    margin-left: 10px;
+  }
+}
+
+// Remove weird right margin from right nav
+@media (min-width: 768px) {
+  .navbar-nav.navbar-right:last-child {
+    margin-right: 0;
+  }
+}
+
 // Fix z-index issue bootstrap tooltips
 .tooltip {
   position: fixed;

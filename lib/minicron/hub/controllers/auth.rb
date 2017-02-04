@@ -9,12 +9,8 @@ class Minicron::Hub::App
     @previous = Minicron::Hub::User.new
 
     begin
-      # Find the user based on their email address
-      user = Minicron::Hub::User.where(email: params[:email]).first
-
-      # If we couldn't find the user by email or the password was incorrect
-      # raise an error without giving away what was wrong
-      if !user || !user.valid_password?(params[:password])
+      # The actual signing in is handled in the auth middleware
+      if !signed_in?
         raise Minicron::AuthError, "Invalid credentials"
       end
 
