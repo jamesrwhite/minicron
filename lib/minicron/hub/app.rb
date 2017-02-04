@@ -5,7 +5,6 @@ rescue LoadError
 end
 
 require 'active_record'
-require 'sinatra/assetpack'
 require 'minicron'
 require 'sinatra/base'
 require 'sinatra/json'
@@ -15,6 +14,7 @@ require 'ansi-to-html'
 require 'sinatra/flash'
 require 'cron2english'
 require 'better_errors'
+require 'sinatra/asset_pipeline'
 
 module Minicron::Hub
   class App < Sinatra::Base
@@ -39,6 +39,41 @@ module Minicron::Hub
       require middleware
     end
 
+    configure do
+      # Set the application root
+      set :root, Minicron::HUB_PATH
+
+      # Always compress assets
+      set :environment, :production
+
+      # Serve static assets from ./public
+      set :public_folder, "#{Minicron::HUB_PATH}/public"
+
+      # Don't log them. We'll do that ourself
+      set :dump_errors, false
+
+      # Don't capture any errors. Throw them up the stack
+      set :raise_errors, true
+
+      # Disable internal middleware for presenting errors as HTML
+      set :show_exceptions, false
+
+      # Include these files when precompiling assets
+      set :assets_precompile, %w(app.js app.css *.png *.jpg *.svg *.eot *.ttf *.woff *.woff2)
+
+      # Asset set up
+      set :assets_paths, %w(assets/sass assets/js assets/fonts)
+
+      # CSS minification
+      set :assets_css_compressor, :sass
+
+      # JavaScript minification
+      set :assets_js_compressor, :uglifier
+
+      # Force the encoding to be UTF-8
+      Encoding.default_external = Encoding::UTF_8
+    end
+
     # Middleware
     use Rack::CommonLogger
     use Rack::ShowExceptions
@@ -52,60 +87,10 @@ module Minicron::Hub
 
     # Extensions
     register Sinatra::Flash
-    register Sinatra::AssetPack
+    register Sinatra::AssetPipeline
 
     # Auth middleware
     use Minicron::Hub::Middleware::Auth
-
-    # Set the application root
-    set :root, Minicron::HUB_PATH
-
-    # General Sinatra configuration
-    configure do
-      # Don't log them. We'll do that ourself
-      set :dump_errors, false
-
-      # Don't capture any errors. Throw them up the stack
-      set :raise_errors, true
-
-      # Disable internal middleware for presenting errors as HTML
-      set :show_exceptions, false
-
-      # Used to enable asset compression, currently nothing else
-      # relies on this
-      set :environment, :production
-
-      # Force the encoding to be UTF-8 to prevent assetpack encoding issues
-      Encoding.default_external = Encoding::UTF_8
-    end
-
-    # Configure how we serve assets
-    assets do
-      serve '/css',   from: 'assets/css'
-      serve '/js',    from: 'assets/js'
-      serve '/fonts', from: 'assets/fonts'
-
-      js_compression :simple
-
-      # Set up the application css
-      css :app, '/css/all.css', [
-        '/css/bootswatch.min.css',
-        '/css/main.css',
-        '/css/perfect-scrollbar-0.4.10.min.css'
-      ]
-
-      # Set up the application javascript
-      js :app, '/js/all.js', [
-        # Dependencies, the order of these is important
-        '/js/jquery-2.1.0.min.js',
-        '/js/bootstrap-3.1.1.min.js',
-        '/js/moment-2.5.1.min.js',
-        '/js/perfect-scrollbar-0.4.10.with-mousewheel.min.js',
-
-        '/js/application.js',
-        '/js/schedules.js'
-      ]
-    end
 
     # Register our helpers
     helpers do

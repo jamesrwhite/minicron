@@ -1,0 +1,21 @@
+#schedule-editor {
+  .panel > a:hover {
+    text-decoration: none;
+  }
+
+  .tab-pane {
+    padding: 25px 0 10px 0;
+  }
+
+  .btn-group {
+    display: block;
+
+    .btn-primary {
+      border-radius: 0;
+    }
+  }
+}
+
+#schedule-input {
+  margin-bottom: 15px;
+}

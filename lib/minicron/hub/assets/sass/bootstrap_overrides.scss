@@ -1,0 +1,10 @@
+// Fix z-index issue bootstrap tooltips
+.tooltip {
+  position: fixed;
+}
+
+// Flash alerts
+.alert.flash {
+  border-radius: 0;
+  margin-bottom: 0;
+}

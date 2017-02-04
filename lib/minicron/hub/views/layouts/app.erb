@@ -1,13 +1,13 @@
 <!doctype html>
 <html>
 <head>
-  <%= css :app, :media => 'screen' %>
+  <%= stylesheet_tag 'app' %>
   <title>minicron</title>
 </head>
 <body>
   <%= erb :'partials/header' %>
 
-  <div class="main-container clearfix">
+  <div class="container clearfix">
     <% if flash[:success] %>
       <div class="flash alert alert-success" role="alert"><%= flash[:success] %></div>
     <% end %>
@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <%= js :app, :media => 'screen' %>
+  <%= javascript_tag 'app' %>
   <script>
     window.Minicron.config = {
       path: '<%= Minicron.config['server']['path'] %>'
