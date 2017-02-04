@@ -79,6 +79,8 @@ module Minicron::Hub
     use Rack::ShowExceptions
     use BetterErrors::Middleware
     BetterErrors.application_root = __dir__
+
+    # Enable coookie based sessions
     use Rack::Session::Cookie, key: Minicron.config['server']['session']['name'],
                                domain: Minicron.config['server']['session']['domain'],
                                path: Minicron.config['server']['session']['path'],
@@ -89,13 +91,16 @@ module Minicron::Hub
     register Sinatra::Flash
     register Sinatra::AssetPipeline
 
+    # Cache Headers middleware
+    use Minicron::Hub::Middleware::CacheHeaders
+
     # Auth middleware
     use Minicron::Hub::Middleware::Auth
 
     # Register our helpers
     helpers do
       def signed_in?
-        session[:user_id] != nil
+        session[:user_id] != nil && Minicron::Hub::User.exists?(session[:user_id])
       end
 
       def current_user
