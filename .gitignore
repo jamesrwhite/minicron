@@ -30,3 +30,6 @@ my.config.toml
 
 # Builds
 pkg/
+
+# Assets
+lib/minicron/hub/public

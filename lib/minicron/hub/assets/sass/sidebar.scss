@@ -1,0 +1,32 @@
+.sidebar {
+  width: 25%;
+  padding: 0;
+  border: 0;
+  margin: 0;
+
+  h2 {
+    font-weight: bold;
+    font-size: 15px;
+    margin: 0;
+    padding: 25px 13px;
+  }
+
+  .execution-status {
+    margin-top: 13px;
+  }
+
+  .execution-info {
+    font-size: 10px;
+  }
+
+  .list-group {
+    margin-bottom: 0;
+  }
+
+  .list-group-item:first-child {
+    border-radius: 0;
+  }
+
+  a.list-group-item:hover {
+  }
+}

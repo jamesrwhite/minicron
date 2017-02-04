@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.post_install_message  = 'Thanks for installing minicron!'
 
   spec.require_paths = ['lib']
-  spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,db,spec}/**/*']
+  spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,db,spec}/**/*', 'lib/minicron/hub/public/assets/.sprockets*']
   spec.test_files    = Dir['{spec}/**/*']
   spec.executables << 'minicron'
 
@@ -26,7 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sinatra', '~> 1.4', '>= 1.4.4'
   spec.add_runtime_dependency 'erubis', '~> 2.7'
   spec.add_runtime_dependency 'activerecord', '~> 5.0'
-  spec.add_runtime_dependency 'sinatra-assetpack', '0.3.3' # TODO: replace this with something else
   spec.add_runtime_dependency 'sass', '~> 3.2', '>= 3.2.14'
   spec.add_runtime_dependency 'parse-cron', '~> 0.1', '>= 0.1.4'
   spec.add_runtime_dependency 'mail', '~> 2.6'
@@ -47,9 +46,11 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'slack-notifier', '~> 1.5'
   spec.add_runtime_dependency 'json', '~> 2.0'
   spec.add_runtime_dependency 'scrypt', '~> 2.0'
+  spec.add_runtime_dependency 'sinatra-asset-pipeline', '~> 1.0'
+  spec.add_runtime_dependency 'uglifier', '~> 3.0'
 
   spec.add_development_dependency 'bundler', '~> 1.14'
-  spec.add_development_dependency 'rake', '~> 10.4'
+  spec.add_development_dependency 'rake', '~> 11.2'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'simplecov', '~> 0.8'
   spec.add_development_dependency 'better_errors', '~> 2.1'
