@@ -12,6 +12,7 @@ server(s) and executes your cron command and reports the status back to the Hub.
 where data from one or many instances of the CLI is received and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.
 
+- [Roadmap](#roadmap)
 - [Background](#background)
 - [Features](#features)
 - [Requirements](#requirements)
@@ -19,7 +20,6 @@ a web interface to the data and makes it easy to manage your cron jobs.
 - [Usage](#usage)
 - [Security](#security)
 - [Versioning](#versioning)
-- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Support](#support)
 - [Credit](#credit)
@@ -32,6 +32,16 @@ Screenshots
 <img src="http://f.cl.ly/items/0c27341m2l1E230B0q1l/Image%202014-04-15%20at%2012.40.42%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/0Y2O0P0j012s3C3t3a3E/Image%202014-04-15%20at%2012.39.19%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/2R1f2m350W46423c220D/Image%202014-04-15%20at%2012.32.41%20am.png" height="175"/>
+
+Roadmap
+-------
+
+After thinking a lot about the future of minicron and it's long overdue 1.0 release I've decided to focus it solely on 
+monitoring cron jobs and doing that really well and leave the management side [to](https://www.chef.io)
+[other](https://puppet.com/) [tools](https://www.ansible.com/). As such I'm removing the features related to SSH
+based magement of jobs, it's possible that in future versions I may revist this but for now I want to focus solely
+on monitoring. All development on this effort will be happening in the
+[1.0-dev](https://github.com/jamesrwhite/minicron/tree/1.0-dev) branch.
 
 Background
 -----------
@@ -87,8 +97,7 @@ If you're using apache as your reverse proxy you need to ensure you have the fol
 - `libapache2-mod-proxy-html`
 - `apache2-utils`
 
-Run the following to enable them and then restart apache
-```a2enmod proxy proxy_html proxy_http xml2enc```
+Run the following to enable them and then restart apache `a2enmod proxy proxy_html proxy_http xml2enc`.
 
 A simple [example config](config/apache.conf) for apache is provided.
 
@@ -240,13 +249,6 @@ Based on the following guidelines:
 * A new *major* release indicates a large change where backwards compatibility is broken.
 * A new *minor* release indicates a normal change that maintains backwards compatibility.
 * A new *patch* release indicates a bugfix or small change which does not affect compatibility.
-
-Roadmap
---------
-
-After thinking a lot about the future of minicron and it's eventual 1.0 release I've decided to focus it solely on
-monitoring  cron jobs and doing that really well and leave the management side to other tools. All development on this
-effort will be happening in the [1.0-dev](https://github.com/jamesrwhite/minicron/tree/1.0-dev) branch.
 
 Contributing
 ------------
