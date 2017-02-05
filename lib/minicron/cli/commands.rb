@@ -171,7 +171,10 @@ module Minicron
             # Set up the job and get the job and execution ids
             unless Minicron.config['client']['dry_run']
               # Get a client instance so we can send data about the job
-              client = Minicron::Transport::Client.new(Minicron.config['client']['api']['base_url'])
+              client = Minicron::Transport::Client.new(
+                Minicron.config['client']['api']['base_url'],
+                Minicron.config['client']['api']['key']
+              )
 
               # Get the command to run
               command = args.first

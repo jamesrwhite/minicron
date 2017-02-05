@@ -24,6 +24,7 @@ module Minicron
     'client' => {
       'dry_run' => false,
       'api' => {
+        'key' => nil,
         'base_url' => 'http://0.0.0.0:9292/api/1.0',
       },
     },

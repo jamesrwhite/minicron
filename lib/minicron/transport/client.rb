@@ -7,8 +7,10 @@ module Minicron
       # Instantiate a new instance of the api client
       #
       # @param base_url [String] The base url of the api
-      def initialize(base_url)
+      # @param api_key [String]
+      def initialize(base_url, api_key)
         @base_url = base_url.chomp("/") # Remove any trailing slash if present
+        @api_key = api_key
         @seq = 1
         @client = Net::HTTP::Persistent.new(name: 'minicron')
       end
@@ -132,9 +134,16 @@ module Minicron
       private
 
       def post(method, data)
-        # Create a POST requests
+        # Build the URI for our api request
         uri = URI("#{@base_url}#{method}")
+
+        # Generate a POST request
         post = Net::HTTP::Post.new(uri.path)
+
+        # Add the api key to the request
+        post['X-API-Key'] = @api_key
+
+        # Set the POST body on the request
         post.set_form_data(data)
 
         # Execute the POST request, TODO: error handling

@@ -40,6 +40,9 @@ module Minicron
         },
         config
       )
+
+      # If an api key is in the env, use that
+      Minicron.config['client']['api']['key'] = ENV['MINICRON_API_KEY'] unless ENV['MINICRON_API_KEY'].nil?
     end
 
     # Used as a helper for yielding command output, returns it in a structured hash

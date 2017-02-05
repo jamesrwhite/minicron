@@ -68,6 +68,7 @@ describe Minicron do
           'client' => {
             'dry_run' => false,
             'api' => {
+              'key' => 'test_api_key',
               'base_url' => 'http://127.0.0.1:9292/api/1.0',
             },
           },

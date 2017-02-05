@@ -8,6 +8,7 @@ debug = false # Useful for debugging
 [client]
   dry_run = false
   [client.api]
+  key = "YOUR_API_KEY"
   base_url = "http://127.0.0.1:9292/api/1.0"
 
 # Server options
