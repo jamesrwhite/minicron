@@ -157,7 +157,6 @@ module Minicron
         cli.command :run do |c|
           c.syntax = "minicron run 'command -option value'"
           c.description = 'Runs the command passed as an argument.'
-          c.option '--mode STRING', String, "How to capture the command output, each 'line' or each 'char'? Default: #{Minicron.config['client']['cli']['mode']}"
           c.option '--dry-run', "Run the command without sending the output to the server.  Default: #{Minicron.config['client']['cli']['dry_run']}"
 
           c.action do |args, opts|
@@ -204,7 +203,7 @@ module Minicron
 
             begin
               # Execute the command and yield the output
-              Minicron::CLI.run_command(args.first, mode: Minicron.config['client']['cli']['mode'], verbose: Minicron.config['verbose']) do |output|
+              Minicron::CLI.run_command(args.first, verbose: Minicron.config['verbose']) do |output|
                 # We need to handle the yielded output differently based on it's type
                 case output[:type]
                 when :start

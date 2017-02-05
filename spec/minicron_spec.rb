@@ -75,7 +75,6 @@ describe Minicron do
               'inactivity_timeout' => 5
             },
             'cli' => {
-              'mode' => 'line',
               'dry_run' => false
             }
           },

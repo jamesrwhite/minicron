@@ -17,7 +17,6 @@ debug = false
   inactivity_timeout = 5
   # CLI options
   [client.cli]
-  mode = "line" # [line, char]
   dry_run = false
 
 # Server options

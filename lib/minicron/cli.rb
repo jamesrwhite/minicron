@@ -30,7 +30,6 @@ module Minicron
           'debug' => opts.debug,
           'client' => {
             'cli' => {
-              'mode' => opts.mode,
               'dry_run' => opts.dry_run
             }
           },
@@ -90,14 +89,11 @@ module Minicron
     # Executes a command in a pseudo terminal and yields the output
     #
     # @param command [String] the command to execute e.g 'ls'
-    # @option options [String] mode ('line') the method to yield the
-    # command output. Either 'line' by line or 'char' by char.
     # @option options [Boolean] verbose whether or not to output extra
     # information for debugging purposes.
     # @yieldparam output [String] output from the command execution
     def self.run_command(command, options = {})
       # Default the options
-      options[:mode] ||= 'line'
       options[:verbose] ||= false
 
       # Record the start time of the command
@@ -123,8 +119,8 @@ module Minicron
           begin
             # Loop until data is no longer being sent to stdout
             until stdout.eof?
-              # One character at a time or one line at a time?
-              output = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
+              # Read in a line of execution output
+              output = stdout.readline
 
               subtract = Time.now.utc
               yield structured :output, output

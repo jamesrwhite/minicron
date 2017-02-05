@@ -33,7 +33,6 @@ module Minicron
         'inactivity_timeout' => 5
       },
       'cli' => {
-        'mode' => 'line',
         'dry_run' => false
       }
     },
