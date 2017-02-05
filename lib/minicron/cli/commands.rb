@@ -259,6 +259,23 @@ module Minicron
           end
         end
       end
+
+      # Add the `minicron config` command
+      # @yieldparam output [String] output from the cli
+      def self.add_config_cli_command(cli)
+        # Add the config command to the cli
+        cli.command :config do |c|
+          c.syntax = "minicron config"
+          c.description = 'Prints out the config minicron is using'
+
+          c.action do |args, opts|
+            # Parse the file and cli config options
+            Minicron::CLI.parse_config(opts)
+
+            puts JSON.pretty_generate(Minicron.config)
+          end
+        end
+      end
     end
   end
 end

@@ -80,6 +80,9 @@ module Minicron
       # Add the db command to the cli
       Minicron::CLI::Commands.add_db_cli_command(@cli)
 
+      # Add the config command to the cli
+      Minicron::CLI::Commands.add_config_cli_command(@cli)
+
       # And off we go!
       @cli.run!
     end
