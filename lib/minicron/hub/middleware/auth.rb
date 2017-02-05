@@ -17,27 +17,39 @@ module Minicron
             api_key = req.env["HTTP_X_API_KEY"]
 
             # Try and find a user that matches the api key
-            user = Minicron::Hub::User.exists?(api_key: api_key)
+            user = api_key ? Minicron::Hub::User.where(api_key: api_key).first : nil
 
-            return [
-              401,
-              {'Content-Type': 'application/json'},
-              ['{"error": "Invalid API credentials"}']
-            ] unless user
+            if user
+              # Add the user to the env so we can use it later
+              env[:user] = user
+            else
+              return [
+                401,
+                {'Content-Type': 'application/json'},
+                ['{"error": "Invalid API credentials"}']
+              ]
+            end
           # Authenticate the user if the route is protected
           elsif protected?(req.fullpath)
-            # Check this user exists in the db
-            valid = req.session[:user_id] != nil && Minicron::Hub::User.exists?(req.session[:user_id])
+            # Get the user id from the session
+            user_id = req.session[:user_id]
 
-            # If the user has bad data in their session for some reason, remove it
-            req.session.delete(:user_id) unless valid
+            # Try and find a user that matches the user id
+            user = user_id ? Minicron::Hub::User.find(req.session[:user_id]) : nil
 
-            # If not redirect to the home page
-            return [
-              301,
-              {'Location' => "#{Minicron::Transport::Server.get_prefix}/auth/sign-in"},
-              []
-            ] unless valid
+            if user
+              # Add the user to the env so we can use it later
+              env[:user] = user
+            else
+              # If the user has bad data in their session for some reason, remove it
+              req.session.delete(:user_id)
+
+              return [
+                301,
+                {'Location' => "#{Minicron::Transport::Server.get_prefix}/auth/sign-in"},
+                []
+              ]
+            end
           end
 
           # Call the next middleware in the chain

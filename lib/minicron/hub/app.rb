@@ -100,13 +100,11 @@ module Minicron::Hub
     # Register our helpers
     helpers do
       def signed_in?
-        session[:user_id] != nil && Minicron::Hub::User.exists?(session[:user_id])
+        request.env[:user] != nil
       end
 
       def current_user
-        nil if !signed_in?
-
-        Minicron::Hub::User.find(session[:user_id])
+        request.env[:user]
       end
 
       def route_prefix
