@@ -20,7 +20,7 @@ module Minicron
         @path = path == '/' ? '/api/v1' : "#{path}/api/v1"
         @port = port
         @seq = 1
-        @client = Net::HTTP::Persistent.new('minicron')
+        @client = Net::HTTP::Persistent.new(name: 'minicron')
       end
 
       # Used to init a job
