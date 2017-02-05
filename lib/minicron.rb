@@ -108,9 +108,14 @@ module Minicron
 
   # Parses the config options from the given hash that matches the expected
   # config format in Minicron.config
-  def self.parse_config_hash(options = {}, config = @config)
+  def self.parse_config_hash(options = {}, config = nil)
+    if config.nil?
+      config = @config
+    end
+
     options.each do |key, value|
       config[key] = {} if config[key].nil?
+
       if value.respond_to?(:each)
         parse_config_hash(value, config[key])
       elsif !value.nil?
