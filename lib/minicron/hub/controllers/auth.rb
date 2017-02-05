@@ -60,6 +60,7 @@ class Minicron::Hub::App
         name: params[:name],
         email: params[:email],
         password: password,
+        api_key: SecureRandom.urlsafe_base64(48)
       )
 
       # Sign them straight in
