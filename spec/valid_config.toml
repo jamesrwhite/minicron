@@ -6,18 +6,9 @@ debug = false
 
 # Client options
 [client]
-  [client.server]
-  scheme = "http" # [http, https]
-  host = "127.0.0.1"
-  # username = "username" # optional for basic auth
-  # password = "password" # optional for basic auth
-  port = 9292
-  path = "/"
-  connect_timeout = 5
-  inactivity_timeout = 5
-  # CLI options
-  [client.cli]
   dry_run = false
+  [client.api]
+  base_url = "http://127.0.0.1:9292/api/1.0"
 
 # Server options
 [server]

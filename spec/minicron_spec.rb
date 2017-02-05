@@ -66,17 +66,10 @@ describe Minicron do
           'verbose' => false,
           'debug' => false,
           'client' => {
-            'server' => {
-              'scheme' => 'http',
-              'host' => '127.0.0.1',
-              'port' => 9292,
-              'path' => '/',
-              'connect_timeout' => 5,
-              'inactivity_timeout' => 5
+            'dry_run' => false,
+            'api' => {
+              'base_url' => 'http://127.0.0.1:9292/api/1.0',
             },
-            'cli' => {
-              'dry_run' => false
-            }
           },
           'server' => {
             'host' => '127.0.0.1',

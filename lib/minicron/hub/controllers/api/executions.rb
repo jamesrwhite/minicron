@@ -1,5 +1,5 @@
 class Minicron::Hub::App
-  post '/api/v1/execution/init' do
+  post '/api/1.0/execution/init' do
     content_type :json
 
     begin
@@ -54,7 +54,7 @@ class Minicron::Hub::App
     end
   end
 
-  post '/api/v1/execution/start' do
+  post '/api/1.0/execution/start' do
     content_type :json
 
     begin
@@ -70,7 +70,7 @@ class Minicron::Hub::App
     end
   end
 
-  post '/api/v1/execution/output' do
+  post '/api/1.0/execution/output' do
     content_type :json
 
     begin
@@ -89,7 +89,7 @@ class Minicron::Hub::App
     end
   end
 
-  post '/api/v1/execution/finish' do
+  post '/api/1.0/execution/finish' do
     content_type :json
 
     begin
@@ -105,7 +105,7 @@ class Minicron::Hub::App
     end
   end
 
-  post '/api/v1/execution/exit' do
+  post '/api/1.0/execution/exit' do
     content_type :json
 
     begin

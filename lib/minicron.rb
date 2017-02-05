@@ -22,19 +22,10 @@ module Minicron
     'verbose' => false,
     'debug' => false,
     'client' => {
-      'server' => {
-        'scheme' => 'http',
-        'host' => '0.0.0.0',
-        'username' => nil,
-        'password' => nil,
-        'port' => 9292,
-        'path' => '/',
-        'connect_timeout' => 5,
-        'inactivity_timeout' => 5
+      'dry_run' => false,
+      'api' => {
+        'base_url' => 'http://0.0.0.0:9292/api/1.0',
       },
-      'cli' => {
-        'dry_run' => false
-      }
     },
     'server' => {
       'host' => '0.0.0.0',

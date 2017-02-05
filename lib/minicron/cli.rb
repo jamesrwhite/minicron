@@ -29,9 +29,7 @@ module Minicron
           'verbose' => opts.verbose,
           'debug' => opts.debug,
           'client' => {
-            'cli' => {
-              'dry_run' => opts.dry_run
-            }
+            'dry_run' => opts.dry_run,
           },
           'server' => {
             'host' => opts.host,
