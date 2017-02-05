@@ -11,8 +11,21 @@ module Minicron
           # Get an easier to work with request object
           req = Rack::Request.new(env)
 
+          # Authenticate API requests using API keys
+          if api_request?(req.fullpath)
+            # Get the API Key from the request
+            api_key = req.env["HTTP_X_API_KEY"]
+
+            # Try and find a user that matches the api key
+            user = Minicron::Hub::User.exists?(api_key: api_key)
+
+            return [
+              401,
+              {'Content-Type': 'application/json'},
+              ['{"error": "Invalid API credentials"}']
+            ] unless user
           # Authenticate the user if the route is protected
-          if protected?(req.fullpath)
+          elsif protected?(req.fullpath)
             # Check this user exists in the db
             valid = req.session[:user_id] != nil && Minicron::Hub::User.exists?(req.session[:user_id])
 
@@ -37,9 +50,15 @@ module Minicron
 
         def protected?(path)
           # Routes we don't need to enforce auth on
-          public_routes = ["/auth", "/api", "/assets", "/favicon.ico", "/__better_errors"]
+          public_routes = ["/auth", "/assets", "/favicon.ico", "/__better_errors"].map do |route|
+            "#{Minicron::Transport::Server.get_prefix}#{route}"
+          end
 
           !path.start_with?(*public_routes)
+        end
+
+        def api_request?(path)
+          path.start_with?("#{Minicron::Transport::Server.get_prefix}/api")
         end
       end
     end
