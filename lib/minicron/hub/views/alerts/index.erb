@@ -6,7 +6,6 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th>ID</th>
       <th>Job</th>
       <th>Kind</th>
       <th>Medium</th>
@@ -18,7 +17,6 @@
   <tbody>
     <% @alerts.each do |alert| %>
       <tr>
-        <td><a href="<%= "#{route_prefix}/alert/#{alert.id}" %>"><%= alert.id %></a></td>
         <td><a href="<%= "#{route_prefix}/job/#{alert.job.id}" %>"><%= alert.job.safe_name %></a></td>
         <td><%= alert.kind %></td>
         <td><%= alert.medium %></td>
