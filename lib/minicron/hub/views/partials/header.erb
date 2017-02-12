@@ -19,9 +19,11 @@
             <span><%= current_user.name %></span>
           </a>
           <ul class="dropdown-menu">
-            <form action="<%= "#{route_prefix}/auth/sign-out" %>" method="POST">
-              <input type="submit" value="Sign Out"/>
-            </form>
+            <li>
+              <form action="<%= "#{route_prefix}/auth/sign-out" %>" method="POST">
+                <input type="submit" value="Sign Out"/>
+              </form>
+            </li>
           </ul>
         <% else %>
           <a href="<%= "#{route_prefix}/auth/sign-in" %>" title="Sign In">Sign In</a>
