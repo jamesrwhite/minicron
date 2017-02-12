@@ -1,16 +1,22 @@
 class Minicron::Hub::App
   get '/jobs' do
     # Look up all the jobs
-    @jobs = Minicron::Hub::Job.all.order(created_at: :desc).includes(:host, :executions)
+    @jobs = Minicron::Hub::Job.belonging_to(current_user)
+                              .includes(:host, :executions)
+                              .all
+                              .order(created_at: :desc)
 
     erb :'jobs/index', layout: :'layouts/app'
   end
 
   get '/job/:id' do
     # Look up the job
-    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
-                             .order('executions.number DESC')
+    @job = Minicron::Hub::Job.belonging_to(current_user)
+                             .includes(:host, :executions, :schedules)
                              .find(params[:id])
+
+    # Sort the executions in code for better perf
+    @job.executions.sort { |a, b| a.number <=> b.number }
 
     erb :'jobs/show', layout: :'layouts/app'
   end
@@ -20,21 +26,22 @@ class Minicron::Hub::App
     @previous = Minicron::Hub::Job.new
 
     # All the hosts for the select dropdown
-    @hosts = Minicron::Hub::Host.all
+    @hosts = Minicron::Hub::Host.belonging_to(current_user).all
 
     erb :'jobs/new', layout: :'layouts/app'
   end
 
   post '/jobs/new' do
     # All the hosts for the select dropdown
-    @hosts = Minicron::Hub::Host.all
+    @hosts = Minicron::Hub::Host.belonging_to(current_user).all
 
     begin
       # First we need to look up the host
-      host = Minicron::Hub::Host.find(params[:host])
+      host = Minicron::Hub::Host.belonging_to(current_user).find(params[:host])
 
       # Try and save the new job
       job = Minicron::Hub::Job.create!(
+        user_id: current_user.id,
         job_hash: Minicron::Transport.get_job_hash(params[:command], host.fqdn),
         name: params[:name],
         command: params[:command],
@@ -45,7 +52,9 @@ class Minicron::Hub::App
       job.save!
 
       # Look up the host and its jobs and job schedules
-      host = Minicron::Hub::Host.includes(jobs: :schedules).find(job.host.id)
+      host = Minicron::Hub::Host.belonging_to(current_user)
+                                .includes(jobs: :schedules)
+                                .find(job.host.id)
 
       # Redirect to the new job
       redirect "#{route_prefix}/job/#{job.id}"
@@ -58,7 +67,9 @@ class Minicron::Hub::App
 
   get '/job/:id/edit' do
     # Find the job
-    @job = Minicron::Hub::Job.includes(:host).find(params[:id])
+    @job = Minicron::Hub::Job.belonging_to(current_user)
+                             .includes(:host)
+                             .find(params[:id])
 
     # All the hosts for the select dropdown
     @hosts = Minicron::Hub::Host.all
@@ -73,7 +84,9 @@ class Minicron::Hub::App
     begin
       Minicron::Hub::Job.transaction do
         # Find the job
-        @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:id])
+        @job = Minicron::Hub::Job.belonging_to(current_user)
+                                 .includes(:host, :schedules)
+                                 .find(params[:id])
 
         # Update the name and command
         @job.name = params[:name]
@@ -87,7 +100,9 @@ class Minicron::Hub::App
         @job.save!
 
         # Look up the host and its jobs and job schedules
-        host = Minicron::Hub::Host.includes(jobs: :schedules).find(@job.host.id)
+        host = Minicron::Hub::Host.belonging_to(current_user)
+                                  .includes(jobs: :schedules)
+                                  .find(@job.host.id)
 
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
@@ -101,9 +116,12 @@ class Minicron::Hub::App
 
   post '/job/:id/status/:status' do
     # Find the job
-    @job = Minicron::Hub::Job.includes(:host, :executions, :schedules)
-                             .order('executions.number DESC')
+    @job = Minicron::Hub::Job.belonging_to(current_user)
+                             .includes(:host, :executions, :schedules)
                              .find(params[:id])
+
+    # Sort the executions in code for better perf
+    @job.executions.sort { |a, b| a.number <=> b.number }
 
     begin
       Minicron::Hub::Job.transaction do
@@ -123,7 +141,9 @@ class Minicron::Hub::App
         @job.save!
 
         # Look up the host and its jobs and job schedules
-        host = Minicron::Hub::Host.includes(jobs: :schedules).find(@job.host.id)
+        host = Minicron::Hub::Host.belonging_to(current_user)
+                                  .includes(jobs: :schedules)
+                                  .find(@job.host.id)
 
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@job.id}"
@@ -137,14 +157,16 @@ class Minicron::Hub::App
 
   get '/job/:id/delete' do
     # Look up the job
-    @job = Minicron::Hub::Job.find(params[:id])
+    @job = Minicron::Hub::Job.belonging_to(current_user).find(params[:id])
 
     erb :'jobs/delete', layout: :'layouts/app'
   end
 
   post '/job/:id/delete' do
     # Look up the job
-    @job = Minicron::Hub::Job.includes(:schedules).find(params[:id])
+    @job = Minicron::Hub::Job.belonging_to(current_user)
+                             .includes(:schedules)
+                             .find(params[:id])
 
     begin
       Minicron::Hub::Job.transaction do
@@ -152,7 +174,9 @@ class Minicron::Hub::App
         Minicron::Hub::Job.destroy(params[:id])
 
         # Look up the host and its jobs and job schedules
-        host = Minicron::Hub::Host.includes(jobs: :schedules).find(@job.host.id)
+        host = Minicron::Hub::Host.belonging_to(current_user)
+                                  .includes(jobs: :schedules)
+                                  .find(@job.host.id)
 
         redirect "#{route_prefix}/jobs"
       end
@@ -166,7 +190,9 @@ class Minicron::Hub::App
 
   get '/job/:job_id/schedule/:schedule_id' do
     # Look up the schedule
-    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
+    @schedule = Minicron::Hub::Schedule.belonging_to(current_user)
+                                       .includes(:job)
+                                       .find(params[:schedule_id])
 
     # Look up the job
     @job = @schedule.job
@@ -179,19 +205,21 @@ class Minicron::Hub::App
     @previous = Minicron::Hub::Schedule.new
 
     # Look up the job
-    @job = Minicron::Hub::Job.find(params[:job_id])
+    @job = Minicron::Hub::Job.belonging_to(current_user).find(params[:job_id])
 
     erb :'jobs/schedules/new', layout: :'layouts/app'
   end
 
   post '/job/:job_id/schedules/new' do
     # Look up the job
-    @job = Minicron::Hub::Job.includes(:host, :schedules).find(params[:job_id])
+    @job = Minicron::Hub::Job.belonging_to(current_user)
+                             .includes(:host, :schedules)
+                             .find(params[:job_id])
 
     begin
       ActiveRecord::Base.transaction do
         # First we need to check a schedule like this doesn't already exist
-        exists = Minicron::Hub::Schedule.exists?(
+        exists = Minicron::Hub::Schedule.belonging_to(current_user).exists?(
           minute: params[:minute].empty? ? nil : params[:minute],
           hour: params[:hour].empty? ? nil : params[:hour],
           day_of_the_month: params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
@@ -207,6 +235,7 @@ class Minicron::Hub::App
 
         # Create the new schedule
         schedule = Minicron::Hub::Schedule.create(
+          user_id: current_user.id,
           minute: params[:minute].empty? ? nil : params[:minute],
           hour: params[:hour].empty? ? nil : params[:hour],
           day_of_the_month: params[:day_of_the_month].empty? ? nil : params[:day_of_the_month],
@@ -220,7 +249,9 @@ class Minicron::Hub::App
       end
 
       # Look up the host
-      host = Minicron::Hub::Host.includes(jobs: :schedules).find(@job.host.id)
+      host = Minicron::Hub::Host.belonging_to(current_user)
+                                .includes(jobs: :schedules)
+                                .find(@job.host.id)
 
       # Redirect to the updated job
       redirect "#{route_prefix}/job/#{@job.id}"
@@ -232,17 +263,21 @@ class Minicron::Hub::App
 
   get '/job/:job_id/schedule/:schedule_id/edit' do
     # Look up the schedule
-    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
+    @schedule = Minicron::Hub::Schedule.belonging_to(current_user)
+                                       .includes(:job)
+                                       .find(params[:schedule_id])
 
     # Look up the job
-    @job = Minicron::Hub::Job.find(params[:job_id])
+    @job = Minicron::Hub::Job.belonging_to(current_user).find(params[:job_id])
 
     erb :'jobs/schedules/edit', layout: :'layouts/app'
   end
 
   post '/job/:job_id/schedule/:schedule_id/edit' do
     # Look up the schedule and job
-    @schedule = Minicron::Hub::Schedule.includes(job: :host).find(params[:schedule_id])
+    @schedule = Minicron::Hub::Schedule.belonging_to(current_user)
+                                       .includes(job: :host)
+                                       .find(params[:schedule_id])
 
     begin
       # To keep the view similar to #new store the job here
@@ -263,7 +298,9 @@ class Minicron::Hub::App
         @schedule.save!
 
         # Look up the host and its jobs and job schedules
-        host = Minicron::Hub::Host.includes(jobs: :schedules).find(@job.host.id)
+        host = Minicron::Hub::Host.belonging_to(current_user)
+                                  .includes(jobs: :schedules)
+                                  .find(@job.host.id)
 
         # Redirect to the updated job
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
@@ -277,14 +314,18 @@ class Minicron::Hub::App
 
   get '/job/:id/schedule/:schedule_id/delete' do
     # Look up the schedule
-    @schedule = Minicron::Hub::Schedule.includes(:job).find(params[:schedule_id])
+    @schedule = Minicron::Hub::Schedule.belonging_to(current_user)
+                                       .includes(:job)
+                                       .find(params[:schedule_id])
 
     erb :'jobs/schedules/delete', layout: :'layouts/app'
   end
 
   post '/job/:id/schedule/:schedule_id/delete' do
     # Find the schedule
-    @schedule = Minicron::Hub::Schedule.includes(job: :host).find(params[:schedule_id])
+    @schedule = Minicron::Hub::Schedule.belonging_to(current_user)
+                                       .includes(job: :host)
+                                       .find(params[:schedule_id])
 
     begin
       Minicron::Hub::Schedule.transaction do
@@ -292,7 +333,9 @@ class Minicron::Hub::App
         Minicron::Hub::Schedule.destroy(params[:schedule_id])
 
         # Look up the host and its jobs and job schedules
-        host = Minicron::Hub::Host.includes(jobs: :schedules).find(@schedule.job.host.id)
+        host = Minicron::Hub::Host.belonging_to(current_user)
+                                  .includes(jobs: :schedules)
+                                  .find(@schedule.job.host.id)
 
         redirect "#{route_prefix}/job/#{@schedule.job.id}"
       end

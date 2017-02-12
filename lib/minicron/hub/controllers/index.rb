@@ -2,6 +2,7 @@ class Minicron::Hub::App
   get '/' do
     # Get the most recent job execution
     recent = Minicron::Hub::Execution
+             .belonging_to(current_user)
              .includes(:job)
              .order(created_at: :desc, started_at: :desc)
              .first

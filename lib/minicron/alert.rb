@@ -23,6 +23,7 @@ module Minicron
 
         # Check if the medium is enabled and alert hasn't already been sent
         next unless value['enabled'] && !sent?(options)
+
         send(
           kind: options[:kind],
           schedule_id: options[:schedule_id],
@@ -64,6 +65,7 @@ module Minicron
 
       # Store that we sent the alert
       Minicron::Hub::Alert.create(
+        user_id: options[:user_id],
         job_id: options[:job_id],
         execution_id: options[:execution_id],
         schedule_id: options[:schedule_id],

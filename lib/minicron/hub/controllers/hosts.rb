@@ -1,15 +1,19 @@
 class Minicron::Hub::App
   get '/hosts' do
     # Look up all the hosts
-    @hosts = Minicron::Hub::Host.all.order(created_at: :desc)
+    @hosts = Minicron::Hub::Host.belonging_to(current_user)
                                 .includes(:jobs)
+                                .all
+                                .order(created_at: :desc)
 
     erb :'hosts/index', layout: :'layouts/app'
   end
 
   get '/host/:id' do
     # Look up the host
-    @host = Minicron::Hub::Host.includes(:jobs).find(params[:id])
+    @host = Minicron::Hub::Host.belonging_to(current_user)
+                               .includes(:jobs)
+                               .find(params[:id])
 
     erb :'hosts/show', layout: :'layouts/app'
   end
@@ -25,6 +29,7 @@ class Minicron::Hub::App
     begin
       # Try and save the new host
       host = Minicron::Hub::Host.create!(
+        user_id: current_user.id,
         name: params[:name],
         fqdn: params[:fqdn],
       )
@@ -43,14 +48,16 @@ class Minicron::Hub::App
 
   get '/host/:id/edit' do
     # Find the host
-    @host = Minicron::Hub::Host.find(params[:id])
+    @host = Minicron::Hub::Host.belonging_to(current_user)
+                               .find(params[:id])
 
     erb :'hosts/edit', layout: :'layouts/app'
   end
 
   post '/host/:id/edit' do
     # Find the host
-    @host = Minicron::Hub::Host.find(params[:id])
+    @host = Minicron::Hub::Host.belonging_to(current_user)
+                               .find(params[:id])
 
     begin
       # Update its data
@@ -70,18 +77,22 @@ class Minicron::Hub::App
 
   get '/host/:id/delete' do
     # Look up the host
-    @host = Minicron::Hub::Host.find(params[:id])
+    @host = Minicron::Hub::Host.belonging_to(current_user)
+                               .find(params[:id])
 
     erb :'hosts/delete', layout: :'layouts/app'
   end
 
   post '/host/:id/delete' do
     # Look up the host
-    @host = Minicron::Hub::Host.includes(jobs: :schedules).find(params[:id])
+    @host = Minicron::Hub::Host.belonging_to(current_user)
+                               .includes(jobs: :schedules)
+                               .find(params[:id])
 
     begin
       # Try and delete the host
-      Minicron::Hub::Host.destroy(params[:id])
+      Minicron::Hub::Host.belonging_to(current_user)
+                         .destroy(params[:id])
 
       redirect "#{route_prefix}/hosts"
     rescue Exception => e

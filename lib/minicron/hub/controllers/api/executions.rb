@@ -5,18 +5,22 @@ class Minicron::Hub::App
     begin
       Minicron::Hub::Host.transaction do
         # Try and find the host
-        host = Minicron::Hub::Host.where(fqdn: params[:fqdn]).first
+        host = Minicron::Hub::Host.belonging_to(current_user)
+                                  .where(fqdn: params[:fqdn])
+                                  .first
 
         # Create it if it didn't exist!
         unless host
           host = Minicron::Hub::Host.create!(
+            user_id: current_user.id,
             name: params[:hostname],
             fqdn: params[:fqdn],
           )
         end
 
         # Validate or create the job
-        job = Minicron::Hub::Job.where(job_hash: params[:job_hash]).first_or_create! do |j|
+        job = Minicron::Hub::Job.belonging_to(current_user).where(job_hash: params[:job_hash]).first_or_create! do |j|
+          j.user_id = current_user.id
           j.job_hash = params[:job_hash]
           j.command = params[:command]
           j.host_id = host.id
@@ -28,7 +32,8 @@ class Minicron::Hub::App
         end
 
         # Get the latest execution number
-        latest_execution = Minicron::Hub::Execution.where(job_id: job.id)
+        latest_execution = Minicron::Hub::Execution.belonging_to(current_user)
+                                                   .where(job_id: job.id)
                                                    .order(id: :desc)
                                                    .limit(1)
                                                    .pluck(:number)
@@ -38,14 +43,17 @@ class Minicron::Hub::App
 
         # Create an execution for this job
         execution = Minicron::Hub::Execution.create!(
+          user_id: current_user.id,
           created_at: Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S'),
           job_id: job.id,
           number: execution_number
         )
 
-        json(job_id: job.id,
-             execution_id: execution.id,
-             execution_number: execution_number)
+        json(
+          job_id: job.id,
+          execution_id: execution.id,
+          execution_number: execution_number
+        )
       end
     rescue Exception => e
       status 500
@@ -58,7 +66,7 @@ class Minicron::Hub::App
     content_type :json
 
     begin
-      Minicron::Hub::Execution.where(id: params[:execution_id]).update_all(
+      Minicron::Hub::Execution.belonging_to(current_user).where(id: params[:execution_id]).update_all(
         started_at: Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
       )
 
@@ -75,6 +83,7 @@ class Minicron::Hub::App
 
     begin
       Minicron::Hub::JobExecutionOutput.create!(
+        user_id: current_user.id,
         execution_id: params[:execution_id],
         output: params[:output],
         timestamp: Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S'),
@@ -93,7 +102,7 @@ class Minicron::Hub::App
     content_type :json
 
     begin
-      Minicron::Hub::Execution.where(id: params[:execution_id]).update_all(
+      Minicron::Hub::Execution.belonging_to(current_user).where(id: params[:execution_id]).update_all(
         finished_at: Time.at(params[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
       )
 
@@ -109,13 +118,14 @@ class Minicron::Hub::App
     content_type :json
 
     begin
-      Minicron::Hub::Execution.where(id: params[:execution_id]).update_all(
+      Minicron::Hub::Execution.belonging_to(current_user).where(id: params[:execution_id]).update_all(
         exit_status: params[:exit_status]
       )
 
       # If the exit status was above 0 we need to trigger a failure alert
       if params[:exit_status].to_i > 0
         Minicron::Alert.send_all(
+          user_id: current_user.id,
           kind: 'fail',
           execution_id: params[:execution_id],
           job_id: params[:job_id]
