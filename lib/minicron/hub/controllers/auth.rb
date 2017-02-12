@@ -1,3 +1,5 @@
+require 'scrypt'
+
 class Minicron::Hub::App
   get '/auth/sign-in' do
     @previous = Minicron::Hub::User.new
