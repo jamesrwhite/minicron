@@ -48,6 +48,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'scrypt', '~> 2.0'
   spec.add_runtime_dependency 'sinatra-asset-pipeline', '~> 1.0'
   spec.add_runtime_dependency 'uglifier', '~> 3.0'
+  spec.add_runtime_dependency 'highline', '~> 1.7'
 
   spec.add_development_dependency 'bundler', '~> 1.14'
   spec.add_development_dependency 'rake', '~> 11.2'
