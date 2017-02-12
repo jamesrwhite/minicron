@@ -16,3 +16,21 @@
     background-color: #f5f5f5;
   }
 }
+
+// User Avatar
+.nav-user img {
+  border-radius: 30px;
+  margin-right: 6px;
+}
+
+// Vertically align left links
+.navbar-nav > li > a, {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 41px;
+}
+
+.navbar-brand {
+  height: auto;
+  line-height: 29px;
+}

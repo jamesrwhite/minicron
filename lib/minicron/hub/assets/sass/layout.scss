@@ -4,7 +4,7 @@ html, body, body > .container {
 
 // Account for static nav bar
 body {
-  padding-top: 51px;
+  padding-top: 62px;
 }
 
 // So we can have two equal width scrollable columns
@@ -22,5 +22,16 @@ body {
 }
 
 .inner {
-  padding: 25px;
+  padding: 15px 25px 25px 25px;
+}
+
+// Header buttons
+header > a, .inner > header > form > input {
+  margin-top: 22px;
+  margin-left: 10px;
+}
+
+// Table buttons
+table td > a {
+  margin-right: 6px;
 }

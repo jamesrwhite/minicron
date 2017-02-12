@@ -3,6 +3,9 @@
   padding: 0;
   border: 0;
   margin: 0;
+  background: #f8f8f8;
+  border-left: 1px solid #e7e7e7;
+  border-right: 1px solid #e7e7e7;
 
   h2 {
     font-weight: bold;
@@ -23,7 +26,18 @@
     margin-bottom: 0;
   }
 
-  .list-group-item:first-child {
+  .list-group-item {
+    border: 1px solid transparent;
+    background: transparent;
+  }
+
+  .list-group-item.active {
+    background: #fff;
+    border: 1px solid #fff;
+    color: #555;
+  }
+
+  .list-group-item:first-child, .list-group-item:last-child {
     border-radius: 0;
   }
 
