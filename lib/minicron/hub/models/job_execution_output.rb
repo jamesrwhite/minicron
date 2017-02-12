@@ -1,8 +1,8 @@
-require 'active_record'
+require 'minicron/hub/models/base'
 
 module Minicron
   module Hub
-    class JobExecutionOutput < ActiveRecord::Base
+    class JobExecutionOutput < Minicron::Hub::Base
       belongs_to :execution
 
       validates :execution_id, presence: true, numericality: { only_integer: true }

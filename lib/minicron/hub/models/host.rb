@@ -1,8 +1,8 @@
-require 'active_record'
+require 'minicron/hub/models/base'
 
 module Minicron
   module Hub
-    class Host < ActiveRecord::Base
+    class Host < Minicron::Hub::Base
       has_many :jobs, dependent: :destroy
 
       validates :name, presence: true

@@ -1,8 +1,8 @@
-require 'active_record'
+require 'minicron/hub/models/base'
 
 module Minicron
   module Hub
-    class Job < ActiveRecord::Base
+    class Job < Minicron::Hub::Base
       belongs_to :host, counter_cache: true
       has_many :executions, dependent: :destroy
       has_many :schedules, dependent: :destroy

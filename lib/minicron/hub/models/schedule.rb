@@ -1,8 +1,8 @@
-require 'active_record'
+require 'minicron/hub/models/base'
 
 module Minicron
   module Hub
-    class Schedule < ActiveRecord::Base
+    class Schedule < Minicron::Hub::Base
       belongs_to :job, counter_cache: true
       has_many :alerts, dependent: :destroy
 
