@@ -35,6 +35,8 @@ timezone = "UTC"
   secret = "change_me"
   [server.database]
   type = "sqlite" # [mysql, postgresql, sqlite]
+  # The options below are for sqlite only (default is ${ruby gem path}/db)
+  # path = /opt/minicron/db
   # The options below are for mysql and postgresql only
   # host = "127.0.0.1"
   # database = "minicron"

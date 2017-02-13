@@ -51,7 +51,8 @@ module Minicron
         'secret' => 'change_me'
       },
       'database' => {
-        'type' => 'sqlite'
+        'type' => 'sqlite',
+        'path' => Minicron::BASE_PATH + '/db'
       },
       'ssh' => {
         'connect_timeout' => 10,
@@ -252,7 +253,7 @@ module Minicron
       # Calculate the realtive path to the db because sqlite or activerecord is
       # weird and doesn't seem to handle abs paths correctly
       root = Pathname.new(Dir.pwd)
-      db = Pathname.new(Minicron::BASE_PATH + '/db')
+      db = Pathname.new(config['path'])
       db_rel_path = db.relative_path_from(root)
 
       return {
