@@ -41,7 +41,7 @@ monitoring cron jobs and doing that really well and leave the management side [t
 [other](https://puppet.com/) [tools](https://www.ansible.com/). As such I'm removing the features related to SSH
 based magement of jobs, it's possible that in future versions I may revist this but for now I want to focus solely
 on monitoring. All development on this effort will be happening in the
-[1.0-dev](https://github.com/jamesrwhite/minicron/tree/1.0-dev) branch.
+[develop](https://github.com/jamesrwhite/minicron/tree/develop) branch and there will be no further 0.9.x releases.
 
 Background
 -----------
