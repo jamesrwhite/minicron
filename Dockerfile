@@ -1,5 +1,5 @@
 FROM phusion/baseimage:0.9.16
-MAINTAINER James White <dev.jameswhite+minicron@gmail.com>
+MAINTAINER James White <james.white@minicron.com>
 
 # Install minicron install dependencies
 RUN apt-get update && apt-get install -y curl unzip

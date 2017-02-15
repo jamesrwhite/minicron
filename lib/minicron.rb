@@ -4,7 +4,7 @@ require 'toml'
 require 'stringio'
 require 'active_support/core_ext/time'
 
-# @author James White <dev.jameswhite+minicron@gmail.com>
+# @author James White <james.white@minicron.com>
 module Minicron
   # Exception classes
   class Error < StandardError; end

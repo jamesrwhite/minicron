@@ -191,7 +191,7 @@ module Minicron
 
       # basic information for the help menu
       @cli.program :name, 'minicron'
-      @cli.program :help, 'Author', 'James White <dev.jameswhite+minicron@gmail.com>'
+      @cli.program :help, 'Author', 'James White <james.white@minicron.com>'
       @cli.program :help, 'License', 'GPL v3'
       @cli.program :version, Minicron::VERSION
       @cli.program :description, 'cli for minicron; a system a to manage and monitor cron jobs'

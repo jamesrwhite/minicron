@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.name                  = 'minicron'
   spec.version               = VERSION
   spec.authors               = ['James White']
-  spec.email                 = ['dev.jameswhite+minicron@gmail.com']
   spec.summary               = 'A system to make it easier to manage and monitor cron jobs'
+  spec.email                 = ['james.white@minicron.com']
   spec.homepage              = 'https://github.com/jamesrwhite/minicron'
   spec.license               = 'GPL-3.0'
   spec.post_install_message  = 'Thanks for installing minicron!'
