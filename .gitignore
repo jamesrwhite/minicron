@@ -1,53 +1,35 @@
+# OSX
+*.DS_Store
+
+# Ruby Gems
+Gemfile.lock
+vendor/
+
 # SublimeText
 *.sublime-workspace
 
-# Ruby Gems
-*.gem
-*.rbc
-.bundle
-.config
-.yardoc
-Gemfile.lock
-InstalledFiles
-_yardoc
+# Test coverage reports
 coverage
-doc/
-lib/bundler/man
-pkg
-rdoc
 spec/reports
-test/tmp
-test/version_tmp
-tmp
 
-# From Rails
-# Ignore bundler config.
-/.bundle
+# Builds
+builds/*.tar.gz
 
 # Ignore all sqlite
 *.sqlite3
 *.sqlite3-journal
 
-# Ignore all logfiles and tempfiles.
-/log/*.log
-
 # Ignore sass cache
 .sass-cache
 
-# My random testing scripts
-testing
-newrelic.yml
+# Vagrant
+.vagrant
 
 # My development config that I symlink to /etc/minicron.toml
 my.config.toml
 
 # Builds
-build/minicron-*
-build/packaging/vendor
-build/packaging/traveling*
-build/geminabox
+pkg/
 
-# Vagrant
-.vagrant
-
-builds
+# Assets
+lib/minicron/hub/public

@@ -2,15 +2,15 @@ require 'slack-notifier'
 
 module Minicron
   module Alert
-     # Allows the sending of Slack alerts
+    # Allows the sending of Slack alerts
     class Slack
       # Used to set up on the Slack::Notifier
       def initialize
         # Get an instance of the slack client
         @client = ::Slack::Notifier.new(
           Minicron.config['alerts']['slack']['webhook_url'],
-          :channel => Minicron.config['alerts']['slack']['channel'],
-          :username => 'minicron'
+          channel: Minicron.config['alerts']['slack']['channel'],
+          username: 'minicron'
         )
       end
 

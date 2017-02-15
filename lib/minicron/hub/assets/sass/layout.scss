@@ -1,0 +1,37 @@
+html, body, body > .container {
+  height: 100%;
+}
+
+// Account for static nav bar
+body {
+  padding-top: 62px;
+}
+
+// So we can have two equal width scrollable columns
+.main-panel, .sidebar {
+  float: left;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+// Main content panel
+.main-panel {
+  width: 75%;
+  background-color: #FFF;
+}
+
+.inner {
+  padding: 15px 25px 25px 25px;
+}
+
+// Header buttons
+header > a, .inner > header > form > input {
+  margin-top: 22px;
+  margin-left: 10px;
+}
+
+// Table buttons
+table td > a {
+  margin-right: 6px;
+}

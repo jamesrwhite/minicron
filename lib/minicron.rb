@@ -1,7 +1,6 @@
 require 'minicron/constants'
 require 'active_record'
 require 'toml'
-require 'sshkey'
 require 'stringio'
 require 'active_support/core_ext/time'
 
@@ -16,25 +15,17 @@ module Minicron
   class CronError < Error; end
   class ValidationError < Error; end
   class ClientError < Error; end
+  class AuthError < Error; end
 
   # Default configuration, this can be overriden
   @config = {
     'verbose' => false,
     'debug' => false,
     'client' => {
-      'server' => {
-        'scheme' => 'http',
-        'host' => '0.0.0.0',
-        'username' => nil,
-        'password' => nil,
-        'port' => 9292,
-        'path' => '/',
-        'connect_timeout' => 5,
-        'inactivity_timeout' => 5,
-      },
-      'cli' => {
-        'mode' => 'line',
-        'dry_run' => false
+      'dry_run' => false,
+      'api' => {
+        'key' => nil,
+        'base_url' => 'http://0.0.0.0:9292/api/1.0',
       },
     },
     'server' => {
@@ -47,16 +38,13 @@ module Minicron
         'name' => 'minicron.session',
         'domain' => '0.0.0.0',
         'path' => '/',
-        'ttl' => 86400,
+        'ttl' => 86_400,
         'secret' => 'change_me'
       },
       'database' => {
         'type' => 'sqlite',
         'path' => Minicron::BASE_PATH + '/db'
-      },
-      'ssh' => {
-        'connect_timeout' => 10,
-      },
+      }
     },
     'alerts' => {
       'email' => {
@@ -112,11 +100,16 @@ module Minicron
 
   # Parses the config options from the given hash that matches the expected
   # config format in Minicron.config
-  def self.parse_config_hash(options = {}, config = @config)
+  def self.parse_config_hash(options = {}, config = nil)
+    if config.nil?
+      config = @config
+    end
+
     options.each do |key, value|
       config[key] = {} if config[key].nil?
+
       if value.respond_to?(:each)
-        self.parse_config_hash(value, config[key])
+        parse_config_hash(value, config[key])
       elsif !value.nil?
         config[key] = value
       end
@@ -129,7 +122,7 @@ module Minicron
   # @option options [Symbol] type (:both) what to capture: :stdout, :stderr or :both
   # @return [StringIO] if the type was set to :stdout or :stderr
   # @return [Hash] containg both the StringIO instances if the type was set to :both
-  def self.capture_output(options = {}, &block)
+  def self.capture_output(options = {})
     # Default options
     options[:type] ||= :both
 
@@ -166,34 +159,10 @@ module Minicron
       stderr
     else
       {
-        :stdout => stdout,
-        :stderr => stderr
+        stdout: stdout,
+        stderr: stderr
       }
     end
-  end
-
-  # Used to generate SSH keys for hosts but is completely generic
-  #
-  # @param type [String] the thing that is using the key, this is just here
-  # so this could be used for something other than hosts if needed
-  # @param id [Integer]
-  # @param name [String]
-  def self.generate_ssh_key(type, id, name)
-    key = SSHKey.generate(:comment => "minicron public key for #{name}")
-
-    # Set the locations to save the public key private key pair
-    private_key_path = File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa")
-    public_key_path = File.expand_path("~/.ssh/minicron_#{type}_#{id}_rsa.pub")
-
-    # Save the public key private key pair
-    File.write(private_key_path, key.private_key)
-    File.write(public_key_path, key.ssh_public_key)
-
-    # Set the correct permissions on the files
-    File.chmod(0600, private_key_path)
-    File.chmod(0644, public_key_path)
-
-    key
   end
 
   # Get the system fully qualified domain name
@@ -241,13 +210,13 @@ module Minicron
   def self.get_activerecord_db_config(config)
     case config['type']
     when /mysql|postgresql/
-      return {
-        :adapter => Minicron.get_db_adapter(config['type']),
-        :host => config['host'],
-        :database => config['database'],
-        :username => config['username'],
-        :password => config['password'],
-        :reconnect => true
+      {
+        adapter: Minicron.get_db_adapter(config['type']),
+        host: config['host'],
+        database: config['database'],
+        username: config['username'],
+        password: config['password'],
+        reconnect: true
       }
     when 'sqlite'
       # Calculate the realtive path to the db because sqlite or activerecord is
@@ -256,9 +225,9 @@ module Minicron
       db = Pathname.new(config['path'])
       db_rel_path = db.relative_path_from(root)
 
-      return {
-        :adapter => Minicron.get_db_adapter(config['type']),
-        :database => "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
+      {
+        adapter: Minicron.get_db_adapter(config['type']),
+        database: "#{db_rel_path}/minicron.sqlite3" # TODO: Allow configuring this but default to this value
       }
     else
       raise Minicron::DatabaseError, "The database #{config['type']} is not supported"
@@ -270,7 +239,7 @@ module Minicron
   # @param type [Hash] database config
   def self.establish_db_connection(config, verbose = false)
     # Get the activerecord formatted config
-    ar_config = self.get_activerecord_db_config(config)
+    ar_config = get_activerecord_db_config(config)
 
     # Connect to the database
     ActiveRecord::Base.establish_connection(ar_config)
@@ -284,7 +253,7 @@ module Minicron
   # @param type [Time]
   # @return type [Time]
   def self.time(time)
-    if !time.nil?
+    unless time.nil?
       return time.in_time_zone(Minicron.config['server']['timezone'])
     end
 

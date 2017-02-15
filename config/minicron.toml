@@ -6,19 +6,10 @@ debug = false # Useful for debugging
 
 # Client options
 [client]
-  [client.server]
-  scheme = "http" # [http, https]
-  host = "127.0.0.1"
-  # username = "username" # optional for basic auth
-  # password = "password" # optional for basic auth
-  port = 9292
-  path = "/"
-  connect_timeout = 5
-  inactivity_timeout = 5
-  # CLI options
-  [client.cli]
-  mode = "line" # [line, char]
   dry_run = false
+  [client.api]
+  key = "YOUR_API_KEY"
+  base_url = "http://127.0.0.1:9292/api/1.0"
 
 # Server options
 [server]
@@ -42,8 +33,6 @@ timezone = "UTC"
   # database = "minicron"
   # username = "minicron"
   # password = "password"
-  [server.ssh]
-  connect_timeout = 10
 
 # Alerting options
 [alerts]

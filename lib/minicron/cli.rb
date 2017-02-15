@@ -21,25 +21,28 @@ module Minicron
     # @param opts [Hash] The Commander provided options hash
     def self.parse_config(opts)
       # Parse the file config
-      Minicron.parse_file_config(opts.config)
+      config = Minicron.parse_file_config(opts.config)
 
       # Parse the cli options
       Minicron.parse_config_hash(
-        'verbose' => opts.verbose,
-        'debug' => opts.debug,
-        'client' => {
-          'cli' => {
-            'mode' => opts.mode,
-            'dry_run' => opts.dry_run
+        {
+          'verbose' => opts.verbose,
+          'debug' => opts.debug,
+          'client' => {
+            'dry_run' => opts.dry_run,
           },
+          'server' => {
+            'host' => opts.host,
+            'port' => opts.port,
+            'path' => opts.path,
+            'pid_file' => opts.pid_file
+          }
         },
-        'server' => {
-          'host' => opts.host,
-          'port' => opts.port,
-          'path' => opts.path,
-          'pid_file' => opts.pid_file,
-        }
+        config
       )
+
+      # If an api key is in the env, use that
+      Minicron.config['client']['api']['key'] = ENV['MINICRON_API_KEY'] unless ENV['MINICRON_API_KEY'].nil?
     end
 
     # Used as a helper for yielding command output, returns it in a structured hash
@@ -48,7 +51,7 @@ module Minicron
     # @param output [String]
     # @return [Hash]
     def self.structured(type, output)
-      { :type => type, :output => output }
+      { type: type, output: output }
     end
 
     # Sets up an instance of commander and runs it based on the argv param
@@ -77,6 +80,9 @@ module Minicron
       # Add the db command to the cli
       Minicron::CLI::Commands.add_db_cli_command(@cli)
 
+      # Add the config command to the cli
+      Minicron::CLI::Commands.add_config_cli_command(@cli)
+
       # And off we go!
       @cli.run!
     end
@@ -84,14 +90,11 @@ module Minicron
     # Executes a command in a pseudo terminal and yields the output
     #
     # @param command [String] the command to execute e.g 'ls'
-    # @option options [String] mode ('line') the method to yield the
-    # command output. Either 'line' by line or 'char' by char.
     # @option options [Boolean] verbose whether or not to output extra
     # information for debugging purposes.
     # @yieldparam output [String] output from the command execution
     def self.run_command(command, options = {})
       # Default the options
-      options[:mode] ||= 'line'
       options[:verbose] ||= false
 
       # Record the start time of the command
@@ -105,8 +108,7 @@ module Minicron
 
       # Spawn a process to run the command
       begin
-        PTY.spawn(command) do |stdout, stdin, pid|
-
+        PTY.spawn(command) do |stdout, _stdin, pid|
           # Output some debug info
           if options[:verbose]
             subtract = Time.now.utc
@@ -118,8 +120,8 @@ module Minicron
           begin
             # Loop until data is no longer being sent to stdout
             until stdout.eof?
-              # One character at a time or one line at a time?
-              output = options[:mode] == 'char' ? stdout.read(1) : stdout.readline
+              # Read in a line of execution output
+              output = stdout.readline
 
               subtract = Time.now.utc
               yield structured :output, output
@@ -201,10 +203,10 @@ module Minicron
       @cli.default_command :help
 
       # Add a global option for verbose mode
-      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose'].to_s}"
+      @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose']}"
 
       # Add a global option for enabling debug mode
-      @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug'].to_s}"
+      @cli.global_option '--debug', "Turn on debug mode. Default: #{Minicron.config['debug']}"
 
       # Add a global option for passing the path to a config file
       @cli.global_option '--config FILE', "Set the config file to use. Default: #{Minicron::DEFAULT_CONFIG_FILE}"

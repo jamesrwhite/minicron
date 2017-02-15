@@ -3,14 +3,12 @@ require 'minicron/alert/slack'
 
 describe Minicron::Alert::Slack do
   before (:each) do
-    Minicron.parse_config_hash({
-      'alerts' => {
-        'slack' => {
-          'webhook_url' => 'https://hooks.slack.com/services/abc/123',
-          'channel' => '#blah'
-        }
-      }
-    })
+    Minicron.parse_config_hash('alerts' => {
+                                 'slack' => {
+                                   'webhook_url' => 'https://hooks.slack.com/services/abc/123',
+                                   'channel' => '#blah'
+                                 }
+                               })
   end
 
   describe '#intiailize' do
@@ -27,10 +25,10 @@ describe Minicron::Alert::Slack do
         slack = Minicron::Alert::Slack.new
         time = Time.now.utc
         options = {
-          :job_id => 1,
-          :expected_at => time,
-          :execution_id => 100,
-          :kind => 'miss'
+          job_id: 1,
+          expected_at: time,
+          execution_id: 100,
+          kind: 'miss'
         }
         message = "Job #1 failed to execute at its expected time - #{time}"
 
@@ -42,11 +40,11 @@ describe Minicron::Alert::Slack do
       it 'should return the correct message' do
         slack = Minicron::Alert::Slack.new
         options = {
-          :job_id => 1,
-          :execution_id => 100,
-          :kind => 'fail'
+          job_id: 1,
+          execution_id: 100,
+          kind: 'fail'
         }
-        message = "Execution #100 of Job #1 failed"
+        message = 'Execution #100 of Job #1 failed'
 
         expect(slack.get_message(options)).to eq message
       end
@@ -56,7 +54,7 @@ describe Minicron::Alert::Slack do
       it 'should raise an Exception' do
         pagerduty = Minicron::Alert::Slack.new
         options = {
-          :kind => 'derp'
+          kind: 'derp'
         }
 
         expect do
@@ -66,7 +64,7 @@ describe Minicron::Alert::Slack do
     end
   end
 
-   describe '#send' do
+  describe '#send' do
     it 'should send message on slack channel' do
       slack = Minicron::Alert::Slack.new
       expect(slack.instance_variable_get(:@client)).to receive(:ping).with('yo')

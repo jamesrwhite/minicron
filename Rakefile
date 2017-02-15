@@ -1,17 +1,7 @@
-require 'minicron'
+require 'rubygems'
+require 'bundler/setup'
 require 'bundler/gem_tasks'
+require 'sinatra/asset_pipeline/task'
+require './lib/minicron/hub/app'
 
-# Task for local dev to dump schema
-task :dump_schema do
-  # Parse our local config file
-  Minicron.parse_file_config('./my.config.toml')
-
-  # Connect to the db
-  Minicron.establish_db_connection(
-    Minicron.config['server']['database'],
-    Minicron.config['verbose']
-  )
-
-  # Dump the schema file
-  ActiveRecord::SchemaDumper.dump
-end
+Sinatra::AssetPipeline::Task.define! Minicron::Hub::App

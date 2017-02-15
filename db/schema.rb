@@ -11,94 +11,92 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 0) do
-
-  create_table "alerts", force: :cascade do |t|
-    t.integer  "job_id",       limit: 4,              null: false
-    t.integer  "execution_id", limit: 4
-    t.integer  "schedule_id",  limit: 4
-    t.string   "kind",         limit: 4, default: "", null: false
-    t.datetime "expected_at"
-    t.string   "medium",       limit: 9, default: "", null: false
-    t.datetime "sent_at",                             null: false
+  create_table 'alerts', force: :cascade do |t|
+    t.integer  'job_id',       limit: 4, null: false
+    t.integer  'execution_id', limit: 4
+    t.integer  'schedule_id',  limit: 4
+    t.string   'kind',         limit: 4, default: '', null: false
+    t.datetime 'expected_at'
+    t.string   'medium', limit: 9, default: '', null: false
+    t.datetime 'sent_at',                             null: false
   end
 
-  add_index "alerts", ["execution_id"], name: "alerts_execution_id", using: :btree
-  add_index "alerts", ["expected_at"], name: "expected_at", using: :btree
-  add_index "alerts", ["job_id"], name: "alerts_job_id", using: :btree
-  add_index "alerts", ["kind"], name: "kind", using: :btree
-  add_index "alerts", ["medium"], name: "medium", using: :btree
-  add_index "alerts", ["schedule_id"], name: "schedule_id", using: :btree
+  add_index 'alerts', ['execution_id'], name: 'alerts_execution_id', using: :btree
+  add_index 'alerts', ['expected_at'], name: 'expected_at', using: :btree
+  add_index 'alerts', ['job_id'], name: 'alerts_job_id', using: :btree
+  add_index 'alerts', ['kind'], name: 'kind', using: :btree
+  add_index 'alerts', ['medium'], name: 'medium', using: :btree
+  add_index 'alerts', ['schedule_id'], name: 'schedule_id', using: :btree
 
-  create_table "executions", force: :cascade do |t|
-    t.integer  "job_id",      limit: 4, null: false
-    t.integer  "number",      limit: 4, null: false
-    t.datetime "created_at",            null: false
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.integer  "exit_status", limit: 4
+  create_table 'executions', force: :cascade do |t|
+    t.integer  'job_id',      limit: 4, null: false
+    t.integer  'number',      limit: 4, null: false
+    t.datetime 'created_at',            null: false
+    t.datetime 'started_at'
+    t.datetime 'finished_at'
+    t.integer  'exit_status', limit: 4
   end
 
-  add_index "executions", ["created_at"], name: "executions_created_at", using: :btree
-  add_index "executions", ["finished_at"], name: "finished_at", using: :btree
-  add_index "executions", ["job_id", "number"], name: "unique_number_per_job", unique: true, using: :btree
-  add_index "executions", ["job_id"], name: "executions_job_id", using: :btree
-  add_index "executions", ["started_at"], name: "started_at", using: :btree
+  add_index 'executions', ['created_at'], name: 'executions_created_at', using: :btree
+  add_index 'executions', ['finished_at'], name: 'finished_at', using: :btree
+  add_index 'executions', %w(job_id number), name: 'unique_number_per_job', unique: true, using: :btree
+  add_index 'executions', ['job_id'], name: 'executions_job_id', using: :btree
+  add_index 'executions', ['started_at'], name: 'started_at', using: :btree
 
-  create_table "hosts", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "fqdn",       limit: 255,   default: "", null: false
-    t.string   "user",       limit: 32,    default: "", null: false
-    t.string   "host",       limit: 255,   default: "", null: false
-    t.integer  "port",       limit: 4,                  null: false
-    t.text     "public_key", limit: 65535
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+  create_table 'hosts', force: :cascade do |t|
+    t.string   'name',       limit: 255
+    t.string   'fqdn',       limit: 255,   default: '', null: false
+    t.string   'user',       limit: 32,    default: '', null: false
+    t.string   'host',       limit: 255,   default: '', null: false
+    t.integer  'port',       limit: 4,                  null: false
+    t.text     'public_key', limit: 65_535
+    t.datetime 'created_at',                            null: false
+    t.datetime 'updated_at',                            null: false
   end
 
-  add_index "hosts", ["fqdn"], name: "hostname", using: :btree
+  add_index 'hosts', ['fqdn'], name: 'hostname', using: :btree
 
-  create_table "job_execution_outputs", force: :cascade do |t|
-    t.integer  "execution_id", limit: 4,     null: false
-    t.integer  "seq",          limit: 4,     null: false
-    t.text     "output",       limit: 65535, null: false
-    t.datetime "timestamp",                  null: false
+  create_table 'job_execution_outputs', force: :cascade do |t|
+    t.integer  'execution_id', limit: 4,     null: false
+    t.integer  'seq',          limit: 4,     null: false
+    t.text     'output',       limit: 65_535, null: false
+    t.datetime 'timestamp', null: false
   end
 
-  add_index "job_execution_outputs", ["execution_id"], name: "job_execution_outputs_execution_id", using: :btree
-  add_index "job_execution_outputs", ["seq"], name: "seq", using: :btree
+  add_index 'job_execution_outputs', ['execution_id'], name: 'job_execution_outputs_execution_id', using: :btree
+  add_index 'job_execution_outputs', ['seq'], name: 'seq', using: :btree
 
-  create_table "jobs", force: :cascade do |t|
-    t.integer  "host_id",    limit: 4,                    null: false
-    t.string   "job_hash",   limit: 32,    default: "",   null: false
-    t.string   "name",       limit: 255
-    t.string   "user",       limit: 32,                   null: false
-    t.text     "command",    limit: 65535,                null: false
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+  create_table 'jobs', force: :cascade do |t|
+    t.integer  'host_id',    limit: 4, null: false
+    t.string   'job_hash',   limit: 32, default: '', null: false
+    t.string   'name',       limit: 255
+    t.string   'user',       limit: 32, null: false
+    t.text     'command',    limit: 65_535, null: false
+    t.datetime 'created_at',                              null: false
+    t.datetime 'updated_at',                              null: false
   end
 
-  add_index "jobs", ["created_at"], name: "jobs_created_at", using: :btree
-  add_index "jobs", ["host_id"], name: "host_id", using: :btree
-  add_index "jobs", ["job_hash"], name: "job_hash", unique: true, using: :btree
+  add_index 'jobs', ['created_at'], name: 'jobs_created_at', using: :btree
+  add_index 'jobs', ['host_id'], name: 'host_id', using: :btree
+  add_index 'jobs', ['job_hash'], name: 'job_hash', unique: true, using: :btree
 
-  create_table "schedules", force: :cascade do |t|
-    t.integer  "job_id",           limit: 4,   null: false
-    t.string   "minute",           limit: 169
-    t.string   "hour",             limit: 61
-    t.string   "day_of_the_month", limit: 83
-    t.string   "month",            limit: 26
-    t.string   "day_of_the_week",  limit: 13
-    t.string   "special",          limit: 9
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+  create_table 'schedules', force: :cascade do |t|
+    t.integer  'job_id',           limit: 4,   null: false
+    t.string   'minute',           limit: 169
+    t.string   'hour',             limit: 61
+    t.string   'day_of_the_month', limit: 83
+    t.string   'month',            limit: 26
+    t.string   'day_of_the_week',  limit: 13
+    t.string   'special',          limit: 9
+    t.datetime 'created_at',                   null: false
+    t.datetime 'updated_at',                   null: false
   end
 
-  add_index "schedules", ["day_of_the_month"], name: "day_of_the_month", using: :btree
-  add_index "schedules", ["day_of_the_week"], name: "day_of_the_week", using: :btree
-  add_index "schedules", ["hour"], name: "hour", using: :btree
-  add_index "schedules", ["job_id"], name: "schedules_job_id", using: :btree
-  add_index "schedules", ["minute"], name: "minute", using: :btree
-  add_index "schedules", ["month"], name: "month", using: :btree
-  add_index "schedules", ["special"], name: "special", using: :btree
-
+  add_index 'schedules', ['day_of_the_month'], name: 'day_of_the_month', using: :btree
+  add_index 'schedules', ['day_of_the_week'], name: 'day_of_the_week', using: :btree
+  add_index 'schedules', ['hour'], name: 'hour', using: :btree
+  add_index 'schedules', ['job_id'], name: 'schedules_job_id', using: :btree
+  add_index 'schedules', ['minute'], name: 'minute', using: :btree
+  add_index 'schedules', ['month'], name: 'month', using: :btree
+  add_index 'schedules', ['special'], name: 'special', using: :btree
 end

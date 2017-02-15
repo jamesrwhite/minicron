@@ -4,23 +4,15 @@ require 'net/http/persistent'
 module Minicron
   module Transport
     class Client
-      # Instantiate a new instance of the client
+      # Instantiate a new instance of the api client
       #
-      # @param scheme [String] The protocol to use e.g http/https
-      # @param host [String] The host to be communicated with e.g test.com or 127.0.0.1
-      # @param username [String] The http basic auth username
-      # @param password [String] The http basic auth password
-      # @param port [Integer]
-      # @param path [String] Path to the minicron server e.g /minicron
-      def initialize(scheme, host, username, password, port, path)
-        @scheme = scheme
-        @host = host
-        @username = username
-        @password = password
-        @path = path == '/' ? '/api/v1' : "#{path}/api/v1"
-        @port = port
+      # @param base_url [String] The base url of the api
+      # @param api_key [String]
+      def initialize(base_url, api_key)
+        @base_url = base_url.chomp("/") # Remove any trailing slash if present
+        @api_key = api_key
         @seq = 1
-        @client = Net::HTTP::Persistent.new('minicron')
+        @client = Net::HTTP::Persistent.new(name: 'minicron')
       end
 
       # Used to init a job
@@ -34,18 +26,16 @@ module Minicron
       # @return [Hash]
       def init(job_hash, user, command, fqdn, hostname, timestamp)
         # Send a request to set up the job
-        response = send("/execution/init", {
-          :job_hash => job_hash,
-          :user => user,
-          :command => command,
-          :fqdn => fqdn,
-          :hostname => hostname,
-          :timestamp => timestamp
-        })
+        response = send('/execution/init', job_hash: job_hash,
+                                           user: user,
+                                           command: command,
+                                           fqdn: fqdn,
+                                           hostname: hostname,
+                                           timestamp: timestamp)
 
         {
-          :job_id => response['job_id'],
-          :execution_id => response['execution_id'],
+          job_id: response['job_id'],
+          execution_id: response['execution_id']
         }
       end
 
@@ -55,12 +45,10 @@ module Minicron
       # @param [Integer] execution_id
       # @param [Integer] timestamp
       # @return [Hash]
-      def start(job_id, execution_id, timestamp)
+      def start(_job_id, execution_id, timestamp)
         # Send a job execution status to the server
-        response = send("/execution/start", {
-          :execution_id => execution_id,
-          :timestamp => timestamp,
-        })
+        response = send('/execution/start', execution_id: execution_id,
+                                            timestamp: timestamp)
 
         response
       end
@@ -71,12 +59,10 @@ module Minicron
       # @param [Integer] execution_id
       # @param [Integer] timestamp
       # @return [Hash]
-      def finish(job_id, execution_id, timestamp)
+      def finish(_job_id, execution_id, timestamp)
         # Send a job execution status to the server
-        response = send("/execution/finish", {
-          :execution_id => execution_id,
-          :timestamp => timestamp,
-        })
+        response = send('/execution/finish', execution_id: execution_id,
+                                             timestamp: timestamp)
 
         response
       end
@@ -89,11 +75,9 @@ module Minicron
       # @return [Hash]
       def exit(job_id, execution_id, exit_status)
         # Send a job execution status to the server
-        response = send("/execution/exit", {
-          :job_id => job_id,
-          :execution_id => execution_id,
-          :exit_status => exit_status,
-        })
+        response = send('/execution/exit', job_id: job_id,
+                                           execution_id: execution_id,
+                                           exit_status: exit_status)
 
         response
       end
@@ -106,11 +90,9 @@ module Minicron
       # @return [Hash]
       def output(job_id, execution_id, output)
         # Send the job execution output to the server
-        response = send("/execution/output", {
-          :job_id => job_id,
-          :execution_id => execution_id,
-          :output => output,
-        })
+        response = send('/execution/output', job_id: job_id,
+                                             execution_id: execution_id,
+                                             output: output)
 
         response
       end
@@ -152,10 +134,16 @@ module Minicron
       private
 
       def post(method, data)
-        # Create a POST requests
-        uri = URI("#{@scheme}://#{@host}:#{@port}#{@path}#{method}")
+        # Build the URI for our api request
+        uri = URI("#{@base_url}#{method}")
+
+        # Generate a POST request
         post = Net::HTTP::Post.new(uri.path)
-        post.basic_auth @username, @password if @username || @password
+
+        # Add the api key to the request
+        post['X-API-Key'] = @api_key
+
+        # Set the POST body on the request
         post.set_form_data(data)
 
         # Execute the POST request, TODO: error handling

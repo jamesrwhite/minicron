@@ -5,9 +5,6 @@
     <input type="submit" class="btn btn-<%= @job.enabled ? 'danger' : 'success' %> btn-sm" value="<%= @job.enabled ? 'Disable' : 'Enable' %>"/>
   </form>
   <a href="<%= "#{route_prefix}/job/#{@job.id}/edit" %>" class="pull-right btn btn-warning btn-sm">Edit</a>
-  <form class="pull-right" action="<%= "#{route_prefix}/job/#{@job.id}/run" %>" method="POST">
-    <input type="submit" class="btn btn-success btn-sm" value="Run"/>
-  </form>
 </header>
 <hr/>
 

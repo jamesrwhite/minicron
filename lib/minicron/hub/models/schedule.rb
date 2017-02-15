@@ -1,12 +1,12 @@
-require 'active_record'
+require 'minicron/hub/models/base'
 
 module Minicron
   module Hub
-    class Schedule < ActiveRecord::Base
-      belongs_to :job
-      has_many :alerts, :dependent => :destroy
+    class Schedule < Minicron::Hub::Base
+      belongs_to :job, counter_cache: true
+      has_many :alerts, dependent: :destroy
 
-      validates :job_id, :presence => true, :numericality => { :only_integer => true }
+      validates :job_id, presence: true, numericality: { only_integer: true }
 
       # The formatted schedule
       def formatted

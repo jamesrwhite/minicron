@@ -1,8 +1,8 @@
-require 'active_record'
+require 'minicron/hub/models/base'
 
 module Minicron
   module Hub
-    class Alert < ActiveRecord::Base
+    class Alert < Minicron::Hub::Base
       belongs_to :job
       belongs_to :schedule
       belongs_to :execution

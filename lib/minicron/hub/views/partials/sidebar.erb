@@ -1,34 +1,39 @@
 <div class="sidebar">
-  <h2>Recent Job Executions</h2>
-  <div class="list-group">
-    <%
-      # Get a list of recent executions
-      recent_executions = Minicron::Hub::Execution.all
-                                                  .order(:created_at => :desc, :started_at => :desc)
-                                                  .includes(:job => :host)
-                                                  .limit(10)
-    %>
-    <% recent_executions.each do |execution| %>
-      <a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="list-group-item clearfix<%= if defined?(@execution) and @execution.id == execution.id then ' active' else nil end %>">
-          <span class="pull-left"><%= execution.job.safe_name %></span>
-          <% if !execution.exit_status.nil? && execution.exit_status > 0 %>
-            <span class="pull-right execution-status label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
-              <span class="glyphicon glyphicon-remove"></span>
-              </span>
-          <% else %>
-            <% if execution.finished_at %>
-              <span class="pull-right execution-status label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
-                <span class="glyphicon glyphicon-ok"></span>
+  <% if signed_in? %>
+    <div class="list-group">
+      <%
+        # Get a list of recent executions
+        recent_executions = Minicron::Hub::Execution.belonging_to(current_user)
+                                                    .all
+                                                    .order(:created_at => :desc, :started_at => :desc)
+                                                    .includes(:job => :host)
+                                                    .limit(15)
+      %>
+
+      <% recent_executions.each do |execution| %>
+        <a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="list-group-item clearfix<%= if defined?(@execution) and @execution.id == execution.id then ' active' else nil end %>">
+            <span class="pull-left"><%= execution.job.safe_name %></span>
+            <% if !execution.exit_status.nil? && execution.exit_status > 0 %>
+              <span class="pull-right execution-status label label-danger" data-toggle="tooltip" data-placement="right" title="Failed">
+                <span class="glyphicon glyphicon-remove"></span>
               </span>
             <% else %>
-              <span class="pull-right execution-status label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
-                <span class="glyphicon glyphicon-flash"></span>
-              </span>
+              <% if execution.finished_at %>
+                <span class="pull-right execution-status label label-success" data-toggle="tooltip" data-placement="right" title="Successful">
+                  <span class="glyphicon glyphicon-ok"></span>
+                </span>
+              <% else %>
+                <span class="pull-right execution-status label label-warning" data-toggle="tooltip" data-placement="right" title="Running">
+                  <span class="glyphicon glyphicon-flash"></span>
+                </span>
+              <% end %>
             <% end %>
-          <% end %>
-          <div style="clear: left;"></div>
-          <span class="execution-info"><%= Minicron.time(execution.created_at) %> on <%= execution.job.host.name %></span>
-        </a>
-    <% end %>
-  </div>
+
+            <div style="clear: left;"></div>
+
+            <span class="execution-info"><%= Minicron.time(execution.created_at) %> on <%= execution.job.host.name %></span>
+          </a>
+      <% end %>
+    </div>
+  <% end %>
 </div>
