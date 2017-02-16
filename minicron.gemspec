@@ -8,11 +8,10 @@ Gem::Specification.new do |spec|
   spec.name                  = 'minicron'
   spec.version               = VERSION
   spec.authors               = ['James White']
-  spec.summary               = 'A system to make it easier to manage and monitor cron jobs'
   spec.email                 = ['james.white@minicron.com']
+  spec.summary               = 'Monitor your cron jobs'
   spec.homepage              = 'https://github.com/jamesrwhite/minicron'
   spec.license               = 'GPL-3.0'
-  spec.post_install_message  = 'Thanks for installing minicron!'
 
   spec.require_paths = ['lib']
   spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,db,spec}/**/*', 'lib/minicron/hub/public/assets/.sprockets*']
