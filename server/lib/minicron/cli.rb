@@ -108,6 +108,7 @@ module Minicron
 
       # Spawn a process to run the command
       begin
+        puts command
         PTY.spawn(command) do |stdout, _stdin, pid|
           # Output some debug info
           if options[:verbose]
