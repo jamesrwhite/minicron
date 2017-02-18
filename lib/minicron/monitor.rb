@@ -84,7 +84,7 @@ module Minicron
       if expected_at > @start_time && Time.now.utc > expected_by && expected_by > schedule.updated_at
         # Check if this execution was created inside a minute window
         # starting when it was expected to run
-        check = Minicron::Hub::Execution.belonging_to(current_user).exists?(
+        check = Minicron::Hub::Execution.exists?(
           created_at: expected_at..expected_by,
           job_id: schedule.job_id
         )
