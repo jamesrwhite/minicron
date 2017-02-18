@@ -5,10 +5,10 @@
     </div>
 
     <ul class="nav navbar-nav navbar-left">
-      <li><a class="<%= 'active' if nav_page == :execution %>" href="<%= Minicron.config['server']['path'] %>">Executions</a></li>
-      <li><a class="<%= 'active' if nav_page == :job %>" href="<%= "#{route_prefix}/jobs" %>">Jobs</a></li>
-      <li><a class="<%= 'active' if nav_page == :host %>" href="<%= "#{route_prefix}/hosts" %>">Hosts</a></li>
-      <li><a class="<%= 'active' if nav_page == :alert %>" href="<%= "#{route_prefix}/alerts" %>">Alerts</a></li>
+      <li><a class="<%= 'active' if nav_page == :execution %>" href="<%= Minicron.config['server']['path'] %>" title="Executions">Executions</a></li>
+      <li><a class="<%= 'active' if nav_page == :job %>" href="<%= "#{route_prefix}/jobs" %>" title="Jobs">Jobs</a></li>
+      <li><a class="<%= 'active' if nav_page == :host %>" href="<%= "#{route_prefix}/hosts" %>" title="Hosts">Hosts</a></li>
+      <li><a class="<%= 'active' if nav_page == :alert %>" href="<%= "#{route_prefix}/alerts" %>" title="Alerts">Alerts</a></li>
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
@@ -19,6 +19,9 @@
             <span><%= current_user.name %></span>
           </a>
           <ul class="dropdown-menu">
+            <li>
+              <a href="<%= "#{route_prefix}/user/profile" %>" title="Profile">Profile</a>
+            </li>
             <li>
               <form action="<%= "#{route_prefix}/auth/sign-out" %>" method="POST">
                 <input type="submit" value="Sign Out"/>
