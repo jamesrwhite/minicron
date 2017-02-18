@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require 'insidious'
-require 'minicron'
-require 'minicron/cli'
-require 'minicron/transport/server'
+require_relative '../lib/minicron'
+require Minicron::REQUIRE_PATH + 'cli'
+require Minicron::REQUIRE_PATH + 'transport/server'
 
 # Set the process name to something more useful
 $PROGRAM_NAME = "minicron #{ARGV.join(' ')}"

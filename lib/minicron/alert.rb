@@ -1,10 +1,10 @@
-require 'minicron/alert/email'
-require 'minicron/alert/sms'
-require 'minicron/alert/pagerduty'
-require 'minicron/alert/aws_sns'
-require 'minicron/alert/slack'
-require 'minicron/hub/models/alert'
-require 'minicron/hub/models/job'
+require Minicron::REQUIRE_PATH + 'alert/email'
+require Minicron::REQUIRE_PATH + 'alert/sms'
+require Minicron::REQUIRE_PATH + 'alert/pagerduty'
+require Minicron::REQUIRE_PATH + 'alert/aws_sns'
+require Minicron::REQUIRE_PATH + 'alert/slack'
+require Minicron::REQUIRE_PATH + 'hub/models/alert'
+require Minicron::REQUIRE_PATH + 'hub/models/job'
 
 module Minicron
   # Allows the sending of alerts via multiple mediums

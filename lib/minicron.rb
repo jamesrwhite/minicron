@@ -1,4 +1,4 @@
-require 'minicron/constants'
+require_relative './minicron/constants.rb'
 require 'active_record'
 require 'toml'
 require 'stringio'

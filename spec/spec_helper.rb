@@ -4,8 +4,8 @@ SimpleCov.start do
 end
 
 require 'rspec'
-require 'minicron'
-require 'minicron/cli'
+require_relative '../lib/minicron'
+require Minicron::REQUIRE_PATH + 'cli'
 
 RSpec.configure do |config|
   config.color = true

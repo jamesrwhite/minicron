@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'minicron/alert/pagerduty'
+require Minicron::REQUIRE_PATH + 'alert/pagerduty'
 
 describe Minicron::Alert::PagerDuty do
   describe '#intiailize' do

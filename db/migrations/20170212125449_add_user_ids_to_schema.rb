@@ -1,7 +1,7 @@
 require 'highline'
 require 'scrypt'
-require 'minicron'
-require 'minicron/hub/app'
+require_relative '../lib/minicron'
+require Minicron::REQUIRE_PATH + 'hub/app'
 
 class AddUserIdsToSchema < ActiveRecord::Migration
   def change

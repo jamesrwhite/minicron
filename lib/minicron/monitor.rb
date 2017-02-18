@@ -1,8 +1,8 @@
 require 'active_record'
 require 'parse-cron'
-require 'minicron/hub/models/schedule'
-require 'minicron/hub/models/execution'
-require 'minicron/alert'
+require Minicron::REQUIRE_PATH + 'hub/models/schedule'
+require Minicron::REQUIRE_PATH + 'hub/models/execution'
+require Minicron::REQUIRE_PATH + 'alert'
 
 module Minicron
   # Used to monitor the executions in the database and look for any failures

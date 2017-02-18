@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'minicron/transport'
+require Minicron::REQUIRE_PATH + 'transport'
 
 describe Minicron::Transport do
   describe '.get_job_hash' do

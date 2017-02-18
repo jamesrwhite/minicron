@@ -1,4 +1,4 @@
-require 'minicron/hub/models/base'
+require Minicron::REQUIRE_PATH + 'hub/models/base'
 
 module Minicron
   module Hub

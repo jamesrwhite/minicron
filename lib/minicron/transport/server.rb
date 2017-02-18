@@ -21,7 +21,7 @@ module Minicron
 
         @server = Thin::Server.new(host, port) do
           map path do
-            require 'minicron/hub/app'
+            require Minicron::REQUIRE_PATH + 'hub/app'
             run Minicron::Hub::App.new
           end
         end

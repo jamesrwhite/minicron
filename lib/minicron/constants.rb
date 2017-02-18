@@ -7,5 +7,6 @@ module Minicron
   DB_PATH = "#{BASE_PATH}/db".freeze
   MIGRATIONS_PATH = "#{BASE_PATH}/db/migrations".freeze
   LIB_PATH = "#{BASE_PATH}/lib".freeze
+  REQUIRE_PATH = "#{BASE_PATH}/lib/minicron/".freeze
   HUB_PATH = "#{BASE_PATH}/lib/minicron/hub".freeze
 end

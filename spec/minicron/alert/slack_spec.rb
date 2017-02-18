@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'minicron/alert/slack'
+require Minicron::REQUIRE_PATH + 'alert/slack'
 
 describe Minicron::Alert::Slack do
   before (:each) do

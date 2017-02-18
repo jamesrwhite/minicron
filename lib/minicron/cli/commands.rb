@@ -1,10 +1,10 @@
-require 'minicron'
 require 'insidious'
 require 'rake'
 require 'active_record'
-require 'minicron/transport'
-require 'minicron/transport/client'
-require 'minicron/transport/server'
+require_relative '../../minicron'
+require Minicron::REQUIRE_PATH + 'transport'
+require Minicron::REQUIRE_PATH + 'transport/client'
+require Minicron::REQUIRE_PATH + 'transport/server'
 
 module Minicron
   module CLI

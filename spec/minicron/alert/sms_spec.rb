@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'minicron/alert/sms'
+require Minicron::REQUIRE_PATH + 'alert/sms'
 
 describe Minicron::Alert::SMS do
   before (:each) do

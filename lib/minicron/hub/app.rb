@@ -4,8 +4,8 @@ begin
 rescue LoadError
 end
 
+require_relative '../../minicron'
 require 'active_record'
-require 'minicron'
 require 'sinatra/base'
 require 'sinatra/json'
 require 'erubis'

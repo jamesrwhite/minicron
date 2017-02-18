@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'minicron/transport/server'
+require Minicron::REQUIRE_PATH + 'transport/server'
 
 describe Minicron::Transport::Server do
   let(:server) { Minicron::Transport::Server }

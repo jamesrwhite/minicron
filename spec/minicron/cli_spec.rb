@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'minicron/cli'
+require Minicron::REQUIRE_PATH + 'cli'
 
 describe Minicron::CLI do
   let(:server) { Minicron::Transport::Server }

@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'minicron/alert'
-require 'minicron/alert/aws_sns'
+require Minicron::REQUIRE_PATH + 'alert'
+require Minicron::REQUIRE_PATH + 'alert/aws_sns'
 
 describe Minicron::Alert do
 end

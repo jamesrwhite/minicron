@@ -1,14 +1,14 @@
 require 'pty'
-require 'minicron'
 require 'English'
 require 'rainbow/ext/string'
 require 'commander'
-require 'minicron/constants'
-require 'minicron/cli/commands'
-require 'minicron/transport'
-require 'minicron/monitor'
-require 'minicron/transport/client'
-require 'minicron/transport/server'
+require_relative '../minicron'
+require Minicron::REQUIRE_PATH + 'constants'
+require Minicron::REQUIRE_PATH + 'cli/commands'
+require Minicron::REQUIRE_PATH + 'transport'
+require Minicron::REQUIRE_PATH + 'monitor'
+require Minicron::REQUIRE_PATH + 'transport/client'
+require Minicron::REQUIRE_PATH + 'transport/server'
 
 include Commander::UI
 
