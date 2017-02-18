@@ -22,8 +22,8 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 
 ## Overview
 
-minicron runs your jobs via it's easy to install "agent" that lives on your and relays the job data back to the
-"hub" (web ui) where you can view it and set up alerts to ensure the job is running correctly.
+minicron runs your jobs via it's easy to install client that lives on your server and relays the job data back to the
+server (web ui) where you can view it and set up alerts to ensure the job is running correctly.
 
 ## Screenshots
 
