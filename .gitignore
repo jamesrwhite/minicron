@@ -3,7 +3,7 @@
 
 # Ruby Gems
 Gemfile.lock
-vendor/
+/vendor/
 
 # SublimeText
 *.sublime-workspace

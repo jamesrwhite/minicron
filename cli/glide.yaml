@@ -1,0 +1,4 @@
+package: github.com/jamesrwhite/minicron
+import:
+- package: github.com/kr/pty
+- package: github.com/spf13/cobra
