@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/jamesrwhite/minicron/run"
@@ -14,11 +13,11 @@ var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "A brief description of your command",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Try and parse the command
+		// Try and parse the command to run from the args we got
 		command, err := run.Parse(args)
 
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 
 			os.Exit(1)
 		}
@@ -27,7 +26,15 @@ var runCmd = &cobra.Command{
 		output := make(chan string)
 
 		// Execute the command
-		go run.Command(command, output)
+		go func() {
+			exitStatus, err := run.Command(command, output)
+
+			if err != nil {
+				fmt.Println(err)
+
+				os.Exit(exitStatus)
+			}
+		}()
 
 		// Listen and print any output from the command
 		for line := range output {
