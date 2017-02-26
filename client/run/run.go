@@ -53,8 +53,11 @@ func Command(command string, output chan string) (int, error) {
 	username := user.Username
 
 	// Get an api client instance
-	// TODO: handle err
-	client, _ := api.GetClient()
+	client, err := api.GetClient()
+
+	if err != nil {
+		return 1, fmt.Errorf("Unable to initialise api client: %s", err.Error())
+	}
 
 	// Mark the executino as being initialised
 	execution, _ := client.Init(&api.InitRequest{
@@ -158,6 +161,7 @@ func Command(command string, output chan string) (int, error) {
 	return exitStatus, nil
 }
 
+// TODO: alter to use sha256
 func hashJob(command, fqdn string) string {
 	hash := md5.Sum([]byte(command + fqdn))
 
