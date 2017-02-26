@@ -45,19 +45,9 @@ module Minicron
       Minicron.config['client']['api']['key'] = ENV['MINICRON_API_KEY'] unless ENV['MINICRON_API_KEY'].nil?
     end
 
-    # Used as a helper for yielding command output, returns it in a structured hash
-    #
-    # @param type [Symbol] The type of command output, currently one of :status, :command and :verbose
-    # @param output [String]
-    # @return [Hash]
-    def self.structured(type, output)
-      { type: type, output: output }
-    end
-
     # Sets up an instance of commander and runs it based on the argv param
     #
     # @param argv [Array] an array of arguments passed to the cli
-    # @yieldparam output [String] output from the cli
     # @raise [ArgumentError] if no arguments are passed to the run cli command
     # i.e when the argv param is ['run']. A second option (the command to execute)
     # should be present in the array
@@ -71,9 +61,6 @@ module Minicron
       # Set some default otions on it
       setup
 
-      # Add the run command to the cli
-      Minicron::CLI::Commands.add_run_cli_command(@cli) { |output| yield output }
-
       # Add the server command to the cli
       Minicron::CLI::Commands.add_server_cli_command(@cli)
 
@@ -85,77 +72,6 @@ module Minicron
 
       # And off we go!
       @cli.run!
-    end
-
-    # Executes a command in a pseudo terminal and yields the output
-    #
-    # @param command [String] the command to execute e.g 'ls'
-    # @option options [Boolean] verbose whether or not to output extra
-    # information for debugging purposes.
-    # @yieldparam output [String] output from the command execution
-    def self.run_command(command, options = {})
-      # Default the options
-      options[:verbose] ||= false
-
-      # Record the start time of the command
-      start = Time.now.utc
-      subtract_total = 0
-
-      # yield the start time
-      subtract = Time.now.utc
-      yield structured :start, start.to_i
-      subtract_total += Time.now.utc - subtract
-
-      # Spawn a process to run the command
-      begin
-        PTY.spawn(command) do |stdout, _stdin, pid|
-          # Output some debug info
-          if options[:verbose]
-            subtract = Time.now.utc
-            yield structured :verbose, '[minicron]'.colour(:magenta)
-            yield structured :verbose, ' started running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n\n".colour(:blue)
-            subtract_total += Time.now.utc - subtract
-          end
-
-          begin
-            # Loop until data is no longer being sent to stdout
-            until stdout.eof?
-              # Read in a line of execution output
-              output = stdout.readline
-
-              subtract = Time.now.utc
-              yield structured :output, output
-              subtract_total += Time.now.utc - subtract
-            end
-          # See https://github.com/ruby/ruby/blob/57fb2199059cb55b632d093c2e64c8a3c60acfbb/ext/pty/pty.c#L517
-          rescue Errno::EIO
-          ensure
-            # Force waiting for the process to finish so we can get the exit status
-            Process.wait pid
-          end
-        end
-      rescue Errno::ENOENT
-        raise Minicron::CommandError, "Running the command `#{command}` failed, are you sure it exists?"
-      ensure
-        # Record the time the command finished
-        finish = Time.now.utc - subtract_total
-        exit_status = !$CHILD_STATUS.nil? && $CHILD_STATUS.exitstatus ? $CHILD_STATUS.exitstatus : nil
-
-        # yield the finish time and exit status
-        yield structured :finish, finish.to_i
-        yield structured :exit, exit_status
-
-        # Output some debug info
-        if options[:verbose]
-          yield structured :verbose, "\n" + '[minicron]'.colour(:magenta)
-          yield structured :verbose, ' finished running '.colour(:blue) + "`#{command}`".colour(:yellow) + " at #{start}\n".colour(:blue)
-          yield structured :verbose, '[minicron]'.colour(:magenta)
-          yield structured :verbose, ' running '.colour(:blue) + "`#{command}`".colour(:yellow) + " took #{finish - start}s\n".colour(:blue)
-          yield structured :verbose, '[minicron]'.colour(:magenta)
-          yield structured :verbose, " `#{command}`".colour(:yellow) + ' finished with an exit status of '.colour(:blue)
-          yield structured :verbose, exit_status == 0 ? "#{exit_status}\n".colour(:green) : "#{exit_status}\n".colour(:red)
-        end
-      end
     end
 
     # Whether or not coloured output of the rainbox gem is enabled, this is
@@ -200,7 +116,7 @@ module Minicron
       @cli.program :help_formatter, Commander::HelpFormatter::TerminalCompact
 
       # Set the default command to run
-      @cli.default_command :help
+      @cli.default_command :server
 
       # Add a global option for verbose mode
       @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose']}"

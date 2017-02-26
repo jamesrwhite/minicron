@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 VERSION = "1.0.0".freeze
 
 Gem::Specification.new do |spec|
-  spec.name                  = 'minicron'
+  spec.name                  = 'minicron-server'
   spec.version               = VERSION
   spec.authors               = ['James White']
   spec.email                 = ['james.white@minicron.com']
@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.files         = Dir['Rakefile', 'README.md', 'LICENSE', '{bin,lib,db,spec}/**/*', 'lib/minicron/hub/public/assets/.sprockets*']
   spec.test_files    = Dir['{spec}/**/*']
-  spec.executables << 'minicron'
+  spec.executables   << 'minicron-server'
 
   spec.add_runtime_dependency 'rainbow', '~> 2.2'
   spec.add_runtime_dependency 'commander', '~> 4.4'
