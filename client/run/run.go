@@ -2,8 +2,6 @@ package run
 
 import (
 	"bufio"
-	"crypto/md5"
-	"encoding/hex"
 	"fmt"
 	"os"
 	"os/exec"
@@ -40,9 +38,6 @@ func Command(command string, output chan string) (int, error) {
 		return 1, fmt.Errorf("Unable to determine hostname: %s", err.Error())
 	}
 
-	// Compute the job hash from the command and fqdn
-	jobHash := hashJob(command, "test")
-
 	// Get the user we're running as
 	user, err := user.Current()
 
@@ -61,10 +56,8 @@ func Command(command string, output chan string) (int, error) {
 
 	// Mark the executino as being initialised
 	execution, _ := client.Init(&api.InitRequest{
-		JobHash:   jobHash,
 		User:      username,
 		Command:   command,
-		FQDN:      hostname, // TODO: remove this and just use hostname
 		Hostname:  hostname,
 		Timestamp: time.Now().Unix(),
 	})
@@ -159,11 +152,4 @@ func Command(command string, output chan string) (int, error) {
 	close(output)
 
 	return exitStatus, nil
-}
-
-// TODO: alter to use sha256
-func hashJob(command, fqdn string) string {
-	hash := md5.Sum([]byte(command + fqdn))
-
-	return hex.EncodeToString(hash[:])
 }

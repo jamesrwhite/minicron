@@ -22,10 +22,8 @@ type client struct {
 }
 
 type InitRequest struct {
-	JobHash   string `json:"job_hash"`
 	User      string `json:"user"`
 	Command   string `json:"command"`
-	FQDN      string `json:"fqdn"`
 	Hostname  string `json:"hostname"`
 	Timestamp int64  `json:"timestamp"`
 }
