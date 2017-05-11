@@ -43,7 +43,7 @@ if [ "$USE_LOCAL_TAR" == "1" ]; then
   echo "Using local archive at ./minicron-$VERSION-$OS.tar.gz and moving to $TMP_TAR_LOCATION"
   cp minicron-$VERSION-$OS.tar.gz $TMP_TAR_LOCATION
 else
-  echo "Downloding minicron from $DOWNLOAD_FILE to $TMP_TAR_LOCATION"
+  echo "Downloading minicron from $DOWNLOAD_FILE to $TMP_TAR_LOCATION"
   (cd /tmp; curl -sL $DOWNLOAD_FILE -o $TMP_TAR_LOCATION)
 fi
 
