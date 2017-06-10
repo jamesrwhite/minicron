@@ -62,12 +62,7 @@ largely from my experience and frustrations using cron both in a personal and pr
 
 #### Database
 
-**Default**
-
 - SQLite
-
-**Also Supported**
-
 - MySQL
 - PostgreSQL
 
