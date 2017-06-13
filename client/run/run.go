@@ -31,7 +31,6 @@ func Parse(command []string) (string, error) {
 }
 
 func Command(command string, output chan string) (int, error) {
-	// Get the fqdn of the host we're running on
 	hostname, err := os.Hostname()
 
 	if err != nil {

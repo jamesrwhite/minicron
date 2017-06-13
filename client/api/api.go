@@ -28,6 +28,10 @@ type InitRequest struct {
 	Timestamp int64  `json:"timestamp"`
 }
 
+type InitResponse struct {
+	ExecutionID int `json:"execution_id"`
+}
+
 type StartRequest struct {
 	ExecutionID int   `json:"execution_id"`
 	Timestamp   int64 `json:"timestamp"`
@@ -49,10 +53,6 @@ type ExitRequest struct {
 	ExecutionID int   `json:"execution_id"`
 	ExitStatus  int   `json:"exit_status"`
 	Timestamp   int64 `json:"timestamp"`
-}
-
-type InitResponse struct {
-	ExecutionID int `json:"execution_id"`
 }
 
 // TODO: inject/get config here
@@ -114,12 +114,12 @@ func (c *client) post(method string, body interface{}) ([]byte, error) {
 	url := fmt.Sprintf("http://127.0.0.1:9292/api/1.0%s", method)
 
 	// Marshal the request body struct to json
-	reqJson, err := json.Marshal(body)
+	reqJSON, err := json.Marshal(body)
 
-	fmt.Println("req: " + string(reqJson))
+	fmt.Println("req: " + string(reqJSON))
 
 	// Build the requests
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(reqJson))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(reqJSON))
 
 	if err != nil {
 		return []byte{}, err
