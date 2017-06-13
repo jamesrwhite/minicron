@@ -164,27 +164,6 @@ module Minicron
     end
   end
 
-  # Get the system fully qualified domain name
-  #
-  # @return [String]
-  def self.get_fqdn
-    `hostname -f`.strip
-  end
-
-  # Get the system short hostname
-  #
-  # @return [String]
-  def self.get_hostname
-    `hostname -s`.strip
-  end
-
-  # Get the user minicron is being run as
-  #
-  # @return [String]
-  def self.get_user
-    `whoami`.strip
-  end
-
   # Get the database adapter for the database type
   #
   # @param type [String] database type

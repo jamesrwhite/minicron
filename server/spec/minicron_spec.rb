@@ -204,24 +204,6 @@ describe Minicron do
     end
   end
 
-  describe '.get_fqdn' do
-    it 'should return the fqdn as a string with no newline' do
-      expect(Minicron.get_fqdn).to eq `hostname -f`.strip
-    end
-  end
-
-  describe '.get_hostname' do
-    it 'should return the hostname as a string with no newline' do
-      expect(Minicron.get_hostname).to eq `hostname -s`.strip
-    end
-  end
-
-  describe '.get_user' do
-    it 'should return the user as a string with no newline' do
-      expect(Minicron.get_user).to eq `whoami`.strip
-    end
-  end
-
   describe '.get_db_adapter' do
     it 'should return the correct adapter name if mysql' do
       expect(Minicron.get_db_adapter('mysql')).to eq 'mysql2'
