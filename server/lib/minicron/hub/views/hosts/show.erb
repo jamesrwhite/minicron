@@ -40,4 +40,28 @@
 </header>
 <hr/>
 
-TODO: add executions
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Job</th>
+      <th>Number</th>
+      <th>Started At</th>
+      <th>Finished At</th>
+      <th>Exit Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @host.executions.each do |execution| %>
+      <tr>
+        <td><a href="<%= "#{route_prefix}/job/#{execution.job.id}" %>"><%= execution.job.name %></a></td>
+        <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>"><%= execution.number %></a></td>
+        <td><%= Minicron.time(execution.started_at) %></td>
+        <td><%= Minicron.time(execution.finished_at) %></td>
+        <td><%= execution.exit_status %></td>
+        <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>" class="btn btn-info btn-xs">View</a></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
