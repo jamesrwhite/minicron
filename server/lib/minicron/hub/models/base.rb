@@ -1,7 +1,7 @@
 require 'active_record'
 
-module Minicron
-  module Hub
+module Minicron::Hub
+  module Model
     class Base < ActiveRecord::Base
       self.abstract_class = true
 

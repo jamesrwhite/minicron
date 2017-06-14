@@ -5,8 +5,10 @@
 
 <form class="form-horizontal" role="form" method="POST">
   <input type="submit" class="btn btn-danger" value="Delete Host"/>
+
   <% if flash[:error] %>
     <input name="force" type="submit" class="btn btn-danger" value="Force Delete Host"/>
   <% end %>
+
   <a href="<%= "#{route_prefix}/host/#{@host.id}" %>" class="btn btn-info">Cancel</a>
 </form>

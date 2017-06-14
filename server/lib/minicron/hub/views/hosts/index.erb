@@ -4,26 +4,28 @@
 </header>
 <hr/>
 
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>FQDN</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @hosts.each do |host| %>
+<% if @hosts.length > 0 %>
+  <table class="table table-striped table-hover">
+    <thead>
       <tr>
-        <td><%= host.name %></td>
-        <td><%= host.fqdn %></td>
-        <td>
-          <a href="<%= "#{route_prefix}/host/#{host.id}" %>" class="btn btn-info btn-xs">View</a>
-          <a href="<%= "#{route_prefix}/host/#{host.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
-          <a href="<%= "#{route_prefix}/host/#{host.id}/delete" %>" class="btn btn-danger btn-xs">Delete</a>
-        </th>
+        <th>Name</th>
+        <th>Hostname</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @hosts.each do |host| %>
+        <tr>
+          <td><%= host.name %></td>
+          <td><%= host.hostname %></td>
+          <td>
+            <a href="<%= "#{route_prefix}/host/#{host.id}" %>" class="btn btn-info btn-xs">View</a>
+            <a href="<%= "#{route_prefix}/host/#{host.id}/edit" %>" class="btn btn-warning btn-xs">Edit</a>
+            <a href="<%= "#{route_prefix}/host/#{host.id}/delete" %>" class="btn btn-danger btn-xs">Delete</a>
+          </th>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,8 +1,8 @@
 require Minicron::REQUIRE_PATH + 'hub/models/base'
 
-module Minicron
-  module Hub
-    class Schedule < Minicron::Hub::Base
+module Minicron::Hub
+  module Model
+    class Schedule < Minicron::Hub::Model::Base
       belongs_to :job, counter_cache: true
       has_many :alerts, dependent: :destroy
 
@@ -10,7 +10,7 @@ module Minicron
 
       # The formatted schedule
       def formatted
-        Minicron::Hub::Schedule.format(self)
+        Minicron::Hub::Model::Schedule.format(self)
       end
 
       # Format the schedule based on all it's components

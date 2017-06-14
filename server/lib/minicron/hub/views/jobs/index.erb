@@ -3,28 +3,29 @@
   <a href="<%= "#{route_prefix}/jobs/new" %>" class="pull-right btn btn-success btn-sm">Add New Job</a>
 </header>
 <hr/>
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Executions</th>
-      <th>Host</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @jobs.each do |job| %>
+<% if @jobs.length > 0 %>
+  <table class="table table-striped table-hover">
+    <thead>
       <tr>
-        <td><%= job.safe_name %></td>
-        <td><%= job.executions.count %></td>
-        <td><a href="<%= "#{route_prefix}/host/#{job.host.id}" %>"><%= job.host.name %></a></td>
-        <td>
-          <a href="<%= "#{route_prefix}/job/#{job.id}" %>" class="pull-left btn btn-info btn-xs">View</a>
-          <a href="<%= "#{route_prefix}/job/#{job.id}/edit" %>" class="pull-left btn btn-warning btn-xs">Edit</a>
-          <a href="<%= "#{route_prefix}/job/#{job.id}/delete" %>" class="pull-left btn btn-danger btn-xs">Delete</a>
-        </th>
+        <th>Name</th>
+        <th>Executions</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @jobs.each do |job| %>
+        <tr>
+          <td><%= job.safe_name %></td>
+          <td><%= job.executions.count %></td>
+          <td>
+            <a href="<%= "#{route_prefix}/job/#{job.id}" %>" class="pull-left btn btn-info btn-xs">View</a>
+            <a href="<%= "#{route_prefix}/job/#{job.id}/edit" %>" class="pull-left btn btn-warning btn-xs">Edit</a>
+            <a href="<%= "#{route_prefix}/job/#{job.id}/delete" %>" class="pull-left btn btn-danger btn-xs">Delete</a>
+          </th>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

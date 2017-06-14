@@ -1,16 +1,14 @@
 require Minicron::REQUIRE_PATH + 'hub/models/base'
 
-module Minicron
-  module Hub
-    class Job < Minicron::Hub::Base
-      belongs_to :host, counter_cache: true
+module Minicron::Hub
+  module Model
+    class Job < Minicron::Hub::Model::Base
       has_many :executions, dependent: :destroy
       has_many :schedules, dependent: :destroy
       has_many :alerts, dependent: :destroy
 
-      validates :name,    presence: true, uniqueness: true
+      validates :name,    presence: true
       validates :command, presence: true
-      validates :host,    presence: true
       validates :enabled, inclusion: { in: [true, false] }
 
       # Default the name of the command to the command itself if no name is set

@@ -2,9 +2,9 @@ require 'active_record'
 require 'scrypt'
 require 'digest/md5'
 
-module Minicron
-  module Hub
-    class User < ActiveRecord::Base
+module Minicron::Hub
+  module Model
+    class User < Minicron::Hub::Model::Base
       validates :name,     presence: true, length: { maximum: 255 }
       validates :email,    presence: true, uniqueness: true, length: { maximum: 255 }
       validates :password, presence: true
@@ -15,7 +15,7 @@ module Minicron
 
       def self.auth(email, password)
         # Find the user based on their email address
-        user = Minicron::Hub::User.where(email: email).first
+        user = Minicron::Hub::Model::User.where(email: email).first
 
         return false if !user
 

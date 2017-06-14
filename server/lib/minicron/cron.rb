@@ -16,7 +16,7 @@ module Minicron
 
     # Build the crontab multiline string that includes all the given jobs
     #
-    # @param host [Minicron::Hub::Host] a host instance with it's jobs and job schedules
+    # @param host [Minicron::Hub::Model::Host] a host instance with it's jobs and job schedules
     # @return [String]
     def build_crontab(host)
       # You have been warned..

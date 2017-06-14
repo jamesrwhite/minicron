@@ -1,8 +1,6 @@
 class Minicron::Hub::App
   get '/hosts' do
-    # Look up all the hosts
-    @hosts = Minicron::Hub::Host.belonging_to(current_user)
-                                .includes(:jobs)
+    @hosts = Minicron::Hub::Model::Host.belonging_to(current_user)
                                 .all
                                 .order(created_at: :desc)
 
@@ -10,28 +8,24 @@ class Minicron::Hub::App
   end
 
   get '/host/:id' do
-    # Look up the host
-    @host = Minicron::Hub::Host.belonging_to(current_user)
-                               .includes(:jobs)
-                               .find(params[:id])
+    @host = Minicron::Hub::Model::Host.belonging_to(current_user).find(params[:id])
 
     erb :'hosts/show', layout: :'layouts/app'
   end
 
   get '/hosts/new' do
     # Empty instance to simplify views
-    @previous = Minicron::Hub::Host.new
+    @previous = Minicron::Hub::Model::Host.new
 
     erb :'hosts/new', layout: :'layouts/app'
   end
 
   post '/hosts/new' do
     begin
-      # Try and save the new host
-      host = Minicron::Hub::Host.create!(
+      host = Minicron::Hub::Model::Host.create!(
         user_id: current_user.id,
         name: params[:name],
-        fqdn: params[:fqdn],
+        hostname: params[:hostname]
       )
 
       host.save!
@@ -47,26 +41,21 @@ class Minicron::Hub::App
   end
 
   get '/host/:id/edit' do
-    # Find the host
-    @host = Minicron::Hub::Host.belonging_to(current_user)
+    @host = Minicron::Hub::Model::Host.belonging_to(current_user)
                                .find(params[:id])
 
     erb :'hosts/edit', layout: :'layouts/app'
   end
 
   post '/host/:id/edit' do
-    # Find the host
-    @host = Minicron::Hub::Host.belonging_to(current_user)
+    @host = Minicron::Hub::Model::Host.belonging_to(current_user)
                                .find(params[:id])
 
     begin
-      # Update its data
       @host.name = params[:name]
-      @host.fqdn = params[:fqdn]
-
+      @host.hostname = params[:hostname]
       @host.save!
 
-      # Redirect to the updated host
       redirect "#{route_prefix}/host/#{@host.id}"
     rescue Exception => e
       @host.restore_attributes
@@ -76,29 +65,22 @@ class Minicron::Hub::App
   end
 
   get '/host/:id/delete' do
-    # Look up the host
-    @host = Minicron::Hub::Host.belonging_to(current_user)
+    @host = Minicron::Hub::Model::Host.belonging_to(current_user)
                                .find(params[:id])
 
     erb :'hosts/delete', layout: :'layouts/app'
   end
 
   post '/host/:id/delete' do
-    # Look up the host
-    @host = Minicron::Hub::Host.belonging_to(current_user)
-                               .includes(jobs: :schedules)
-                               .find(params[:id])
+    @host = Minicron::Hub::Model::Host.belonging_to(current_user).find(params[:id])
 
     begin
-      # Try and delete the host
-      Minicron::Hub::Host.belonging_to(current_user)
-                         .destroy(params[:id])
+      Minicron::Hub::Model::Host.belonging_to(current_user).destroy(params[:id])
 
       redirect "#{route_prefix}/hosts"
     rescue Exception => e
-      flash.now[:error] = "<h4>Error</h4>
-                            <p>#{e.message}</p>
-                            <p>You can force delete the host without connecting to the host</p>"
+      @host.restore_attributes
+      flash.now[:error] = e.message
       erb :'hosts/delete', layout: :'layouts/app'
     end
   end

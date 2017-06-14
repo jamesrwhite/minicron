@@ -1,8 +1,8 @@
 require Minicron::REQUIRE_PATH + 'hub/models/base'
 
-module Minicron
-  module Hub
-    class Alert < Minicron::Hub::Base
+module Minicron::Hub
+  module Model
+    class Alert < Minicron::Hub::Model::Base
       belongs_to :job
       belongs_to :schedule
       belongs_to :execution

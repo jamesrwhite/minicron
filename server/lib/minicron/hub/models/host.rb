@@ -1,17 +1,16 @@
 require Minicron::REQUIRE_PATH + 'hub/models/base'
 
-module Minicron
-  module Hub
-    class Host < Minicron::Hub::Base
-      has_many :jobs, dependent: :destroy
+module Minicron::Hub
+  module Model
+    class Host < Minicron::Hub::Model::Base
+      has_many :executions
 
-      validates :name, presence: true
-      validates :fqdn, presence: true, uniqueness: true
+      validates :hostname, presence: true
 
-      # Default the name of the host to the fqdn itself if no name is set
+      # Default the name to the hostname if no name is set
       def name
         if read_attribute(:name) == '' || read_attribute(:name).nil?
-          read_attribute(:fqdn)
+          read_attribute(:hostname)
         else
           read_attribute(:name)
         end

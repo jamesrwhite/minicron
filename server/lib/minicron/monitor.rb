@@ -31,7 +31,7 @@ module Minicron
         # While the monitor is active run it in a loop ~every minute
         while @active
           # Get all the schedules
-          schedules = Minicron::Hub::Schedule.all
+          schedules = Minicron::Hub::Model::Schedule.all
 
           # Loop every schedule we know about
           schedules.each do |schedule|
@@ -66,7 +66,7 @@ module Minicron
 
     # Handle the monitoring of a cron schedule
     #
-    # @param schedule [Minicron::Hub::Schedule]
+    # @param schedule [Minicron::Hub::Model::Schedule]
     def monitor(schedule)
       # Parse the cron expression
       cron = CronParser.new(schedule.formatted)
@@ -84,7 +84,7 @@ module Minicron
       if expected_at > @start_time && Time.now.utc > expected_by && expected_by > schedule.updated_at
         # Check if this execution was created inside a minute window
         # starting when it was expected to run
-        check = Minicron::Hub::Execution.exists?(
+        check = Minicron::Hub::Model::Execution.exists?(
           created_at: expected_at..expected_by,
           job_id: schedule.job_id
         )

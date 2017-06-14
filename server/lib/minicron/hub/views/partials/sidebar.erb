@@ -3,11 +3,11 @@
     <div class="list-group">
       <%
         # Get a list of recent executions
-        recent_executions = Minicron::Hub::Execution.belonging_to(current_user)
-                                                    .all
-                                                    .order(:created_at => :desc, :started_at => :desc)
-                                                    .includes(:job => :host)
-                                                    .limit(15)
+        recent_executions = Minicron::Hub::Model::Execution.belonging_to(current_user)
+                                                           .all
+                                                           .order(:created_at => :desc, :started_at => :desc)
+                                                           .includes(:job)
+                                                           .limit(15)
       %>
 
       <% recent_executions.each do |execution| %>
@@ -31,7 +31,7 @@
 
             <div style="clear: left;"></div>
 
-            <span class="execution-info"><%= Minicron.time(execution.created_at) %> on <%= execution.job.host.name %></span>
+            <span class="execution-info"><%= Minicron.time(execution.created_at) %> on <%= execution.host.name %></span>
           </a>
       <% end %>
     </div>

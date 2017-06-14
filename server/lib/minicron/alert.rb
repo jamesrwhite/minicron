@@ -45,7 +45,7 @@ module Minicron
     # @option options [String] medium the medium to send the alert via
     def self.send(options = {})
       # Look up the job for this schedule
-      options[:job] = Minicron::Hub::Job.find(options[:job_id])
+      options[:job] = Minicron::Hub::Model::Job.find(options[:job_id])
 
       # Switch the medium that the alert will be sent via
       case options[:medium]
@@ -64,7 +64,7 @@ module Minicron
       end
 
       # Store that we sent the alert
-      Minicron::Hub::Alert.create(
+      Minicron::Hub::Model::Alert.create(
         user_id: options[:user_id],
         job_id: options[:job_id],
         execution_id: options[:execution_id],
@@ -132,7 +132,7 @@ module Minicron
     # @option options [Time] expected_at when the schedule was expected to execute
     # @option options [String] medium the medium to send the alert via
     def self.sent?(options = {})
-      Minicron::Hub::Alert.exists?(
+      Minicron::Hub::Model::Alert.exists?(
         kind: options[:kind],
         execution_id: options[:execution_id],
         schedule_id: options[:schedule_id],

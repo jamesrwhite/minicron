@@ -1,8 +1,8 @@
 class Minicron::Hub::App
   get '/execution/:id' do
     # Look up the job execution
-    @execution = Minicron::Hub::Execution.belonging_to(current_user)
-                                         .includes(:job_execution_outputs, job: :host)
+    @execution = Minicron::Hub::Model::Execution.belonging_to(current_user)
+                                         .includes(:job, :job_execution_outputs)
                                          .find(params[:id])
 
     # Sort the execution output in code for better perf
@@ -13,7 +13,7 @@ class Minicron::Hub::App
 
   get '/execution/:id/delete' do
     # Look up the execution
-    @execution = Minicron::Hub::Execution.belonging_to(current_user)
+    @execution = Minicron::Hub::Model::Execution.belonging_to(current_user)
                                          .includes(:job)
                                          .find(params[:id])
 
@@ -22,13 +22,13 @@ class Minicron::Hub::App
 
   post '/execution/:id/delete' do
     # Look up the execution
-    @execution = Minicron::Hub::Execution.belonging_to(current_user)
+    @execution = Minicron::Hub::Model::Execution.belonging_to(current_user)
                                          .includes(:job)
                                          .find(params[:id])
 
     begin
       # Try and delete the execution
-      Minicron::Hub::Execution.belonging_to(current_user)
+      Minicron::Hub::Model::Execution.belonging_to(current_user)
                               .destroy(params[:id])
 
       redirect "#{route_prefix}/job/#{@execution.job.id}"

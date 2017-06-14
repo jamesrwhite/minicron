@@ -3,28 +3,30 @@
 </header>
 <hr/>
 
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th>Job</th>
-      <th>Kind</th>
-      <th>Medium</th>
-      <th>Sent</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @alerts.each do |alert| %>
+<% if @alerts.length > 0 %>
+  <table class="table table-striped table-hover">
+    <thead>
       <tr>
-        <td><a href="<%= "#{route_prefix}/job/#{alert.job.id}" %>"><%= alert.job.safe_name %></a></td>
-        <td><%= alert.kind %></td>
-        <td><%= alert.medium %></td>
-        <td><%= Minicron.time(alert.sent_at) %></td>
-        <td>
-          <a href="<%= "#{route_prefix}/alert/#{alert.id}" %>" class="btn btn-xs btn-info">View</a>
-        </td>
+        <th>Job</th>
+        <th>Kind</th>
+        <th>Medium</th>
+        <th>Sent</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @alerts.each do |alert| %>
+        <tr>
+          <td><a href="<%= "#{route_prefix}/job/#{alert.job.id}" %>"><%= alert.job.safe_name %></a></td>
+          <td><%= alert.kind %></td>
+          <td><%= alert.medium %></td>
+          <td><%= Minicron.time(alert.sent_at) %></td>
+          <td>
+            <a href="<%= "#{route_prefix}/alert/#{alert.id}" %>" class="btn btn-xs btn-info">View</a>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

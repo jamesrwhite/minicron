@@ -1,8 +1,8 @@
 require Minicron::REQUIRE_PATH + 'hub/models/base'
 
-module Minicron
-  module Hub
-    class JobExecutionOutput < Minicron::Hub::Base
+module Minicron::Hub
+  module Model
+    class JobExecutionOutput < Minicron::Hub::Model::Base
       belongs_to :execution
 
       validates :execution_id, presence: true, numericality: { only_integer: true }

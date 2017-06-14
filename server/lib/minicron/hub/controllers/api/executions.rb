@@ -5,27 +5,28 @@ class Minicron::Hub::App
     begin
       body = JSON.parse(request.body.read.to_s).symbolize_keys
 
-      Minicron::Hub::Host.transaction do
+      Minicron::Hub::Model::Host.transaction do
         # Try and find the host
-        host = Minicron::Hub::Host.belonging_to(current_user)
-                                  .where(fqdn: body[:fqdn])
+        host = Minicron::Hub::Model::Host.belonging_to(current_user)
+                                  .where(hostname: body[:hostname])
                                   .first
 
         # Create it if it didn't exist!
         unless host
-          host = Minicron::Hub::Host.create!(
+          host = Minicron::Hub::Model::Host.create!(
             user_id: current_user.id,
-            name: body[:hostname],
-            fqdn: body[:fqdn],
+            hostname: body[:hostname],
           )
         end
 
-        # Validate or create the job
-        job = Minicron::Hub::Job.belonging_to(current_user).where(job_hash: body[:job_hash]).first_or_create! do |j|
+        # Hash the job command
+        command_hash = Minicron::Transport.get_job_hash(body[:command])
+
+        # Find or create the job
+        job = Minicron::Hub::Model::Job.belonging_to(current_user).where(command_hash: command_hash).first_or_create! do |j|
           j.user_id = current_user.id
-          j.job_hash = body[:job_hash]
           j.command = body[:command]
-          j.host_id = host.id
+          j.command_hash = command_hash
         end
 
         # Check if the job is enabled
@@ -34,26 +35,25 @@ class Minicron::Hub::App
         end
 
         # Get the latest execution number
-        latest_execution = Minicron::Hub::Execution.belonging_to(current_user)
-                                                   .where(job_id: job.id)
-                                                   .order(id: :desc)
-                                                   .limit(1)
-                                                   .pluck(:number)
+        latest_execution = Minicron::Hub::Model::Execution.belonging_to(current_user)
+                                                          .where(job_id: job.id)
+                                                          .order(id: :desc)
+                                                          .limit(1)
+                                                          .pluck(:number)
 
         # If this is the first execution then default it to 1 otherwise increment by 1
+        # TODO: is this safe to do like this?
         execution_number = latest_execution[0].nil? ? 1 : latest_execution[0] + 1
 
         # Create an execution for this job
-        execution = Minicron::Hub::Execution.create!(
+        execution = Minicron::Hub::Model::Execution.create!(
           user_id: current_user.id,
-          created_at: Time.at(body[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S'),
           job_id: job.id,
+          host_id: host.id,
           number: execution_number
         )
 
-        json(
-          execution_id: execution.id,
-        )
+        json(execution_id: execution.id)
       end
     rescue Exception => e
       status 500
@@ -68,7 +68,7 @@ class Minicron::Hub::App
     begin
       body = JSON.parse(request.body.read.to_s).symbolize_keys
 
-      Minicron::Hub::Execution.belonging_to(current_user).where(id: body[:execution_id]).update_all(
+      Minicron::Hub::Model::Execution.belonging_to(current_user).where(id: body[:execution_id]).update_all(
         started_at: Time.at(body[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
       )
 
@@ -86,7 +86,7 @@ class Minicron::Hub::App
     begin
       body = JSON.parse(request.body.read.to_s).symbolize_keys
 
-      Minicron::Hub::JobExecutionOutput.create!(
+      Minicron::Hub::Model::JobExecutionOutput.create!(
         user_id: current_user.id,
         execution_id: body[:execution_id],
         output: body[:output],
@@ -108,7 +108,7 @@ class Minicron::Hub::App
     begin
       body = JSON.parse(request.body.read.to_s).symbolize_keys
 
-      Minicron::Hub::Execution.belonging_to(current_user).where(id: body[:execution_id]).update_all(
+      Minicron::Hub::Model::Execution.belonging_to(current_user).where(id: body[:execution_id]).update_all(
         finished_at: Time.at(body[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
       )
 
@@ -126,7 +126,7 @@ class Minicron::Hub::App
     begin
       body = JSON.parse(request.body.read.to_s).symbolize_keys
 
-      Minicron::Hub::Execution.belonging_to(current_user).where(id: body[:execution_id]).update_all(
+      Minicron::Hub::Model::Execution.belonging_to(current_user).where(id: body[:execution_id]).update_all(
         exit_status: body[:exit_status]
       )
 

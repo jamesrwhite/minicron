@@ -16,7 +16,7 @@ module Minicron
 
       # Return the message for an alert
       #
-      # @option options [Minicron::Hub::Job] job a job instance
+      # @option options [Minicron::Hub::Model::Job] job a job instance
       # @option options [String] kind 'fail' or 'miss'
       # @option options [Integer, nil] schedule_id only applies to 'miss' alerts
       # @option options [Integer, nil] execution_id only used by 'fail' alerts

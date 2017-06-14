@@ -2,17 +2,17 @@ require 'scrypt'
 
 class Minicron::Hub::App
   get '/auth/sign-in' do
-    @previous = Minicron::Hub::User.new
+    @previous = Minicron::Hub::Model::User.new
 
     erb :'auth/sign-in', layout: :'layouts/app'
   end
 
   post '/auth/sign-in' do
-    @previous = Minicron::Hub::User.new
+    @previous = Minicron::Hub::Model::User.new
 
     begin
       # Authenticate the user
-      user = Minicron::Hub::User.auth(params[:email], params[:password])
+      user = Minicron::Hub::Model::User.auth(params[:email], params[:password])
 
       # Write their user id into the session if it existed
       if user
@@ -40,13 +40,13 @@ class Minicron::Hub::App
   end
 
   get '/auth/sign-up' do
-    @previous = Minicron::Hub::User.new
+    @previous = Minicron::Hub::Model::User.new
 
     erb :'auth/sign-up', layout: :'layouts/app'
   end
 
   post '/auth/sign-up' do
-    @previous = Minicron::Hub::User.new
+    @previous = Minicron::Hub::Model::User.new
 
     begin
       # Validate the password length here before it gets to the model
@@ -58,7 +58,7 @@ class Minicron::Hub::App
       password = SCrypt::Password.create(params[:password], key_len: 64)
 
       # Create their account
-      user = Minicron::Hub::User.create!(
+      user = Minicron::Hub::Model::User.create!(
         name: params[:name],
         email: params[:email],
         password: password,
