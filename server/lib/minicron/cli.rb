@@ -7,7 +7,6 @@ require Minicron::REQUIRE_PATH + 'constants'
 require Minicron::REQUIRE_PATH + 'cli/commands'
 require Minicron::REQUIRE_PATH + 'transport'
 require Minicron::REQUIRE_PATH + 'monitor'
-require Minicron::REQUIRE_PATH + 'transport/client'
 require Minicron::REQUIRE_PATH + 'transport/server'
 
 include Commander::UI

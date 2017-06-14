@@ -3,7 +3,6 @@ require 'rake'
 require 'active_record'
 require_relative '../../minicron'
 require Minicron::REQUIRE_PATH + 'transport'
-require Minicron::REQUIRE_PATH + 'transport/client'
 require Minicron::REQUIRE_PATH + 'transport/server'
 
 module Minicron
