@@ -17,7 +17,12 @@ module Minicron
             api_key = req.env["HTTP_X_API_KEY"]
 
             # Try and find a user that matches the api key
+            begin
               user = api_key ? Minicron::Hub::Model::User.where(api_key: api_key).first : nil
+            rescue ActiveRecord::RecordNotFound
+              # TODO: log here?
+              user = nil
+            end
 
             if user
               # Add the user to the env so we can use it later
@@ -35,7 +40,12 @@ module Minicron
             user_id = req.session[:user_id]
 
             # Try and find a user that matches the user id
+            begin
               user = user_id ? Minicron::Hub::Model::User.find(req.session[:user_id]) : nil
+            rescue ActiveRecord::RecordNotFound
+              # TODO: log here?
+              user = nil
+            end
 
             if user
               # Add the user to the env so we can use it later
