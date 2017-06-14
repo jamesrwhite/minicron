@@ -6,7 +6,7 @@
         recent_executions = Minicron::Hub::Model::Execution.belonging_to(current_user)
                                                            .all
                                                            .order(:created_at => :desc, :started_at => :desc)
-                                                           .includes(:job)
+                                                           .includes(:job, :host)
                                                            .limit(15)
       %>
 
