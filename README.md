@@ -10,7 +10,7 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 ### Status
 
 > This branch is under active development for version 1.0 and as such is not recommended for use,
-> the latest stable release ([0.9.7](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.7))
+> the latest release ([0.9.7](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.7))
 > is in [master](https://github.com/jamesrwhite/minicron/tree/master).
 
 - [Overview](#overview)
