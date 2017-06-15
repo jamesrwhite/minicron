@@ -6,13 +6,23 @@ minicron
 [![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
 [![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)
 
+## Status
+
+> After thinking a lot about the future of minicron and it's long overdue 1.0 release I've decided to focus it solely on 
+> monitoring cron jobs and doing that really well and leave the management side [to](https://www.chef.io)
+> [other](https://puppet.com/) [tools](https://www.ansible.com/). As such I'm removing the features related to SSH
+> based magement of jobs, it's possible that in future versions I may revist this but for now I want to focus solely
+> on monitoring. All development on this effort will be happening in the
+> [develop](https://github.com/jamesrwhite/minicron/tree/develop) branch and there will be **no further 0.9.x releases**.
+
+## Overview
+
 minicron aims to complement ````cron```` by making it easier to manage and monitor cron jobs, it can largely be
 thought of as two components that interact together, the CLI and the Hub. The CLI is what is installed on your
 server(s) and executes your cron command and reports the status back to the Hub. The Hub is the central point
 where data from one or many instances of the CLI is received and stored in a database. The Hub also provides
 a web interface to the data and makes it easy to manage your cron jobs.
 
-- [Roadmap](#roadmap)
 - [Background](#background)
 - [Features](#features)
 - [Requirements](#requirements)
@@ -32,16 +42,6 @@ Screenshots
 <img src="http://f.cl.ly/items/0c27341m2l1E230B0q1l/Image%202014-04-15%20at%2012.40.42%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/0Y2O0P0j012s3C3t3a3E/Image%202014-04-15%20at%2012.39.19%20am.png" height="175"/>
 <img src="http://f.cl.ly/items/2R1f2m350W46423c220D/Image%202014-04-15%20at%2012.32.41%20am.png" height="175"/>
-
-Roadmap
--------
-
-After thinking a lot about the future of minicron and it's long overdue 1.0 release I've decided to focus it solely on 
-monitoring cron jobs and doing that really well and leave the management side [to](https://www.chef.io)
-[other](https://puppet.com/) [tools](https://www.ansible.com/). As such I'm removing the features related to SSH
-based magement of jobs, it's possible that in future versions I may revist this but for now I want to focus solely
-on monitoring. All development on this effort will be happening in the
-[develop](https://github.com/jamesrwhite/minicron/tree/develop) branch and there will be no further 0.9.x releases.
 
 Background
 -----------
