@@ -147,7 +147,7 @@ module Minicron
                 puts 'minicron is not running'
               end
             else
-              raise Minicron::ArgumentError, 'Invalid action, expected [start|stop|status]. See `minicron help server`'
+              raise Minicron::ArgumentError, 'Invalid action, expected [start|stop|restart|status]. See `minicron help server`'
             end
           end
         end
