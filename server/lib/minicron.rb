@@ -194,6 +194,7 @@ module Minicron
         database: config['database'],
         username: config['username'],
         password: config['password'],
+        port: config['port'],
         reconnect: true
       }
     when 'sqlite'

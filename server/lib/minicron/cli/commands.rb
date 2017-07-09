@@ -5,6 +5,14 @@ require_relative '../../minicron'
 require Minicron::REQUIRE_PATH + 'transport'
 require Minicron::REQUIRE_PATH + 'transport/server'
 
+def database_exists?
+  ActiveRecord::Base.connection
+rescue ActiveRecord::NoDatabaseError
+  false
+else
+  true
+end
+
 module Minicron
   module CLI
     class Commands
@@ -38,10 +46,12 @@ module Minicron
                 )
 
                 # Create the database
-                ActiveRecord::Base.connection.create_database(
-                  Minicron.config['server']['database']['database'],
-                  charset: 'utf8'
-                )
+                unless database_exists?
+                  ActiveRecord::Base.connection.create_database(
+                    Minicron.config['server']['database']['database'],
+                    charset: 'utf8'
+                  )
+                end
               end
 
               # Then create the initial schema based on schema.rb
