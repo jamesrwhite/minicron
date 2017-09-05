@@ -146,8 +146,6 @@ func Command(command string, output chan string) (int, error) {
 	}
 
 	// Close the output channel to signify we have no more output to send
-	// TODO: currently this blocks the program from exiting in cmd/run.go which is
-	// just a happy accident really
 	close(output)
 
 	return exitStatus, nil
