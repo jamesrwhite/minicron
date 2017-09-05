@@ -8,10 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "A brief description of your command",
+	Short: "run the given command",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Try and parse the command to run from the args we got
 		command, err := run.Parse(args)
