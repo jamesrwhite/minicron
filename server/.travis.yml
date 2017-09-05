@@ -1,4 +1,4 @@
 language: ruby
 rvm:
-  - 2.3.3
-script: bundle exec rake spec
+  - 2.4.0
+script: bundle exec rspec
