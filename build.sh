@@ -5,4 +5,6 @@ echo "TODO: add client build"
 
 # Server build
 cd server
-bundle exec rspec
+make setup
+make build
+make test

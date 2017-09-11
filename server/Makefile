@@ -1,7 +1,7 @@
 .PHONY: build
 
-deps:
-	gem install bundler
+setup:
+	gem install --version 1.15.4 bundler
 
 build_assets:
 	RACK_ENV=production rake assets:precompile
