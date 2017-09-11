@@ -2,4 +2,5 @@ dist: trusty
 language: ruby
 rvm:
   - 2.4.0
-script: build.sh
+script: ./build.sh
+
