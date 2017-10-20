@@ -14,7 +14,7 @@ module Minicron
             domain: Minicron.config['alerts']['email']['smtp']['domain'],
             user_name: Minicron.config['alerts']['email']['smtp']['user_name'],
             password: Minicron.config['alerts']['email']['smtp']['password'],
-			authentication: Minicron.config['alerts']['email']['smtp']['authentication'],
+			      authentication: Minicron.config['alerts']['email']['smtp']['authentication'],
             enable_starttls_auto: Minicron.config['alerts']['email']['smtp']['enable_starttls_auto']
           )
         end
