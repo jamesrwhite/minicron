@@ -26,9 +26,9 @@ module Minicron
       def get_message(options = {})
         case options[:kind]
         when 'miss'
-          "Job ##{options[:job_id]} failed to execute at its expected time - #{options[:expected_at]}"
+          "Job '#{options[:job][:name]}' (##{options[:job_id]}) failed to execute at its expected time - #{options[:expected_at]}"
         when 'fail'
-          "Execution ##{options[:execution_id]} of Job ##{options[:job_id]} failed"
+          "Execution ##{options[:execution_id]} of Job '#{options[:job][:name]}' (##{options[:job_id]}) failed"
         else
           raise Minicron::ArgumentError, "The kind '#{options[:kind]} is not supported!"
         end
