@@ -11,7 +11,7 @@ describe Minicron::Alert::Slack do
                                })
   end
 
-  describe '#intiailize' do
+  describe '#initialize' do
     it 'should create an instance of the Slack gem' do
       slack = Minicron::Alert::Slack.new
 
@@ -25,12 +25,15 @@ describe Minicron::Alert::Slack do
         slack = Minicron::Alert::Slack.new
         time = Time.now.utc
         options = {
-          job_id: 1,
-          expected_at: time,
-          execution_id: 100,
-          kind: 'miss'
+          :job_id => 1,
+          :expected_at => time,
+          :execution_id => 100,
+          :kind => 'miss',
+          :job => {
+            :name => 'Spec Job'
+          }
         }
-        message = "Job #1 failed to execute at its expected time - #{time}"
+        message = "Job 'Spec Job' (#1) failed to execute at its expected time - #{time}"
 
         expect(slack.get_message(options)).to eq message
       end
@@ -40,11 +43,14 @@ describe Minicron::Alert::Slack do
       it 'should return the correct message' do
         slack = Minicron::Alert::Slack.new
         options = {
-          job_id: 1,
-          execution_id: 100,
-          kind: 'fail'
+          :job_id => 1,
+          :execution_id => 100,
+          :kind => 'fail',
+          :job => {
+            :name => 'Spec Job'
+          }
         }
-        message = 'Execution #100 of Job #1 failed'
+        message = "Execution #100 of Job 'Spec Job' (#1) failed"
 
         expect(slack.get_message(options)).to eq message
       end
