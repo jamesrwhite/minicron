@@ -53,12 +53,26 @@ class Minicron::Hub::App
           number: execution_number
         )
 
-        json(execution_id: execution.id)
+        json({
+          body: {
+            execution_id: execution.id
+          },
+          success: true,
+          error: {
+            message: nil
+          }
+        })
       end
     rescue Exception => e
       status 500
 
-      json(error: e.message)
+      json({
+        body: nil,
+        success: false,
+        error: {
+          message: e.message
+        }
+      })
     end
   end
 
@@ -72,11 +86,23 @@ class Minicron::Hub::App
         started_at: Time.at(body[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
       )
 
-      json(success: true)
+      json({
+        body: nil,
+        success: true,
+        error: {
+          message: nil
+        }
+      })
     rescue Exception => e
       status 500
 
-      json(error: e.message)
+      json({
+        body: nil,
+        success: false,
+        error: {
+          message: e.message
+        }
+      })
     end
   end
 
@@ -94,11 +120,23 @@ class Minicron::Hub::App
         seq: body[:seq]
       )
 
-      json(success: true)
+      json({
+        body: nil,
+        success: true,
+        error: {
+          message: nil
+        }
+      })
     rescue Exception => e
       status 500
 
-      json(error: e.message)
+      json({
+        body: nil,
+        success: false,
+        error: {
+          message: e.message
+        }
+      })
     end
   end
 
@@ -112,11 +150,23 @@ class Minicron::Hub::App
         finished_at: Time.at(body[:timestamp].to_i).utc.strftime('%Y-%m-%d %H:%M:%S')
       )
 
-      json(success: true)
+      json({
+        body: nil,
+        success: true,
+        error: {
+          message: nil
+        }
+      })
     rescue Exception => e
       status 500
 
-      json(error: e.message)
+      json({
+        body: nil,
+        success: false,
+        error: {
+          message: e.message
+        }
+      })
     end
   end
 
@@ -140,11 +190,23 @@ class Minicron::Hub::App
         )
       end
 
-      json(success: true)
+      json({
+        body: nil,
+        success: true,
+        error: {
+          message: nil
+        }
+      })
     rescue Exception => e
       status 500
 
-      json(error: e.message)
+      json({
+        body: nil,
+        success: false,
+        error: {
+          message: e.message
+        }
+      })
     end
   end
 end
