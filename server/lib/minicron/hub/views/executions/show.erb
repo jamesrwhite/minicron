@@ -67,4 +67,6 @@
 
 <% if @execution.job_execution_outputs.length > 0 %>
   <div class="output tomorrow-night-eighties-ansi-theme"><% @execution.job_execution_outputs.each do |output| %><%= ansi_to_html(output.safe_output) + "\n" %><% end %></div>
+<% else %>
+  No output recorded.
 <% end %>
