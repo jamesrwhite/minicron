@@ -5,14 +5,6 @@ require_relative '../../minicron'
 require Minicron::REQUIRE_PATH + 'transport'
 require Minicron::REQUIRE_PATH + 'transport/server'
 
-def database_exists?
-  ActiveRecord::Base.connection
-rescue ActiveRecord::NoDatabaseError
-  false
-else
-  true
-end
-
 module Minicron
   module CLI
     class Commands
@@ -37,25 +29,22 @@ module Minicron
             # Adjust the task name for some more friendly tasks
             case args.first
             when 'setup'
-              # You can't "create" a database in sqlite ¯\_(ツ)_/¯
-              unless Minicron.config['server']['database']['type'] == 'sqlite'
-                # Remove the database name from the config in case it doesn't exist yet
-                Minicron.establish_db_connection(
-                  Minicron.config['server']['database'].merge('database' => nil),
-                  Minicron.config['verbose']
-                )
+              # Remove the database name from the config in case it doesn't exist yet
+              Minicron.establish_db_connection(
+                Minicron.config['server']['database'].merge('database' => nil),
+                Minicron.config['verbose']
+              )
 
-                # Create the database
-                unless database_exists?
-                  ActiveRecord::Base.connection.create_database(
-                    Minicron.config['server']['database']['database'],
-                    charset: 'utf8'
-                  )
-                end
+              begin
+                ActiveRecord::Base.connection.create_database(
+                  Minicron.config['server']['database']['database'],
+                  charset: 'utf8'
+                )
+              rescue
               end
 
               # Then create the initial schema based on schema.rb
-              ActiveRecord::Tasks::DatabaseTasks.load_schema_for(
+              ActiveRecord::Tasks::DatabaseTasks.load_schema(
                 Minicron.get_activerecord_db_config(Minicron.config['server']['database']),
                 ActiveRecord::Base.schema_format,
                 "#{Minicron::DB_PATH}/schema.rb"
