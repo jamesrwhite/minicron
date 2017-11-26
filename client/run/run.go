@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jamesrwhite/minicron/api"
+	"github.com/jamesrwhite/minicron/client/api"
 
 	"github.com/kr/pty"
 )

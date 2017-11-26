@@ -1,4 +1,10 @@
-package: github.com/jamesrwhite/minicron
+package: github.com/jamesrwhite/minicron/client
 import:
 - package: github.com/kr/pty
+  version: ~1.0.1
+- package: github.com/sirupsen/logrus
+  version: ~1.0.3
 - package: github.com/spf13/cobra
+  version: ~0.0.1
+- package: github.com/spf13/viper
+  version: ~1.0.0

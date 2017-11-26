@@ -1,0 +1,49 @@
+package commands
+
+import (
+	"fmt"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
+
+	"github.com/jamesrwhite/minicron/client/run"
+)
+
+var RunCommand = &cobra.Command{
+	Use:   "run",
+	Short: "run the given command",
+	Run: func(cmd *cobra.Command, args []string) {
+		// Try and parse the command to run from the args we got
+		command, err := run.Parse(args)
+
+		if err != nil {
+			log.WithFields(log.Fields{
+				"error": err,
+			}).Fatal("run_parse")
+		}
+
+		// Create a channel we can listen for command output on
+		output := make(chan string)
+
+		// Execute the command
+		go func() {
+			exitStatus, err := run.Command(command, output)
+
+			if err != nil {
+				fmt.Println(err)
+
+				log.WithFields(log.Fields{
+					"error":      err,
+					"exitStatus": exitStatus,
+				}).Fatal("run_execute")
+			}
+		}()
+
+		// Listen and print any output from the command
+		for line := range output {
+			fmt.Println(line)
+		}
+	},
+}
+
+func init() {}

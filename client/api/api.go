@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 type Client interface {
@@ -109,31 +112,56 @@ func (c *client) Exit(req *ExitRequest) error {
 }
 
 func (c *client) post(method string, body interface{}) ([]byte, error) {
+	// Get the api base endpoint
+	apiBase := viper.Get("apiBase")
+
 	// Build the URL for the request
 	// TODO: get base url from config
-	url := fmt.Sprintf("http://127.0.0.1:9292/api/1.0%s", method)
+	url := fmt.Sprintf("%s%s", apiBase, method)
 
 	// Marshal the request body struct to json
 	reqJSON, err := json.Marshal(body)
-
-	fmt.Println("req: " + string(reqJSON))
 
 	// Build the requests
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(reqJSON))
 
 	if err != nil {
+		log.WithFields(log.Fields{
+			"method": method,
+			"url":    url,
+			"error":  err,
+		}).Error("api_request")
+
 		return []byte{}, err
 	}
 
-	// Add the api token
-	// TODO: get this from config
-	req.Header.Add("X-API-Key", "RsMZbz4zSJM7vfkAJ8P7CaHkYcdCSr8HF1whHRNxQv5m9ulWkaszImV9x72lZX-Q")
+	// Get the api key from config
+	// TODO: validate it here or earlier?
+	apiKey := viper.GetString("apiKey")
+
+	// Add the api key and content type
+	req.Header.Add("X-API-Key", apiKey)
 	req.Header.Add("Content-Type", "application/json")
+
+	log.WithFields(log.Fields{
+		"method":  method,
+		"url":     url,
+		"apiKey":  apiKey,
+		"payload": string(reqJSON),
+	}).Debug("api_request")
 
 	// Execute the request
 	resp, err := c.http.Do(req)
 
 	if err != nil {
+		log.WithFields(log.Fields{
+			"method":  method,
+			"url":     url,
+			"apiKey":  apiKey,
+			"payload": string(reqJSON),
+			"error":   err,
+		}).Error("api_response")
+
 		return []byte{}, err
 	}
 
@@ -142,10 +170,24 @@ func (c *client) post(method string, body interface{}) ([]byte, error) {
 	respBody, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
+		log.WithFields(log.Fields{
+			"method":  method,
+			"url":     url,
+			"apiKey":  apiKey,
+			"payload": string(reqJSON),
+			"error":   err,
+		}).Error("api_response")
+
 		return []byte{}, err
 	}
 
-	fmt.Println("res: " + string(respBody))
+	log.WithFields(log.Fields{
+		"method":   method,
+		"url":      url,
+		"apiKey":   apiKey,
+		"payload":  string(reqJSON),
+		"response": string(respBody),
+	}).Debug("api_response")
 
 	return respBody, nil
 }
