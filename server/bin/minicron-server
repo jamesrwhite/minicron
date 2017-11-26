@@ -5,7 +5,7 @@ require Minicron::REQUIRE_PATH + 'cli'
 require Minicron::REQUIRE_PATH + 'transport/server'
 
 # Set the process name to something more useful
-$PROGRAM_NAME = "minicron #{ARGV.join(' ')}"
+$PROGRAM_NAME = "minicron-server #{ARGV.join(' ')}"
 
 begin
   # Capture any output from STDERR so we can handle it how we want to
