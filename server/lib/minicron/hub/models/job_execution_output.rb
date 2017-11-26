@@ -5,8 +5,8 @@ module Minicron::Hub
     class JobExecutionOutput < Minicron::Hub::Model::Base
       belongs_to :execution
 
-      validates :execution_id, presence: true, numericality: { only_integer: true }
-      validates :seq, presence: true, numericality: { only_integer: true }
+      validates :execution_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+      validates :seq, presence: true, numericality: { only_integer: true, greater_than: 0 }
       validates :timestamp, presence: true
 
       def safe_output
