@@ -35,6 +35,8 @@ func Command(command string, output chan string) (int, error) {
 	hostname, err := os.Hostname()
 
 	if err != nil {
+		close(output)
+
 		return 0, fmt.Errorf("Unable to determine hostname: %s", err.Error())
 	}
 
@@ -42,6 +44,8 @@ func Command(command string, output chan string) (int, error) {
 	user, err := user.Current()
 
 	if err != nil {
+		close(output)
+
 		return 0, fmt.Errorf("Unable to determine user: %s", err.Error())
 	}
 
@@ -51,6 +55,8 @@ func Command(command string, output chan string) (int, error) {
 	client, err := api.GetClient()
 
 	if err != nil {
+		close(output)
+
 		return 0, fmt.Errorf("Unable to initialise api client: %s", err.Error())
 	}
 
@@ -63,6 +69,8 @@ func Command(command string, output chan string) (int, error) {
 	})
 
 	if err != nil {
+		close(output)
+
 		return 0, err
 	}
 
@@ -73,6 +81,8 @@ func Command(command string, output chan string) (int, error) {
 	file, err := pty.Start(cmd)
 
 	if err != nil {
+		close(output)
+
 		return 0, err
 	}
 
@@ -83,6 +93,8 @@ func Command(command string, output chan string) (int, error) {
 	})
 
 	if err != nil {
+		close(output)
+
 		return 0, err
 	}
 
@@ -106,6 +118,8 @@ func Command(command string, output chan string) (int, error) {
 		})
 
 		if err != nil {
+			close(output)
+
 			return 0, err
 		}
 	}
@@ -118,6 +132,8 @@ func Command(command string, output chan string) (int, error) {
 	})
 
 	if err := scanner.Err(); err != nil {
+		close(output)
+
 		return 0, err
 	}
 
@@ -147,6 +163,8 @@ func Command(command string, output chan string) (int, error) {
 	})
 
 	if err != nil {
+		close(output)
+
 		return 0, err
 	}
 
