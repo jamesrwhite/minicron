@@ -101,6 +101,7 @@ func Command(command string, output chan string) (int, error) {
 		_, err = client.Output(&api.OutputRequest{
 			ExecutionID: initResponse.Body.ExecutionID,
 			Output:      line,
+			Seq:         int(time.Now().Unix()), // TODO: seq seems to be serving the same purpose as timestamp?
 			Timestamp:   time.Now().Unix(),
 		})
 
