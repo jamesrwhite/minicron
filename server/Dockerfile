@@ -22,11 +22,7 @@ RUN bundle install
 # Copy the app over and switch into that dir
 COPY . /usr/src/app
 
-# Build and install the server
-RUN bundle exec rake build
-RUN gem install pkg/*.gem
-
 EXPOSE 9292
 
-ENTRYPOINT ["minicron-server"]
+ENTRYPOINT ["bundle", "exec", "bin/minicron-server"]
 CMD ["server", "--debug"]
