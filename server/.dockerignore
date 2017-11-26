@@ -1,0 +1,22 @@
+# Vendor dir is platform specific
+vendor
+
+# Test coverage reports
+coverage
+spec/reports
+
+# Builds
+builds/*.tar.gz
+
+# Ignore all sqlite
+*.sqlite3
+*.sqlite3-journal
+
+# Ignore sass cache
+.sass-cache
+
+# Builds
+pkg
+
+# Assets
+lib/minicron/hub/public

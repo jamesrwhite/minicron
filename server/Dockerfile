@@ -1,10 +1,32 @@
-FROM phusion/baseimage:0.9.16
+FROM ruby:2.4.1
+
 MAINTAINER James White <james.white@minicron.com>
+LABEL maintainer="james.white@minicron.com"
 
-# Install minicron install dependencies
-RUN apt-get update && apt-get install -y curl unzip
+WORKDIR /usr/src/app
 
-# Install minicron
-ADD install.sh /
-RUN chmod +x /install.sh
-RUN /install.sh
+# Install required packages
+RUN apt-get update && apt-get install -y less
+
+# Run core setup
+RUN gem install --version 1.15.4 bundler
+
+# Copy over the dependency files
+COPY Gemfile /usr/src/app
+COPY Gemfile.lock /usr/src/app
+COPY minicron.gemspec /usr/src/app
+
+# Install dependencies
+RUN bundle install
+
+# Copy the app over and switch into that dir
+COPY . /usr/src/app
+
+# Build and install the server
+RUN bundle exec rake build
+RUN gem install pkg/*.gem
+
+EXPOSE 9292
+
+ENTRYPOINT ["minicron-server"]
+CMD ["server", "--debug"]
