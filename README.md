@@ -10,10 +10,10 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 ### Status
 
 > Latest stable release in
-> [0.9.7](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.7)) tag but
+> [0.9.7](https://github.com/jamesrwhite/minicron/tree/v0.9.7) tag but
 > `0.9.x` is not being actively developed/supported. This branch is under active
 > development for `1.0.0`.
-
+>
 > After thinking about the future of minicron and it's long overdue 1.0
 > release I've decided to focus it solely on the monitoring of cron jobs and doing
 > that really well and leave the management side [to](https://www.chef.io)
