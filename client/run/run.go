@@ -31,17 +31,18 @@ func Parse(command []string) (string, error) {
 }
 
 func Command(command string, output chan string) (int, error) {
+	// Get the hostnasme of the server we're running on
 	hostname, err := os.Hostname()
 
 	if err != nil {
-		return 1, fmt.Errorf("Unable to determine hostname: %s", err.Error())
+		return 0, fmt.Errorf("Unable to determine hostname: %s", err.Error())
 	}
 
 	// Get the user we're running as
 	user, err := user.Current()
 
 	if err != nil {
-		return 1, fmt.Errorf("Unable to determine user: %s", err.Error())
+		return 0, fmt.Errorf("Unable to determine user: %s", err.Error())
 	}
 
 	username := user.Username
@@ -50,16 +51,20 @@ func Command(command string, output chan string) (int, error) {
 	client, err := api.GetClient()
 
 	if err != nil {
-		return 1, fmt.Errorf("Unable to initialise api client: %s", err.Error())
+		return 0, fmt.Errorf("Unable to initialise api client: %s", err.Error())
 	}
 
 	// Mark the executino as being initialised
-	execution, _ := client.Init(&api.InitRequest{
+	initResponse, err := client.Init(&api.InitRequest{
 		User:      username,
 		Command:   command,
 		Hostname:  hostname,
 		Timestamp: time.Now().Unix(),
 	})
+
+	if err != nil {
+		return 0, err
+	}
 
 	// Run the command via sh to allow for basic shell functionality
 	cmd := exec.Command("sh", "-c", command)
@@ -68,17 +73,17 @@ func Command(command string, output chan string) (int, error) {
 	file, err := pty.Start(cmd)
 
 	if err != nil {
-		return 1, err
+		return 0, err
 	}
 
 	// Mark the execution as having started
-	err = client.Start(&api.StartRequest{
-		ExecutionID: execution.ExecutionID,
+	_, err = client.Start(&api.StartRequest{
+		ExecutionID: initResponse.Body.ExecutionID,
 		Timestamp:   time.Now().Unix(),
 	})
 
 	if err != nil {
-		return 1, err
+		return 0, err
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -93,26 +98,26 @@ func Command(command string, output chan string) (int, error) {
 
 		// Send the output to the api
 		// TODO: do this async
-		err = client.Output(&api.OutputRequest{
-			ExecutionID: execution.ExecutionID,
+		_, err = client.Output(&api.OutputRequest{
+			ExecutionID: initResponse.Body.ExecutionID,
 			Output:      line,
 			Timestamp:   time.Now().Unix(),
 		})
 
 		if err != nil {
-			return 1, err
+			return 0, err
 		}
 	}
 
 	// Mark the execution as having finished
 	// TODO: should this be before/after the below error?
-	err = client.Finish(&api.FinishRequest{
-		ExecutionID: execution.ExecutionID,
+	_, err = client.Finish(&api.FinishRequest{
+		ExecutionID: initResponse.Body.ExecutionID,
 		Timestamp:   time.Now().Unix(),
 	})
 
 	if err := scanner.Err(); err != nil {
-		return 1, err
+		return 0, err
 	}
 
 	// Wait for the command to finish so we can determinse it's exit status
@@ -134,15 +139,14 @@ func Command(command string, output chan string) (int, error) {
 	}
 
 	// Mark the execution as having finished
-	// TODO: should this be before/after the below error?
-	err = client.Exit(&api.ExitRequest{
-		ExecutionID: execution.ExecutionID,
+	_, err = client.Exit(&api.ExitRequest{
+		ExecutionID: initResponse.Body.ExecutionID,
 		ExitStatus:  exitStatus,
 		Timestamp:   time.Now().Unix(),
 	})
 
 	if err != nil {
-		return exitStatus, err
+		return 0, err
 	}
 
 	// Close the output channel to signify we have no more output to send

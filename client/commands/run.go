@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"os"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -25,16 +26,15 @@ var RunCommand = &cobra.Command{
 		// Create a channel we can listen for command output on
 		output := make(chan string)
 
+		var exitStatus int
+
 		// Execute the command
 		go func() {
-			exitStatus, err := run.Command(command, output)
+			exitStatus, err = run.Command(command, output)
 
 			if err != nil {
-				fmt.Println(err)
-
 				log.WithFields(log.Fields{
-					"error":      err,
-					"exitStatus": exitStatus,
+					"error": err,
 				}).Fatal("run_execute")
 			}
 		}()
@@ -43,6 +43,9 @@ var RunCommand = &cobra.Command{
 		for line := range output {
 			fmt.Println(line)
 		}
+
+		// Exit with the exit status of the command
+		os.Exit(exitStatus)
 	},
 }
 
