@@ -116,13 +116,22 @@ func (c *client) post(method string, body interface{}) ([]byte, error) {
 	apiBase := viper.Get("apiBase")
 
 	// Build the URL for the request
-	// TODO: get base url from config
 	url := fmt.Sprintf("%s%s", apiBase, method)
 
 	// Marshal the request body struct to json
 	reqJSON, err := json.Marshal(body)
 
-	// Build the requests
+	if err != nil {
+		log.WithFields(log.Fields{
+			"method": method,
+			"url":    url,
+			"error":  err,
+		}).Error("api_request")
+
+		return []byte{}, err
+	}
+
+	// Build the request
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(reqJSON))
 
 	if err != nil {
@@ -136,7 +145,6 @@ func (c *client) post(method string, body interface{}) ([]byte, error) {
 	}
 
 	// Get the api key from config
-	// TODO: validate it here or earlier?
 	apiKey := viper.GetString("apiKey")
 
 	// Add the api key and content type
