@@ -39,9 +39,6 @@ module Minicron
         },
         config
       )
-
-      # If an api key is in the env, use that
-      Minicron.config['client']['api']['key'] = ENV['MINICRON_API_KEY'] unless ENV['MINICRON_API_KEY'].nil?
     end
 
     # Sets up an instance of commander and runs it based on the argv param
