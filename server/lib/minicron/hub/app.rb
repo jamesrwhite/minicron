@@ -13,7 +13,6 @@ require 'pathname'
 require 'ansi-to-html'
 require 'sinatra/flash'
 require 'cron2english'
-require 'better_errors'
 require 'sinatra/asset_pipeline'
 
 module Minicron::Hub
