@@ -129,7 +129,7 @@ describe Minicron do
     context 'when a non existent toml file is passed' do
       it 'should raise an Exception' do
         expect do
-          Minicron.parse_file_config('./nowhere/minicron.toml')
+          Minicron.parse_file_config('./nowhere/server.toml')
         end.to raise_error Exception
       end
     end

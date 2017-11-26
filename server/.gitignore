@@ -16,7 +16,7 @@ builds/*.tar.gz
 # Ignore sass cache
 .sass-cache
 
-# My development config that I symlink to /etc/minicron.toml
+# My development config that I symlink to /etc/minicron/server.toml
 my.config.toml
 
 # Builds

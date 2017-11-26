@@ -150,7 +150,7 @@ or ````--version```` are passed to the CLI.
 Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
 to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
-[minicron.toml](config/minicron.toml) file and minicron will parse a config located in ````/etc/minicron.toml```` if it
+[server.toml](config/server.toml) file and minicron will parse a config located in ````/etc/minicron/server.toml```` if it
 exists. Options specified via the command line will take precedence over those taken from a config file.
 
 ## Versioning
