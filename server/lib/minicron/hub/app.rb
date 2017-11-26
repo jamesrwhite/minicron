@@ -43,7 +43,7 @@ module Minicron::Hub
       set :root, Minicron::HUB_PATH
 
       # Always compress assets
-      set :environment, :production
+      # set :environment, :production
 
       # Serve static assets from ./public
       set :public_folder, "#{Minicron::HUB_PATH}/public"
