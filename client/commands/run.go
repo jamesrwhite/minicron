@@ -35,7 +35,7 @@ var RunCommand = &cobra.Command{
 			if err != nil {
 				log.WithFields(log.Fields{
 					"error": err,
-				}).Fatal("run_execute")
+				}).Error("run_execute")
 			}
 		}()
 
