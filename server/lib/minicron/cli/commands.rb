@@ -109,16 +109,16 @@ module Minicron
             case action
             when 'start'
               insidious.start! do
-                # Run the execution monitor (this runs in a separate thread)
-                monitor = Minicron::Monitor.new
-                monitor.start!
-
                 # Start the server!
                 Minicron::Transport::Server.start!(
                   Minicron.config['server']['host'],
                   Minicron.config['server']['port'],
                   Minicron.config['server']['path']
                 )
+
+                # Run the execution monitor (this runs in a separate thread)
+                monitor = Minicron::Monitor.new
+                monitor.start!
               end
             when 'stop'
               insidious.stop!
