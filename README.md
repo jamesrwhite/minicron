@@ -77,7 +77,7 @@ largely from my experience and frustrations using cron both in a personal and pr
 #### Web Server / Reverse Proxy
 
 #### Nginx
-A simple [example config](config/nginx.conf) for nginx is provided.
+A simple [example config](server/config/nginx.conf) for nginx is provided.
 
 #### Apache
 If you're using apache as your reverse proxy you need to ensure you have the following modules installed:
@@ -87,7 +87,7 @@ If you're using apache as your reverse proxy you need to ensure you have the fol
 Run the following to enable them and then restart apache
 ```a2enmod proxy proxy_html proxy_http xml2enc```
 
-A simple [example config](config/apache.conf) for apache is provided.
+A simple [example config](server/config/apache.conf) for apache is provided.
 
 ## Installation
 
