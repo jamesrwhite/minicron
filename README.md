@@ -95,6 +95,8 @@ A simple [example config](server/config/apache.conf) for apache is provided.
 wget https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh
 chmod +x install.sh
 ./install.sh
+nano /etc/minicron.toml
+minicron db setup
 ```
 
 ## Usage
