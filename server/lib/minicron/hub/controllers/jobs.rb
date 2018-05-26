@@ -1,7 +1,6 @@
 class Minicron::Hub::App
   get '/jobs' do
     @jobs = Minicron::Hub::Model::Job.belonging_to(current_user)
-                                     .includes(:executions)
                                      .all
                                      .order(created_at: :desc)
 
@@ -10,8 +9,12 @@ class Minicron::Hub::App
 
   get '/job/:id' do
     @job = Minicron::Hub::Model::Job.belonging_to(current_user)
-                                    .includes(:executions, :schedules)
+                                    .includes(:schedules)
                                     .find(params[:id])
+    @job_executions = Minicron::Hub::Model::Execution.belonging_to(current_user)
+                                                      .where(job_id: @job.id)
+                                                      .limit(15)
+                                                      .order(created_at: :desc)
 
     # Sort the executions in code for better perf
     @job.executions.sort { |a, b| a.number <=> b.number }

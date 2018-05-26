@@ -8,7 +8,12 @@ class Minicron::Hub::App
   end
 
   get '/host/:id' do
-    @host = Minicron::Hub::Model::Host.belonging_to(current_user).includes(executions: :job).find(params[:id])
+    @host = Minicron::Hub::Model::Host.belonging_to(current_user).find(params[:id])
+    @host_executions = Minicron::Hub::Model::Execution.belonging_to(current_user)
+                                                      .includes(:job)
+                                                      .where(host_id: @host.id)
+                                                      .limit(15)
+                                                      .order(created_at: :desc)
 
     erb :'hosts/show', layout: :'layouts/app'
   end

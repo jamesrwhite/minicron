@@ -18,7 +18,7 @@
       <% @jobs.each do |job| %>
         <tr>
           <td><%= job.safe_name %></td>
-          <td><%= job.executions.count %></td>
+          <td><%= job.executions_count %></td>
           <td>
             <a href="<%= "#{route_prefix}/job/#{job.id}" %>" class="pull-left btn btn-info btn-xs">View</a>
             <a href="<%= "#{route_prefix}/job/#{job.id}/edit" %>" class="pull-left btn btn-warning btn-xs">Edit</a>

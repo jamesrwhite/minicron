@@ -36,7 +36,7 @@
 </form>
 
 <header class="clearfix">
-  <h2 class="pull-left">Executions</h2>
+  <h2 class="pull-left">Recent Executions</h2>
 </header>
 <hr/>
 
@@ -53,7 +53,7 @@
   </thead>
 
   <tbody>
-    <% @host.executions.each do |execution| %>
+    <% @host_executions.each do |execution| %>
       <tr>
         <td><a href="<%= "#{route_prefix}/job/#{execution.job.id}" %>"><%= execution.job.name %></a></td>
         <td><a href="<%= "#{route_prefix}/execution/#{execution.id}" %>"><%= execution.number %></a></td>
