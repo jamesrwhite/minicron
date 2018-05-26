@@ -1,8 +1,8 @@
 class Minicron::Hub::App
   get '/hosts' do
     @hosts = Minicron::Hub::Model::Host.belonging_to(current_user)
-                                .all
-                                .order(created_at: :desc)
+                                       .all
+                                       .order(created_at: :desc)
 
     erb :'hosts/index', layout: :'layouts/app'
   end
@@ -47,14 +47,14 @@ class Minicron::Hub::App
 
   get '/host/:id/edit' do
     @host = Minicron::Hub::Model::Host.belonging_to(current_user)
-                               .find(params[:id])
+                                      .find(params[:id])
 
     erb :'hosts/edit', layout: :'layouts/app'
   end
 
   post '/host/:id/edit' do
     @host = Minicron::Hub::Model::Host.belonging_to(current_user)
-                               .find(params[:id])
+                                      .find(params[:id])
 
     begin
       @host.name = params[:name]
@@ -71,7 +71,7 @@ class Minicron::Hub::App
 
   get '/host/:id/delete' do
     @host = Minicron::Hub::Model::Host.belonging_to(current_user)
-                               .find(params[:id])
+                                      .find(params[:id])
 
     erb :'hosts/delete', layout: :'layouts/app'
   end

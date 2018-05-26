@@ -260,8 +260,8 @@ class Minicron::Hub::App
   get '/job/:id/schedule/:schedule_id/delete' do
     # Look up the schedule
     @schedule = Minicron::Hub::Model::Schedule.belonging_to(current_user)
-                                       .includes(:job)
-                                       .find(params[:schedule_id])
+                                              .includes(:job)
+                                              .find(params[:schedule_id])
 
     erb :'jobs/schedules/delete', layout: :'layouts/app'
   end
