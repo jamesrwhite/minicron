@@ -14,3 +14,6 @@ test:
 
 run:
 	bundle exec bin/minicron-server --debug --verbose
+
+shell:
+	docker-compose exec server bash
