@@ -9,6 +9,12 @@ module Minicron::Hub
       validates :email,    presence: true, uniqueness: true, length: { maximum: 255 }
       validates :password, presence: true
 
+      has_many :alerts, dependent: :destroy
+      has_many :hosts, dependent: :destroy
+      has_many :executions, dependent: :destroy
+      has_many :jobs, dependent: :destroy
+      has_many :job_execution_outputs, dependent: :destroy
+
       def avatar
         "https://s.gravatar.com/avatar/#{Digest::MD5.hexdigest(email.downcase)}"
       end

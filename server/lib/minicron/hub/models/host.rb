@@ -3,7 +3,7 @@ require Minicron::REQUIRE_PATH + 'hub/models/base'
 module Minicron::Hub
   module Model
     class Host < Minicron::Hub::Model::Base
-      has_many :executions
+      has_many :executions, dependent: :destroy
 
       validates :hostname, presence: true
 
