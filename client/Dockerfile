@@ -11,5 +11,3 @@ ARG GOARCH=amd64
 
 RUN GOOS=${GOOS} GOARCH=${GOARCH} go build -o minicron .
 RUN cp ./minicron /usr/local/bin/minicron
-
-ENTRYPOINT ["minicron"]
