@@ -2,6 +2,7 @@ version: '3'
 
 services:
   server:
+    tty: true
     build:
       context: ./server
     ports:
