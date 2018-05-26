@@ -1,6 +1,5 @@
 FROM ruby:2.4.1
 
-MAINTAINER James White <james.white@minicron.com>
 LABEL maintainer="james.white@minicron.com"
 
 WORKDIR /usr/src/app

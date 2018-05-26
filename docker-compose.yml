@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "9292:9292"
+
+  database:
+    image: mysql:5.7.19
+    command: mysqld
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: minicron
+    ports:
+      - "33306:3306"
+    volumes:
+      - minicron-mysql:/var/lib/mysql
+
+volumes:
+  minicron-mysql:
