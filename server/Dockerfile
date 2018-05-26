@@ -23,5 +23,4 @@ COPY . /usr/src/app
 
 EXPOSE 9292
 
-ENTRYPOINT ["bundle", "exec", "bin/minicron-server"]
-CMD ["server", "--debug"]
+ENTRYPOINT ["minicron-server"]
