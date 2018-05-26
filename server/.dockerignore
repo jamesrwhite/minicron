@@ -20,3 +20,7 @@ pkg
 
 # Assets
 lib/minicron/hub/public
+
+# Docker and Make files
+Dockerfile
+Makefile
