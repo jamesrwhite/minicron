@@ -111,6 +111,9 @@ module Minicron
       # Display the output in a compact format
       @cli.program :help_formatter, Commander::HelpFormatter::TerminalCompact
 
+      # Set the default command to run
+      @cli.default_command :help
+
       # Add a global option for verbose mode
       @cli.global_option '--verbose', "Turn on verbose mode. Default: #{Minicron.config['verbose']}"
 
