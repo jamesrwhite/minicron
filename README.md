@@ -14,11 +14,11 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 > `0.9.x` is not being actively developed/supported. This branch is under active
 > development for `1.0.0`.
 >
-> After thinking about the future of minicron and it's long overdue 1.0
+> After thinking about the future of minicron and its long overdue 1.0
 > release I've decided to focus it solely on the monitoring of cron jobs and doing
 > that really well and leave the management side [to](https://www.chef.io)
 > [other](https://puppet.com/) [tools](https://www.ansible.com/). As such all
-> the SSH based management of jobs have been removed.
+> the SSH based management of jobs has been removed.
 
 
 - [Overview](#overview)
@@ -35,7 +35,7 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 
 ## Overview
 
-minicron runs your jobs via it's easy to install client that lives on your server and relays the job data back to the
+minicron runs your jobs via its easy to install client which lives on your server and relays the job data back to the
 server (web ui) where you can view it and set up alerts to ensure the job is running correctly.
 
 ## Screenshots
@@ -137,7 +137,7 @@ arguments ````--host```` ````--port```` and ````--path```` or in the config file
 By default the server will run as a daemon with its process id stored in ````/tmp/minicron.pid````
 you can also use the ````stop````, ````restart```` and ````status```` commands to control the server.
 
-To run the server in debug mode, so you can see its output and any errors you can pass the ````--debug````
+To run the server in debug mode, so you can see its output and any errors, you can pass the ````--debug````
 option.
 
 #### Version
@@ -147,7 +147,7 @@ or ````--version```` are passed to the CLI.
 
 #### Configuration
 
-Some configuration options can be passed in manually but the recommend way to configure minicron is through the use
+Some configuration options can be passed in manually but the recommended way to configure minicron is through the use
 of a config file. You can specify the path to the file using the ````--config```` global option. The file is expected
 to be in the [toml](https://github.com/mojombo/toml) format. The default options are specified in the
 [server.toml](config/server.toml) file and minicron will parse a config located in ````/etc/minicron/server.toml```` if it
@@ -169,24 +169,24 @@ Based on the following guidelines:
 
 ## Contributing
 
-Feedback and pull requests are welcome, please see [CONTRIBUTING.md](CONTRIBUTING.md)
+Feedback and pull requests are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md)
 for more info.
 
 Areas that I would love some help with:
 
 - Any of the unassigned [issues here](https://github.com/jamesrwhite/minicron/issues?state=open).
-- General testing of the system, let me know what you think and create issues for any bugs you find!
+- General testing of the system. Let me know what you think, and create issues for any bugs you find!
 - Tests!!
 - Validation and error handling improvements
 - Documentation improvements.
 - Look for '[TODO:](https://github.com/jamesrwhite/minicron/search?q=TODO%3A)' notices littered around the code,
-  I'm trying to convert them all to issues but there are a lot..
-- Code refactoring, I had a deadline to meet for the initial versions so some parts are a tad rushed
+  I'm trying to convert them all to issues but there are a lot...
+- Code refactoring: I had a deadline to meet for the initial versions so some parts are a tad rushed
 - UI improvements
 
 ## Support
 
-Where possible I will try and provide support for minicron but I offer no guarantees.
+Where possible I will try to provide support for minicron but I offer no guarantees.
 
 Feel free to open an issue and I'll do my best to help.
 
@@ -199,4 +199,4 @@ I started out trying to list all of them but it was taking way too much time so 
 
 ## License
 
-minicron is licensed under the GPL v3, [see here for the full license](LICENSE)
+minicron is licensed under the GPL v3 - [see here for the full license](LICENSE)
