@@ -186,7 +186,7 @@ Areas that I would love some help with:
 
 ## Support
 
-Where possible I will try and provide support for minicron but I offer no gurantees .
+Where possible I will try and provide support for minicron but I offer no guarantees.
 
 Feel free to open an issue and I'll do my best to help.
 
