@@ -1,9 +1,7 @@
 # minicron
 
 [![Build Status](http://img.shields.io/travis/jamesrwhite/minicron.svg)](http://travis-ci.org/jamesrwhite/minicron)
-[![Code Climate](http://img.shields.io/codeclimate/github/jamesrwhite/minicron.svg)](https://codeclimate.com/github/jamesrwhite/minicron)
-[![Dependency Status](http://img.shields.io/gemnasium/jamesrwhite/minicron.svg)](https://gemnasium.com/jamesrwhite/minicron)
-[![Inline docs](http://inch-ci.org/github/jamesrwhite/minicron.png)](http://inch-ci.org/github/jamesrwhite/minicron)
+[![Code Climate](https://api.codeclimate.com/v1/badges/7e368b7ec3ca01bebba7/maintainability)](https://codeclimate.com/github/jamesrwhite/minicron/maintainability)
 
 minicron makes it simple to monitor your cron jobs and ensure they are running both correctly and on schedule.
 
