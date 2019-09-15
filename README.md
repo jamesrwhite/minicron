@@ -116,7 +116,7 @@ instead.
 2. Use the handy [install script](install.sh) or [grab the latest](https://github.com/jamesrwhite/minicron/releases/tag/v0.9.7) zip/tarball
    for your OS and install manually.
    ```
-   bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/master/install.sh)"
+   bash -c "$(curl -sSL https://raw.githubusercontent.com/jamesrwhite/minicron/v0.9.7/install.sh)"
    ```
    ..or [build it yourself](https://github.com/jamesrwhite/minicron-build)
    if you're feeling adventurous!
