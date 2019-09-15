@@ -5,19 +5,21 @@
 
 minicron makes it simple to monitor your cron jobs and ensure they are running both correctly and on schedule.
 
-### Status
+## Project Status
 
-> Latest stable release in
-> [0.9.7](https://github.com/jamesrwhite/minicron/tree/v0.9.7) tag but
-> `0.9.x` is not being actively developed/supported. This branch is under active
-> development for `1.0.0`.
+> tl;dr: minicron is not being actively worked on at present.
+>
+> The latest stable release is 
+> [v0.9.7](https://github.com/jamesrwhite/minicron/tree/v0.9.7), but
+> `0.9.x` is not being actively developed/supported, I will accept small bug fixes but no new features.
+>
+> This branch (master) is the current state of progress towards a v1.0 release.
 >
 > After thinking about the future of minicron and its long overdue 1.0
 > release I've decided to focus it solely on the monitoring of cron jobs and doing
 > that really well and leave the management side [to](https://www.chef.io)
 > [other](https://puppet.com/) [tools](https://www.ansible.com/). As such all
 > the SSH based management of jobs has been removed.
-
 
 - [Overview](#overview)
 - [Background](#background)
