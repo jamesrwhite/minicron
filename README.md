@@ -7,13 +7,14 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 
 ## Project Status
 
-> tl;dr: minicron is not being actively worked on at present.
+> **tl;dr: minicron is not being actively worked on at present.**
 >
 > The latest stable release is 
 > [v0.9.7](https://github.com/jamesrwhite/minicron/tree/v0.9.7), but
 > `0.9.x` is not being actively developed/supported, I will accept small bug fixes but no new features.
 >
-> This branch (master) is the current state of progress towards a v1.0 release.
+> This branch (master) is the current state of progress towards a v1.0 release, I do intend to continue
+> working on minicron but don't have as much spare time at the moment as I did in the past to dedicate to it.
 >
 > After thinking about the future of minicron and its long overdue 1.0
 > release I've decided to focus it solely on the monitoring of cron jobs and doing
