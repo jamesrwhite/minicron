@@ -5,7 +5,11 @@
 
 minicron makes it simple to monitor your cron jobs and ensure they are running both correctly and on schedule.
 
-## Project Status
+### Sponsors
+
+- If you are looking for a cloud-based monitoring service and dashboard for your cron jobs I recommend [Cronitor](https://cronitor.io).
+
+### Project Status
 
 > **tl;dr: minicron is not being actively worked on at present.**
 >
