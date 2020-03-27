@@ -1,4 +1,4 @@
-# minicron
+# 🕰️ minicron
 
 minicron makes it simple to monitor your cron jobs and ensure they are running both correctly and on schedule.
 
