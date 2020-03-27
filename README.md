@@ -13,12 +13,12 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 
 > **tl;dr: minicron is not being actively worked on at present.**
 >
-> The latest stable release is 
-> [v0.9.6](https://github.com/jamesrwhite/minicron/tree/v0.9.6), but
-> `0.9.x` is not being actively developed/supported.
+> The latest release is  [v0.9.6](https://github.com/jamesrwhite/minicron/tree/v0.9.6),
+> but `0.9.x` is not being actively developed or supported.
 >
-> This branch (master) is the current state of progress towards a v1.0 release, I do intend to continue
-> working on minicron but don't have as much spare time at the moment as I did in the past to dedicate to it.
+> This branch (master) is the current state of progress towards a v1.0 release however
+> I am not currently actively working on it due not having sufficient time to dedicate to the
+> project as I did in the past.
 >
 > After thinking about the future of minicron and its long overdue 1.0
 > release I've decided to focus it solely on the monitoring of cron jobs and doing
@@ -44,12 +44,6 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 
 minicron runs your jobs via its easy to install client which lives on your server and relays the job data back to the
 server (web ui) where you can view it and set up alerts to ensure the job is running correctly.
-
-## Screenshots
-
-```
-TODO: generate new screenshots for 1.0
-```
 
 ## Background
 
@@ -84,15 +78,17 @@ largely from my experience and frustrations using cron both in a personal and pr
 #### Web Server / Reverse Proxy
 
 #### Nginx
+
 A simple [example config](server/config/nginx.conf) for nginx is provided.
 
 #### Apache
 If you're using apache as your reverse proxy you need to ensure you have the following modules installed:
+
 - `libapache2-mod-proxy-html`
 - `apache2-utils`
 
 Run the following to enable them and then restart apache
-```a2enmod proxy proxy_html proxy_http xml2enc```
+```a2enmod proxy proxy_html proxy_http xml2enc```.
 
 A simple [example config](server/config/apache.conf) for apache is provided.
 
