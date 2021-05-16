@@ -2,13 +2,7 @@
 
 minicron makes it simple to monitor your cron jobs and ensure they are running both correctly and on schedule.
 
-### Sponsors
-
-- If you are looking for a cloud-based monitoring service and dashboard for your cron jobs I recommend [Cronitor](https://cronitor.io).
-
-### Project Status
-
-> **tl;dr: minicron is not being actively worked on at present.**
+> ⚠️ **minicron is no longer being worked on**
 >
 > The latest release is  [v0.9.6](https://github.com/jamesrwhite/minicron/tree/v0.9.6),
 > but `0.9.x` is not being actively developed or supported.
@@ -17,11 +11,6 @@ minicron makes it simple to monitor your cron jobs and ensure they are running b
 > I am not currently actively working on it due not having sufficient time to dedicate to the
 > project as I did in the past.
 >
-> After thinking about the future of minicron and its long overdue 1.0
-> release I've decided to focus it solely on the monitoring of cron jobs and doing
-> that really well and leave the management side [to](https://www.chef.io)
-> [other](https://puppet.com/) [tools](https://www.ansible.com/). As such all
-> the SSH based management of jobs has been removed.
 
 <hr>
 
